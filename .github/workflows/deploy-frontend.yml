@@ -33,6 +33,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
+          port: 2901
           source: "client/dist/*"
           target: "/var/www/flowkan-frontend"
           strip_components: 2
