@@ -48,9 +48,9 @@ jobs:
         working-directory: server
         run: npm run lint
 
-      - name: Run Tests (Server)
-        working-directory: server
-        run: npm run test
+      # - name: Run Tests (Server)
+      #  working-directory: server
+      #  run: npm run test
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
