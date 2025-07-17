@@ -1,5 +1,6 @@
 services:
   app:
+    container_name: flowkan-server
     build: .
     ports:
       - "3000:3000"
@@ -9,11 +10,12 @@ services:
       - db
     volumes:
       - .:/usr/src/app
-    restart: unless-stopped
+    restart: always
 
   db:
+    container_name: flowkan-db
     image: postgres:alpine3.22
-    restart: unless-stopped
+    restart: always
     env_file:
       - .env
     ports:
