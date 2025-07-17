@@ -1,0 +1,38 @@
+name: Build and Deploy Frontend
+
+on:
+  push:
+    tags:
+      - '*'   # Triggers on any tag push
+    paths:
+      - 'client/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: Install and Build (Vite)
+        working-directory: client
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy to Server via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "client/dist/*"
+          target: "/var/www/flowkan-frontend"
+          strip_components: 2

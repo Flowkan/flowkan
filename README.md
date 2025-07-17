@@ -1,15 +1,9 @@
 # Flowkan - Tablero kanbna para gestionar tus tareas
 
-## Despligue imagen a github
-
- 1. construir imagen para github ->  docker build -t ghcr.io/flowkan/flowkan .
- 2. login para poder subir imagen -> docker login ghcr.io -u virgulilla
-  la contraseña es el token creado en github, apartado settings > Developer settings > Personal access tokens
-3. subir imagen a github -> docker push ghcr.io/flowkan/flowkan:latest
-
-## Ejecutar imagen de docker en servidor
-1. docker run ghcr.io/flowkan/flowkan
-2. docker-compose -f flowkan.yml up
+## Desplegar release en servidor
+ - Para desplegar crear un tag sobre main
+ - Entrar al servidor, editar el yml y en image poner el tag que se va a desplegar (se puede ver en el repo de github)
+ - ejecutar: docker-compose -f xxxx.yml up -d (para recrear los contenedores)
 
 ## montar imagen en local
 Entrar en la carpeta server y ejecutar: docker-compose up --build
