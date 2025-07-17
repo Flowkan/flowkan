@@ -1,4 +1,4 @@
-"# flowkan" 
+# Flowkan - Tablero kanbna para gestionar tus tareas
 
 ## Despligue imagen a github
 
