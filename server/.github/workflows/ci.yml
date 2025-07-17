@@ -1,0 +1,37 @@
+name: ci
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '**'
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22]
+      fail-fast: false
+    name: Test Node ${{ matrix.node-version }}
+    steps:
+    - name: Fix usage of insecure GitHub protocol
+      run: sudo git config --system url."https://github".insteadOf "git://github"
+    - name: Fix git protocol for Node 22
+      if: ${{ startsWith(matrix.node-version, '22') }}
+      run: sudo git config --system url."https://github".insteadOf "ssh://git@github"
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Dependancies
+      run: npm install
+    - name: Check Linting
+      run: npm run lint
+    - name: Run Tests
+      run: npm run test
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
