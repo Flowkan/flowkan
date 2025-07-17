@@ -33,8 +33,8 @@ jobs:
           context: server
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ github.ref_name }} 
+            ghcr.io/flowkan/flowkan:latest
+            ghcr.io/flowkan/flowkan:${{ github.ref_name }}
 
       - name: Logout from GitHub Container Registry
         run: docker logout ghcr.io
