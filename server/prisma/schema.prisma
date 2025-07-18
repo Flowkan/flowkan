@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+   provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  name     String
+  email    String   @unique
+  password String
+  boards   Board[]  @relation("BoardOwner")
+  members  BoardMember[]
+  comments Comment[]
+  assignedCards CardAssignee[]   @relation("CardAssignees")
+}
+
+model Board {
+  id        Int           @id @default(autoincrement())
+  title     String
+  owner     User          @relation("BoardOwner", fields: [ownerId], references: [id])
+  ownerId   Int
+  members   BoardMember[]
+  lists     List[]
+  labels    Label[]
+}
+
+model BoardMember {
+  board   Board @relation(fields: [boardId], references: [id])
+  boardId Int
+  user    User  @relation(fields: [userId], references: [id])
+  userId  Int
+  role    String @default("member")
+  @@id([boardId, userId])
+}
+
+model List {
+  id      Int     @id @default(autoincrement())
+  title   String
+  board   Board   @relation(fields: [boardId], references: [id])
+  boardId Int
+  cards   Card[]
+  position Int
+}
+
+model Card {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  list        List         @relation(fields: [listId], references: [id])
+  listId      Int
+  position    Int
+  labels      CardLabel[]
+  comments    Comment[]
+  assignees   CardAssignee[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model CardAssignee {
+  card   Card @relation(fields: [cardId], references: [id])
+  cardId Int
+  user   User @relation("CardAssignees", fields: [userId], references: [id])
+  userId Int
+  @@id([cardId, userId]) // Clave compuesta
+}
+
+model Label {
+  id      Int     @id @default(autoincrement())
+  name    String
+  color   String
+  board   Board   @relation(fields: [boardId], references: [id])
+  boardId Int
+  cards   CardLabel[]
+}
+
+model CardLabel {
+  card   Card @relation(fields: [cardId], references: [id])
+  cardId Int
+  label  Label @relation(fields: [labelId], references: [id])
+  labelId Int
+  @@id([cardId, labelId])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  card      Card     @relation(fields: [cardId], references: [id])
+  cardId    Int
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
