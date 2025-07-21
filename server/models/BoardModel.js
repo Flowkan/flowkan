@@ -1,5 +1,3 @@
-import pool from '../config/db.js';
-
 class BoardModel {
 
      constructor(prisma) {
