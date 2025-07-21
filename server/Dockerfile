@@ -1,15 +1,15 @@
 FROM node:22-bookworm-slim
 
-WORKDIR /code  
+RUN apt-get update -y && \
+    apt-get install -y openssl libssl-dev && \
+    rm -rf /var/lib/apt/lists/*
 
-# copiamos el código del proyecto dentro del contenedor en /code
-COPY . /code
+WORKDIR /usr/src/app
 
-# instalamos las dependencias de mi aplicación
+COPY . /usr/src/app
+
 RUN npm install
 
-# Información publica de la imagen
 EXPOSE 3000
 
-# comando de inicio para cuando se ejecute docker run
 CMD ["npm", "start"]

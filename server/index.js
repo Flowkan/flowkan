@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 app.get("/", (req, res) => {
   console.log("Esta versión del servidor está corriendo muy bien");
-  res.send("Hola mundo desde ESM");
+  res.send("Hola mundo desde ESM hola");
 });
 
 app.get("/db", async (req, res) => {
@@ -21,6 +21,7 @@ app.get("/db", async (req, res) => {
     });
     res.json(boards);
   } catch (err) {
+    console.log(err)
     res.status(500).send("Error al conectar a la base de datos");
   }
 });
