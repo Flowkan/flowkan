@@ -10,6 +10,8 @@ services:
       - db
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run dev
     restart: always
 
   db:
