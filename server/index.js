@@ -1,7 +1,9 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import dotenv from 'dotenv'
 
 const app = express();
+dotenv.config()
 const prisma = new PrismaClient();
 
 app.get("/", (req, res) => {
@@ -26,6 +28,6 @@ app.get("/db", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Servidor escuchando en http://localhost:3000");
 });
