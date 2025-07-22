@@ -3,6 +3,10 @@ class BoardService {
     this.boardModel = boardModel;
   }
 
+  async getAllBoardsByUserId(userId) {
+    return this.boardModel.getAllByUserId(userId);
+  }
+
   async getAllBoards() {
     return this.boardModel.getAll();
   }
