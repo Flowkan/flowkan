@@ -1,33 +1,7 @@
-import express from "express";
-import { PrismaClient } from "@prisma/client";
-import dotenv from 'dotenv'
+import app from './app.js';
 
-const app = express();
-dotenv.config()
-const prisma = new PrismaClient();
+const PORT = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
-  console.log("Esta versión del servidor está corriendo muy bien");
-  res.send("Hola mundo desde ESM hola");
-});
-
-app.get("/db", async (req, res) => {
-  try {
-    const boards = await prisma.board.findMany({
-      include: {
-        lists: true,
-        members: {
-          include: { user: true },
-        },
-      },
-    });
-    res.json(boards);
-  } catch (err) {
-    console.log(err)
-    res.status(500).send("Error al conectar a la base de datos");
-  }
-});
-
-app.listen(process.env.PORT, () => {
-  console.log("Servidor escuchando en http://localhost:3000");
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });

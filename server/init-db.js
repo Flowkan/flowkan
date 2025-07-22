@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from './config/db.js';
 import bcrypt from "bcrypt";
 import readline from "readline";
-
-const prisma = new PrismaClient();
 
 const rl = readline.createInterface({
   input: process.stdin,
