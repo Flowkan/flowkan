@@ -3,7 +3,7 @@ import prisma from "../config/db.js";
 import AuthModel from "../models/AuthModel.js";
 import AuthService from "../services/AuthService.js";
 import { AuthController } from "../controllers/authController.js";
-import { validateUserFields } from "../middlewares/auth.js";
+import { validateUserFields } from "../validators/authValidator.js";
 
 const router = Router();
 
