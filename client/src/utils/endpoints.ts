@@ -9,10 +9,10 @@ export const TypeAccountEnum = z.enum([
 
 type TypeAccount = z.infer<typeof TypeAccountEnum>;
 
-const VERSION = `/api/v1/`;
+const VERSION = `/api/v1`;
 
 export const USER_ENDPOINTS = {
-  SIGNUP: `${VERSION}/auth/signup`,
+  REGISTER: `${VERSION}/auth/register`,
   LOGIN: `${VERSION}/auth/login`,
   AUTH: `${VERSION}/auth/me`,
   PROFILE: `${VERSION}/auth/profile`,
