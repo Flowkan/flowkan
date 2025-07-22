@@ -19,9 +19,8 @@ export const USER_ENDPOINTS = {
 };
 
 export const getAccountEndpoint = (typeAccount: TypeAccount): string | null => {
-  const validAccount = Object.values(TypeAccountEnum)
-  if(!validAccount.includes(typeAccount)){
-    throw new Error("Tipo de cuenta no válida.")
+  if (!TypeAccountEnum.options.includes(typeAccount)) {
+    throw new Error("Not valid account.");
   }
   return `${USER_ENDPOINTS.PROFILE}?account=${typeAccount}`;
-}
+};
