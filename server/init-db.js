@@ -1,4 +1,4 @@
-import prisma from './config/db.js';
+import prisma from "./config/db.js";
 import bcrypt from "bcrypt";
 import readline from "readline";
 
