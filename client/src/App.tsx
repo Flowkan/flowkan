@@ -1,5 +1,7 @@
+import Board from "./components/Board";
+
 function App() {
-  return <h1>Hello Flowkan</h1>;
+  return <Board />;
 }
 
 export default App;
