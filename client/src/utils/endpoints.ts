@@ -1,5 +1,7 @@
 import { z } from "zod";
-import { API_VERSION as VERSION } from "./constants";
+import "dotenv/config"
+
+const VERSION = process.env.API_VERSION
 
 export const TypeAccountEnum = z.enum([
   "FREE",

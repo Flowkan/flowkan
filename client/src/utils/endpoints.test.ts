@@ -41,24 +41,24 @@ describe("API Endpoint Generators", () => {
   });
 
   it("BOARD_ENDPOINTS.BY_ID returns correct URL", () => {
-    const id = "board123";
+    const id = "123";
     expect(BOARD_ENDPOINTS.BY_ID(id)).toBe(`/api/v1/boards/${id}`);
   });
 
   it("CARD_ENDPOINT.BY_ID returns correct URL", () => {
-    const id = "card456";
+    const id = "456";
     expect(CARD_ENDPOINT.BY_ID(id)).toBe(`/api/v1/cards/${id}`);
   });
 
   it("LIST_ENDPOINT.BY_ID returns correct URL", () => {
-    const id = "list789";
+    const id = "789";
     expect(LIST_ENDPOINT.BY_ID(id)).toBe(`/api/v1/lists/${id}`);
   });
 });
 
 describe("USER_ENDPOINTS.BY_ID", () => {
   it("should return the correct dynamic URL for a given profile ID", () => {
-    const id = "user123";
+    const id = "123";
     const expectedUrl = `/api/v1/profile/${id}`;
     const result = USER_ENDPOINTS.BY_ID(id);
 
