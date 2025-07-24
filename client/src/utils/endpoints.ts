@@ -16,6 +16,7 @@ export const USER_ENDPOINTS = {
   LOGIN: `${VERSION}/auth/login`,
   AUTH: `${VERSION}/auth/me`,
   PROFILE: `${VERSION}/auth/profile`,
+  BY_ID: byId("profile")
 };
 
 export const BOARD_ENDPOINTS = {
