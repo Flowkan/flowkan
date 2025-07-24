@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { API_VERSION as VERSION } from "./constants";
 
 export const TypeAccountEnum = z.enum([
   "FREE",
@@ -8,14 +9,29 @@ export const TypeAccountEnum = z.enum([
 ]);
 
 type TypeAccount = z.infer<typeof TypeAccountEnum>;
-
-const VERSION = `/api/v1`;
+const byId = (base: string) => (id: string) => `${VERSION}/${base}/${id}`;
 
 export const USER_ENDPOINTS = {
   REGISTER: `${VERSION}/auth/register`,
   LOGIN: `${VERSION}/auth/login`,
   AUTH: `${VERSION}/auth/me`,
   PROFILE: `${VERSION}/auth/profile`,
+  BY_ID: byId("profile")
+};
+
+export const BOARD_ENDPOINTS = {
+  BOARDS: `${VERSION}/boards`,
+  BY_ID: byId("boards"),
+};
+
+export const LIST_ENDPOINT = {
+  LISTS: `${VERSION}/lists`,
+  BY_ID: byId("lists"),
+};
+
+export const CARD_ENDPOINT = {
+  CARDS: `${VERSION}/cards`,
+  BY_ID: byId("cards"),
 };
 
 export const getAccountEndpoint = (typeAccount: TypeAccount): string | null => {
