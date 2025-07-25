@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { Layout } from "./components/layout/layout";
 import { HomePage } from "./pages/home";
 import { NotFound } from "./pages/not-found";
-import { LoginPage } from "./pages/login";
+import { LoginPage } from "./pages/auth/login";
 import Board from "./components/Board";
 function App() {
 	return (

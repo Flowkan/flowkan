@@ -1,4 +1,4 @@
-import { Page } from "../components/layout/page";
+import { Page } from "../../components/layout/page";
 
 export const LoginPage = () => {
 	const handleChange = () => {};
@@ -14,13 +14,13 @@ export const LoginPage = () => {
 			>
 				<div>
 					<label htmlFor="email">Email: </label>
-					<input 
-            id="email" 
-            type="text" 
-            name="email" 
-            placeholder="email"
-            required
-          />
+					<input
+						id="email"
+						type="text"
+						name="email"
+						placeholder="email"
+						required
+					/>
 				</div>
 				<div>
 					<label htmlFor="password">Password: </label>
@@ -29,11 +29,15 @@ export const LoginPage = () => {
 						type="password"
 						name="password"
 						placeholder="password"
-            required
+						required
 					/>
 				</div>
 			</form>
-			<button type="submit" onClick={handleChange} className="cursor-pointer pt-6">
+			<button
+				type="submit"
+				onClick={handleChange}
+				className="cursor-pointer pt-6"
+			>
 				Entrar
 			</button>
 		</Page>
