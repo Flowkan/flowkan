@@ -25,9 +25,9 @@ export const Header: React.FC = () => {
         </NavLink>
 
         <nav className="hidden md:flex space-x-6 text-text-body">
-          <a href="#" className="hover:text-accent font-medium">Características</a>
-          <a href="#" className="hover:text-accent font-medium">Soluciones</a>
-          <a href="#" className="hover:text-accent font-medium">Precios</a>
+          <a href="#" className="hover:border-b-2 hover:border-accent">Características</a>
+          <a href="#" className="hover:border-b-2 hover:border-accent">Soluciones</a>
+          <a href="#" className="hover:border-b-2 hover:border-accent">Precios</a>
         </nav>
       </div>
 
