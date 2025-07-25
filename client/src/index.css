@@ -1,1 +1,34 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
+
+@theme {
+  /* Colores para el modo claro (ajustados a la estética rosa/azul/blanco) */
+  --color-primary: oklch(0.65 0.19 350); /* Rosa intenso, similar a pink-600 */
+  --color-primary-hover: oklch(0.55 0.20 350); /* Rosa más oscuro para hover */
+
+  --color-accent: oklch(0.49 0.17 261); /* Azul, similar a blue-600 */
+  --color-accent-hover: oklch(0.45 0.18 261); /* Azul más oscuro para hover */
+
+  --color-background-page: oklch(1 0 0); /* Blanco puro para fondos de página (bg-white) */
+  --color-background-card: oklch(1 0 0); /* Blanco puro para fondos de tarjetas/formularios */
+  --color-background-light-grey: oklch(0.97 0.005 250); /* Gris muy claro, similar a gray-50/100 para hover/fondos sutiles */
+  --color-background-dark-footer: oklch(0.25 0.005 250); /* Gris oscuro para el footer, similar a gray-800 */
+
+  --color-text-heading: oklch(0.15 0.005 250); /* Gris oscuro casi negro, similar a gray-900 */
+  --color-text-body: oklch(0.48 0.005 250); /* Gris medio, similar a gray-600 */
+  --color-text-placeholder: oklch(0.65 0.005 250); /* Gris para placeholders, similar a gray-500 */
+  --color-text-link: oklch(0.49 0.17 261); /* Azul para enlaces, igual que accent */
+  --color-text-on-accent: oklch(1 0 0); /* Blanco para texto sobre fondos de acento (rosa/azul) */
+
+  --color-border-light: oklch(0.85 0.005 250); /* Gris claro para bordes, similar a gray-300 */
+  --color-border-dark: oklch(0.4 0.005 250); /* Gris oscuro para bordes como el separador del footer, similar a gray-700 */
+
+  --color-success: oklch(0.7 0.12 140); /* Verde para éxito (tus valores originales) */
+  --color-danger: oklch(0.65 0.17 27); /* Naranja/Rojo para peligro (tus valores originales) */
+
+  --font-sans: "Inter", sans-serif;
+}
+
+body {
+  @apply font-sans;
+}
