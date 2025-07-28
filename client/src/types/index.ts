@@ -1,6 +1,7 @@
 export interface Task {
   id: string;
   content: string;
+  description?: string;
 }
 
 export interface Column {
