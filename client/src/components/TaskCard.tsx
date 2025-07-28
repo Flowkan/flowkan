@@ -4,24 +4,41 @@ import type { Task } from "../types";
 interface Props {
   task: Task;
   index: number;
+  columnId: string;
+  onEditTask: (columnId: string, taskId: string, newContent: string, newDescription?: string) => void;
+  onDeleteTask: (columnId: string, taskId: string) => void;
+  onOpenTaskDetail: (task: Task, columnId: string) => void;
 }
 
-const TaskCard = ({ task, index }: Props) => (
-  <Draggable draggableId={task.id} index={index}>
-    {(prov, snapshot) => (
-      <div
-        ref={prov.innerRef}
-        {...prov.draggableProps}
-        {...prov.dragHandleProps}
-        className={`rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm transition-all duration-200 hover:bg-gray-50 ${
-          snapshot.isDragging ? "bg-blue-50 ring-2 ring-blue-300 shadow-md" : ""
-        }`}
-        style={prov.draggableProps.style}
-      >
-        {task.content}
-      </div>
-    )}
-  </Draggable>
-);
+const TaskCard = ({ task, index, columnId, onOpenTaskDetail }: Props) => {
+  const handleClick = () => {
+    onOpenTaskDetail(task, columnId);
+  };
+
+  return (
+    <Draggable draggableId={task.id} index={index}>
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          onClick={handleClick}
+          className={`
+            rounded-md shadow-md p-4 mb-3 cursor-pointer
+            flex justify-between items-center text-text-body
+            border-2 transition-all duration-200 ease-in-out
+            ${snapshot.isDragging
+              ? "bg-accent-lightest ring-2 ring-accent-light shadow-lg"
+              : "bg-background-card border-background-card hover:border-accent-light hover:shadow-lg" // Añadido hover
+            }
+          `}
+          style={{ ...provided.draggableProps.style }}
+        >
+          <span className="flex-grow pr-2 break-words text-text-heading font-medium">{task.content}</span>
+        </div>
+      )}
+    </Draggable>
+  );
+};
 
 export default TaskCard;
