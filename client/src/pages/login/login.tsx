@@ -1,18 +1,13 @@
-// src/pages/LoginPage.tsx
 import { Page } from "../../components/layout/page";
 import { NavLink } from "react-router-dom";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
-// Importamos nuestro componente de toast personalizado
 import { CustomToast } from "../../components/CustomToast";
-
-interface ILoginData {
-	email: string;
-	password: string;
-}
+import { login } from "./service";
+import type { Credentials } from "./types";
 
 export const LoginPage = () => {
-	const [formData, setFormData] = useState<ILoginData>({
+	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
 	});
@@ -30,7 +25,7 @@ export const LoginPage = () => {
 		}));
 	};
 
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		// Validar el email primero
@@ -57,6 +52,8 @@ export const LoginPage = () => {
 			return;
 		}
 
+		await login(formData);
+
 		// Si ambas validaciones pasan, mostrar el mensaje de éxito
 		toast.custom((t) => (
 			<CustomToast
@@ -65,7 +62,6 @@ export const LoginPage = () => {
 				type="success"
 			/>
 		));
-		console.log("Datos del formulario:", formData);
 	};
 
 	return (

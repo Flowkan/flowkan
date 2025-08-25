@@ -1,6 +1,21 @@
 import axios from "axios";
 
-export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL_API,
+export const client = axios.create({
+	baseURL: import.meta.env.VITE_BASE_URL_URL,
 });
 
+export const setAuthorizationHeader = (accessToken: string) => {
+	client.defaults.headers["Authorization"] = `Bearer ${accessToken}`;
+};
+
+export const removeAuthorizationHeader = () => {
+	delete client.defaults.headers["Authorization"];
+};
+
+client.interceptors.request.use((config) => {
+	const token = localStorage.getItem("authToken");
+	if (token) {
+		config.headers.Authorization = `Bearer ${token}`;
+	}
+	return config;
+});
