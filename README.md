@@ -6,4 +6,5 @@
  - ejecutar: docker-compose -f xxxx.yml up -d (para recrear los contenedores)
 
 ## montar imagen en local
-Entrar en la carpeta server y ejecutar: docker-compose up --build
+
+Entrar en la carpeta server y ejecutar: docker-compose up --build -d
