@@ -1,5 +1,6 @@
 import express from "express";
 import createError from "http-errors";
+import cors from "cors";
 import boardRoutes from "./routes/boards.routes.js";
 import listRoutes from "./routes/list.routes.js";
 import cardRoutes from "./routes/card.routes.js";
@@ -7,6 +8,8 @@ import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 app.disable("x-powered-by");
+
+app.use(cors());
 
 app.use(express.json());
 

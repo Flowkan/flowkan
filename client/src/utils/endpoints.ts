@@ -1,7 +1,6 @@
 import { z } from "zod";
-import "dotenv/config";
 
-const VERSION = process.env.API_VERSION;
+const VERSION = import.meta.env.VITE_API_VERSION;
 
 export const TypeAccountEnum = z.enum([
 	"FREE",
