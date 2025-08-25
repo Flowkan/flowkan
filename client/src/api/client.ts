@@ -1,5 +1,7 @@
 import axios from "axios";
+import { resolveBaseURLFromEnv } from "../utils/resolveBaseUrlEnv";
 
+<<<<<<< HEAD
 export const client = axios.create({
 	baseURL: import.meta.env.VITE_BASE_URL_URL,
 });
@@ -19,3 +21,8 @@ client.interceptors.request.use((config) => {
 	}
 	return config;
 });
+=======
+export const apiClient = axios.create({
+	baseURL: `${resolveBaseURLFromEnv()}/${import.meta.env.API_VERSION}`,
+});
+>>>>>>> main
