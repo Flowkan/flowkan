@@ -6,7 +6,7 @@ export class AuthController {
     this.authService = authService;
   }
 
-  login = async (req, res) => {
+  login = async (req, res, next) => {
     try {
       const user = await this.authService.validateCredentials(req.body);
 
