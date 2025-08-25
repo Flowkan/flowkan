@@ -1,44 +1,44 @@
 import { z } from "zod";
-import "dotenv/config"
+import "dotenv/config";
 
-const VERSION = process.env.API_VERSION
+const VERSION = process.env.API_VERSION;
 
 export const TypeAccountEnum = z.enum([
-  "FREE",
-  "BASIC",
-  "PREMIUM",
-  "ENTERPRISE",
+	"FREE",
+	"BASIC",
+	"PREMIUM",
+	"ENTERPRISE",
 ]);
 
 type TypeAccount = z.infer<typeof TypeAccountEnum>;
-const byId = (base: string) => (id: string) => `${VERSION}/${base}/${id}`;
+const byId = (base: string) => (id: string) => `/api/${VERSION}/${base}/${id}`;
 
 export const USER_ENDPOINTS = {
-  REGISTER: `${VERSION}/auth/register`,
-  LOGIN: `${VERSION}/auth/login`,
-  AUTH: `${VERSION}/auth/me`,
-  PROFILE: `${VERSION}/auth/profile`,
-  BY_ID: byId("profile")
+	REGISTER: `/api/${VERSION}/auth/register`,
+	LOGIN: `/api/${VERSION}/auth/login`,
+	AUTH: `/api/${VERSION}/auth/me`,
+	PROFILE: `/api/${VERSION}/auth/profile`,
+	BY_ID: byId("profile"),
 };
 
 export const BOARD_ENDPOINTS = {
-  BOARDS: `${VERSION}/boards`,
-  BY_ID: byId("boards"),
+	BOARDS: `/api/${VERSION}/boards`,
+	BY_ID: byId("boards"),
 };
 
 export const LIST_ENDPOINT = {
-  LISTS: `${VERSION}/lists`,
-  BY_ID: byId("lists"),
+	LISTS: `/api/${VERSION}/lists`,
+	BY_ID: byId("lists"),
 };
 
 export const CARD_ENDPOINT = {
-  CARDS: `${VERSION}/cards`,
-  BY_ID: byId("cards"),
+	CARDS: `/api/${VERSION}/cards`,
+	BY_ID: byId("cards"),
 };
 
 export const getAccountEndpoint = (typeAccount: TypeAccount): string | null => {
-  if (!TypeAccountEnum.options.includes(typeAccount)) {
-    throw new Error("Not valid account.");
-  }
-  return `${USER_ENDPOINTS.PROFILE}?account=${typeAccount}`;
+	if (!TypeAccountEnum.options.includes(typeAccount)) {
+		throw new Error("Not valid account.");
+	}
+	return `${USER_ENDPOINTS.PROFILE}?account=${typeAccount}`;
 };
