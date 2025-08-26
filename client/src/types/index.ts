@@ -1,18 +1,17 @@
-export type Task = {
+export interface Task {
 	id: string;
 	content: string;
 	description?: string;
-};
+}
 
-export type Column = {
+export interface Column {
 	id: string;
 	title: string;
 	items: Task[];
-};
+	isVisible: boolean;
+}
 
-export type BoardData = {
-	columns: {
-		[key: string]: Column;
-	};
+export interface BoardData {
+	columns: Record<string, Column>;
 	columnOrder: string[];
-};
+}
