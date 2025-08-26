@@ -3,14 +3,22 @@ import { NavLink } from "react-router-dom";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
-import { login } from "./service";
 import type { Credentials } from "./types";
+import { useLoginAction, useUiResetError } from "../../store/hooks";
+import { useAppSelector } from "../../store";
+import { getUi } from "../../store/selectors";
 
 export const LoginPage = () => {
+	const loginAction = useLoginAction();
+	const uiResetErrorAction = useUiResetError();
+	const { pending: isFetching, error } = useAppSelector(getUi);
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
 	});
+
+	const { email, password } = formData;
+	const disabled = !email || !password || isFetching;
 
 	const validateEmail = (email: string): boolean => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -52,7 +60,7 @@ export const LoginPage = () => {
 			return;
 		}
 
-		await login(formData);
+		await loginAction(formData);
 
 		// Si ambas validaciones pasan, mostrar el mensaje de éxito
 		toast.custom((t) => (
@@ -72,6 +80,17 @@ export const LoginPage = () => {
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
 							Iniciar Sesión
 						</h1>
+						{error && (
+							<div
+								className="rounded border border-red-200 bg-red-50 px-3 py-2 text-center text-sm text-red-600"
+								role="alert"
+								onClick={() => {
+									uiResetErrorAction();
+								}}
+							>
+								{error.message}
+							</div>
+						)}
 						<p className="text-text-body mt-2 text-center text-sm">
 							¿No tienes una cuenta?{" "}
 							<NavLink
@@ -134,6 +153,7 @@ export const LoginPage = () => {
 						<div>
 							<button
 								type="submit"
+								disabled={disabled}
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 							>
 								Iniciar Sesión

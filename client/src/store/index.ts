@@ -1,57 +1,17 @@
-import { createStore, applyMiddleware } from "redux";
-import rootReducer from "./reducer";
+import { combineReducers, createStore, applyMiddleware } from "redux";
+import * as reducers from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { composeWithDevTools } from "@redux-devtools/extension";
 import * as thunk from "redux-thunk";
 import type { Actions } from "./actions";
-import type { State } from "./reducer";
+import * as auth from "../pages/login/service";
 import type { createBrowserRouter } from "react-router";
-import type { Credentials } from "./actions";
 
-const api = {
-	auth: {
-		login: async (credentials: Credentials) => {
-			// Simulación de llamada a API de login
-			return new Promise((resolve, reject) => {
-				setTimeout(() => {
-					if (
-						credentials.username === "user" &&
-						credentials.password === "pass"
-					) {
-						resolve({ success: true });
-					} else {
-						reject(new Error("Invalid credentials from API mock"));
-					}
-				}, 500);
-			});
-		},
-		logout: async () => {
-			// Simulación de llamada a API de logout
-			return new Promise((resolve) => setTimeout(resolve, 200));
-		},
-	},
-	boards: {
-		getBoard: async (boardId: string) => {
-			/* ... */
-		},
-		createColumn: async (column: any) => {
-			/* ... */
-		},
-		createTask: async (task: any) => {
-			/* ... */
-		},
-		updateTask: async (taskId: string, updates: any) => {
-			/* ... */
-		},
-		deleteTask: async (taskId: string) => {
-			/* ... */
-		},
-	},
-};
+const rootReducer = combineReducers(reducers);
 type Router = ReturnType<typeof createBrowserRouter>;
 
 export type ExtraArgument = {
-	api: typeof api;
+	api: { auth: typeof auth };
 	router: Router;
 };
 
@@ -73,7 +33,7 @@ const failureRedirects = (router: Router) => (store) => (next) => (action) => {
 };
 
 export default function configureStore(
-	preloadedState: Partial<State>,
+	preloadedState: Partial<reducers.State>,
 	router: Router,
 ) {
 	const store = createStore(
@@ -81,8 +41,8 @@ export default function configureStore(
 		preloadedState as never,
 		composeWithDevTools(
 			applyMiddleware(
-				thunk.withExtraArgument<State, Actions, ExtraArgument>({
-					api: api,
+				thunk.withExtraArgument<reducers.State, Actions, ExtraArgument>({
+					api: { auth },
 					router,
 				}),
 				failureRedirects(router),

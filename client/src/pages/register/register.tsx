@@ -1,5 +1,5 @@
 import { Page } from "../../components/layout/page";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import type { User } from "./types";
 import toast from "react-hot-toast";
 import { useState, type ChangeEvent, type FormEvent } from "react";
@@ -7,12 +7,18 @@ import { CustomToast } from "../../components/CustomToast";
 import { register } from "./service";
 
 export const RegisterPage = () => {
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState<User>({
 		name: "",
 		email: "",
 		password: "",
 		confirmPassword: "",
 	});
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const { name, email, password, confirmPassword } = formData;
+	const disabled =
+		!name || !email || !password || !confirmPassword || isSubmitting;
 
 	const validateEmail = (email: string): boolean => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -29,8 +35,9 @@ export const RegisterPage = () => {
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setIsSubmitting(true);
 
-		if (!validateEmail(formData.email)) {
+		if (!validateEmail(email)) {
 			toast.custom((t) => (
 				<CustomToast
 					message="Por favor, introduce una dirección de correo válida."
@@ -38,13 +45,11 @@ export const RegisterPage = () => {
 					type="error"
 				/>
 			));
+			setIsSubmitting(false);
 			return;
 		}
 
-		if (
-			formData.password.trim() === "" ||
-			formData.confirmPassword.trim() === ""
-		) {
+		if (password.trim() === "" || confirmPassword.trim() === "") {
 			toast.custom((t) => (
 				<CustomToast
 					message="La contraseña no puede estar vacía."
@@ -52,30 +57,47 @@ export const RegisterPage = () => {
 					type="error"
 				/>
 			));
+			setIsSubmitting(false);
 			return;
 		}
 
-		if (formData.password.trim() !== formData.confirmPassword.trim()) {
+		if (password.trim() !== confirmPassword.trim()) {
 			toast.custom((t) => (
 				<CustomToast
-					message="La contraseñas son diferentes."
+					message="Las contraseñas no coinciden."
 					t={t}
 					type="error"
 				/>
 			));
+			setIsSubmitting(false);
 			return;
 		}
 
-		await register(formData);
+		try {
+			await register(formData);
 
-		// Si ambas validaciones pasan, mostrar el mensaje de éxito
-		toast.custom((t) => (
-			<CustomToast
-				message="Formulario enviado con éxito!"
-				t={t}
-				type="success"
-			/>
-		));
+			toast.custom((t) => (
+				<CustomToast
+					message="Registro exitoso! Redirigiendo a la página de inicio de sesión."
+					t={t}
+					type="success"
+				/>
+			));
+
+			setTimeout(() => {
+				navigate("/login");
+			}, 2000);
+		} catch (error) {
+			const errorMessage =
+				error instanceof Error
+					? error.message
+					: "Ha ocurrido un error inesperado durante el registro.";
+			toast.custom((t) => (
+				<CustomToast message={errorMessage} t={t} type="error" />
+			));
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	return (
@@ -116,6 +138,7 @@ export const RegisterPage = () => {
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
 									placeholder="Nombre completo"
 									onChange={handleChange}
+									value={name}
 								/>
 							</div>
 							<div className="mt-3">
@@ -131,6 +154,7 @@ export const RegisterPage = () => {
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
 									placeholder="Correo electrónico"
 									onChange={handleChange}
+									value={email}
 								/>
 							</div>
 
@@ -147,6 +171,7 @@ export const RegisterPage = () => {
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
 									placeholder="Contraseña"
 									onChange={handleChange}
+									value={password}
 								/>
 							</div>
 							<div className="mt-3">
@@ -162,6 +187,7 @@ export const RegisterPage = () => {
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
 									placeholder="Confirmar contraseña"
 									onChange={handleChange}
+									value={confirmPassword}
 								/>
 							</div>
 						</div>
@@ -169,9 +195,10 @@ export const RegisterPage = () => {
 						<div>
 							<button
 								type="submit"
+								disabled={disabled}
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 							>
-								Registrarse
+								{isSubmitting ? "Registrando..." : "Registrarse"}
 							</button>
 						</div>
 					</form>
