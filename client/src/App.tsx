@@ -3,7 +3,7 @@ import { Layout } from "./components/layout/layout";
 import { HomePage } from "./pages/home";
 import { NotFound } from "./pages/not-found";
 import { LoginPage } from "./pages/login/login";
-import { RegisterPage } from "./pages/register";
+import { RegisterPage } from "./pages/register/register";
 import Board from "./components/Board";
 
 function App() {
