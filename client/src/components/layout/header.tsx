@@ -1,7 +1,10 @@
 import { NavLink } from "react-router-dom";
 import React from "react";
+import { useTranslation } from "react-i18next";
+import LanguageToggle from "../hooks/useLangToggle";
 
 export const Header: React.FC = () => {
+	const { t } = useTranslation();
 	return (
 		<header className="bg-background-card flex items-center justify-between px-6 py-4 shadow-sm md:px-12">
 			<div className="flex items-center space-x-8">
@@ -20,40 +23,27 @@ export const Header: React.FC = () => {
 							></path>
 						</svg>
 						<span className="text-text-heading text-2xl font-bold">
-							Flowkan
+							{t("Flowkan")}
 						</span>
 					</div>
 				</NavLink>
 
 				<nav className="text-text-body hidden space-x-6 md:flex">
 					<a href="#" className="hover:border-accent hover:border-b-2">
-						Características
+						{t("Características")}
 					</a>
 					<a href="#" className="hover:border-accent hover:border-b-2">
-						Soluciones
+						{t("Soluciones")}
 					</a>
 					<a href="#" className="hover:border-accent hover:border-b-2">
-						Precios
+						{t("Precios")}
 					</a>
 				</nav>
 			</div>
 
 			<div className="flex items-center space-x-4">
 				<div className="flex items-center space-x-3">
-					<button className="hover:bg-background-light-grey text-text-body rounded-full p-2">
-						<svg
-							className="h-5 w-5"
-							fill="currentColor"
-							viewBox="0 0 20 20"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								fillRule="evenodd"
-								d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 8a1 1 0 000 2h4a1 1 0 100-2H7zm-3 4a1 1 0 011-1h6a1 1 0 010 2H5a1 1 0 01-1-1zm3 4a1 1 0 011-1h2a1 1 0 010 2H8a1 1 0 01-1-1z"
-								clipRule="evenodd"
-							></path>
-						</svg>
-					</button>
+					<LanguageToggle />
 				</div>
 
 				<div className="flex space-x-2">
@@ -67,7 +57,7 @@ export const Header: React.FC = () => {
 							}`
 						}
 					>
-						Login
+						{t("Login")}
 					</NavLink>
 					<NavLink
 						to="/register"
@@ -79,7 +69,7 @@ export const Header: React.FC = () => {
 							}`
 						}
 					>
-						Registro
+						{t("Registro")}
 					</NavLink>
 				</div>
 			</div>

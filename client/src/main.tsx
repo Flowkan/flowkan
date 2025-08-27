@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import "../src/lib/i18nextHandlers.ts"
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
