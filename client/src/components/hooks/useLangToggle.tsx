@@ -1,48 +1,57 @@
-import { useState } from "react";
-import i18n from "../../lib/i18nextHandlers";
-
-const LANGUAGES = {
-  es: { code: "es", label: "ES", flag: "🇪🇸" },
-  en: { code: "en", label: "EN", flag: "🇬🇧" },
-};
+import { LangSwitch } from "../ui/LangSwitch";
 
 export default function LanguageToggleButton() {
-  const [open, setOpen] = useState(false);
-  const currentLang = i18n.language.startsWith("en") ? "en" : "es";
+	const {
+		open,
+		setOpen,
+		LANGUAGES,
+		changeLanguage,
+		selectedLanguage,
+		selectedLangCode,
+	} = LangSwitch();
 
-  const changeLanguage = (lang: "es" | "en") => {
-    i18n.changeLanguage(lang);
-    setOpen(false);
-  };
+	return (
+		<div className="relative">
+			<button
+				onClick={() => setOpen(!open)}
+				aria-expanded={open}
+				className="hover:bg-background-light-grey text-text-body flex items-center gap-2 rounded-full px-3 py-2"
+			>
+				{selectedLanguage && (
+					<>
+						<span className="text-xl">
+							<img
+								src={selectedLanguage.flag}
+								alt={`Bandera de ${selectedLanguage.label}`}
+								width={32}
+							/>
+						</span>
+						<span className="font-medium">{selectedLanguage.label}</span>
+					</>
+				)}
+			</button>
 
-  return (
-    <div className="relative">
-      {/* Botón principal con bandera y código */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="hover:bg-background-light-grey text-text-body rounded-full px-3 py-2 flex items-center gap-2"
-      >
-        <span className="text-xl">{LANGUAGES[currentLang].flag}</span>
-        <span className="font-medium">{LANGUAGES[currentLang].label}</span>
-      </button>
-
-      {/* Desplegable */}
-      {open && (
-        <div className="absolute right-0 mt-2 w-22 rounded border bg-white shadow-md z-10">
-          {(Object.keys(LANGUAGES) as Array<"es" | "en">).map((key) => (
-            <button
-              key={key}
-              onClick={() => changeLanguage(key)}
-              className={`flex w-full items-center gap-2 px-3 py-2 hover:bg-gray-100 ${
-                currentLang === key ? "font-bold bg-gray-100" : ""
-              }`}
-            >
-              <span className="text-xl">{LANGUAGES[key].flag}</span>
-              <span className="font-medium">{LANGUAGES[key].label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+			{open && (
+				<div className="absolute right-0 z-10 mt-2 w-28 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+					{LANGUAGES.map(({ code, flag, label }) => {
+						const isActive = selectedLangCode === code;
+						return (
+							<button
+								key={code}
+								onClick={() => changeLanguage(code)}
+								className={`flex w-full items-center gap-3 px-4 py-2 text-left transition-colors duration-150 hover:bg-gray-100 ${
+									isActive ? "bg-gray-200 font-semibold" : ""
+								}`}
+							>
+								<span className="text-xl">
+									<img src={flag} alt={`Bandera de ${label}`} width={32} />
+								</span>
+								<span>{label}</span>
+							</button>
+						);
+					})}
+				</div>
+			)}
+		</div>
+	);
 }

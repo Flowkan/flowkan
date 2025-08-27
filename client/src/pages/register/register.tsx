@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { CustomToast } from "../../components/CustomToast";
 import { register } from "./service";
+import { t } from "i18next";
 
 export const RegisterPage = () => {
 	const [formData, setFormData] = useState<User>({
@@ -84,15 +85,15 @@ export const RegisterPage = () => {
 				<div className="bg-background-card w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl transition-all duration-300 hover:scale-[1.01]">
 					<div>
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
-							Crea tu Cuenta
+							{t("Crea tu Cuenta")}
 						</h1>
 						<p className="text-text-body mt-2 text-center text-sm">
-							¿Ya tienes una cuenta?{" "}
+							{t("¿Ya tienes una cuenta?")}
 							<NavLink
 								to="/login"
 								className="text-text-link hover:text-accent-hover font-medium"
 							>
-								Inicia sesión aquí
+								{t("Inicia sesión aquí")}
 							</NavLink>
 						</p>
 					</div>
@@ -105,7 +106,7 @@ export const RegisterPage = () => {
 						<div className="-space-y-px rounded-md shadow-sm">
 							<div>
 								<label htmlFor="full-name" className="sr-only">
-									Nombre Completo
+									{t("Nombre Completo")}
 								</label>
 								<input
 									id="full-name"
@@ -114,13 +115,13 @@ export const RegisterPage = () => {
 									autoComplete="name"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder="Nombre completo"
+									placeholder={t("Nombre completo")}
 									onChange={handleChange}
 								/>
 							</div>
 							<div className="mt-3">
 								<label htmlFor="email-address" className="sr-only">
-									Dirección de Email
+									{t("Dirección de Email")}
 								</label>
 								<input
 									id="email-address"
@@ -129,14 +130,14 @@ export const RegisterPage = () => {
 									autoComplete="email"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder="Correo electrónico"
+									placeholder={t("Correo electrónico")}
 									onChange={handleChange}
 								/>
 							</div>
 
 							<div className="mt-3">
 								<label htmlFor="password" className="sr-only">
-									Contraseña
+									{t("Contraseña")}
 								</label>
 								<input
 									id="password"
@@ -145,13 +146,13 @@ export const RegisterPage = () => {
 									autoComplete="new-password"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder="Contraseña"
+									placeholder={t("Contraseña")}
 									onChange={handleChange}
 								/>
 							</div>
 							<div className="mt-3">
 								<label htmlFor="confirm-password" className="sr-only">
-									Confirmar Contraseña
+									{t("Confirmar Contraseña")}
 								</label>
 								<input
 									id="confirm-password"
@@ -160,7 +161,7 @@ export const RegisterPage = () => {
 									autoComplete="new-password"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder="Confirmar contraseña"
+									placeholder={t("Confirmar contraseña")}
 									onChange={handleChange}
 								/>
 							</div>
@@ -171,7 +172,7 @@ export const RegisterPage = () => {
 								type="submit"
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 							>
-								Registrarse
+								{t("Registrarse")}
 							</button>
 						</div>
 					</form>
@@ -182,7 +183,7 @@ export const RegisterPage = () => {
 						</div>
 						<div className="relative flex justify-center text-sm">
 							<span className="bg-background-card text-text-placeholder px-2">
-								O continúa con
+								{t("O continúa con")}
 							</span>
 						</div>
 					</div>
