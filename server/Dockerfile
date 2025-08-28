@@ -6,9 +6,13 @@ RUN apt-get update -y && \
 
 WORKDIR /usr/src/app
 
-COPY . /usr/src/app
-
+COPY package*.json ./
+# Instala las dependencias primero para aprovechar el caché de capas de Docker
 RUN npm install
+
+COPY . .
+
+RUN npx prisma generate
 
 EXPOSE 3000
 

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "nodemon",
     "lint": "eslint .",
     "format": "prettier --write .",
     "db:migrate": "npx prisma migrate dev --name init",
