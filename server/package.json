@@ -1,15 +1,17 @@
 {
-  "name": "server",
+  "name": "flowkan-server",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "nodemon",
     "lint": "eslint .",
     "format": "prettier --write .",
     "db:migrate": "npx prisma migrate dev --name init",
     "db:init": "node init-db.js",
+    "db:docker-init": "docker exec -it flowkan-server node init-db.js",
+    "db:docker-migrate": "docker exec -it flowkan-server npm run db:migrate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,24 +19,26 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^6.12.0",
-    "bcrypt": "^6.0.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^5.1.0",
-    "express-validator": "^7.2.1",
-    "http-errors": "^2.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "pg": "^8.16.3"
+    "@prisma/client": "6.12.0",
+    "bcrypt": "6.0.0",
+    "cors": "2.8.5",
+    "dotenv": "16.4.7",
+    "express": "5.1.0",
+    "express-validator": "7.2.1",
+    "http-errors": "2.0.0",
+    "jsonwebtoken": "9.0.2",
+    "pg": "8.16.3",
+    "react": "19.1.1",
+    "uninstall": "0.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.31.0",
-    "eslint": "^9.31.0",
-    "eslint-config-prettier": "^10.1.5",
-    "globals": "^16.3.0",
-    "nodemon": "^3.1.10",
-    "prettier": "^3.6.2",
-    "prisma": "^6.12.0",
-    "typescript-eslint": "^8.37.0"
+    "@eslint/js": "9.31.0",
+    "eslint": "9.31.0",
+    "eslint-config-prettier": "10.1.5",
+    "globals": "16.3.0",
+    "nodemon": "3.1.10",
+    "prettier": "3.6.2",
+    "prisma": "6.12.0",
+    "typescript-eslint": "8.37.0"
   }
 }

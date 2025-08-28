@@ -9,8 +9,9 @@ services:
     depends_on:
       - db
     volumes:
-      - .:/usr/src/app
+      - .:/usr/src/app:delegated
       - /usr/src/app/node_modules
+      - ./src:/usr/src/app/src:delegated,consistency=cached
     command: npm run dev
     restart: always
 
