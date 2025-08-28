@@ -23,20 +23,20 @@ export const Header: React.FC = () => {
 							></path>
 						</svg>
 						<span className="text-text-heading text-2xl font-bold">
-							{t("Flowkan")}
+							{t("header.title","Flowkan")}
 						</span>
 					</div>
 				</NavLink>
 
 				<nav className="text-text-body hidden space-x-6 md:flex">
 					<a href="#" className="hover:border-accent hover:border-b-2">
-						{t("Características")}
+						{t("header.navbar.features", "Características")}
 					</a>
 					<a href="#" className="hover:border-accent hover:border-b-2">
-						{t("Soluciones")}
+						{t("header.navbar.solutions", "Soluciones")}
 					</a>
 					<a href="#" className="hover:border-accent hover:border-b-2">
-						{t("Precios")}
+						{t("header.navbar.prices", "Precios")}
 					</a>
 				</nav>
 			</div>
@@ -57,7 +57,7 @@ export const Header: React.FC = () => {
 							}`
 						}
 					>
-						{t("Login")}
+						{t("header.login", "Login")}
 					</NavLink>
 					<NavLink
 						to="/register"
@@ -69,7 +69,7 @@ export const Header: React.FC = () => {
 							}`
 						}
 					>
-						{t("Registro")}
+						{t("header.signup", "Registro")}
 					</NavLink>
 				</div>
 			</div>

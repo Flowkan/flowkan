@@ -10,13 +10,6 @@ export const options = {
 		list: ["i18next.t", "i18n.t", "t", "__"],
 		extensions: [".ts", ".tsx"],
 	},
-	trans: {
-		component: "Trans",
-		i18nKey: "i18nKey",
-		extensions: [".ts", ".tsx"],
-		defaultsKey: "defaults",
-		fallbackKey: (ns, value) => value,
-	},
 	lngs: ["es", "en"],
 	ns: ["translation"],
 	defaultLng: "es",
@@ -29,5 +22,5 @@ export const options = {
 	},
 	plural: true,
 	context: true,
-	defaultValue: (lng, ns, key) => key,
+	resetDefaultValue: false,
 };

@@ -1,57 +1,129 @@
 {
-  "Política de privacidad": "Política de privacidad",
-  "Términos y condiciones de servicio": "Términos y condiciones de servicio",
-  "Contacto": "Contacto",
-  "Email": "Email",
-  "Teléfono": "Teléfono",
-  "Dirección": "Dirección",
-  "Calle": "Calle",
-  "España": "España",
-  "Nuestros Clientes": "Nuestros Clientes",
-  "Todos los derechos reservados": "Todos los derechos reservados",
-  "Flowkan": "Flowkan",
-  "Características": "Características",
-  "Soluciones": "Soluciones",
-  "Precios": "Precios",
-  "Login": "Login",
-  "Registro": "Registro",
-  "Simplifica tus tareas, maximiza tu productividad": "Simplifica tus tareas, maximiza tu productividad",
-  "Tarjetas de Tareas, Listas, Tableros": "Tarjetas de Tareas, Listas, Tableros",
-  "Arrastrar y soltar": "Arrastrar y soltar",
-  "Saber Más": "Saber Más",
-  "Características Destacadas": "Características Destacadas",
-  "Kanban Board": "Kanban Board",
-  "Visualiza y gestiona tus tareas con facilidad": "Visualiza y gestiona tus tareas con facilidad",
-  "Colaboración": "Colaboración",
-  "Trabaja en equipo en tiempo real sin esfuerzo": "Trabaja en equipo en tiempo real sin esfuerzo",
-  "Seguimiento de Progreso": "Seguimiento de Progreso",
-  "Mantente al tanto del avance de tus proyectos": "Mantente al tanto del avance de tus proyectos",
-  "Calendario Integrado": "Calendario Integrado",
-  "Organiza tus plazos y eventos importantes": "Organiza tus plazos y eventos importantes",
-  "Lo que dicen nuestros usuarios": "Lo que dicen nuestros usuarios",
-  "Ana García, CEO en Empresa X": "Ana García, CEO en Empresa X",
-  "Juan Pérez, Product Manager": "Juan Pérez, Product Manager",
-  "Sofía Castro, Diseñadora UX": "Sofía Castro, Diseñadora UX",
-  "Cómo puedes usar nuestra plataforma": "Cómo puedes usar nuestra plataforma",
-  "Gestión de Proyectos": "Gestión de Proyectos",
-  "Más información": "Más información",
-  "Planificación de Eventos": "Planificación de Eventos",
-  "Seguimiento Personal": "Seguimiento Personal",
-  "Iniciar Sesión": "Iniciar Sesión",
-  "¿No tienes una cuenta?": "¿No tienes una cuenta?",
-  "Regístrate aquí": "Regístrate aquí",
-  "Dirección de Email": "Dirección de Email",
-  "Correo electrónico": "Correo electrónico",
-  "Contraseña": "Contraseña",
-  "¿Olvidaste tu contraseña?": "¿Olvidaste tu contraseña?",
-  "O continúa con": "O continúa con",
-  "Página no encontrada": "Página no encontrada",
-  "Lo sentimos, no pudimos encontrar la página que buscas": "Lo sentimos, no pudimos encontrar la página que buscas",
-  "Volver a inicio": "Volver a inicio",
-  "Crea tu Cuenta": "Crea tu Cuenta",
-  "¿Ya tienes una cuenta?": "¿Ya tienes una cuenta?",
-  "Inicia sesión aquí": "Inicia sesión aquí",
-  "Nombre Completo": "Nombre Completo",
-  "Confirmar contraseña": "Confirmar contraseña",
-  "Registrarse": "Registrarse"
+	"footer": {
+		"description": "FlowKan te ayuda a organizar tu trabajo y a tu equipo de forma visual y eficiente. Simplifica la gestión de proyectos y alcanza tus objetivos.",
+		"privacy": "Política de privacidad",
+		"terms": "Términos y condiciones de\tservicio",
+		"title": "Contacto",
+		"contact": {
+			"email": "Email",
+			"phone": "Teléfono"
+		},
+		"address": {
+			"label": "Dirección",
+			"street": "Calle",
+			"country": "España"
+		},
+		"clients": "Nuestros Clientes",
+		"copy": "Todos los derechos reservados"
+	},
+	"header": {
+		"title": "Flowkan",
+		"navbar": {
+			"features": "Características",
+			"solutions": "Soluciones",
+			"prices": "Precios"
+		},
+		"login": "Login",
+		"signup": "Registro"
+	},
+	"home": {
+		"banner": "Simplifica tus tareas, maximiza tu productividad",
+		"description": "Tarjetas de Tareas, Listas, Tableros",
+		"funtionality": "Arrastrar y soltar",
+		"more": "Saber Más",
+		"features": {
+			"title": "Características Destacadas",
+			"board": "Kanban Board",
+			"viewTask": "Visualiza y gestiona tus tareas con facilidad",
+			"collaborations": "Colaboración",
+			"jobsTeam": "Trabaja en equipo en tiempo real sin esfuerzo",
+			"follow": "Seguimiento de Progreso",
+			"upToDay": "Mantente al tanto del avance de tus proyectos",
+			"calendar": "Calendario Integrado",
+			"events": "Organiza tus plazos y eventos importantes"
+		},
+		"ourUsers": {
+			"title": "Lo que dicen nuestros usuarios"
+		}
+	},
+	"ourUsers": {
+		"feedbacks": {
+			"first": {
+				"text": "Esta aplicación ha transformado la forma en que gestionamos nuestros proyectos. ¡Absolutamente indispensable!",
+				"user": "Ana García, CEO en Empresa X"
+			},
+			"second": {
+				"text": "La interfaz es increíblemente intuitiva y las funciones de\tcolaboración son de otro nivel.",
+				"user": "Juan Pérez, Product Manager"
+			},
+			"third": {
+				"text": "Nunca pensé que la gestión de tareas pudiera ser tan sencilla y visualmente agradable.",
+				"user": "Sofía Castro, Diseñadora UX"
+			}
+		}
+	},
+	"docs": {
+		"title": "Cómo puedes usar nuestra plataforma",
+		"management": {
+			"title": "Gestión de Proyectos",
+			"message": "Desde pequeños equipos hasta grandes empresas, nuestra\therramienta se adapta a tus necesidades de gestión de\tproyectos complejos."
+		},
+		"planning": {
+			"title": "Planificación de Eventos",
+			"message": "Organiza cada detalle de tus eventos, desde la logística hasta\tlas invitaciones, de manera visual."
+		},
+		"monitoring": {
+			"title": "Seguimiento Personal",
+			"message": "Gestiona tus tareas personales, objetivos y hábitos diarios con un sistema Kanban fácil de usar."
+		}
+	},
+	"moreInformation": "Más información",
+	"login": {
+		"loginForm": {
+			"title": "Iniciar Sesión",
+			"question": "¿No tienes una cuenta?",
+			"signup": "Regístrate aquí",
+			"email": {
+				"emailLabel": "Dirección de Email",
+				"placeholder": "Correo electrónico"
+			},
+			"password": {
+				"passwordLabel": "Contraseña",
+				"passwordPlaceholder": "Contraseña"
+			},
+			"forgetPassword": "¿Olvidaste tu contraseña?",
+			"loginButton": "Iniciar Sesión",
+			"otherTypeLogin": "O continúa con"
+		}
+	},
+	"notFound": {
+		"title": "Página no encontrada",
+		"description": "Lo sentimos, no pudimos encontrar la página que buscas",
+		"backButton": "Volver a inicio"
+	},
+	"register": {
+		"registerForm": {
+			"title": "Crea tu Cuenta",
+			"question": "¿Ya tienes una cuenta?",
+			"login": "Inicia sesión aquí",
+			"name": {
+				"label": "Nombre Completo",
+				"placeholder": "Nombre completo"
+			},
+			"email": {
+				"label": "Dirección de Email",
+				"placeholder": "Correo electrónico"
+			},
+			"password": {
+				"label": "Contraseña",
+				"placeholder": "Contraseña"
+			},
+			"confirmPassword": {
+				"label": "Confirmar Contraseña",
+				"placeholder": "Confirmar contraseña"
+			},
+			"registerButton": "Registrarse",
+			"otherTypeRegister": "O continúa con"
+		}
+	}
 }

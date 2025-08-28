@@ -1,8 +1,9 @@
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import { Page } from "../components/layout/page";
 import React from "react";
 
 export const HomePage: React.FC = () => {
+	const { t } = useTranslation();
 	return (
 		<Page>
 			<main className="bg-background-page text-text-heading flex-grow">
@@ -10,15 +11,19 @@ export const HomePage: React.FC = () => {
 					<div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between lg:flex-row">
 						<div className="mb-10 text-center lg:mb-0 lg:w-1/2 lg:text-left">
 							<h1 className="mb-4 text-4xl leading-tight font-extrabold md:text-5xl">
-								{t("Simplifica tus tareas, maximiza tu productividad")}.
+								{t(
+									"home.banner",
+									"Simplifica tus tareas, maximiza tu productividad",
+								)}
+								.
 							</h1>
 							<p className="mb-6 text-xl font-light md:text-2xl">
-								{t("Tarjetas de Tareas, Listas, Tableros")}
+								{t("home.description", "Tarjetas de Tareas, Listas, Tableros")}
 								<br />
-								{t("Arrastrar y soltar")}
+								{t("home.funtionality", "Arrastrar y soltar")}
 							</p>
 							<button className="bg-primary text-text-on-accent hover:bg-primary-dark transform rounded-lg px-8 py-4 text-lg font-semibold shadow-lg transition duration-300 hover:scale-105">
-								{t("Saber Más")}
+								{t("home.more", "Saber Más")}
 							</button>
 						</div>
 
@@ -41,7 +46,7 @@ export const HomePage: React.FC = () => {
 				<section className="bg-background-light-grey px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-7xl text-center">
 						<h2 className="text-text-heading mb-12 text-3xl font-bold md:text-4xl">
-							{t("Características Destacadas")}
+							{t("home.features.title", "Características Destacadas")}
 						</h2>
 						<div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
 							<div className="bg-background-card flex transform flex-col items-center rounded-lg p-8 shadow-lg transition-transform duration-300 hover:-translate-y-2">
@@ -60,10 +65,14 @@ export const HomePage: React.FC = () => {
 									</svg>
 								</div>
 								<h3 className="text-text-heading mb-2 text-xl font-semibold">
-									{t("Kanban Board")}
+									{t("home.features.board", "Kanban Board")}
 								</h3>
 								<p className="text-text-body text-center">
-									{t("Visualiza y gestiona tus tareas con facilidad")}.
+									{t(
+										"home.features.viewTask",
+										"Visualiza y gestiona tus tareas con facilidad",
+									)}
+									.
 								</p>
 							</div>
 							<div className="bg-background-card flex transform flex-col items-center rounded-lg p-8 shadow-lg transition-transform duration-300 hover:-translate-y-2">
@@ -77,10 +86,14 @@ export const HomePage: React.FC = () => {
 									</svg>
 								</div>
 								<h3 className="text-text-heading mb-2 text-xl font-semibold">
-									{t("Colaboración")}
+									{t("home.features.collaborations", "Colaboración")}
 								</h3>
 								<p className="text-text-body text-center">
-									{t("Trabaja en equipo en tiempo real sin esfuerzo")}.
+									{t(
+										"home.features.jobsTeam",
+										"Trabaja en equipo en tiempo real sin esfuerzo",
+									)}
+									.
 								</p>
 							</div>
 							<div className="bg-background-card flex transform flex-col items-center rounded-lg p-8 shadow-lg transition-transform duration-300 hover:-translate-y-2">
@@ -98,10 +111,14 @@ export const HomePage: React.FC = () => {
 									</svg>
 								</div>
 								<h3 className="text-text-heading mb-2 text-xl font-semibold">
-									{t("Seguimiento de Progreso")}
+									{t("home.features.follow", "Seguimiento de Progreso")}
 								</h3>
 								<p className="text-text-body text-center">
-									{t("Mantente al tanto del avance de tus proyectos")}.
+									{t(
+										"home.features.upToDay",
+										"Mantente al tanto del avance de tus proyectos",
+									)}
+									.
 								</p>
 							</div>
 							<div className="bg-background-card flex transform flex-col items-center rounded-lg p-8 shadow-lg transition-transform duration-300 hover:-translate-y-2">
@@ -119,10 +136,14 @@ export const HomePage: React.FC = () => {
 									</svg>
 								</div>
 								<h3 className="text-text-heading mb-2 text-xl font-semibold">
-									{t("Calendario Integrado")}
+									{t("home.features.calendar", "Calendario Integrado")}
 								</h3>
 								<p className="text-text-body text-center">
-									{t("Organiza tus plazos y eventos importantes")}.
+									{t(
+										"home.features.events",
+										"Organiza tus plazos y eventos importantes",
+									)}
+									.
 								</p>
 							</div>
 						</div>
@@ -132,7 +153,7 @@ export const HomePage: React.FC = () => {
 				<section className="bg-background-page px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-7xl text-center">
 						<h2 className="text-text-heading mb-12 text-3xl font-bold md:text-4xl">
-							{t("Lo que dicen nuestros usuarios")}
+							{t("home.ourUsers.title", "Lo que dicen nuestros usuarios")}
 						</h2>
 						<div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 							<div className="bg-background-light-grey flex flex-col items-center rounded-lg p-6 shadow-md">
@@ -142,11 +163,17 @@ export const HomePage: React.FC = () => {
 									className="border-accent-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 								/>
 								<p className="text-text-body mb-4 italic">
-									"Esta aplicación ha transformado la forma en que
-									gestionamos nuestros proyectos. ¡Absolutamente indispensable!"
+									{t(
+										"ourUsers.feedbacks.first.text",
+										"Esta aplicación ha transformado la forma en que gestionamos nuestros proyectos. ¡Absolutamente indispensable!",
+									)}
 								</p>
 								<p className="text-text-heading font-semibold">
-									- {t("Ana García, CEO en Empresa X")}
+									-{" "}
+									{t(
+										"ourUsers.feedbacks.first.user",
+										"Ana García, CEO en Empresa X",
+									)}
 								</p>
 							</div>
 							<div className="bg-background-light-grey flex flex-col items-center rounded-lg p-6 shadow-md">
@@ -156,11 +183,18 @@ export const HomePage: React.FC = () => {
 									className="border-primary-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 								/>
 								<p className="text-text-body mb-4 italic">
-									"La interfaz es increíblemente intuitiva y las funciones de
-									colaboración son de otro nivel."
+									{" "}
+									{t(
+										"ourUsers.feedbacks.second.text",
+										"La interfaz es increíblemente intuitiva y las funciones de	colaboración son de otro nivel.",
+									)}
 								</p>
 								<p className="text-text-heading font-semibold">
-									- {t("Juan Pérez, Product Manager")}
+									-{" "}
+									{t(
+										"ourUsers.feedbacks.second.user",
+										"Juan Pérez, Product Manager",
+									)}
 								</p>
 							</div>
 							<div className="bg-background-light-grey flex flex-col items-center rounded-lg p-6 shadow-md">
@@ -170,11 +204,17 @@ export const HomePage: React.FC = () => {
 									className="border-primary-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 								/>
 								<p className="text-text-body mb-4 italic">
-									"Nunca pensé que la gestión de tareas pudiera ser tan sencilla
-									y visualmente agradable."
+									{t(
+										"ourUsers.feedbacks.third.text",
+										"Nunca pensé que la gestión de tareas pudiera ser tan sencilla y visualmente agradable.",
+									)}
 								</p>
 								<p className="text-text-heading font-semibold">
-									- {t("Sofía Castro, Diseñadora UX")}
+									-{" "}
+									{t(
+										"ourUsers.feedbacks.third.user",
+										"Sofía Castro, Diseñadora UX",
+									)}
 								</p>
 							</div>
 						</div>
@@ -184,53 +224,58 @@ export const HomePage: React.FC = () => {
 				<section className="bg-background-light-grey px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-7xl text-center">
 						<h2 className="text-text-heading mb-12 text-3xl font-bold md:text-4xl">
-							{t("Cómo puedes usar nuestra plataforma")}
+							{t("docs.title", "Cómo puedes usar nuestra plataforma")}
 						</h2>
 						<div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 							<div className="bg-background-card rounded-lg p-8 shadow-lg">
 								<h3 className="text-accent mb-4 text-2xl font-semibold">
-									{t("Gestión de Proyectos")}
+									{t("docs.management.title", "Gestión de Proyectos")}
 								</h3>
 								<p className="text-text-body mb-4">
-									Desde pequeños equipos hasta grandes empresas, nuestra
-									herramienta se adapta a tus necesidades de gestión de
-									proyectos complejos.
+									{t(
+										"docs.management.message",
+										"Desde pequeños equipos hasta grandes empresas, nuestra	herramienta se adapta a tus necesidades de gestión de	proyectos complejos.",
+									)}
 								</p>
 								<a
 									href="#"
 									className="text-accent font-semibold hover:underline"
 								>
-									{t("Más información")} &rarr;
+									{t("moreInformation", "Más información")} &rarr;
 								</a>
 							</div>
 							<div className="bg-background-card rounded-lg p-8 shadow-lg">
 								<h3 className="text-primary mb-4 text-2xl font-semibold">
-									{t("Planificación de Eventos")}
+									{t("docs.planning.title", "Planificación de Eventos")}
 								</h3>
 								<p className="text-text-body mb-4">
-									Organiza cada detalle de tus eventos, desde la logística hasta
-									las invitaciones, de manera visual.
+									{t(
+										"docs.planning.message",
+										"Organiza cada detalle de tus eventos, desde la logística hasta	las invitaciones, de manera visual.",
+									)}
 								</p>
 								<a
 									href="#"
 									className="text-primary font-semibold hover:underline"
 								>
-									{t("Más información")} &rarr;
+									{t("moreInformation", "Más información")} &rarr;
 								</a>
 							</div>
 							<div className="bg-background-card rounded-lg p-8 shadow-lg">
 								<h3 className="text-primary mb-4 text-2xl font-semibold">
-									{t("Seguimiento Personal")}
+									{t("docs.monitoring.title", "Seguimiento Personal")}
 								</h3>
 								<p className="text-text-body mb-4">
-									Gestiona tus tareas personales, objetivos y hábitos diarios
-									con un sistema Kanban fácil de usar.
+									{t(
+										"docs.monitoring.message",
+										"Gestiona tus tareas personales, objetivos y hábitos diarios con un sistema Kanban fácil de usar.",
+									)}
 								</p>
 								<a
 									href="#"
 									className="text-primary font-semibold hover:underline"
 								>
-									{t("Más información")} &rarr;
+									{t("moreInformation","Más información")} &rarr;
 								</a>
 							</div>
 						</div>

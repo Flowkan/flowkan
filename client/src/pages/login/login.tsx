@@ -5,9 +5,10 @@ import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import { login } from "./service";
 import type { Credentials } from "./types";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 export const LoginPage = () => {
+	const { t } = useTranslation();
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
@@ -71,15 +72,15 @@ export const LoginPage = () => {
 				<div className="bg-background-card w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl transition-all duration-300 hover:scale-[1.01]">
 					<div>
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
-							{t("Iniciar Sesión")}
+							{t("login.loginForm.title", "Iniciar Sesión")}
 						</h1>
 						<p className="text-text-body mt-2 text-center text-sm">
-							{t("¿No tienes una cuenta?")}
+							{t("login.loginForm.question", "¿No tienes una cuenta?")}
 							<NavLink
 								to="/register"
 								className="text-text-link hover:text-accent-hover font-medium"
 							>
-								{t("Regístrate aquí")}
+								{" "}{t("login.loginForm.signup", "Regístrate aquí")}
 							</NavLink>
 						</p>
 					</div>
@@ -91,7 +92,7 @@ export const LoginPage = () => {
 						<div className="-space-y-px rounded-md shadow-sm">
 							<div>
 								<label htmlFor="email-address" className="sr-only">
-									{t("Dirección de Email")}
+									{t("login.loginForm.email.emailLabel", "Dirección de Email")}
 								</label>
 								<input
 									id="email-address"
@@ -100,14 +101,14 @@ export const LoginPage = () => {
 									autoComplete="email"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder={t("Correo electrónico")}
+									placeholder={t("login.loginForm.email.placeholder", "Correo electrónico")}
 									onChange={handleChange}
 									value={formData.email}
 								/>
 							</div>
 							<div>
 								<label htmlFor="password" className="sr-only">
-									{t("Contraseña")}
+									{t("login.loginForm.password.passwordLabel", "Contraseña")}
 								</label>
 								<input
 									id="password"
@@ -116,7 +117,7 @@ export const LoginPage = () => {
 									autoComplete="current-password"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative mt-3 block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder={t("Contraseña")}
+									placeholder={t("login.loginForm.password.passwordPlaceholder", "Contraseña")}
 									onChange={handleChange}
 									value={formData.password}
 								/>
@@ -128,7 +129,7 @@ export const LoginPage = () => {
 									href="#"
 									className="text-text-link hover:text-accent-hover font-medium"
 								>
-									{t("¿Olvidaste tu contraseña?")}
+									{t("login.loginForm.forgetPassword", "¿Olvidaste tu contraseña?")}
 								</a>
 							</div>
 						</div>
@@ -137,7 +138,7 @@ export const LoginPage = () => {
 								type="submit"
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 							>
-								{t("Iniciar Sesión")}
+								{t("login.loginForm.loginButton", "Iniciar Sesión")}
 							</button>
 						</div>
 					</form>
@@ -147,7 +148,7 @@ export const LoginPage = () => {
 						</div>
 						<div className="relative flex justify-center text-sm">
 							<span className="bg-background-card text-text-placeholder px-2">
-								{t("O continúa con")}
+								{t("login.loginForm.otherTypeLogin", "O continúa con")}
 							</span>
 						</div>
 					</div>
