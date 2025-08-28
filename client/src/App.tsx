@@ -13,7 +13,18 @@ function App() {
 				<Route index element={<HomePage />} />
 				<Route path="login" element={<LoginPage />} />
 				<Route path="register" element={<RegisterPage />} />
-				<Route path="boards" element={<Board />} />
+				<Route
+					path="boards"
+					element={
+						//TODO: protected routes
+						/* <RequireAuth> */
+						<Board />
+						/* </RequireAuth> */
+					}
+				>
+					{/*TODO: add <BoardPage /> */}
+					<Route path=":id" />
+				</Route>
 				<Route path="not-found" element={<NotFound />} />
 				<Route path="*" element={<Navigate to="/not-found" />} />
 			</Route>
