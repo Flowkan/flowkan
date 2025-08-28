@@ -3,16 +3,24 @@ import { NavLink } from "react-router-dom";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
-import { login } from "./service";
 import type { Credentials } from "./types";
 import { useTranslation } from "react-i18next";
+import { useLoginAction, useUiResetError } from "../../store/hooks";
+import { useAppSelector } from "../../store";
+import { getUi } from "../../store/selectors";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
+	const loginAction = useLoginAction();
+	const uiResetErrorAction = useUiResetError();
+	const { pending: isFetching, error } = useAppSelector(getUi);
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
 	});
+
+	const { email, password } = formData;
+	const disabled = !email || !password || isFetching;
 
 	const validateEmail = (email: string): boolean => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -54,7 +62,7 @@ export const LoginPage = () => {
 			return;
 		}
 
-		await login(formData);
+		await loginAction(formData);
 
 		// Si ambas validaciones pasan, mostrar el mensaje de éxito
 		toast.custom((t) => (
@@ -74,13 +82,25 @@ export const LoginPage = () => {
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
 							{t("login.loginForm.title", "Iniciar Sesión")}
 						</h1>
+						{error && (
+							<div
+								className="rounded border border-red-200 bg-red-50 px-3 py-2 text-center text-sm text-red-600"
+								role="alert"
+								onClick={() => {
+									uiResetErrorAction();
+								}}
+							>
+								{error.message}
+							</div>
+						)}
 						<p className="text-text-body mt-2 text-center text-sm">
 							{t("login.loginForm.question", "¿No tienes una cuenta?")}
 							<NavLink
 								to="/register"
 								className="text-text-link hover:text-accent-hover font-medium"
 							>
-								{" "}{t("login.loginForm.signup", "Regístrate aquí")}
+								{" "}
+								{t("login.loginForm.signup", "Regístrate aquí")}
 							</NavLink>
 						</p>
 					</div>
@@ -101,7 +121,10 @@ export const LoginPage = () => {
 									autoComplete="email"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder={t("login.loginForm.email.placeholder", "Correo electrónico")}
+									placeholder={t(
+										"login.loginForm.email.placeholder",
+										"Correo electrónico",
+									)}
 									onChange={handleChange}
 									value={formData.email}
 								/>
@@ -117,7 +140,10 @@ export const LoginPage = () => {
 									autoComplete="current-password"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative mt-3 block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder={t("login.loginForm.password.passwordPlaceholder", "Contraseña")}
+									placeholder={t(
+										"login.loginForm.password.passwordPlaceholder",
+										"Contraseña",
+									)}
 									onChange={handleChange}
 									value={formData.password}
 								/>
@@ -129,13 +155,17 @@ export const LoginPage = () => {
 									href="#"
 									className="text-text-link hover:text-accent-hover font-medium"
 								>
-									{t("login.loginForm.forgetPassword", "¿Olvidaste tu contraseña?")}
+									{t(
+										"login.loginForm.forgetPassword",
+										"¿Olvidaste tu contraseña?",
+									)}
 								</a>
 							</div>
 						</div>
 						<div>
 							<button
 								type="submit"
+								disabled={disabled}
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 							>
 								{t("login.loginForm.loginButton", "Iniciar Sesión")}
