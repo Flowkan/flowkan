@@ -1,0 +1,5 @@
+{
+  "watch": ["./"],
+  "legacyWatch": true,
+  "ext": "js,json,ts,mjs"
+}

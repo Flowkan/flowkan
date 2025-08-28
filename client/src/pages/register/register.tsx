@@ -5,9 +5,11 @@ import toast from "react-hot-toast";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { CustomToast } from "../../components/CustomToast";
 import { register } from "./service";
+import { useTranslation } from "react-i18next";
 
 export const RegisterPage = () => {
 	const navigate = useNavigate();
+	const { t } = useTranslation();
 	const [formData, setFormData] = useState<User>({
 		name: "",
 		email: "",
@@ -106,15 +108,16 @@ export const RegisterPage = () => {
 				<div className="bg-background-card w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl transition-all duration-300 hover:scale-[1.01]">
 					<div>
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
-							Crea tu Cuenta
+							{t("register.registerForm.title", "Crea tu Cuenta")}
 						</h1>
 						<p className="text-text-body mt-2 text-center text-sm">
-							¿Ya tienes una cuenta?{" "}
+							{t("register.registerForm.question", "¿Ya tienes una cuenta?")}
 							<NavLink
 								to="/login"
 								className="text-text-link hover:text-accent-hover font-medium"
 							>
-								Inicia sesión aquí
+								{" "}
+								{t("register.registerForm.login", "Inicia sesión aquí")}
 							</NavLink>
 						</p>
 					</div>
@@ -127,7 +130,7 @@ export const RegisterPage = () => {
 						<div className="-space-y-px rounded-md shadow-sm">
 							<div>
 								<label htmlFor="full-name" className="sr-only">
-									Nombre Completo
+									{t("register.registerForm.name.label", "Nombre Completo")}
 								</label>
 								<input
 									id="full-name"
@@ -136,14 +139,17 @@ export const RegisterPage = () => {
 									autoComplete="name"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder="Nombre completo"
+									placeholder={t(
+										"register.registerForm.name.placeholder",
+										"Nombre completo",
+									)}
 									onChange={handleChange}
 									value={name}
 								/>
 							</div>
 							<div className="mt-3">
 								<label htmlFor="email-address" className="sr-only">
-									Dirección de Email
+									{t("register.registerForm.email.label", "Dirección de Email")}
 								</label>
 								<input
 									id="email-address"
@@ -152,7 +158,10 @@ export const RegisterPage = () => {
 									autoComplete="email"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder="Correo electrónico"
+									placeholder={t(
+										"register.registerForm.email.placeholder",
+										"Correo electrónico",
+									)}
 									onChange={handleChange}
 									value={email}
 								/>
@@ -160,7 +169,7 @@ export const RegisterPage = () => {
 
 							<div className="mt-3">
 								<label htmlFor="password" className="sr-only">
-									Contraseña
+									{t("register.registerForm.password.label", "Contraseña")}
 								</label>
 								<input
 									id="password"
@@ -169,14 +178,20 @@ export const RegisterPage = () => {
 									autoComplete="new-password"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder="Contraseña"
+									placeholder={t(
+										"register.registerForm.password.placeholder",
+										"Contraseña",
+									)}
 									onChange={handleChange}
 									value={password}
 								/>
 							</div>
 							<div className="mt-3">
 								<label htmlFor="confirm-password" className="sr-only">
-									Confirmar Contraseña
+									{t(
+										"register.registerForm.confirmPassword.label",
+										"Confirmar Contraseña",
+									)}
 								</label>
 								<input
 									id="confirm-password"
@@ -185,7 +200,10 @@ export const RegisterPage = () => {
 									autoComplete="new-password"
 									required
 									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder="Confirmar contraseña"
+									placeholder={t(
+										"register.registerForm.confirmPassword.placeholder",
+										"Confirmar contraseña",
+									)}
 									onChange={handleChange}
 									value={confirmPassword}
 								/>
@@ -199,6 +217,7 @@ export const RegisterPage = () => {
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 							>
 								{isSubmitting ? "Registrando..." : "Registrarse"}
+								{t("register.registerForm.registerButton", "Registrarse")}
 							</button>
 						</div>
 					</form>
@@ -209,7 +228,7 @@ export const RegisterPage = () => {
 						</div>
 						<div className="relative flex justify-center text-sm">
 							<span className="bg-background-card text-text-placeholder px-2">
-								O continúa con
+								{t("register.registerForm.otherTypeRegister", "O continúa con")}
 							</span>
 						</div>
 					</div>
