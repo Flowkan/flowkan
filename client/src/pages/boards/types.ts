@@ -3,6 +3,6 @@ export interface Board {
 	title: string;
 }
 
-export interface BoardData {
+export interface BoardsData {
 	title: string;
 }

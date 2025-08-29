@@ -1,20 +1,21 @@
-import { combineReducers, createStore, applyMiddleware } from "redux";
-import * as reducers from "./reducer";
+import { createStore, applyMiddleware } from "redux";
 import { useDispatch, useSelector } from "react-redux";
 import { composeWithDevTools } from "@redux-devtools/extension";
 import * as thunk from "redux-thunk";
 import type { Actions } from "./actions";
 import * as auth from "../pages/login/service";
 import * as boards from "../pages/boards/service";
+import * as board from "../pages/board/service";
 import type { createBrowserRouter } from "react-router";
+import { rootReducer, type RootState } from "./reducer";
 
-const rootReducer = combineReducers(reducers);
 type Router = ReturnType<typeof createBrowserRouter>;
 
 export type ExtraArgument = {
 	api: {
 		auth: typeof auth;
 		boards: typeof boards;
+		board: typeof board;
 	};
 	router: Router;
 };
@@ -37,7 +38,7 @@ const failureRedirects = (router: Router) => (store) => (next) => (action) => {
 };
 
 export default function configureStore(
-	preloadedState: Partial<reducers.State>,
+	preloadedState: Partial<RootState>,
 	router: Router,
 ) {
 	const store = createStore(
@@ -45,8 +46,8 @@ export default function configureStore(
 		preloadedState as never,
 		composeWithDevTools(
 			applyMiddleware(
-				thunk.withExtraArgument<reducers.State, Actions, ExtraArgument>({
-					api: { auth, boards },
+				thunk.withExtraArgument<RootState, Actions, ExtraArgument>({
+					api: { auth, boards, board },
 					router,
 				}),
 				failureRedirects(router),
@@ -58,7 +59,7 @@ export default function configureStore(
 
 export type AppStore = ReturnType<typeof configureStore>;
 export type AppGetState = AppStore["getState"];
-export type RootState = ReturnType<AppGetState>;
+
 export type AppDispatch = AppStore["dispatch"];
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();

@@ -1,4 +1,4 @@
-import type { RootState } from ".";
+import { type RootState } from "./reducer";
 
 export const hasLogged = (state: RootState) => state.auth;
 

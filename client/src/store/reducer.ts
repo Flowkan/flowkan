@@ -1,5 +1,7 @@
 import { type Actions, type ActionsRejected } from "./actions.ts";
 import type { Board } from "../pages/boards/types";
+import type { BoardData } from "../pages/board/types";
+import { combineReducers } from "redux";
 
 export type State = {
 	auth: boolean;
@@ -13,6 +15,7 @@ export type State = {
 		pending: boolean;
 		error: Error | null;
 	};
+	currentBoard: CurrentBoardState;
 };
 
 const defaultState: State = {
@@ -27,6 +30,23 @@ const defaultState: State = {
 		pending: false,
 		error: null,
 	},
+	currentBoard: {
+		data: null,
+		pending: false,
+		error: null,
+	},
+};
+
+export type CurrentBoardState = {
+	data: BoardData | null;
+	pending: boolean;
+	error: Error | null;
+};
+
+const defaultCurrentBoardState: CurrentBoardState = {
+	data: null,
+	pending: false,
+	error: null,
 };
 
 export function auth(
@@ -97,6 +117,156 @@ export function boards(
 	}
 }
 
+export function currentBoard(
+	state = defaultCurrentBoardState,
+	action: Actions,
+): CurrentBoardState {
+	switch (action.type) {
+		case "board/load/pending":
+		case "column/add/pending":
+		case "column/update/pending":
+		case "column/delete/pending":
+		case "task/add/pending":
+		case "task/update/pending":
+		case "task/delete/pending":
+			return { ...state, pending: true, error: null };
+		case "board/load/fulfilled":
+			return {
+				...state,
+				data: {
+					...action.payload,
+					columns: action.payload.columns ?? {},
+					columnOrder: action.payload.columnOrder ?? [],
+				},
+				pending: false,
+				error: null,
+			};
+		case "column/add/fulfilled": {
+			if (!state.data) return state;
+			const newColumn = action.payload;
+			return {
+				...state,
+				data: {
+					...state.data,
+					columns: {
+						...state.data.columns,
+						[newColumn.id]: newColumn,
+					},
+					columnOrder: [...state.data.columnOrder, newColumn.id],
+				},
+				pending: false,
+				error: null,
+			};
+		}
+		case "column/update/fulfilled": {
+			if (!state.data) return state;
+			const updatedColumn = action.payload;
+			return {
+				...state,
+				data: {
+					...state.data,
+					columns: {
+						...state.data.columns,
+						[updatedColumn.id]: updatedColumn,
+					},
+				},
+				pending: false,
+				error: null,
+			};
+		}
+		case "column/delete/fulfilled": {
+			if (!state.data) return state;
+			const columnIdToDelete = action.payload;
+			const newColumns = { ...state.data.columns };
+			delete newColumns[columnIdToDelete];
+			return {
+				...state,
+				data: {
+					...state.data,
+					columns: newColumns,
+					columnOrder: state.data.columnOrder.filter(
+						(id) => id !== columnIdToDelete,
+					),
+				},
+				pending: false,
+				error: null,
+			};
+		}
+		case "task/add/fulfilled": {
+			if (!state.data) return state;
+			const { columnId: addColumnId, task: newTask } = action.payload;
+			return {
+				...state,
+				data: {
+					...state.data,
+					columns: {
+						...state.data.columns,
+						[addColumnId]: {
+							...state.data.columns[addColumnId],
+							items: [...state.data.columns[addColumnId].items, newTask],
+						},
+					},
+				},
+				pending: false,
+				error: null,
+			};
+		}
+		case "task/update/fulfilled": {
+			if (!state.data) return state;
+			const { columnId: updateColumnId, task: updatedTask } = action.payload;
+			return {
+				...state,
+				data: {
+					...state.data,
+					columns: {
+						...state.data.columns,
+						[updateColumnId]: {
+							...state.data.columns[updateColumnId],
+							items: state.data.columns[updateColumnId].items.map((task) =>
+								task.id === updatedTask.id ? updatedTask : task,
+							),
+						},
+					},
+				},
+				pending: false,
+				error: null,
+			};
+		}
+		case "task/delete/fulfilled": {
+			if (!state.data) return state;
+			const { columnId: deleteColumnId, taskId: taskToDeleteId } =
+				action.payload;
+			return {
+				...state,
+				data: {
+					...state.data,
+					columns: {
+						...state.data.columns,
+						[deleteColumnId]: {
+							...state.data.columns[deleteColumnId],
+							items: state.data.columns[deleteColumnId].items.filter(
+								(task) => task.id !== taskToDeleteId,
+							),
+						},
+					},
+				},
+				pending: false,
+				error: null,
+			};
+		}
+		case "board/load/rejected":
+		case "column/add/rejected":
+		case "column/update/rejected":
+		case "column/delete/rejected":
+		case "task/add/rejected":
+		case "task/update/rejected":
+		case "task/delete/rejected":
+			return { ...state, error: action.payload, pending: false };
+		default:
+			return state;
+	}
+}
+
 function isRejectedAction(action: Actions): action is ActionsRejected {
 	return action.type.endsWith("/rejected");
 }
@@ -117,3 +287,12 @@ export function ui(state = defaultState.ui, action: Actions): State["ui"] {
 	}
 	return state;
 }
+
+export const rootReducer = combineReducers({
+	auth,
+	boards,
+	ui,
+	currentBoard,
+});
+
+export type RootState = ReturnType<typeof rootReducer>;

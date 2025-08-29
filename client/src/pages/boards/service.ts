@@ -1,13 +1,13 @@
 import { apiClient } from "../../api/client";
 import { BOARD_ENDPOINTS } from "../../utils/endpoints";
-import type { Board, BoardData } from "./types";
+import type { Board, BoardsData } from "./types";
 
 export const getBoards = async (): Promise<Board[]> => {
 	const response = await apiClient.get<Board[]>(BOARD_ENDPOINTS.BOARDS);
 	return response.data;
 };
 
-export const createBoard = async (boardData: BoardData): Promise<Board> => {
+export const createBoard = async (boardData: BoardsData): Promise<Board> => {
 	const response = await apiClient.post<Board>(
 		BOARD_ENDPOINTS.BOARDS,
 		boardData,
@@ -17,7 +17,7 @@ export const createBoard = async (boardData: BoardData): Promise<Board> => {
 
 export const updateBoard = async (
 	boardId: string,
-	boardData: BoardData,
+	boardData: BoardsData,
 ): Promise<Board> => {
 	const response = await apiClient.put<Board>(
 		`${BOARD_ENDPOINTS.BOARDS}/${boardId}`,
