@@ -1,11 +1,13 @@
-import type { BoardData } from "../types";
 import { type Actions, type ActionsRejected } from "./actions.ts";
+import type { Board } from "../pages/boards/types";
 
 export type State = {
 	auth: boolean;
 	boards: {
 		loaded: boolean;
-		data: BoardData | null;
+		data: Board[] | null;
+		pending: boolean;
+		error: Error | null;
 	};
 	ui: {
 		pending: boolean;
@@ -18,6 +20,8 @@ const defaultState: State = {
 	boards: {
 		loaded: false,
 		data: null,
+		pending: false,
+		error: null,
 	},
 	ui: {
 		pending: false,
@@ -34,6 +38,22 @@ export function auth(
 			return true;
 		case "auth/logout":
 			return false;
+		default:
+			return state;
+	}
+}
+
+export function boards(
+	state = defaultState.boards,
+	action: Actions,
+): State["boards"] {
+	switch (action.type) {
+		case "boards/load/pending":
+			return { ...state, pending: true, error: null };
+		case "boards/load/fulfilled":
+			return { ...state, loaded: true, data: action.payload, pending: false };
+		case "boards/load/rejected":
+			return { ...state, error: action.payload, pending: false };
 		default:
 			return state;
 	}
