@@ -54,6 +54,44 @@ export function boards(
 			return { ...state, loaded: true, data: action.payload, pending: false };
 		case "boards/load/rejected":
 			return { ...state, error: action.payload, pending: false };
+		case "boards/add/pending":
+			return { ...state, pending: true, error: null };
+		case "boards/add/fulfilled":
+			return {
+				...state,
+				data: state.data ? [...state.data, action.payload] : [action.payload],
+				pending: false,
+			};
+		case "boards/add/rejected":
+			return { ...state, error: action.payload, pending: false };
+
+		case "boards/update/pending":
+			return { ...state, pending: true, error: null };
+		case "boards/update/fulfilled":
+			return {
+				...state,
+				data: state.data
+					? state.data.map((board) =>
+							board.id === action.payload.id ? action.payload : board,
+						)
+					: state.data,
+				pending: false,
+			};
+		case "boards/update/rejected":
+			return { ...state, error: action.payload, pending: false };
+
+		case "boards/delete/pending":
+			return { ...state, pending: true, error: null };
+		case "boards/delete/fulfilled":
+			return {
+				...state,
+				data: state.data
+					? state.data.filter((board) => board.id !== action.payload)
+					: state.data,
+				pending: false,
+			};
+		case "boards/delete/rejected":
+			return { ...state, error: action.payload, pending: false };
 		default:
 			return state;
 	}

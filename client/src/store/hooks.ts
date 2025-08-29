@@ -1,9 +1,16 @@
 import { useAppDispatch, useAppSelector } from ".";
 import type { Credentials } from "../pages/login/types";
-import { authLogin, authLogout, resetError } from "./actions";
+import {
+	authLogin,
+	authLogout,
+	resetError,
+	boardsLoad,
+	boardsAdd,
+	boardsUpdate,
+	boardsDelete,
+} from "./actions";
 import { hasLogged } from "./selectors";
-import { boardsLoad } from "./actions";
-import type { Board } from "../pages/boards/types";
+import type { Board, BoardData } from "../pages/boards/types";
 
 export function useAuth() {
 	return useAppSelector(hasLogged);
@@ -29,6 +36,22 @@ export function useUiResetError() {
 export function useBoardsAction() {
 	const dispatch = useAppDispatch();
 	return () => dispatch(boardsLoad());
+}
+
+export function useBoardsAddAction() {
+	const dispatch = useAppDispatch();
+	return (boardData: BoardData) => dispatch(boardsAdd(boardData));
+}
+
+export function useBoardsUpdateAction() {
+	const dispatch = useAppDispatch();
+	return (boardId: string, boardData: BoardData) =>
+		dispatch(boardsUpdate(boardId, boardData));
+}
+
+export function useBoardsDeleteAction() {
+	const dispatch = useAppDispatch();
+	return (boardId: string) => dispatch(boardsDelete(boardId));
 }
 
 export function useBoards(): {
