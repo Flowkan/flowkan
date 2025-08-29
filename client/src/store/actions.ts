@@ -1,5 +1,6 @@
 import type { AppThunk } from ".";
 import type { Credentials } from "../pages/login/types";
+import type { Board } from "../pages/boards/types";
 
 type AuthLoginPending = {
 	type: "auth/login/pending";
@@ -22,6 +23,20 @@ type UiResetError = {
 	type: "ui/reset-error";
 };
 
+type BoardsLoadPending = {
+	type: "boards/load/pending";
+};
+
+type BoardsLoadFulfilled = {
+	type: "boards/load/fulfilled";
+	payload: Board[];
+};
+
+type BoardsLoadRejected = {
+	type: "boards/load/rejected";
+	payload: Error;
+};
+
 export const authLoginPending = (): AuthLoginPending => ({
 	type: "auth/login/pending",
 });
@@ -32,6 +47,20 @@ export const authLoginFulfilled = (): AuthLoginFulfilled => ({
 
 export const authLoginRejected = (error: Error): AuthLoginRejected => ({
 	type: "auth/login/rejected",
+	payload: error,
+});
+
+export const boardsLoadPending = (): BoardsLoadPending => ({
+	type: "boards/load/pending",
+});
+
+export const boardsLoadFulfilled = (boards: Board[]): BoardsLoadFulfilled => ({
+	type: "boards/load/fulfilled",
+	payload: boards,
+});
+
+export const boardsLoadRejected = (error: Error): BoardsLoadRejected => ({
+	type: "boards/load/rejected",
 	payload: error,
 });
 
@@ -59,6 +88,20 @@ export function authLogout(): AppThunk<Promise<void>> {
 	};
 }
 
+export function boardsLoad(): AppThunk<Promise<void>> {
+	return async function (dispatch, _getState, { api }) {
+		dispatch(boardsLoadPending());
+		try {
+			const boards = await api.boards.getBoards();
+			dispatch(boardsLoadFulfilled(boards));
+		} catch (error) {
+			if (error instanceof Error) {
+				dispatch(boardsLoadRejected(error));
+			}
+		}
+	};
+}
+
 export const resetError = (): UiResetError => ({
 	type: "ui/reset-error",
 });
@@ -68,6 +111,9 @@ export type Actions =
 	| AuthLoginFulfilled
 	| AuthLoginRejected
 	| AuthLogout
-	| UiResetError;
+	| UiResetError
+	| BoardsLoadPending
+	| BoardsLoadFulfilled
+	| BoardsLoadRejected;
 
-export type ActionsRejected = AuthLoginRejected;
+export type ActionsRejected = AuthLoginRejected | BoardsLoadRejected;
