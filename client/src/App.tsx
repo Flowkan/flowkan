@@ -32,6 +32,7 @@ const AuthRoute = ({ children, requireAuth, redirectTo }: AuthRouteProps) => {
 	);
 };
 
+/*  Precarga de skeletton */
 function LoginSkeleton() {
 	return (
 		<div className="bg-background flex min-h-screen items-center justify-center">
