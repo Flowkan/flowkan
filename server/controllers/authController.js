@@ -25,7 +25,7 @@ export class AuthController {
           if (err) {
             return next(err);
           }
-          res.json({ tokenJWT });
+          res.json({ accessToken: tokenJWT });
         },
       );
     } catch (err) {
