@@ -171,9 +171,15 @@ export function authLogout(): AppThunk<Promise<void>> {
 }
 
 export function boardsLoad(): AppThunk<Promise<void>> {
-	return async function (dispatch, _getState, { api }) {
-		dispatch(boardsLoadPending());
+	return async function (dispatch, getState, { api }) {
+		// if boards are already loaded in state, return them without reloading them
+		const state = getState();
+		if (state.boards.loaded) {
+			return;
+		}
+
 		try {
+			dispatch(boardsLoadPending());
 			const boards = await api.boards.getBoards();
 			dispatch(boardsLoadFulfilled(boards));
 		} catch (error) {
