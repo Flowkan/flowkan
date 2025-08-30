@@ -10,7 +10,7 @@ import {
 	boardsDelete,
 } from "./actions";
 import { hasLogged, selectBoards } from "./selectors";
-import type { Board, BoardData } from "../pages/boards/types";
+import type { BoardData } from "../pages/boards/types";
 import { useEffect } from "react";
 
 export function useAuth() {
