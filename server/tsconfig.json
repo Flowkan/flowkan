@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "module": "es2022",
+    "module": "commonjs",
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false,
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -13,8 +13,9 @@
     "resolveJsonModule": true
   },
   "include": [
-    "**/*.js",
-    "**/*.ts"
+    "src/**/*.js",
+    "src/**/*.ts",
+    "express.d.ts"
   ],
   "exclude": [
     "node_modules",

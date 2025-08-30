@@ -2,16 +2,16 @@
   "name": "flowkan-server",
   "version": "1.0.0",
   "main": "./index.js",
-  "type": "module",
+
   "scripts": {
-    "build": "tsc ./dist",
-    "start": "node src/index.js",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
     "lint": "eslint . --ext .js,.ts",
     "format": "prettier --write .",
     "db:migrate": "npx prisma migrate dev --name init",
     "db:init": "tsx src/init-db.ts",
-    "db:docker-init": "docker exec -it flowkan-server ts-node init-db.js",
+    "db:docker-init": "docker exec -it flowkan-server npm run db:init",
     "db:docker-migrate": "docker exec -it flowkan-server npm run db:migrate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,7 +30,8 @@
     "jsonwebtoken": "9.0.2",
     "pg": "8.16.3",
     "react": "19.1.1",
-    "uninstall": "0.0.0"
+    "uninstall": "0.0.0",
+    "zod": "4.1.5"
   },
   "devDependencies": {
     "@eslint/js": "9.31.0",
