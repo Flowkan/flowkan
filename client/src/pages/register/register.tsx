@@ -75,6 +75,16 @@ export const RegisterPage = () => {
 			return;
 		}
 
+		if(password.trim().length < 8) {
+			toast.custom((t) => (
+				<CustomToast
+					message="La contraseña debe ser de al menos 8 caracteres."
+					t={t}
+					type="error"
+				/>	
+			))
+		}
+
 		try {
 			await register(formData);
 
@@ -216,8 +226,7 @@ export const RegisterPage = () => {
 								disabled={disabled}
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 							>
-								{isSubmitting ? "Registrando..." : "Registrarse"}
-								{t("register.registerForm.registerButton", "Registrarse")}
+								{isSubmitting ? t("register.registerForm.registerButton.loading", "Registrando...") : t("register.registerForm.registerButton.pending", "Registrarse")}
 							</button>
 						</div>
 					</form>
