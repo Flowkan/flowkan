@@ -1,5 +1,5 @@
-import express from "express";
-import createError from "http-errors";
+import express, { NextFunction, Request, Response } from "express";
+import createError, { HttpError } from "http-errors";
 import cors from "cors";
 import boardRoutes from "./routes/boards.routes.js";
 import listRoutes from "./routes/list.routes.js";
@@ -18,14 +18,14 @@ app.use("/api/v1/boards", boardRoutes);
 app.use("/api/v1/lists", listRoutes);
 app.use("/api/v1/cards", cardRoutes);
 
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   if (!req.url.startsWith("/api")) {
     return res.status(404).send("Ruta no válida");
   }
   next(createError(404));
 });
 
-app.use((err, req, res, next) => {
+app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   if (req.url.startsWith("/api")) {
     res.status(err.status || 500).json({ error: err.message });
   } else {
