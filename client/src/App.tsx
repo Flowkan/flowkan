@@ -4,7 +4,7 @@ import { HomePage } from "./pages/home";
 import { NotFound } from "./pages/not-found";
 import { RegisterPage } from "./pages/register/register";
 import { Suspense, lazy, type ReactNode } from "react";
-import Board from "./pages/boards/Board.tsx";
+import Board from "./pages/boards/board.tsx";
 import { useAppSelector } from "./store";
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((module) => ({
