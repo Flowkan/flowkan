@@ -2,12 +2,10 @@ import { Router } from "express";
 import { CardController } from "../controllers/cardController.js";
 import CardModel from "../models/CardModel.js";
 import CardService from "../services/CardService.js";
-import prisma from "../config/db.js";
-import * as jwtAuth from "../middlewares/jwtAuthMiddleware.js";
-import {
-  validateCardCreate,
-  validateCardUpdate,
-} from "../validators/cardValidators.js";
+import prisma from "../config/db";
+import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
+import { validateCard } from "../validators/cardValidators";
+import { cardCreateSchema, cardUpdateSchema } from "../validators/cardSchema";
 
 const router = Router();
 
@@ -17,8 +15,8 @@ const controller = new CardController(service);
 
 router.get("/", jwtAuth.guard, controller.getAllCards);
 router.get("/:id", jwtAuth.guard, controller.getCard);
-router.post("/", jwtAuth.guard, validateCardCreate, controller.addCard);
-router.put("/:id", jwtAuth.guard, validateCardUpdate, controller.updateCard);
+router.post("/", jwtAuth.guard, validateCard(cardCreateSchema), controller.addCard);
+router.put("/:id", jwtAuth.guard, validateCard(cardUpdateSchema), controller.updateCard);
 router.delete("/:id", jwtAuth.guard, controller.deleteCard);
 
 export default router;
