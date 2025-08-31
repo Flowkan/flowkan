@@ -1,12 +1,16 @@
 import createHttpError from "http-errors";
 import jwt from "jsonwebtoken";
+import AuthService from "../services/AuthService";
+import { NextFunction, Request, Response } from "express";
+import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
 
 export class AuthController {
-  constructor(authService) {
+  private authService: AuthService;
+  constructor(authService: AuthService) {
     this.authService = authService;
   }
 
-  login = async (req, res, next) => {
+  login = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = await this.authService.validateCredentials(req.body);
 
@@ -14,9 +18,12 @@ export class AuthController {
         next(createHttpError(401, "Invalid credentials"));
         return;
       }
+      if (!process.env.JWT_SECRET) {
+        throw new Error("JWT_SECRET is not defined in environment variables");
+      }
 
       jwt.sign(
-        { user_id: user.id },
+        { user_id: user.id } satisfies JwtPayload,
         process.env.JWT_SECRET,
         {
           expiresIn: "1d",
@@ -29,22 +36,28 @@ export class AuthController {
         },
       );
     } catch (err) {
-      next(err);
+      next(err as Error);
     }
   };
 
-  register = async (req, res) => {
+  register = async (req: Request, res: Response) => {
     try {
       const newUser = await this.authService.register(req.body);
       res.status(201).json({ success: true, user: newUser });
     } catch (err) {
       console.log("error", err);
       // Prisma: Unique constraint failed
-      if (err.code === "P2002") {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "code" in err &&
+        (err as { code: string }).code === "P2002"
+      ) {
         res.status(400).json({
           success: false,
           message: "No se pudo completar el registro",
         });
+        return;
       }
 
       res
