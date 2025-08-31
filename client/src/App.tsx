@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, Outlet } from "react-router-dom";
 import { Layout } from "./components/layout/layout";
 import { HomePage } from "./pages/home";
 import { NotFound } from "./pages/not-found";
@@ -24,7 +24,7 @@ const AuthRoute = ({ children, requireAuth, redirectTo }: AuthRouteProps) => {
 	const isLogged = useAppSelector((state) => state.auth);
 	const location = useLocation();
 
-	const shouldAllow = requireAuth ? isLogged : !isLogged;
+	const shouldAllow = requireAuth ? isLogged : true;
 	const fallbackRoute = redirectTo ?? (requireAuth ? "/login" : "/boards");
 
 	return shouldAllow ? (
@@ -61,18 +61,12 @@ function App() {
 					path="boards"
 					element={
 						<AuthRoute requireAuth={true}>
-							<BoardsListPage />
+							<Outlet />
 						</AuthRoute>
 					}
 				>
-					<Route
-						path=":id"
-						element={
-							<AuthRoute requireAuth={true}>
-								<Board />
-							</AuthRoute>
-						}
-					/>
+					<Route index element={<BoardsListPage />} />
+					<Route path=":id" element={<Board />} />
 				</Route>
 				<Route path="not-found" element={<NotFound />} />
 				<Route path="*" element={<Navigate to="/not-found" />} />
