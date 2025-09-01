@@ -1,7 +1,6 @@
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { useBoardsAction } from "../../store/hooks";
 import { Page } from "../../components/layout/page";
-import LoginSkeleton from "../../components/ui/LoginSkeleton";
 
 const BoardsList = lazy(() => import("./boards-list"));
 
@@ -21,13 +20,8 @@ function BoardsListPage() {
 	return (
 		<Page title="Mis tableros">
 			<section>
-				{!boards.length ? (
-					<EmptyList />
-				) : (
-					<Suspense fallback={<LoginSkeleton />}>
-						<BoardsList list={boards} />
-					</Suspense>
-				)}
+				<h2 className="sr-only">Lista de tableros</h2>
+				{!boards.length ? <EmptyList /> : <BoardsList list={boards} />}
 			</section>
 		</Page>
 	);

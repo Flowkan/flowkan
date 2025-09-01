@@ -67,6 +67,7 @@ function App() {
 				>
 					<Route index element={<BoardsListPage />} />
 					<Route path=":id" element={<Board />} />
+					<Route path="new" />
 				</Route>
 				<Route path="not-found" element={<NotFound />} />
 				<Route path="*" element={<Navigate to="/not-found" />} />
