@@ -10,7 +10,7 @@ export class AuthController {
     this.authService = authService;
   }
 
-  login = async (req: Request, res: Response, next: NextFunction) => {
+  login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const user = await this.authService.validateCredentials(req.body);
 
@@ -40,29 +40,30 @@ export class AuthController {
     }
   };
 
-  register = async (req: Request, res: Response) => {
+  register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const newUser = await this.authService.register(req.body);
-      res.status(201).json({ success: true, user: newUser });
+      const { password, ...safeUser } = newUser;
+      res.status(201).json({ success: true, user: safeUser });
     } catch (err) {
       console.log("error", err);
-      // Prisma: Unique constraint failed
-      if (
-        typeof err === "object" &&
-        err !== null &&
-        "code" in err &&
-        (err as { code: string }).code === "P2002"
-      ) {
+      if (this.isPrismaUniqueConstraintError(err)) {
         res.status(400).json({
           success: false,
-          message: "No se pudo completar el registro",
+          message: "El email ya está registrado",
         });
         return;
       }
-
-      res
-        .status(500)
-        .json({ success: false, message: "Error al registrar usuario" });
+      next(createHttpError(500, "Error al registrar usuario"));
     }
   };
+  // Prisma: Unique constraint failed
+  private isPrismaUniqueConstraintError(err: unknown): boolean {
+    return (
+      typeof err === "object" &&
+      err !== null &&
+      "code" in err &&
+      (err as { code: string }).code === "P2002"
+    );
+  }
 }

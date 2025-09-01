@@ -1,5 +1,5 @@
 import { User } from "@prisma/client";
-import AuthModel, { RegisterParams, ValidateCredentialsParams } from "../models/AuthModel";
+import AuthModel, { RegisterParams, SafeUser, ValidateCredentialsParams } from "../models/AuthModel";
 
 class AuthService {
   private authModel: AuthModel;
@@ -7,15 +7,14 @@ class AuthService {
     this.authModel = authModel;
   }
 
-  async validateCredentials(data: ValidateCredentialsParams): Promise <User | null> {
+  async validateCredentials(data: ValidateCredentialsParams): Promise <SafeUser | null> {
     if(!data.email || !data.password) {
       throw new Error("Email and password are required");
     }
-
     return this.authModel.validateCredentials(data);
   }
 
-  async register(data: RegisterParams) {
+  async register(data: RegisterParams): Promise<User> {
     if (!data.name || !data.email || !data.password) {
       throw new Error("All fieldsets are required. (Name, email and password)")
     }
