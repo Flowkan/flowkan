@@ -66,18 +66,20 @@
 		"title": "How you can use our platform",
 		"management": {
 			"title": "Project Management",
-			"message": "From small teams to large companies, our tool adapts to your complex project management needs."
+			"message": "From small teams to large companies, our tool adapts to your complex project management needs.",
+      "moreInfo": "More Information"
 		},
 		"planning": {
 			"title": "Event Planning",
-			"message": "Organize every detail of your events, from logistics to invitations, in a visual way."
+			"message": "Organize every detail of your events, from logistics to invitations, in a visual way.",
+      "moreInfo": "More Information"
 		},
 		"monitoring": {
 			"title": "Personal Tracking",
-			"message": "Manage your personal tasks, goals, and daily habits with an easy-to-use Kanban system."
+			"message": "Manage your personal tasks, goals, and daily habits with an easy-to-use Kanban system.",
+      "moreInfo": "More Information"
 		}
 	},
-	"moreInformation": "More Information",
 	"login": {
 		"loginForm": {
 			"title": "Login",

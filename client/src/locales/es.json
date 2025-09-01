@@ -66,18 +66,20 @@
     "title": "Cómo puedes usar nuestra plataforma",
     "management": {
       "title": "Gestión de Proyectos",
-      "message": "Desde pequeños equipos hasta grandes empresas, nuestra\therramienta se adapta a tus necesidades de gestión de\tproyectos complejos."
+      "message": "Desde pequeños equipos hasta grandes empresas, nuestra\therramienta se adapta a tus necesidades de gestión de\tproyectos complejos.",
+      "moreInfo": "Más información"
     },
     "planning": {
       "title": "Planificación de Eventos",
-      "message": "Organiza cada detalle de tus eventos, desde la logística hasta\tlas invitaciones, de manera visual."
+      "message": "Organiza cada detalle de tus eventos, desde la logística hasta\tlas invitaciones, de manera visual.",
+      "moreInfo": "Más información"
     },
     "monitoring": {
       "title": "Seguimiento Personal",
-      "message": "Gestiona tus tareas personales, objetivos y hábitos diarios con un sistema Kanban fácil de usar."
+      "message": "Gestiona tus tareas personales, objetivos y hábitos diarios con un sistema Kanban fácil de usar.",
+      "moreInfo": "Más información"
     }
   },
-  "moreInformation": "Más información",
   "login": {
     "loginForm": {
       "title": "Iniciar Sesión",

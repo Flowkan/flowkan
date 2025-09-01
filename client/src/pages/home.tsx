@@ -241,7 +241,7 @@ export const HomePage: React.FC = () => {
 									href="#"
 									className="text-accent font-semibold hover:underline"
 								>
-									{t("moreInformation", "Más información")} &rarr;
+									{t("docs.management.moreInfo", "Más información")} &rarr;
 								</a>
 							</div>
 							<div className="bg-background-card rounded-lg p-8 shadow-lg">
@@ -258,7 +258,7 @@ export const HomePage: React.FC = () => {
 									href="#"
 									className="text-primary font-semibold hover:underline"
 								>
-									{t("moreInformation", "Más información")} &rarr;
+									{t("docs.planning.moreInfo", "Más información")} &rarr;
 								</a>
 							</div>
 							<div className="bg-background-card rounded-lg p-8 shadow-lg">
@@ -275,7 +275,7 @@ export const HomePage: React.FC = () => {
 									href="#"
 									className="text-primary font-semibold hover:underline"
 								>
-									{t("moreInformation","Más información")} &rarr;
+									{t("docs.monitoring.moreInfo","Más información")} &rarr;
 								</a>
 							</div>
 						</div>
