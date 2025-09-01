@@ -34,11 +34,6 @@ export function useUiResetError() {
 	};
 }
 
-/* export function useBoardsAction() {
-	const dispatch = useAppDispatch();
-	return () => dispatch(boardsLoad());
-} */
-
 export function useBoardsAction() {
 	const dispatch = useAppDispatch();
 	const boards = useAppSelector(selectBoards);
@@ -65,12 +60,3 @@ export function useBoardsDeleteAction() {
 	const dispatch = useAppDispatch();
 	return (boardId: string) => dispatch(boardsDelete(boardId));
 }
-
-/* export function useBoards(): {
-	data: Board[] | null;
-	loaded: boolean;
-	pending: boolean;
-	error: Error | null;
-} {
-	return useAppSelector((state) => state.boards);
-} */
