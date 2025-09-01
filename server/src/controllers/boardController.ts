@@ -1,19 +1,27 @@
+import { Request, Response } from "express";
+import BoardService from "../services/BoardService";
+import { Prisma } from "@prisma/client";
+import { BoardWithRelations } from "../models/BoardModel";
+
 export class BoardController {
-  constructor(boardService) {
+  private boardService: BoardService;
+  
+  constructor(boardService: BoardService) {
     this.boardService = boardService;
   }
 
-  getAll = async (req, res) => {
+  getAll = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const boards = await this.boardService.getAllBoards(userId);
+      const boards: BoardWithRelations[] = await this.boardService.getAllBoardsByUserId(userId);
       res.json(boards);
     } catch (err) {
       res.status(500).send("Error al obtener los tableros");
     }
   };
 
-  get = async (req, res) => {
+
+  get = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
       const boardId = req.params.id;
@@ -25,10 +33,10 @@ export class BoardController {
     }
   };
 
-  add = async (req, res) => {
+  add = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const { title } = req.body;
+      const { title }: { title: string } = req.body;
       const board = await this.boardService.add({ userId, title });
       res.status(201).json(board);
     } catch (err) {
@@ -36,12 +44,12 @@ export class BoardController {
     }
   };
 
-  update = async (req, res) => {
+  update = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
       const boardId = req.params.id;
-      const { title } = req.body;
-      const data = { title };
+      const { title }: { title?: string } = req.body;
+      const data: Prisma.BoardUpdateInput = { title };
       const board = await this.boardService.update({ userId, boardId, data });
       res.status(200).json(board);
     } catch (err) {
@@ -49,7 +57,7 @@ export class BoardController {
     }
   };
 
-  delete = async (req, res) => {
+  delete = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
       const boardId = req.params.id;
