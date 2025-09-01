@@ -1,9 +1,14 @@
+import { NextFunction, Request, Response } from "express";
+import ListService from "../services/ListService";
+import createHttpError from "http-errors";
+
 export class ListController {
-  constructor(listService) {
+  private listService: ListService
+  constructor(listService: ListService) {
     this.listService = listService;
   }
 
-  getAllLists = async (req, res) => {
+  getAllLists = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
       const boardId = Number(req.body.boardId);
@@ -15,7 +20,7 @@ export class ListController {
     }
   };
 
-  getList = async (req, res) => {
+  getList = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
       const listId = Number(req.params.id);
@@ -27,7 +32,7 @@ export class ListController {
     }
   };
 
-  addList = async (req, res) => {
+  addList = async (req: Request, res: Response) => {
     try {
       const { title, boardId, position } = req.body;
       const list = await this.listService.createList({
@@ -41,7 +46,7 @@ export class ListController {
     }
   };
 
-  updateList = async (req, res) => {
+  updateList = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.apiUserId;
       const listId = Number(req.params.id);
@@ -49,24 +54,24 @@ export class ListController {
       const list = await this.listService.updateList(userId, listId, data);
       res.json(list);
     } catch (err) {
-      if (err.message.includes("permiso")) {
-        return res.status(403).json({ message: err.message });
+      if (err instanceof Error && err.message.includes("permiso")) {
+        return next(createHttpError(403, err.message ||  "Error al actualizar la lista"))
       }
-      res.status(500).send("Error al actualizar la lista");
+      next(err);
     }
   };
 
-  deleteList = async (req, res) => {
+  deleteList = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.apiUserId;
       const listId = Number(req.params.id);
       await this.listService.deleteList(userId, listId);
       res.status(204).send();
     } catch (err) {
-      if (err.message.includes("permiso")) {
-        return res.status(403).json({ message: err.message });
+      if (err instanceof Error && err.message.includes("permiso")) {
+        return next(createHttpError(403, err.message ||  "Error al eliminar la lista"));
       }
-      res.status(500).send("Error al eliminar la lista");
+      next(err);
     }
   };
 }

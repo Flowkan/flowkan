@@ -1,9 +1,20 @@
+import { Prisma, PrismaClient } from "@prisma/client";
+
+
+export interface CardCreateParams {
+  title: string;
+  description: string;
+  position: number;
+  listId: number;
+}
+
 export default class CardModel {
-  constructor(prisma) {
+  private prisma: PrismaClient;
+  constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
 
-  async getAll(listId, userId) {
+  async getAll(listId: number, userId: number) {
     const list = await this.prisma.list.findUnique({
       where: { id: listId },
       select: { boardId: true },
@@ -19,7 +30,7 @@ export default class CardModel {
     });
   }
 
-  async getById(cardId, userId) {
+  async getById(cardId: number, userId: number) {
     const card = await this.prisma.card.findUnique({
       where: { id: cardId },
       include: {
@@ -37,7 +48,7 @@ export default class CardModel {
     return card;
   }
 
-  async create({ title, description, position, listId }) {
+  async create({ title, description, position, listId }: CardCreateParams) {
     return this.prisma.card.create({
       data: {
         title,
@@ -48,20 +59,20 @@ export default class CardModel {
     });
   }
 
-  async update(cardId, data) {
+  async update(cardId: number, data: Prisma.ListUpdateInput) {
     return this.prisma.card.update({
       where: { id: cardId },
       data,
     });
   }
 
-  async delete(cardId) {
+  async delete(cardId: number) {
     return this.prisma.card.delete({
       where: { id: cardId },
     });
   }
 
-  async isUserBoardMember(userId, cardId) {
+  async isUserBoardMember(userId: number, cardId: number) {
     const card = await this.prisma.card.findUnique({
       where: { id: cardId },
       select: {
@@ -76,7 +87,7 @@ export default class CardModel {
     return this._isUserBoardMember(userId, card.list.boardId);
   }
 
-  async _isUserBoardMember(userId, boardId) {
+  async _isUserBoardMember(userId: number, boardId: number) {
     const board = await this.prisma.board.findFirst({
       where: {
         id: boardId,

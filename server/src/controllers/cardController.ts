@@ -1,9 +1,14 @@
+import { NextFunction, Request, Response } from "express";
+import CardService from "../services/CardService";
+import createHttpError from "http-errors";
+
 export class CardController {
-  constructor(cardService) {
+  private cardService: CardService
+  constructor(cardService: CardService) {
     this.cardService = cardService;
   }
 
-  getAllCards = async (req, res) => {
+  getAllCards = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
       const listId = Number(req.body.listId);
@@ -14,7 +19,7 @@ export class CardController {
     }
   };
 
-  getCard = async (req, res) => {
+  getCard = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
       const cardId = Number(req.params.id);
@@ -26,7 +31,7 @@ export class CardController {
     }
   };
 
-  addCard = async (req, res) => {
+  addCard = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { title, description, position, listId } = req.body;
       const card = await this.cardService.createCard({
@@ -37,11 +42,14 @@ export class CardController {
       });
       res.status(201).json(card);
     } catch (err) {
-      res.status(500).send("Error al crear la tarjeta");
+      if (err instanceof Error) {
+        return next(createHttpError(500, err.message || "Error al crear la tarjeta"));
+      }
+      return next(createHttpError(500, "Error desconocido al crear la tarjeta"))
     }
   };
 
-  updateCard = async (req, res) => {
+  updateCard = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.apiUserId;
       const cardId = Number(req.params.id);
@@ -49,24 +57,24 @@ export class CardController {
       const card = await this.cardService.updateCard(userId, cardId, data);
       res.json(card);
     } catch (err) {
-      if (err.message.includes("permiso")) {
-        return res.status(403).json({ message: err.message });
+      if (err instanceof Error && err.message.includes("permiso")) {
+        return next(createHttpError(403, err.message ||  "Error al actualizar la tarjeta"));
       }
-      res.status(500).send("Error al actualizar la tarjeta");
+      next(err);
     }
   };
 
-  deleteCard = async (req, res) => {
+  deleteCard = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.apiUserId;
       const cardId = Number(req.params.id);
       await this.cardService.deleteCard(userId, cardId);
       res.status(204).send();
     } catch (err) {
-      if (err.message.includes("permiso")) {
-        return res.status(403).json({ message: err.message });
+      if (err instanceof Error && err.message.includes("permiso")) {
+        return next(createHttpError(403, err.message ? err.message :  "Error al eliminar la lista"));
       }
-      res.status(500).send("Error al eliminar la tarjeta");
+      next(err);
     }
   };
 }

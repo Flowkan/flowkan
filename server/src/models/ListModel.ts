@@ -1,9 +1,19 @@
+import { List, Prisma, PrismaClient } from "@prisma/client";
+
+
+export interface ListCreateParams {
+  title: string;
+  boardId: number;
+  position: number;
+}
+
 export default class ListModel {
-  constructor(prisma) {
+  private prisma: PrismaClient;
+  constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
 
-  async getAll(boardId, userId) {
+  async getAll(boardId: number, userId: number) {
     const isMember = await this._isUserBoardMember(userId, boardId);
     if (!isMember) return [];
 
@@ -15,7 +25,7 @@ export default class ListModel {
     });
   }
 
-  async getById(listId, userId) {
+  async getById(listId: number, userId: number) {
     const list = await this.prisma.list.findUnique({
       where: { id: listId },
       include: {
@@ -32,7 +42,7 @@ export default class ListModel {
     return list;
   }
 
-  async create({ title, boardId, position }) {
+  async create({ title, boardId, position }: ListCreateParams): Promise<List> {
     return this.prisma.list.create({
       data: {
         title,
@@ -42,14 +52,14 @@ export default class ListModel {
     });
   }
 
-  async update(listId, data) {
+  async update(listId: number, data: Prisma.ListUpdateInput): Promise<List> {
     return this.prisma.list.update({
       where: { id: listId },
       data,
     });
   }
 
-  async delete(listId) {
+  async delete(listId: number) {
     await this.prisma.card.deleteMany({
       where: { listId },
     });
@@ -59,7 +69,7 @@ export default class ListModel {
     });
   }
 
-  async isUserBoardMember(userId, listId) {
+  async isUserBoardMember(userId: number, listId: number) {
     const list = await this.prisma.list.findUnique({
       where: { id: listId },
       select: { boardId: true },
@@ -70,7 +80,7 @@ export default class ListModel {
     return this._isUserBoardMember(userId, list.boardId);
   }
 
-  async _isUserBoardMember(userId, boardId) {
+  async _isUserBoardMember(userId: number, boardId: number) {
     const board = await this.prisma.board.findFirst({
       where: {
         id: boardId,
