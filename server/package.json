@@ -8,8 +8,6 @@
     "dev": "nodemon",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "db:migrate": "npx prisma migrate dev --name init",
-    "db:init": "node init-db.js",
     "db:docker-init": "docker exec -it flowkan-server node init-db.js",
     "db:docker-migrate": "docker exec -it flowkan-server npm run db:migrate",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -27,6 +25,7 @@
     "express-validator": "7.2.1",
     "http-errors": "2.0.0",
     "jsonwebtoken": "9.0.2",
+    "multer": "2.0.2",
     "pg": "8.16.3",
     "react": "19.1.1",
     "uninstall": "0.0.0"

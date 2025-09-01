@@ -16,13 +16,14 @@ class AuthModel {
     return isValid ? user : null;
   }
 
-  async register({ name, email, password }) {
+  async register({ name, email, password, photo }) {
     const hashedPassword = await bcrypt.hash(password, 10);
     return this.prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
+        photo,
       },
     });
   }
