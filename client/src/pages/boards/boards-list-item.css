@@ -1,0 +1,17 @@
+.board-item {
+	display: flex;
+	justify-content: space-between;
+	border-width: 1px;
+	border-radius: 5px;
+	padding: 8px 25px;
+	margin: 10px 0;
+
+	.board-link {
+		align-self: center;
+		font-weight: bold;
+		text-decoration: none;
+		&:hover {
+			color: var(--color-primary);
+		}
+	}
+}

@@ -5,6 +5,7 @@ import { useState } from "react";
 import EditButton from "../../components/ui/edit-button";
 import ConfirmDelete from "../../components/ui/confirm-delete";
 import { useBoardsDeleteAction } from "../../store/hooks";
+import "./boards-list-item.css";
 
 interface BoardsItemProps {
 	board: Board;
@@ -31,10 +32,10 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 				</Link>
 				<div className="edit-trash">
 					<div className="edit-container">
-						<TrashButton showConfirm={handleShowConfirm} />
+						<EditButton />
 					</div>
 					<div className="trash-container">
-						<EditButton />
+						<TrashButton showConfirm={handleShowConfirm} />
 					</div>
 				</div>
 			</li>
