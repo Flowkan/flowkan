@@ -6,7 +6,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
-    "lint": "eslint . --ext .js,.ts",
+    "lint": "eslint .",
     "format": "prettier --write .",
     "db:migrate": "npx prisma migrate dev --name init",
     "db:init": "tsx src/init-db.ts",
