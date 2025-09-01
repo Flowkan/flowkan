@@ -5,6 +5,12 @@ export type Task = {
 	position: number;
 };
 
+export type TaskData = {
+	title: string;
+	description?: string;
+	position: number;
+};
+
 export type Column = {
 	id: string;
 	title: string;
