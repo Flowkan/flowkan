@@ -52,7 +52,7 @@ function App() {
 				<Route
 					path="register"
 					element={
-						<AuthRoute requireAuth={false}>
+						<AuthRoute requireAuth={false} redirectTo="/login">
 							<RegisterPage />
 						</AuthRoute>
 					}

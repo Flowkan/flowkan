@@ -139,5 +139,9 @@
 	"confirm": {
 		"yes": "SI",
 		"no": "NO"
+	},
+	"emptylist": {
+		"p1": "Todavía no tienes ningún tablero.",
+		"p2": "¿Quieres crear uno?"
 	}
 }

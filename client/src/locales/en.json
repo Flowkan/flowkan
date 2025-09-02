@@ -139,5 +139,9 @@
 	"confirm": {
 		"yes": "YES",
 		"no": "NO"
+	},
+	"emptylist": {
+		"p1": "You don't have any boards yet.",
+		"p2": "Would you like to create one?"
 	}
 }

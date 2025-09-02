@@ -8,11 +8,12 @@ import { Page } from "../../components/layout/page";
 import { useTranslation } from "react-i18next";
 
 function EmptyList() {
+	const { t } = useTranslation();
 	return (
 		<div className="empty-list">
 			<div className="p-empty-list">
-				<p>Todavía no tienes ningún tablero.</p>
-				<p>¿Quieres crear uno?</p>
+				<p>{t("emptylist.p1", "Todavía no tienes ningún tablero.")}</p>
+				<p>{t("emptylist.p2", "¿Quieres crear uno?")}</p>
 			</div>
 			<AddButton />
 		</div>
