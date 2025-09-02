@@ -5,6 +5,7 @@ import AuthService from "../services/AuthService.js";
 import { AuthController } from "../controllers/authController.js";
 import { validateUserFields } from "../validators/authValidator";
 import { loginSchema, registerSchema } from "../validators/authSchema";
+import upload from "../lib/uploadConfigure";
 
 const router = Router();
 
@@ -14,6 +15,11 @@ const controller = new AuthController(service);
 
 router.post("/login", validateUserFields(loginSchema), controller.login);
 
-router.post("/register", validateUserFields(registerSchema), controller.register);
+router.post(
+  "/register",
+  upload.single("photo"),
+  validateUserFields(registerSchema),
+  controller.register,
+);
 
 export default router;

@@ -8,6 +8,7 @@ export interface ValidateCredentialsParams {
 
 export interface RegisterParams extends ValidateCredentialsParams {
   name: string;
+  photo?: string | null;
 }
 
 export type SafeUser = Omit<User, "password">;
@@ -35,13 +36,14 @@ class AuthModel {
     return safeUser as SafeUser;
   }
 
-  async register({ name, email, password }: RegisterParams): Promise<User> {
+  async register({ name, email, password, photo }: RegisterParams): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10);
     return this.prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
+        photo,
       },
     });
   }

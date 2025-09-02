@@ -32,7 +32,15 @@ export class AuthController {
           if (err) {
             return next(err);
           }
-          res.json({ accessToken: tokenJWT });
+          res.json({
+            accessToken: tokenJWT,
+            user: {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              photo: user.photo || null,
+            },
+          });
         },
       );
     } catch (err) {
@@ -43,6 +51,10 @@ export class AuthController {
   register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const newUser = await this.authService.register(req.body);
+      let photoUrl = null;
+      if (req.file) {
+        photoUrl = `/uploads/${req.file.filename}`;
+      }
       const { password, ...safeUser } = newUser;
       res.status(201).json({ success: true, user: safeUser });
     } catch (err) {

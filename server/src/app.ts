@@ -16,6 +16,7 @@ app.disable("x-powered-by");
 app.use(cors());
 
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/boards", boardRoutes);

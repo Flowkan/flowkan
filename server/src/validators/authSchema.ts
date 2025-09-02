@@ -10,6 +10,7 @@ export const registerSchema = z.object({
     .nonempty("Debe informar la contraseña")
     .min(8, "La contraseña debe tener al menos 8 caracteres"),
   name: z.string().nonempty("Debe indicar un nombre").trim(),
+  photo: z.string().optional().nullable(),
 });
 
 export const loginSchema = z.object({

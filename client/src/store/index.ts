@@ -5,13 +5,17 @@ import { composeWithDevTools } from "@redux-devtools/extension";
 import * as thunk from "redux-thunk";
 import type { Actions } from "./actions";
 import * as auth from "../pages/login/service";
+import * as boards from "../pages/boards/service";
 import type { createBrowserRouter } from "react-router";
 
 const rootReducer = combineReducers(reducers);
 type Router = ReturnType<typeof createBrowserRouter>;
 
 export type ExtraArgument = {
-	api: { auth: typeof auth };
+	api: {
+		auth: typeof auth;
+		boards: typeof boards;
+	};
 	router: Router;
 };
 
@@ -42,7 +46,7 @@ export default function configureStore(
 		composeWithDevTools(
 			applyMiddleware(
 				thunk.withExtraArgument<reducers.State, Actions, ExtraArgument>({
-					api: { auth },
+					api: { auth, boards },
 					router,
 				}),
 				failureRedirects(router),
