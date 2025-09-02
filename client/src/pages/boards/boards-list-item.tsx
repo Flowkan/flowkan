@@ -26,7 +26,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 					handleHideMessage={handleHideMessage}
 				/>
 			)}
-			<li key={board.id} className="board-item">
+			<li className="board-item">
 				<Link to={`/boards/${board.id}`} className="board-link">
 					<div className="board-title">{board.title}</div>
 				</Link>

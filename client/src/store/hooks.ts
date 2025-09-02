@@ -10,7 +10,7 @@ import {
 	boardsDelete,
 } from "./actions";
 import { hasLogged, selectBoards } from "./selectors";
-import type { BoardData } from "../pages/boards/types";
+import type { Board, BoardData } from "../pages/boards/types";
 import { useEffect } from "react";
 
 export function useAuth() {
@@ -34,7 +34,7 @@ export function useUiResetError() {
 	};
 }
 
-export function useBoardsAction() {
+export function useBoardsAction(): Board[] {
 	const dispatch = useAppDispatch();
 	const boards = useAppSelector(selectBoards);
 

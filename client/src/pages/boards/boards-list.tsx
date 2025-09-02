@@ -1,15 +1,10 @@
-import type { Board } from "./types";
 import BoardsItem from "./boards-list-item";
 import { Suspense } from "react";
 import LoginSkeleton from "../../components/ui/LoginSkeleton";
 import AddButton from "../../components/ui/add-button";
-import "./board-list.css";
+import "./boards-list.css";
 import { useBoardsAction } from "../../store/hooks";
 import { Page } from "../../components/layout/page";
-
-interface BoardsListProps {
-	list: Board[];
-}
 
 function EmptyList() {
 	return (
@@ -42,7 +37,7 @@ const BoardsList = () => {
 							<Suspense fallback={<LoginSkeleton />}>
 								<ul className="boards-list">
 									{boards.map((board) => (
-										<BoardsItem board={board} />
+										<BoardsItem key={board.id} board={board} />
 									))}
 								</ul>
 							</Suspense>
