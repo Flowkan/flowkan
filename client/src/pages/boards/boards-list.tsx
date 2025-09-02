@@ -5,6 +5,7 @@ import AddButton from "../../components/ui/add-button";
 import "./boards-list.css";
 import { useBoardsAction } from "../../store/hooks";
 import { Page } from "../../components/layout/page";
+import { useTranslation } from "react-i18next";
 
 function EmptyList() {
 	return (
@@ -20,9 +21,10 @@ function EmptyList() {
 
 const BoardsList = () => {
 	const boards = useBoardsAction();
+	const { t } = useTranslation();
 
 	return (
-		<Page title="Mis tableros">
+		<Page title={t("boardslist.title", "Mis tableros")}>
 			<section className="boards-list-container">
 				<h2 className="sr-only">Lista de tableros</h2>
 				{!boards.length ? (

@@ -125,5 +125,12 @@
 			"registerButton": "Sign Up",
 			"otherTypeRegister": "Or continue with"
 		}
-	}
+	},
+	"boardslist": {
+		"title": "My boards"
+	},
+	"boardsitem": {
+		"confirm": "Are you sure you want to delete this board?"
+	},
+	"addbtn": "New board"
 }

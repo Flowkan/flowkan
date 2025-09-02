@@ -125,5 +125,12 @@
 			"registerButton": "Registrarse",
 			"otherTypeRegister": "O continúa con"
 		}
-	}
+	},
+	"boardslist": {
+		"title": "Mis tableros"
+	},
+	"boardsitem": {
+		"confirm": "¿Seguro que quieres borrar el tablero?"
+	},
+	"addbtn": "Nuevo tablero"
 }
