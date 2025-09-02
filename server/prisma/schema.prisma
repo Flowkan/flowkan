@@ -28,7 +28,7 @@ model User {
 model Board {
   id        Int           @id @default(autoincrement())
   title     String
-  owner     User          @relation("BoardOwner", fields: [ownerId], references: [id])
+  owner     User          @relation("BoardOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId   Int
   members   BoardMember[]
   lists     List[]
@@ -36,9 +36,9 @@ model Board {
 }
 
 model BoardMember {
-  board   Board @relation(fields: [boardId], references: [id])
+  board   Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId Int
-  user    User  @relation(fields: [userId], references: [id])
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  Int
   role    String @default("member")
   @@id([boardId, userId])
@@ -47,7 +47,7 @@ model BoardMember {
 model List {
   id      Int     @id @default(autoincrement())
   title   String
-  board   Board   @relation(fields: [boardId], references: [id])
+  board   Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId Int
   cards   Card[]
   position Int
@@ -57,7 +57,7 @@ model Card {
   id          Int          @id @default(autoincrement())
   title       String
   description String?
-  list        List         @relation(fields: [listId], references: [id])
+  list        List         @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId      Int
   position    Int
   labels      CardLabel[]
@@ -68,9 +68,9 @@ model Card {
 }
 
 model CardAssignee {
-  card   Card @relation(fields: [cardId], references: [id])
+  card   Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
   cardId Int
-  user   User @relation("CardAssignees", fields: [userId], references: [id])
+  user   User @relation("CardAssignees", fields: [userId], references: [id], onDelete: Cascade)
   userId Int
   @@id([cardId, userId]) // Clave compuesta
 }
@@ -79,15 +79,15 @@ model Label {
   id      Int     @id @default(autoincrement())
   name    String
   color   String
-  board   Board   @relation(fields: [boardId], references: [id])
+  board   Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId Int
   cards   CardLabel[]
 }
 
 model CardLabel {
-  card   Card @relation(fields: [cardId], references: [id])
+  card   Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
   cardId Int
-  label  Label @relation(fields: [labelId], references: [id])
+  label  Label @relation(fields: [labelId], references: [id], onDelete: Cascade)
   labelId Int
   @@id([cardId, labelId])
 }
@@ -95,9 +95,9 @@ model CardLabel {
 model Comment {
   id        Int      @id @default(autoincrement())
   content   String
-  card      Card     @relation(fields: [cardId], references: [id])
+  card      Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
   cardId    Int
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
