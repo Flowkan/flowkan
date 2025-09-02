@@ -4,7 +4,6 @@ import { NextFunction, Request, Response } from "express";
 
 export interface JwtPayload {
   user_id: number;
-  photo?: string | null
 }
 
 export function guard(req: Request, res: Response, next: NextFunction) {
