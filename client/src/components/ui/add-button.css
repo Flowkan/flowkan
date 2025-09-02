@@ -11,4 +11,8 @@
 	.p-add {
 		padding-right: 2px;
 	}
+
+	&:hover {
+		background-color: #3264c2;
+	}
 }

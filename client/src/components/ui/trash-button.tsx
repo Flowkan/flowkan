@@ -1,4 +1,5 @@
 import TrashIcon from "../icons/trash-icon.svg";
+import "../../pages/boards/boards-list-item.css";
 
 interface TrashButtonProps {
 	showConfirm: () => void;

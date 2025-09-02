@@ -31,10 +31,10 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 					<div className="board-title">{board.title}</div>
 				</Link>
 				<div className="edit-trash">
-					<div className="edit-container">
+					<div className="edit-icon container">
 						<EditButton />
 					</div>
-					<div className="trash-container">
+					<div className="trash-icon container">
 						<TrashButton showConfirm={handleShowConfirm} />
 					</div>
 				</div>

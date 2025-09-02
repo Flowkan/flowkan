@@ -1,4 +1,5 @@
 import EditIcon from "../icons/edit-icon.svg";
+import "../../pages/boards/boards-list-item.css";
 
 const EditButton = () => {
 	return (

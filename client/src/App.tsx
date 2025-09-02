@@ -7,7 +7,7 @@ import { Suspense, lazy, type ReactNode } from "react";
 import Board from "./pages/boards/board.tsx";
 import { useAppSelector } from "./store";
 import LoginSkeleton from "./components/ui/LoginSkeleton.tsx";
-import BoardsListPage from "./pages/boards/boards-list-page.tsx";
+import BoardsList from "./pages/boards/boards-list.tsx";
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((module) => ({
 		default: module.LoginPage,
@@ -65,7 +65,7 @@ function App() {
 						</AuthRoute>
 					}
 				>
-					<Route index element={<BoardsListPage />} />
+					<Route index element={<BoardsList />} />
 					<Route path=":id" element={<Board />} />
 					<Route path="new" />
 				</Route>
