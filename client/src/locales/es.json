@@ -132,5 +132,9 @@
 	"boardsitem": {
 		"confirm": "¿Seguro que quieres borrar el tablero?"
 	},
-	"addbtn": "Nuevo tablero"
+	"addbtn": "Nuevo tablero",
+	"confirm": {
+		"yes": "SI",
+		"no": "NO"
+	}
 }
