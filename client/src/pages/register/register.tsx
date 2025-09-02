@@ -2,7 +2,7 @@ import { Page } from "../../components/layout/page";
 import { NavLink, useNavigate } from "react-router-dom";
 import type { User } from "./types";
 import toast from "react-hot-toast";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { CustomToast } from "../../components/CustomToast";
 import { register } from "./service";
 import { useTranslation } from "react-i18next";
@@ -15,12 +15,15 @@ export const RegisterPage = () => {
 		email: "",
 		password: "",
 		confirmPassword: "",
+		photo: null,
 	});
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const { name, email, password, confirmPassword } = formData;
 	const disabled =
 		!name || !email || !password || !confirmPassword || isSubmitting;
+	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+	const fileRef = useRef<HTMLInputElement>(null);
 
 	const validateEmail = (email: string): boolean => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,11 +31,14 @@ export const RegisterPage = () => {
 	};
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
+		const { name, type, value, files } = e.target;
 		setFormData((prevData) => ({
 			...prevData,
-			[name]: value,
+			[name]: type === "file" ? (files?.[0] ?? null) : value,
 		}));
+		if (type === "file" && files?.[0]) {
+			setPreviewUrl(URL.createObjectURL(files[0]));
+		}
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -73,6 +79,16 @@ export const RegisterPage = () => {
 			));
 			setIsSubmitting(false);
 			return;
+		}
+
+		if (password.trim().length < 8) {
+			toast.custom((t) => (
+				<CustomToast
+					message="La contraseña debe ser de al menos 8 caracteres."
+					t={t}
+					type="error"
+				/>
+			));
 		}
 
 		try {
@@ -128,6 +144,78 @@ export const RegisterPage = () => {
 						method="POST"
 					>
 						<div className="-space-y-px rounded-md shadow-sm">
+							<div className="mb-6 flex flex-col items-center">
+								<div className="relative">
+									{previewUrl ? (
+										<img
+											src={previewUrl}
+											alt="preview"
+											className="h-24 w-24 rounded-full border border-gray-300 object-cover shadow-md"
+										/>
+									) : (
+										<div
+											onClick={() => fileRef.current?.click()}
+											className="flex h-24 w-24 cursor-pointer items-center justify-center rounded-full border border-gray-300 bg-gray-200 transition hover:bg-gray-300"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="h-8 w-8 text-gray-500"
+												fill="none"
+												viewBox="0 0 24 24"
+												stroke="currentColor"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth={2}
+													d="M3 7h2l2-3h10l2 3h2a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2z"
+												/>
+												<circle
+													cx="12"
+													cy="13"
+													r="3"
+													strokeWidth="2"
+													stroke="currentColor"
+												/>
+											</svg>
+										</div>
+									)}
+
+									{previewUrl && (
+										<button
+											type="button"
+											onClick={() => fileRef.current?.click()}
+											className="bg-primary hover:bg-primary-dark absolute right-0 bottom-0 rounded-full p-1.5 text-white shadow transition"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="h-4 w-4"
+												fill="none"
+												viewBox="0 0 24 24"
+												stroke="currentColor"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth={2}
+													d="M12 4v16m8-8H4"
+												/>
+											</svg>
+										</button>
+									)}
+								</div>
+
+								<input
+									id="photo"
+									name="photo"
+									type="file"
+									accept="image/*"
+									className="hidden"
+									ref={fileRef}
+									onChange={handleChange}
+								/>
+							</div>
+
 							<div>
 								<label htmlFor="full-name" className="sr-only">
 									{t("register.registerForm.name.label", "Nombre Completo")}
@@ -216,8 +304,15 @@ export const RegisterPage = () => {
 								disabled={disabled}
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 							>
-								{isSubmitting ? "Registrando..." : "Registrarse"}
-								{t("register.registerForm.registerButton", "Registrarse")}
+								{isSubmitting
+									? t(
+											"register.registerForm.registerButton.loading",
+											"Registrando...",
+										)
+									: t(
+											"register.registerForm.registerButton.pending",
+											"Registrarse",
+										)}
 							</button>
 						</div>
 					</form>
