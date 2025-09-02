@@ -122,7 +122,10 @@
 				"label": "Confirmar Contraseña",
 				"placeholder": "Confirmar contraseña"
 			},
-			"registerButton": "Registrarse",
+			"registerButton": {
+				"loading": "Registrando...",
+				"pending": "Registrarse"
+			},
 			"otherTypeRegister": "O continúa con"
 		}
 	},

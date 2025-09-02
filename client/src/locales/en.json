@@ -122,8 +122,11 @@
 				"label": "Confirm Password",
 				"placeholder": "Confirm password"
 			},
-			"registerButton": "Sign Up",
-			"otherTypeRegister": "Or continue with"
+			"registerButton": {
+				"loading": "Loading...",
+				"pending": "Sign Up"
+			},
+			"otherTypeRegister": "O continúa con"
 		}
 	},
 	"boardslist": {
