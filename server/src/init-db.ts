@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import prisma from "./config/db.js";
+import prisma from "./config/db";
 import bcrypt from "bcrypt";
 import readline, { Interface } from "readline";
 
