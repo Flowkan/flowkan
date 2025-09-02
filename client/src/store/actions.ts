@@ -8,6 +8,12 @@ type AuthLoginPending = {
 
 type AuthLoginFulfilled = {
 	type: "auth/login/fulfilled";
+	payload: {
+		id: number;
+		name: string;
+		email: string;
+		photo?: string;
+	};
 };
 
 type AuthLoginRejected = {
@@ -83,8 +89,11 @@ export const authLoginPending = (): AuthLoginPending => ({
 	type: "auth/login/pending",
 });
 
-export const authLoginFulfilled = (): AuthLoginFulfilled => ({
+export const authLoginFulfilled = (
+	user: AuthLoginFulfilled["payload"],
+): AuthLoginFulfilled => ({
 	type: "auth/login/fulfilled",
+	payload: user,
 });
 
 export const authLoginRejected = (error: Error): AuthLoginRejected => ({
@@ -150,8 +159,9 @@ export function authLogin(credentials: Credentials): AppThunk<Promise<void>> {
 	return async function (dispatch, _getState, { api, router }) {
 		dispatch(authLoginPending());
 		try {
-			await api.auth.login(credentials);
-			dispatch(authLoginFulfilled());
+			const user = await api.auth.login(credentials);
+			dispatch(authLoginFulfilled(user));
+
 			const to = router.state.location.state?.from ?? "/";
 			router.navigate(to, { replace: true });
 		} catch (error) {

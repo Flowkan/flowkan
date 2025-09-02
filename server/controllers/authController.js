@@ -18,14 +18,21 @@ export class AuthController {
       jwt.sign(
         { user_id: user.id },
         process.env.JWT_SECRET,
-        {
-          expiresIn: "1d",
-        },
+        { expiresIn: "1d" },
         (err, tokenJWT) => {
           if (err) {
             return next(err);
           }
-          res.json({ accessToken: tokenJWT });
+
+          res.json({
+            accessToken: tokenJWT,
+            user: {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              photo: user.photo || null,
+            },
+          });
         },
       );
     } catch (err) {
@@ -35,7 +42,18 @@ export class AuthController {
 
   register = async (req, res) => {
     try {
-      const newUser = await this.authService.register(req.body);
+      const { name, email, password } = req.body;
+      let photoUrl = null;
+      if (req.file) {
+        photoUrl = `/uploads/${req.file.filename}`;
+      }
+
+      const newUser = await this.authService.register({
+        name,
+        email,
+        password,
+        photo: photoUrl,
+      });
       res.status(201).json({ success: true, user: newUser });
     } catch (err) {
       console.log("error", err);

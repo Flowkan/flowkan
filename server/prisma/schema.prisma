@@ -18,6 +18,7 @@ model User {
   name     String
   email    String   @unique
   password String
+  photo    String?
   boards   Board[]  @relation("BoardOwner")
   members  BoardMember[]
   comments Comment[]
