@@ -1,3 +1,4 @@
+import { Button } from "../ui/Button";
 import { LangSwitch } from "../ui/LangSwitch";
 
 export default function LanguageToggleButton() {
@@ -12,7 +13,7 @@ export default function LanguageToggleButton() {
 
 	return (
 		<div className="relative">
-			<button
+			<Button
 				onClick={() => setOpen(!open)}
 				aria-expanded={open}
 				className="hover:bg-background-light-grey text-text-body flex items-center gap-2 rounded-full px-3 py-2"
@@ -29,14 +30,14 @@ export default function LanguageToggleButton() {
 						<span className="font-medium">{selectedLanguage.label}</span>
 					</>
 				)}
-			</button>
+			</Button>
 
 			{open && (
 				<div className="absolute right-0 z-10 mt-2 w-28 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
 					{LANGUAGES.map(({ code, flag, label }) => {
 						const isActive = selectedLangCode === code;
 						return (
-							<button
+							<Button
 								key={code}
 								onClick={() => changeLanguage(code)}
 								className={`flex w-full items-center gap-3 px-4 py-2 text-left transition-colors duration-150 hover:bg-gray-100 ${
@@ -47,7 +48,7 @@ export default function LanguageToggleButton() {
 									<img src={flag} alt={`Bandera de ${label}`} width={32} />
 								</span>
 								<span>{label}</span>
-							</button>
+							</Button>
 						);
 					})}
 				</div>

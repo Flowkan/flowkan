@@ -6,6 +6,7 @@ import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { CustomToast } from "../../components/CustomToast";
 import { register } from "./service";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../components/ui/Button";
 
 export const RegisterPage = () => {
 	const navigate = useNavigate();
@@ -182,7 +183,7 @@ export const RegisterPage = () => {
 									)}
 
 									{previewUrl && (
-										<button
+										<Button
 											type="button"
 											onClick={() => fileRef.current?.click()}
 											className="bg-primary hover:bg-primary-dark absolute right-0 bottom-0 rounded-full p-1.5 text-white shadow transition"
@@ -201,7 +202,7 @@ export const RegisterPage = () => {
 													d="M12 4v16m8-8H4"
 												/>
 											</svg>
-										</button>
+										</Button>
 									)}
 								</div>
 
@@ -299,7 +300,7 @@ export const RegisterPage = () => {
 						</div>
 
 						<div>
-							<button
+							<Button
 								type="submit"
 								disabled={disabled}
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
@@ -313,7 +314,7 @@ export const RegisterPage = () => {
 											"register.registerForm.registerButton.pending",
 											"Registrarse",
 										)}
-							</button>
+							</Button>
 						</div>
 					</form>
 
@@ -331,20 +332,20 @@ export const RegisterPage = () => {
 					<div>
 						<div className="mt-6 grid grid-cols-2 gap-3">
 							<div>
-								<button
+								<Button
 									type="button"
 									className="border-border-light bg-background-card text-text-body hover:bg-background-light-grey inline-flex w-full justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors duration-200"
 								>
 									<img
-										src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+										src="https://img.icons8.com/?size=100&id=17949&format=png&color=000000"
 										alt="Google Logo"
 										className="mr-2 h-5 w-5"
 									/>
 									Google
-								</button>
+								</Button>
 							</div>
 							<div>
-								<button
+								<Button
 									type="button"
 									className="border-border-light bg-background-card text-text-body hover:bg-background-light-grey inline-flex w-full justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors duration-200"
 								>
@@ -354,7 +355,7 @@ export const RegisterPage = () => {
 										className="mr-2 h-5 w-5"
 									/>
 									GitHub
-								</button>
+								</Button>
 							</div>
 						</div>
 					</div>
