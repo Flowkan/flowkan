@@ -128,5 +128,20 @@
 			},
 			"otherTypeRegister": "O continúa con"
 		}
+	},
+	"boardslist": {
+		"title": "My boards"
+	},
+	"boardsitem": {
+		"confirm": "Are you sure you want to delete this board?"
+	},
+	"addbtn": "New board",
+	"confirm": {
+		"yes": "YES",
+		"no": "NO"
+	},
+	"emptylist": {
+		"p1": "You don't have any boards yet.",
+		"p2": "Would you like to create one?"
 	}
 }
