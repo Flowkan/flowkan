@@ -5,7 +5,7 @@ export type State = {
 	auth: boolean;
 	boards: {
 		loaded: boolean;
-		data: Board[] | null;
+		data: Board[];
 		pending: boolean;
 		error: Error | null;
 	};
@@ -34,7 +34,7 @@ const defaultState: State = {
 	auth: false,
 	boards: {
 		loaded: false,
-		data: null,
+		data: [],
 		pending: false,
 		error: null,
 	},

@@ -5,10 +5,10 @@ import {
 	Draggable,
 	type DropResult,
 } from "@hello-pangea/dnd";
-import type { BoardData, Column as ColumnType, Task } from "../types";
-import { handleColumnDrag, handleTaskDrag } from "../lib/dragHandlers";
-import Column from "./Column";
-import TaskDetailModal from "./TaskDetailModal";
+import type { BoardData, Column as ColumnType, Task } from "../../types";
+import { handleColumnDrag, handleTaskDrag } from "../../lib/dragHandlers";
+import Column from "../../components/Column";
+import TaskDetailModal from "../../components/TaskDetailModal";
 
 const generateUniqueId = (): string => {
 	return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
