@@ -47,7 +47,9 @@ export function useBoardsAction(): Board[] {
 
 export function useBoardsAddAction() {
 	const dispatch = useAppDispatch();
-	return (boardData: BoardData) => dispatch(boardsAdd(boardData));
+	return async function (boardData: FormData): Promise<Board> {
+		return await dispatch(boardsAdd(boardData));
+	};
 }
 
 export function useBoardsUpdateAction() {
