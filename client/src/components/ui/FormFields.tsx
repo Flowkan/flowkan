@@ -7,21 +7,22 @@ import { useTranslation } from "react-i18next";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	id: string;
 	name: string;
-	type: string;
 	label?: string;
 	required?: boolean;
 	labelClassName?: string;
+	ref?: React.RefObject<HTMLInputElement | null>
 }
 
 export const FormFields = ({
 	id,
 	name,
-	type,
+	type = "text",
 	label,
 	required,
 	labelClassName,
 	value,
 	onChange,
+	ref,
 	...props
 }: InputProps) => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -30,22 +31,23 @@ export const FormFields = ({
 	const { t } = useTranslation();
 
 	return (
-		<div>
+		<div className="mt-3">
 			{label && (
 				<label
 					htmlFor={id}
-					className={clsx("text-sm font-medium text-teal-500", labelClassName)}
+					className={clsx("text-sm font-medium text-gray-800", labelClassName)}
 				>
 					{label}
 					{required && <span className="text-red-600"> *</span>}
 				</label>
 			)}
-			<div className="relative mt-1">
+			<div className="relative mt-3">
 				<input
 					id={id}
 					name={name}
 					type={inputType}
 					value={value}
+					ref={ref}
 					onChange={onChange}
 					required={required}
 					className={clsx(
@@ -57,27 +59,27 @@ export const FormFields = ({
 				{isPassword && (
 					<Button
 						type="button"
-						className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition-colors hover:text-green-600"
+						className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
 						onClick={() => setShowPassword(!showPassword)}
 						aria-label={
 							showPassword
 								? t(
-										"arialabel.component.FormFields.hidePass",
+										"arialabels.component.FormFields.hidePass",
 										"Ocultar contraseña",
 									)
 								: t(
-										"arialabel.component.FormFields.showPass",
+										"arialabels.component.FormFields.showPass",
 										"Mostrar contraseña",
 									)
 						}
 						title={
 							showPassword
 								? t(
-										"arialabel.component.FormFields.hidePass",
+										"arialabels.component.FormFields.hidePass",
 										"Ocultar contraseña",
 									)
 								: t(
-										"arialabel.component.FormFields.showPass",
+										"arialabels.component.FormFields.showPass",
 										"Mostrar contraseña",
 									)
 						}
