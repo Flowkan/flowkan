@@ -164,14 +164,14 @@ export const HomePage: React.FC = () => {
 								/>
 								<p className="text-text-body mb-4 italic">
 									{t(
-										"ourUsers.feedbacks.first.text",
+										"home.ourUsers.feedbacks.first.text",
 										"Esta aplicación ha transformado la forma en que gestionamos nuestros proyectos. ¡Absolutamente indispensable!",
 									)}
 								</p>
 								<p className="text-text-heading font-semibold">
 									-{" "}
 									{t(
-										"ourUsers.feedbacks.first.user",
+										"home.ourUsers.feedbacks.first.user",
 										"Ana García, CEO en Empresa X",
 									)}
 								</p>
@@ -185,14 +185,14 @@ export const HomePage: React.FC = () => {
 								<p className="text-text-body mb-4 italic">
 									{" "}
 									{t(
-										"ourUsers.feedbacks.second.text",
+										"home.ourUsers.feedbacks.second.text",
 										"La interfaz es increíblemente intuitiva y las funciones de	colaboración son de otro nivel.",
 									)}
 								</p>
 								<p className="text-text-heading font-semibold">
 									-{" "}
 									{t(
-										"ourUsers.feedbacks.second.user",
+										"home.ourUsers.feedbacks.second.user",
 										"Juan Pérez, Product Manager",
 									)}
 								</p>
@@ -205,14 +205,14 @@ export const HomePage: React.FC = () => {
 								/>
 								<p className="text-text-body mb-4 italic">
 									{t(
-										"ourUsers.feedbacks.third.text",
+										"home.ourUsers.feedbacks.third.text",
 										"Nunca pensé que la gestión de tareas pudiera ser tan sencilla y visualmente agradable.",
 									)}
 								</p>
 								<p className="text-text-heading font-semibold">
 									-{" "}
 									{t(
-										"ourUsers.feedbacks.third.user",
+										"home.ourUsers.feedbacks.third.user",
 										"Sofía Castro, Diseñadora UX",
 									)}
 								</p>
@@ -224,16 +224,16 @@ export const HomePage: React.FC = () => {
 				<section className="bg-background-light-grey px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-7xl text-center">
 						<h2 className="text-text-heading mb-12 text-3xl font-bold md:text-4xl">
-							{t("docs.title", "Cómo puedes usar nuestra plataforma")}
+							{t("home.docs.title", "Cómo puedes usar nuestra plataforma")}
 						</h2>
 						<div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 							<div className="bg-background-card rounded-lg p-8 shadow-lg">
 								<h3 className="text-accent mb-4 text-2xl font-semibold">
-									{t("docs.management.title", "Gestión de Proyectos")}
+									{t("home.docs.management.title", "Gestión de Proyectos")}
 								</h3>
 								<p className="text-text-body mb-4">
 									{t(
-										"docs.management.message",
+										"home.docs.management.message",
 										"Desde pequeños equipos hasta grandes empresas, nuestra	herramienta se adapta a tus necesidades de gestión de	proyectos complejos.",
 									)}
 								</p>
@@ -241,16 +241,16 @@ export const HomePage: React.FC = () => {
 									href="#"
 									className="text-accent font-semibold hover:underline"
 								>
-									{t("moreInformation", "Más información")} &rarr;
+									{t("home.moreInformation", "Más información")} &rarr;
 								</a>
 							</div>
 							<div className="bg-background-card rounded-lg p-8 shadow-lg">
 								<h3 className="text-primary mb-4 text-2xl font-semibold">
-									{t("docs.planning.title", "Planificación de Eventos")}
+									{t("home.docs.planning.title", "Planificación de Eventos")}
 								</h3>
 								<p className="text-text-body mb-4">
 									{t(
-										"docs.planning.message",
+										"home.docs.planning.message",
 										"Organiza cada detalle de tus eventos, desde la logística hasta	las invitaciones, de manera visual.",
 									)}
 								</p>
@@ -258,16 +258,16 @@ export const HomePage: React.FC = () => {
 									href="#"
 									className="text-primary font-semibold hover:underline"
 								>
-									{t("moreInformation", "Más información")} &rarr;
+									{t("home.moreInformation", "Más información")} &rarr;
 								</a>
 							</div>
 							<div className="bg-background-card rounded-lg p-8 shadow-lg">
 								<h3 className="text-primary mb-4 text-2xl font-semibold">
-									{t("docs.monitoring.title", "Seguimiento Personal")}
+									{t("home.docs.monitoring.title", "Seguimiento Personal")}
 								</h3>
 								<p className="text-text-body mb-4">
 									{t(
-										"docs.monitoring.message",
+										"home.docs.monitoring.message",
 										"Gestiona tus tareas personales, objetivos y hábitos diarios con un sistema Kanban fácil de usar.",
 									)}
 								</p>
@@ -275,7 +275,7 @@ export const HomePage: React.FC = () => {
 									href="#"
 									className="text-primary font-semibold hover:underline"
 								>
-									{t("moreInformation","Más información")} &rarr;
+									{t("home.moreInformation","Más información")} &rarr;
 								</a>
 							</div>
 						</div>

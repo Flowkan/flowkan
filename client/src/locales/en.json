@@ -56,45 +56,42 @@
       "events": "Organize your deadlines and important events"
     },
     "ourUsers": {
-      "title": "What our users say"
-    }
-  },
-  "ourUsers": {
-    "feedbacks": {
-      "first": {
-        "text": "This app has transformed the way we manage our projects. Absolutely indispensable!",
-        "user": "Ana García, CEO at Company X"
-      },
-      "second": {
-        "text": "The interface is incredibly intuitive and the collaboration features are next level.",
-        "user": "Juan Pérez, Product Manager"
-      },
-      "third": {
-        "text": "I never thought task management could be so simple and visually pleasant.",
-        "user": "Sofía Castro, UX Designer"
+      "title": "What Our Users Say",
+      "feedbacks": {
+        "first": {
+          "text": "This app has transformed the way we manage our projects. Absolutely indispensable!",
+          "user": "Ana García, CEO at Company X"
+        },
+        "second": {
+          "text": "The interface is incredibly intuitive and the collaboration features are next level.",
+          "user": "Juan Pérez, Product Manager"
+        },
+        "third": {
+          "text": "I never thought task management could be so simple and visually pleasant.",
+          "user": "Sofía Castro, UX Designer"
+        }
       }
-    }
-  },
-  "docs": {
-    "title": "How you can use our platform",
-    "management": {
-      "title": "Project Management",
-      "message": "From small teams to large companies, our tool adapts to your complex project management needs."
     },
-    "planning": {
-      "title": "Event Planning",
-      "message": "Organize every detail of your events, from logistics to invitations, in a visual way."
+    "docs": {
+      "title": "How You Can Use Our Platform",
+      "management": {
+        "title": "Project Management",
+        "message": "From small teams to large companies, our tool adapts to your complex project management needs."
+      },
+      "planning": {
+        "title": "Event Planning",
+        "message": "Organize every detail of your events, from logistics to invitations, visually."
+      },
+      "monitoring": {
+        "title": "Personal Tracking",
+        "message": "Manage your personal tasks, goals, and daily habits with an easy-to-use Kanban system."
+      }
     },
-    "monitoring": {
-      "title": "Personal Tracking",
-      "message": "Manage your personal tasks, goals, and daily habits with an easy-to-use Kanban system."
-    }
+    "moreInformation": "More Information"
   },
-  "moreInformation": "More Information",
   "login": {
     "toast": {
       "message": {
-        "errorEmailNotValid": "Please enter a valid email address.",
         "errorEmptyPassword": "Password cannot be empty.",
         "success": "Form submitted successfully!",
         "error": "Incorrect credentials"
