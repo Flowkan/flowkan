@@ -1,6 +1,6 @@
 {
   "footer": {
-    "description": "FlowKan helps you organize your work and team visually and efficiently. Simplify project management and achieve your goals.",
+    "description": "FlowKan helps you organize your work and your team visually and efficiently. Simplify project management and achieve your goals.",
     "privacy": "Privacy Policy",
     "terms": "Terms and Conditions of Service",
     "title": "Contact",
@@ -26,18 +26,33 @@
     "menu": {
       "profile": "Profile",
       "settings": "Settings",
-      "logout": "Log Out"
+      "logout": "Log out"
     },
     "login": "Login",
     "signup": "Sign Up"
   },
+  "addbtn": "New board",
+  "confirm": {
+    "yes": "YES",
+    "no": "NO"
+  },
   "arialabels": {
     "component": {
       "FormFields": {
-        "hidePass": "Hide Password",
-        "showPass": "Show Password"
+        "hidePass": "Hide password",
+        "showPass": "Show password"
       }
     }
+  },
+  "boardsitem": {
+    "confirm": ""
+  },
+  "emptylist": {
+    "p1": "You don’t have any boards yet.",
+    "p2": "Do you want to create one?"
+  },
+  "boardslist": {
+    "title": "My boards"
   },
   "home": {
     "banner": "Simplify your tasks, maximize your productivity",
@@ -56,7 +71,7 @@
       "events": "Organize your deadlines and important events"
     },
     "ourUsers": {
-      "title": "What Our Users Say",
+      "title": "What our users say",
       "feedbacks": {
         "first": {
           "text": "This app has transformed the way we manage our projects. Absolutely indispensable!",
@@ -73,7 +88,7 @@
       }
     },
     "docs": {
-      "title": "How You Can Use Our Platform",
+      "title": "How you can use our platform",
       "management": {
         "title": "Project Management",
         "message": "From small teams to large companies, our tool adapts to your complex project management needs."
@@ -87,7 +102,7 @@
         "message": "Manage your personal tasks, goals, and daily habits with an easy-to-use Kanban system."
       }
     },
-    "moreInformation": "More Information"
+    "moreInformation": "More information"
   },
   "login": {
     "toast": {
@@ -119,13 +134,13 @@
     }
   },
   "notFound": {
-    "title": "Page Not Found",
+    "title": "Page not found",
     "description": "Sorry, we couldn’t find the page you’re looking for",
-    "backButton": "Back to Home"
+    "backButton": "Go back home"
   },
   "register": {
     "registerForm": {
-      "title": "Create Your Account",
+      "title": "Create your Account",
       "question": "Already have an account?",
       "login": "Login here",
       "name": {
@@ -154,20 +169,5 @@
     "withOtherService": {
       "otherTypeRegister": "Or continue with"
     }
-  },
-  "boardslist": {
-		"title": "My boards"
-	},
-	"boardsitem": {
-		"confirm": "Are you sure you want to delete this board?"
-	},
-	"addbtn": "New board",
-	"confirm": {
-		"yes": "YES",
-		"no": "NO"
-	},
-	"emptylist": {
-		"p1": "You don't have any boards yet.",
-		"p2": "Would you like to create one?"
-	}
+  }
 }
