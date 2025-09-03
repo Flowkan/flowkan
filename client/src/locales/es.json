@@ -23,8 +23,21 @@
       "solutions": "Soluciones",
       "prices": "Precios"
     },
+    "menu": {
+      "profile": "Perfil",
+      "settings": "Ajustes",
+      "logout": "Cerrar sesión"
+    },
     "login": "Login",
     "signup": "Registro"
+  },
+  "arialabels": {
+    "component": {
+      "FormFields": {
+        "hidePass": "Ocultar contraseña",
+        "showPass": "Mostrar contraseña"
+      }
+    }
   },
   "home": {
     "banner": "Simplifica tus tareas, maximiza tu productividad",
@@ -79,6 +92,14 @@
   },
   "moreInformation": "Más información",
   "login": {
+    "toast": {
+      "message": {
+        "errorEmailNotValid": "Por favor, introduce una dirección de correo válida.",
+        "errorEmptyPassword": "La contraseña no puede estar vacía.",
+        "success": "Formulario enviado con éxito!",
+        "error": "Credenciales incorrectas"
+      }
+    },
     "loginForm": {
       "title": "Iniciar Sesión",
       "question": "¿No tienes una cuenta?",
@@ -92,8 +113,12 @@
         "passwordPlaceholder": "Contraseña"
       },
       "forgetPassword": "¿Olvidaste tu contraseña?",
-      "loginButton": "Iniciar Sesión",
-      "otherTypeLogin": "O continúa con"
+      "loginButton": {
+        "spinner": {
+          "loading": "Cargando...",
+          "default": "Iniciar Sesión"
+        }
+      }
     }
   },
   "notFound": {
@@ -123,9 +148,13 @@
         "placeholder": "Confirmar contraseña"
       },
       "registerButton": {
-        "loading": "Registrando...",
-        "pending": "Registrarse"
-      },
+        "spinner": {
+          "loading": "Registrando...",
+          "default": "Registrarse"
+        }
+      }
+    },
+    "withOtherService": {
       "otherTypeRegister": "O continúa con"
     }
   }
