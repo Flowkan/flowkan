@@ -16,9 +16,10 @@ import {
 	taskUpdate,
 	taskDelete,
 } from "./actions";
-import { hasLogged } from "./selectors";
+import { hasLogged, selectBoards } from "./selectors";
 import type { Board, BoardsData } from "../pages/boards/types";
 import type { BoardData, Task, ColumnData } from "../pages/board/types";
+import { useEffect } from "react";
 
 export function useAuth() {
 	return useAppSelector(hasLogged);
@@ -41,9 +42,15 @@ export function useUiResetError() {
 	};
 }
 
-export function useBoardsAction() {
+export function useBoardsAction(): Board[] {
 	const dispatch = useAppDispatch();
-	return () => dispatch(boardsLoad());
+	const boards = useAppSelector(selectBoards);
+
+	useEffect(() => {
+		dispatch(boardsLoad());
+	}, [dispatch]);
+
+	return boards;
 }
 
 export function useBoardsAddAction() {
