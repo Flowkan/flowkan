@@ -5,6 +5,10 @@ import en from "../locales/en.json";
 import es from "../locales/es.json";
 
 const resources = {
+	func: {
+	list: ["i18next.t", "i18n.t", "t", "__"],
+	extensions: [".ts", ".tsx"],
+	},
 	en: { translation: en },
 	es: { translation: es },
 };
