@@ -8,6 +8,12 @@ type AuthLoginPending = {
 
 type AuthLoginFulfilled = {
 	type: "auth/login/fulfilled";
+	payload: {
+		id: number;
+		name: string;
+		email: string;
+		photo?: string;
+	};
 };
 
 type AuthLoginRejected = {
@@ -83,8 +89,11 @@ export const authLoginPending = (): AuthLoginPending => ({
 	type: "auth/login/pending",
 });
 
-export const authLoginFulfilled = (): AuthLoginFulfilled => ({
+export const authLoginFulfilled = (
+	user: AuthLoginFulfilled["payload"],
+): AuthLoginFulfilled => ({
 	type: "auth/login/fulfilled",
+	payload: user,
 });
 
 export const authLoginRejected = (error: Error): AuthLoginRejected => ({
@@ -150,8 +159,9 @@ export function authLogin(credentials: Credentials): AppThunk<Promise<void>> {
 	return async function (dispatch, _getState, { api, router }) {
 		dispatch(authLoginPending());
 		try {
-			await api.auth.login(credentials);
-			dispatch(authLoginFulfilled());
+			const user = await api.auth.login(credentials);
+			dispatch(authLoginFulfilled(user));
+
 			const to = router.state.location.state?.from ?? "/";
 			router.navigate(to, { replace: true });
 		} catch (error) {
@@ -171,9 +181,15 @@ export function authLogout(): AppThunk<Promise<void>> {
 }
 
 export function boardsLoad(): AppThunk<Promise<void>> {
-	return async function (dispatch, _getState, { api }) {
-		dispatch(boardsLoadPending());
+	return async function (dispatch, getState, { api }) {
+		// if boards are already loaded in state, return them without reloading them
+		const state = getState();
+		if (state.boards.loaded) {
+			return;
+		}
+
 		try {
+			dispatch(boardsLoadPending());
 			const boards = await api.boards.getBoards();
 			dispatch(boardsLoadFulfilled(boards));
 		} catch (error) {

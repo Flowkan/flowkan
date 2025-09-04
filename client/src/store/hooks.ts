@@ -9,8 +9,9 @@ import {
 	boardsUpdate,
 	boardsDelete,
 } from "./actions";
-import { hasLogged } from "./selectors";
+import { hasLogged, selectBoards } from "./selectors";
 import type { Board, BoardData } from "../pages/boards/types";
+import { useEffect } from "react";
 
 export function useAuth() {
 	return useAppSelector(hasLogged);
@@ -33,9 +34,15 @@ export function useUiResetError() {
 	};
 }
 
-export function useBoardsAction() {
+export function useBoardsAction(): Board[] {
 	const dispatch = useAppDispatch();
-	return () => dispatch(boardsLoad());
+	const boards = useAppSelector(selectBoards);
+
+	useEffect(() => {
+		dispatch(boardsLoad());
+	}, [dispatch]);
+
+	return boards;
 }
 
 export function useBoardsAddAction() {
@@ -52,13 +59,4 @@ export function useBoardsUpdateAction() {
 export function useBoardsDeleteAction() {
 	const dispatch = useAppDispatch();
 	return (boardId: string) => dispatch(boardsDelete(boardId));
-}
-
-export function useBoards(): {
-	data: Board[] | null;
-	loaded: boolean;
-	pending: boolean;
-	error: Error | null;
-} {
-	return useAppSelector((state) => state.boards);
 }

@@ -8,6 +8,12 @@ import { useTranslation } from "react-i18next";
 import { useLoginAction, useUiResetError } from "../../store/hooks";
 import { useAppSelector } from "../../store";
 import { getUi } from "../../store/selectors";
+import { SpinnerLoadingText } from "../../components/ui/Spinner";
+import { Form } from "../../components/ui/Form";
+import { FormFields } from "../../components/ui/FormFields";
+import { Button } from "../../components/ui/Button";
+import { __ } from "../../utils/i18nextHelper";
+import { WithOtherServices } from "../register/withOtherServices/WithOtherServices";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
@@ -21,6 +27,7 @@ export const LoginPage = () => {
 
 	const { email, password } = formData;
 	const disabled = !email || !password || isFetching;
+	const [isLoading, setIsLoading] = useState(false);
 
 	const validateEmail = (email: string): boolean => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -37,41 +44,64 @@ export const LoginPage = () => {
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setIsLoading(true);
+		try {
+			// Validar el email primero
+			if (!validateEmail(formData.email)) {
+				toast.custom((t) => (
+					<CustomToast
+						message="Por favor, introduce una dirección de correo válida."
+						t={t}
+						type="error"
+					/>
+				));
+				return;
+			}
 
-		// Validar el email primero
-		if (!validateEmail(formData.email)) {
+			// Si el email es válido, validar la contraseña
+			if (formData.password.trim() === "") {
+				toast.custom((t) => (
+					<CustomToast
+						message={__(
+							"login.toast.message.errorEmptyPassword",
+							"La contraseña no puede estar vacía.",
+						)}
+						t={t}
+						type="error"
+					/>
+				));
+				return;
+			}
+
+			await loginAction(formData);
+
+			// Si ambas validaciones pasan, mostrar el mensaje de éxito
 			toast.custom((t) => (
 				<CustomToast
-					message="Por favor, introduce una dirección de correo válida."
+					message={__(
+						"login.toast.message.success",
+						"Formulario enviado con éxito!",
+					)}
+					t={t}
+					type="success"
+				/>
+			));
+		} catch (error) {
+			setFormData((prevData) => ({
+				...prevData,
+				email: "",
+				password: "",
+			}));
+			toast.custom((t) => (
+				<CustomToast
+					message={__("login.toast.message.error", "Credenciales incorrectas")}
 					t={t}
 					type="error"
 				/>
 			));
-			return;
+		} finally {
+			setIsLoading(false);
 		}
-
-		// Si el email es válido, validar la contraseña
-		if (formData.password.trim() === "") {
-			toast.custom((t) => (
-				<CustomToast
-					message="La contraseña no puede estar vacía."
-					t={t}
-					type="error"
-				/>
-			));
-			return;
-		}
-
-		await loginAction(formData);
-
-		// Si ambas validaciones pasan, mostrar el mensaje de éxito
-		toast.custom((t) => (
-			<CustomToast
-				message="Formulario enviado con éxito!"
-				t={t}
-				type="success"
-			/>
-		));
 	};
 
 	return (
@@ -104,51 +134,52 @@ export const LoginPage = () => {
 							</NavLink>
 						</p>
 					</div>
-					<form
+					<Form
 						className="mt-8 space-y-6"
 						onSubmit={handleSubmit}
 						method="POST"
+						initialValue={{
+							email: formData.email,
+							password: formData.password,
+						}}
 					>
-						<div className="-space-y-px rounded-md shadow-sm">
-							<div>
-								<label htmlFor="email-address" className="sr-only">
-									{t("login.loginForm.email.emailLabel", "Dirección de Email")}
-								</label>
-								<input
-									id="email-address"
-									name="email"
-									type="email"
-									autoComplete="email"
-									required
-									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder={t(
-										"login.loginForm.email.placeholder",
-										"Correo electrónico",
-									)}
-									onChange={handleChange}
-									value={formData.email}
-								/>
-							</div>
-							<div>
-								<label htmlFor="password" className="sr-only">
-									{t("login.loginForm.password.passwordLabel", "Contraseña")}
-								</label>
-								<input
-									id="password"
-									name="password"
-									type="password"
-									autoComplete="current-password"
-									required
-									className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative mt-3 block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-									placeholder={t(
-										"login.loginForm.password.passwordPlaceholder",
-										"Contraseña",
-									)}
-									onChange={handleChange}
-									value={formData.password}
-								/>
-							</div>
-						</div>
+						<FormFields
+							label={t(
+								"login.loginForm.email.emailLabel",
+								"Dirección de Email",
+							)}
+							labelClassName="sr-only"
+							id="email-address"
+							name="email"
+							type="email"
+							autoComplete="email"
+							required
+							className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
+							placeholder={t(
+								"login.loginForm.email.placeholder",
+								"Correo electrónico",
+							)}
+							onChange={handleChange}
+							value={formData.email}
+						/>
+
+						<FormFields
+							label={t("login.loginForm.password.passwordLabel", "Contraseña")}
+							labelClassName="sr-only"
+							id="password"
+							name="password"
+							type="password"
+							autoComplete="current-password"
+							required
+							className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative mt-3 block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
+							placeholder={t(
+								"login.loginForm.password.passwordPlaceholder",
+								"Contraseña",
+							)}
+							onChange={handleChange}
+							value={formData.password}
+						/>
+
 						<div className="flex items-center justify-between">
 							<div className="text-sm">
 								<a
@@ -163,55 +194,28 @@ export const LoginPage = () => {
 							</div>
 						</div>
 						<div>
-							<button
+							<Button
 								type="submit"
 								disabled={disabled}
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 							>
-								{t("login.loginForm.loginButton", "Iniciar Sesión")}
-							</button>
-						</div>
-					</form>
-					<div className="relative">
-						<div className="absolute inset-0 flex items-center">
-							<div className="border-border-light w-full border-t"></div>
-						</div>
-						<div className="relative flex justify-center text-sm">
-							<span className="bg-background-card text-text-placeholder px-2">
-								{t("login.loginForm.otherTypeLogin", "O continúa con")}
-							</span>
-						</div>
-					</div>
-					<div>
-						<div className="mt-6 grid grid-cols-2 gap-3">
-							<div>
-								<button
-									type="button"
-									className="border-border-light bg-background-card text-text-body hover:bg-background-light-grey inline-flex w-full justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors duration-200"
-								>
-									<img
-										src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-										alt="Google Logo"
-										className="mr-2 h-5 w-5"
+								{isLoading ? (
+									<SpinnerLoadingText
+										text={t(
+											"login.loginForm.loginButton.spinner.loading",
+											"Cargando...",
+										)}
 									/>
-									Google
-								</button>
-							</div>
-							<div>
-								<button
-									type="button"
-									className="border-border-light bg-background-card text-text-body hover:bg-background-light-grey inline-flex w-full justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors duration-200"
-								>
-									<img
-										src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
-										alt="GitHub Logo"
-										className="mr-2 h-5 w-5"
-									/>
-									GitHub
-								</button>
-							</div>
+								) : (
+									t(
+										"login.loginForm.loginButton.spinner.default",
+										"Iniciar Sesión",
+									)
+								)}
+							</Button>
 						</div>
-					</div>
+					</Form>
+					<WithOtherServices />
 				</div>
 			</div>
 		</Page>

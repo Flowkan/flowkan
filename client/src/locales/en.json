@@ -1,134 +1,173 @@
 {
-	"footer": {
-		"description": "FlowKan helps you organize your work and team visually and efficiently. Simplify project management and achieve your goals.",
-		"privacy": "Privacy Policy",
-		"terms": "Terms and Conditions of Service",
-		"title": "Contact",
-		"contact": {
-			"email": "Email",
-			"phone": "Phone"
-		},
-		"address": {
-			"label": "Address",
-			"street": "Street",
-			"country": "Spain"
-		},
-		"clients": "Our Clients",
-		"copy": "All rights reserved"
-	},
-	"header": {
-		"title": "Flowkan",
-		"navbar": {
-			"features": "Features",
-			"solutions": "Solutions",
-			"prices": "Pricing"
-		},
-		"login": "Login",
-		"signup": "Sign Up"
-	},
-	"home": {
-		"banner": "Simplify your tasks, maximize your productivity",
-		"description": "Task Cards, Lists, Boards",
-		"funtionality": "Drag and Drop",
-		"more": "Learn More",
-		"features": {
-			"title": "Key Features",
-			"board": "Kanban Board",
-			"viewTask": "View and manage your tasks with ease",
-			"collaborations": "Collaboration",
-			"jobsTeam": "Work effortlessly in real time with your team",
-			"follow": "Progress Tracking",
-			"upToDay": "Stay up to date with your projects’ progress",
-			"calendar": "Integrated Calendar",
-			"events": "Organize your deadlines and important events"
-		},
-		"ourUsers": {
-			"title": "What our users say"
-		}
-	},
-	"ourUsers": {
-		"feedbacks": {
-			"first": {
-				"text": "This app has transformed the way we manage our projects. Absolutely indispensable!",
-				"user": "Ana García, CEO at Company X"
-			},
-			"second": {
-				"text": "The interface is incredibly intuitive and the collaboration features are next level.",
-				"user": "Juan Pérez, Product Manager"
-			},
-			"third": {
-				"text": "I never thought task management could be so simple and visually pleasant.",
-				"user": "Sofía Castro, UX Designer"
-			}
-		}
-	},
-	"docs": {
-		"title": "How you can use our platform",
-		"management": {
-			"title": "Project Management",
-			"message": "From small teams to large companies, our tool adapts to your complex project management needs.",
-      "moreInfo": "More Information"
-		},
-		"planning": {
-			"title": "Event Planning",
-			"message": "Organize every detail of your events, from logistics to invitations, in a visual way.",
-      "moreInfo": "More Information"
-		},
-		"monitoring": {
-			"title": "Personal Tracking",
-			"message": "Manage your personal tasks, goals, and daily habits with an easy-to-use Kanban system.",
-      "moreInfo": "More Information"
-		}
-	},
-	"login": {
-		"loginForm": {
-			"title": "Login",
-			"question": "Don’t have an account?",
-			"signup": "Sign up here",
-			"email": {
-				"emailLabel": "Email Address",
-				"placeholder": "Email"
-			},
-			"password": {
-				"passwordLabel": "Password",
-				"passwordPlaceholder": "Password"
-			},
-			"forgetPassword": "Forgot your password?",
-			"loginButton": "Login",
-			"otherTypeLogin": "Or continue with"
-		}
-	},
-	"notFound": {
-		"title": "Page Not Found",
-		"description": "Sorry, we couldn’t find the page you’re looking for",
-		"backButton": "Back to Home"
-	},
-	"register": {
-		"registerForm": {
-			"title": "Create Your Account",
-			"question": "Already have an account?",
-			"login": "Login here",
-			"name": {
-				"label": "Full Name",
-				"placeholder": "Full name"
-			},
-			"email": {
-				"label": "Email Address",
-				"placeholder": "Email"
-			},
-			"password": {
-				"label": "Password",
-				"placeholder": "Password"
-			},
-			"confirmPassword": {
-				"label": "Confirm Password",
-				"placeholder": "Confirm password"
-			},
-			"registerButton": {
-				"loading": "Loading...",
-				"pending": "Sign Up"
-			},
-			"otherTypeRegister": "O continúa con"
-		}
-	}
+  "footer": {
+    "description": "FlowKan helps you organize your work and your team visually and efficiently. Simplify project management and achieve your goals.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms and Conditions of Service",
+    "title": "Contact",
+    "contact": {
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "address": {
+      "label": "Address",
+      "street": "Street",
+      "country": "Spain"
+    },
+    "clients": "Our Clients",
+    "copy": "All rights reserved"
+  },
+  "header": {
+    "title": "Flowkan",
+    "navbar": {
+      "features": "Features",
+      "solutions": "Solutions",
+      "prices": "Pricing"
+    },
+    "menu": {
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Log out"
+    },
+    "login": "Login",
+    "signup": "Sign Up"
+  },
+  "addbtn": "New board",
+  "confirm": {
+    "yes": "YES",
+    "no": "NO"
+  },
+  "arialabels": {
+    "component": {
+      "FormFields": {
+        "hidePass": "Hide password",
+        "showPass": "Show password"
+      }
+    }
+  },
+  "boardsitem": {
+    "confirm": ""
+  },
+  "emptylist": {
+    "p1": "You don’t have any boards yet.",
+    "p2": "Do you want to create one?"
+  },
+  "boardslist": {
+    "title": "My boards"
+  },
+  "home": {
+    "banner": "Simplify your tasks, maximize your productivity",
+    "description": "Task Cards, Lists, Boards",
+    "funtionality": "Drag and Drop",
+    "more": "Learn More",
+    "features": {
+      "title": "Key Features",
+      "board": "Kanban Board",
+      "viewTask": "View and manage your tasks with ease",
+      "collaborations": "Collaboration",
+      "jobsTeam": "Work effortlessly in real time with your team",
+      "follow": "Progress Tracking",
+      "upToDay": "Stay up to date with your project progress",
+      "calendar": "Integrated Calendar",
+      "events": "Organize your deadlines and important events"
+    },
+    "ourUsers": {
+      "title": "What our users say",
+      "feedbacks": {
+        "first": {
+          "text": "This app has transformed the way we manage our projects. Absolutely indispensable!",
+          "user": "Ana García, CEO at Company X"
+        },
+        "second": {
+          "text": "The interface is incredibly intuitive and the collaboration features are next level.",
+          "user": "Juan Pérez, Product Manager"
+        },
+        "third": {
+          "text": "I never thought task management could be so simple and visually pleasant.",
+          "user": "Sofía Castro, UX Designer"
+        }
+      }
+    },
+    "docs": {
+      "title": "How you can use our platform",
+      "management": {
+        "title": "Project Management",
+        "message": "From small teams to large companies, our tool adapts to your complex project management needs."
+      },
+      "planning": {
+        "title": "Event Planning",
+        "message": "Organize every detail of your events, from logistics to invitations, visually."
+      },
+      "monitoring": {
+        "title": "Personal Tracking",
+        "message": "Manage your personal tasks, goals, and daily habits with an easy-to-use Kanban system."
+      }
+    },
+    "moreInformation": "More information"
+  },
+  "login": {
+    "toast": {
+      "message": {
+        "errorEmptyPassword": "Password cannot be empty.",
+        "success": "Form submitted successfully!",
+        "error": "Incorrect credentials"
+      }
+    },
+    "loginForm": {
+      "title": "Login",
+      "question": "Don’t have an account?",
+      "signup": "Sign up here",
+      "email": {
+        "emailLabel": "Email Address",
+        "placeholder": "Email"
+      },
+      "password": {
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Password"
+      },
+      "forgetPassword": "Forgot your password?",
+      "loginButton": {
+        "spinner": {
+          "loading": "Loading...",
+          "default": "Login"
+        }
+      }
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "Sorry, we couldn’t find the page you’re looking for",
+    "backButton": "Go back home"
+  },
+  "register": {
+    "registerForm": {
+      "title": "Create your Account",
+      "question": "Already have an account?",
+      "login": "Login here",
+      "name": {
+        "label": "Full Name",
+        "placeholder": "Full name"
+      },
+      "email": {
+        "label": "Email Address",
+        "placeholder": "Email"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Password"
+      },
+      "confirmPassword": {
+        "label": "Confirm Password",
+        "placeholder": "Confirm password"
+      },
+      "registerButton": {
+        "spinner": {
+          "loading": "Registering...",
+          "default": "Sign Up"
+        }
+      }
+    },
+    "withOtherService": {
+      "otherTypeRegister": "Or continue with"
+    }
+  }
 }

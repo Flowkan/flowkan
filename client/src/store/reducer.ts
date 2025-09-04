@@ -5,7 +5,7 @@ export type State = {
 	auth: boolean;
 	boards: {
 		loaded: boolean;
-		data: Board[] | null;
+		data: Board[];
 		pending: boolean;
 		error: Error | null;
 	};
@@ -15,11 +15,26 @@ export type State = {
 	};
 };
 
+export type AuthState = {
+	isLogged: boolean;
+	user?: {
+		id: number;
+		name: string;
+		email: string;
+		photo?: string;
+	};
+};
+
+const defaultAuthState: AuthState = {
+	isLogged: false,
+	user: undefined,
+};
+
 const defaultState: State = {
 	auth: false,
 	boards: {
 		loaded: false,
-		data: null,
+		data: [],
 		pending: false,
 		error: null,
 	},
@@ -30,14 +45,17 @@ const defaultState: State = {
 };
 
 export function auth(
-	state = defaultState.auth,
+	state: AuthState = defaultAuthState,
 	action: Actions,
-): State["auth"] {
+): AuthState {
 	switch (action.type) {
 		case "auth/login/fulfilled":
-			return true;
+			return {
+				isLogged: true,
+				user: action.payload,
+			};
 		case "auth/logout":
-			return false;
+			return defaultAuthState;
 		default:
 			return state;
 	}
