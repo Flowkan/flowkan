@@ -14,5 +14,6 @@
 
 	&:hover {
 		background-color: #3264c2;
+		cursor: pointer;
 	}
 }
