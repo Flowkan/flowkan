@@ -4,7 +4,6 @@ import TrashButton from "../../components/ui/trash-button";
 import { useState } from "react";
 import EditButton from "../../components/ui/edit-button";
 import ConfirmDelete from "../../components/ui/confirm-delete";
-import { useBoardsDeleteAction } from "../../store/hooks";
 import "./boards-list-item.css";
 import { useTranslation } from "react-i18next";
 
@@ -16,7 +15,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 	const [showConfirm, setShowConfirm] = useState(false);
 
 	const handleShowConfirm = () => setShowConfirm(true);
-	const handleDeleteBoard = () => useBoardsDeleteAction();
+	const handleDeleteBoard = () => {};
 	const handleHideMessage = () => setShowConfirm(false);
 
 	const { t } = useTranslation();

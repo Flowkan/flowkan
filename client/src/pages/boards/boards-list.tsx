@@ -1,11 +1,12 @@
 import BoardsItem from "./boards-list-item";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import LoginSkeleton from "../../components/ui/LoginSkeleton";
 import AddButton from "../../components/ui/add-button";
 import "./boards-list.css";
-import { useBoardsAction } from "../../store/hooks";
 import { Page } from "../../components/layout/page";
 import { useTranslation } from "react-i18next";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { fetchBoards } from "../../store/boardsSlice";
 
 function EmptyList() {
 	const { t } = useTranslation();
@@ -21,8 +22,21 @@ function EmptyList() {
 }
 
 const BoardsList = () => {
-	const boards = useBoardsAction();
+	const dispatch = useAppDispatch();
+	const boards = useAppSelector((state) => state.boards.boards);
+	const status = useAppSelector((state) => state.boards.status);
+	const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 	const { t } = useTranslation();
+
+	useEffect(() => {
+		if (status === "idle" || (status === "loading" && isAuthenticated)) {
+			dispatch(fetchBoards());
+		}
+	}, [isAuthenticated, status, dispatch]);
+
+	if (status === "loading") {
+		return <LoginSkeleton />;
+	}
 
 	return (
 		<Page title={t("boardslist.title", "Mis tableros")}>
