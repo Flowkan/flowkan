@@ -5,9 +5,10 @@ import { NotFound } from "./pages/not-found";
 import { RegisterPage } from "./pages/register/register";
 import { Suspense, lazy, type ReactNode } from "react";
 import Board from "./pages/boards/board.tsx";
-import { useAppSelector } from "./store";
+import { useAppSelector } from "./store/hooks.ts";
 import LoginSkeleton from "./components/ui/LoginSkeleton.tsx";
 import BoardsList from "./pages/boards/boards-list.tsx";
+
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((module) => ({
 		default: module.LoginPage,
@@ -21,17 +22,24 @@ interface AuthRouteProps {
 }
 
 const AuthRoute = ({ children, requireAuth, redirectTo }: AuthRouteProps) => {
-	const isLogged = useAppSelector((state) => state.auth);
+	const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 	const location = useLocation();
 
-	const shouldAllow = requireAuth ? isLogged : true;
-	const fallbackRoute = redirectTo ?? (requireAuth ? "/login" : "/boards");
+	if (requireAuth && !isAuthenticated) {
+		return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+	}
 
-	return shouldAllow ? (
-		children
-	) : (
-		<Navigate to={fallbackRoute} replace state={{ from: location.pathname }} />
-	);
+	if (!requireAuth && isAuthenticated) {
+		return (
+			<Navigate
+				to={redirectTo || "/boards"}
+				replace
+				state={{ from: location.pathname }}
+			/>
+		);
+	}
+
+	return <>{children}</>;
 };
 
 function App() {
@@ -52,7 +60,7 @@ function App() {
 				<Route
 					path="register"
 					element={
-						<AuthRoute requireAuth={false} redirectTo="/login">
+						<AuthRoute requireAuth={false} redirectTo="/boards">
 							<RegisterPage />
 						</AuthRoute>
 					}
@@ -66,7 +74,7 @@ function App() {
 					}
 				>
 					<Route index element={<BoardsList />} />
-					<Route path=":id" element={<Board />} />
+					<Route path=":boardId" element={<Board />} />
 					<Route path="new" />
 				</Route>
 				<Route path="not-found" element={<NotFound />} />

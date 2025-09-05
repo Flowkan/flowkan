@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import type { Task } from "../pages/board/types";
+import type { Task } from "../pages/boards/types";
 
 interface TaskDetailModalProps {
 	task: Task;
@@ -21,7 +21,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	onEditTask,
 	onDeleteTask,
 }) => {
-	const [editedContent, setEditedContent] = useState(task.description || "");
+	const [editedContent, setEditedContent] = useState(task.title || "");
 	const [editedDescription, setEditedDescription] = useState(
 		task.description || "",
 	);
@@ -41,7 +41,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		) {
 			onEditTask(
 				columnId,
-				task.id,
+				task.id!.toString(),
 				editedContent.trim(),
 				editedDescription.trim(),
 			);
@@ -50,7 +50,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 	const handleDelete = () => {
 		if (window.confirm("¿Estás seguro de que quieres eliminar esta tarea?")) {
-			onDeleteTask(columnId, task.id);
+			onDeleteTask(columnId, task.id!.toString());
 			onClose();
 		}
 	};
@@ -92,7 +92,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	return (
 		<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black p-4">
 			{" "}
-			{/* Oscurecido más el fondo */}
 			<div
 				ref={modalRef}
 				className="bg-background-card relative flex w-full max-w-3xl gap-6 rounded-lg p-6 shadow-2xl" // Aumentado padding y sombra, añadido flex y gap

@@ -1,26 +1,34 @@
+// src/pages/login/LoginPage.tsx
 import { Page } from "../../components/layout/page";
-import { NavLink } from "react-router-dom";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import type { Credentials } from "./types";
 import { useTranslation } from "react-i18next";
-import { useLoginAction, useUiResetError } from "../../store/hooks";
-import { useAppSelector } from "../../store";
-import { getUi } from "../../store/selectors";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { login } from "../../store/authSlice";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
-	const loginAction = useLoginAction();
-	const uiResetErrorAction = useUiResetError();
-	const { pending: isFetching, error } = useAppSelector(getUi);
+	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+	const { status, error, isAuthenticated } = useAppSelector(
+		(state) => state.auth,
+	);
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
 	});
 
 	const { email, password } = formData;
-	const disabled = !email || !password || isFetching;
+	const disabled = !email || !password;
+
+	useEffect(() => {
+		if (isAuthenticated) {
+			navigate("/boards");
+		}
+	}, [isAuthenticated, navigate]);
 
 	const validateEmail = (email: string): boolean => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -62,16 +70,18 @@ export const LoginPage = () => {
 			return;
 		}
 
-		await loginAction(formData);
-
-		// Si ambas validaciones pasan, mostrar el mensaje de éxito
-		toast.custom((t) => (
-			<CustomToast
-				message="Formulario enviado con éxito!"
-				t={t}
-				type="success"
-			/>
-		));
+		try {
+			await dispatch(login(formData));
+			toast.custom((t) => (
+				<CustomToast
+					message="Formulario enviado con éxito!"
+					t={t}
+					type="success"
+				/>
+			));
+		} catch (err) {
+			console.error("Login failed:", err);
+		}
 	};
 
 	return (
@@ -86,11 +96,8 @@ export const LoginPage = () => {
 							<div
 								className="rounded border border-red-200 bg-red-50 px-3 py-2 text-center text-sm text-red-600"
 								role="alert"
-								onClick={() => {
-									uiResetErrorAction();
-								}}
 							>
-								{error.message}
+								{error}
 							</div>
 						)}
 						<p className="text-text-body mt-2 text-center text-sm">
@@ -168,7 +175,9 @@ export const LoginPage = () => {
 								disabled={disabled}
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 							>
-								{t("login.loginForm.loginButton", "Iniciar Sesión")}
+								{status === "loading"
+									? t("login.loginForm.loading", "Cargando...")
+									: t("login.loginForm.loginButton", "Iniciar Sesión")}
 							</button>
 						</div>
 					</form>
