@@ -30,37 +30,39 @@ const BoardsList = () => {
 	const handleCloseAddForm = () => setShowAddForm(false);
 
 	return (
-		<Page title={t("boardslist.title", "Mis tableros")}>
-			<section className="boards-list-container">
-				{showAddForm && <NewBoard onClose={handleCloseAddForm} />}
-				<h2 className="sr-only">Lista de tableros</h2>
-				{!boards.length ? (
-					<div className="empty-list">
-						<div className="p-empty-list">
-							<p>{t("emptylist.p1", "Todavía no tienes ningún tablero.")}</p>
-							<p>{t("emptylist.p2", "¿Quieres crear uno?")}</p>
-						</div>
-						<AddButton showAddForm={handleShowAddForm} />
-					</div>
-				) : (
-					<div className="boards-wrapper">
-						<div className="add-board-btn">
+		<>
+			{showAddForm && <NewBoard onClose={handleCloseAddForm} />}
+			<Page title={t("boardslist.title", "Mis tableros")}>
+				<section className="boards-list-container">
+					<h2 className="sr-only">Lista de tableros</h2>
+					{!boards.length ? (
+						<div className="empty-list">
+							<div className="p-empty-list">
+								<p>{t("emptylist.p1", "Todavía no tienes ningún tablero.")}</p>
+								<p>{t("emptylist.p2", "¿Quieres crear uno?")}</p>
+							</div>
 							<AddButton showAddForm={handleShowAddForm} />
 						</div>
+					) : (
+						<div className="boards-wrapper">
+							<div className="add-board-btn">
+								<AddButton showAddForm={handleShowAddForm} />
+							</div>
 
-						<div className="boards-list-content">
-							<Suspense fallback={<LoginSkeleton />}>
-								<ul className="boards-list">
-									{boards.map((board) => (
-										<BoardsItem key={board.id} board={board} />
-									))}
-								</ul>
-							</Suspense>
+							<div className="boards-list-content">
+								<Suspense fallback={<LoginSkeleton />}>
+									<ul className="boards-list">
+										{boards.map((board) => (
+											<BoardsItem key={board.id} board={board} />
+										))}
+									</ul>
+								</Suspense>
+							</div>
 						</div>
-					</div>
-				)}
-			</section>
-		</Page>
+					)}
+				</section>
+			</Page>
+		</>
 	);
 };
 

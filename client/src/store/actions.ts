@@ -201,7 +201,7 @@ export function boardsLoad(): AppThunk<Promise<void>> {
 }
 
 export const boardsAdd =
-	(boardData: FormData): AppThunk<Promise<Board>> =>
+	(boardData: BoardData): AppThunk<Promise<Board>> =>
 	async (dispatch, _getState, { api, router }) => {
 		try {
 			dispatch(boardsAddPending());

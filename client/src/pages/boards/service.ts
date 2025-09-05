@@ -7,11 +7,11 @@ export const getBoards = async (): Promise<Board[]> => {
 	return response.data;
 };
 
-export const createBoard = async (boardData: FormData) => {
+export const createBoard = async (boardData: BoardData) => {
 	const response = await apiClient.post<Board>(
 		BOARD_ENDPOINTS.BOARDS,
 		boardData,
-		{ headers: { "Content-Type": "multipart/form-data" } },
+		{ headers: { "Content-Type": "application/json" } },
 	);
 	return response.data;
 };
