@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import type { Credentials } from "./types";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { login } from "../../store/authSlice";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
@@ -219,46 +218,6 @@ export const LoginPage = () => {
 							{error && <p className="text-red-500">{error}</p>}
 						</div>
 					</Form>
-					<div className="relative">
-						<div className="absolute inset-0 flex items-center">
-							<div className="border-border-light w-full border-t"></div>
-						</div>
-						<div className="relative flex justify-center text-sm">
-							<span className="bg-background-card text-text-placeholder px-2">
-								{t("login.loginForm.otherTypeLogin", "O continúa con")}
-							</span>
-						</div>
-					</div>
-					<div>
-						<div className="mt-6 grid grid-cols-2 gap-3">
-							<div>
-								<button
-									type="button"
-									className="border-border-light bg-background-card text-text-body hover:bg-background-light-grey inline-flex w-full justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors duration-200"
-								>
-									<img
-										src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-										alt="Google Logo"
-										className="mr-2 h-5 w-5"
-									/>
-									Google
-								</button>
-							</div>
-							<div>
-								<button
-									type="button"
-									className="border-border-light bg-background-card text-text-body hover:bg-background-light-grey inline-flex w-full justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors duration-200"
-								>
-									<img
-										src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
-										alt="GitHub Logo"
-										className="mr-2 h-5 w-5"
-									/>
-									GitHub
-								</button>
-							</div>
-						</div>
-					</div>
 					<WithOtherServices />
 				</div>
 			</div>
