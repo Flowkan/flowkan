@@ -5,7 +5,7 @@ import { BoardWithRelations } from "../models/BoardModel";
 
 export class BoardController {
   private boardService: BoardService;
-  
+
   constructor(boardService: BoardService) {
     this.boardService = boardService;
   }
@@ -13,13 +13,13 @@ export class BoardController {
   getAll = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const boards: BoardWithRelations[] = await this.boardService.getAllBoardsByUserId(userId);
+      const boards: BoardWithRelations[] =
+        await this.boardService.getAllBoardsByUserId(userId);
       res.json(boards);
     } catch (err) {
       res.status(500).send("Error al obtener los tableros");
     }
   };
-
 
   get = async (req: Request, res: Response) => {
     try {
@@ -40,7 +40,7 @@ export class BoardController {
       const board = await this.boardService.add({ userId, title });
       res.status(201).json(board);
     } catch (err) {
-      res.status(500).send("Error al crear el tablero");
+      res.status(500).send("Error al crear tablero :(");
     }
   };
 
