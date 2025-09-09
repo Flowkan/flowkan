@@ -25,6 +25,7 @@
 		},
 		"menu": {
 			"profile": "Profile",
+			"boards": "My boards",
 			"settings": "Settings",
 			"logout": "Log out"
 		},
@@ -53,12 +54,6 @@
 	},
 	"boardslist": {
 		"title": "My boards"
-	},
-	"newboard": {
-		"form": {
-			"header": "Create board",
-			"title": "Board title"
-		}
 	},
 	"home": {
 		"banner": "Simplify your tasks, maximize your productivity",

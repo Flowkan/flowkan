@@ -25,6 +25,7 @@
 		},
 		"menu": {
 			"profile": "Perfil",
+			"boards": "Mis tableros",
 			"settings": "Ajustes",
 			"logout": "Cerrar sesión"
 		},
@@ -53,12 +54,6 @@
 	},
 	"boardslist": {
 		"title": "Mis tableros"
-	},
-	"newboard": {
-		"form": {
-			"header": "Crear tablero",
-			"title": "Título del tablero"
-		}
 	},
 	"home": {
 		"banner": "Simplifica tus tareas, maximiza tu productividad",

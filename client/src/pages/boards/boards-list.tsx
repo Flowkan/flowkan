@@ -1,12 +1,13 @@
 import BoardsItem from "./boards-list-item";
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import LoginSkeleton from "../../components/ui/LoginSkeleton";
 import AddButton from "../../components/ui/add-button";
 import "./boards-list.css";
-import { useBoardsAction } from "../../store/hooks";
 import { Page } from "../../components/layout/page";
 import { useTranslation } from "react-i18next";
 import NewBoard from "./new-board";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { fetchBoards } from "../../store/boardsSlice";
 
 /* function EmptyList() {
 	const { t } = useTranslation();
@@ -23,11 +24,24 @@ import NewBoard from "./new-board";
 
 const BoardsList = () => {
 	const [showAddForm, setShowAddForm] = useState(false);
-	const boards = useBoardsAction();
+	const boards = useAppSelector((state) => state.boards.boards);
+	const dispatch = useAppDispatch();
+	const status = useAppSelector((state) => state.boards.status);
+	const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 	const { t } = useTranslation();
 
 	const handleShowAddForm = () => setShowAddForm(true);
 	const handleCloseAddForm = () => setShowAddForm(false);
+
+	useEffect(() => {
+		if (status === "idle" || (status === "loading" && isAuthenticated)) {
+			dispatch(fetchBoards());
+		}
+	}, [isAuthenticated, status, dispatch]);
+
+	if (status === "loading") {
+		return <LoginSkeleton />;
+	}
 
 	return (
 		<>
