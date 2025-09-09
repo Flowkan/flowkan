@@ -27,17 +27,18 @@ const BoardsList = () => {
 	const boards = useAppSelector((state) => state.boards.boards);
 	const dispatch = useAppDispatch();
 	const status = useAppSelector((state) => state.boards.status);
-	const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 	const { t } = useTranslation();
+	const [shouldRefetch, setShouldRefetch] = useState(false);
 
 	const handleShowAddForm = () => setShowAddForm(true);
 	const handleCloseAddForm = () => setShowAddForm(false);
 
 	useEffect(() => {
-		if (status === "idle" || (status === "loading" && isAuthenticated)) {
+		if (status === "idle" || shouldRefetch) {
 			dispatch(fetchBoards());
+			setShouldRefetch(false);
 		}
-	}, [isAuthenticated, status, dispatch]);
+	}, [shouldRefetch, status, dispatch]);
 
 	if (status === "loading") {
 		return <LoginSkeleton />;
@@ -45,7 +46,12 @@ const BoardsList = () => {
 
 	return (
 		<>
-			{showAddForm && <NewBoard onClose={handleCloseAddForm} />}
+			{showAddForm && (
+				<NewBoard
+					onClose={handleCloseAddForm}
+					onBoardCreated={() => setShouldRefetch(true)}
+				/>
+			)}
 			<Page title={t("boardslist.title", "Mis tableros")}>
 				<section className="boards-list-container">
 					<h2 className="sr-only">Lista de tableros</h2>
