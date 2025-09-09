@@ -15,6 +15,7 @@ export const createBoard = async (boardData: BoardsData): Promise<Board> => {
 	const response = await apiClient.post<Board>(
 		BOARD_ENDPOINTS.BOARDS,
 		boardData,
+		{ headers: { "Content-Type": "application/json" } },
 	);
 	return response.data;
 };

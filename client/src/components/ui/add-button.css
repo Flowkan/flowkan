@@ -7,6 +7,7 @@
 	border-radius: 5px;
 	background-color: #2159bf;
 	color: #ffffff;
+	transition: background-color 0.3s ease;
 
 	.p-add {
 		padding-right: 2px;
@@ -14,5 +15,6 @@
 
 	&:hover {
 		background-color: #3264c2;
+		cursor: pointer;
 	}
 }

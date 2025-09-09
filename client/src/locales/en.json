@@ -26,6 +26,7 @@
 		"menu": {
 			"profile": "Profile",
 			"boards": "My boards",
+			"settings": "Settings",
 			"logout": "Log out"
 		},
 		"login": "Login",

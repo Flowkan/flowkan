@@ -26,6 +26,7 @@
 		"menu": {
 			"profile": "Perfil",
 			"boards": "Mis tableros",
+			"settings": "Ajustes",
 			"logout": "Cerrar sesión"
 		},
 		"login": "Login",
