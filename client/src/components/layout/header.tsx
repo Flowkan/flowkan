@@ -82,10 +82,10 @@ export const Header: React.FC = () => {
 										{t("header.menu.profile", "Perfil")}
 									</NavLink>
 									<NavLink
-										to="/settings"
+										to="/boards"
 										className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 									>
-										{t("header.menu.settings", "Ajustes")}
+										{t("header.menu.boards", "Mis tableros")}
 									</NavLink>
 									<button
 										onClick={() => dispatch(logout())}

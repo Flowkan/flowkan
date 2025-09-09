@@ -4,8 +4,9 @@ import {
 	Droppable,
 	Draggable,
 	type DropResult,
+	type DraggableLocation,
 } from "@hello-pangea/dnd";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Column from "../../components/Column";
 import TaskDetailModal from "../../components/TaskDetailModal";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
@@ -22,16 +23,41 @@ import {
 	updateColumnsLocal,
 	updateColumnOrderLocal,
 } from "../../store/boardsSlice";
-import LoginSkeleton from "../../components/ui/LoginSkeleton";
+import { Page } from "../../components/layout/page";
+
+const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
+	const result = Array.from(list);
+	const [removed] = result.splice(startIndex, 1);
+	result.splice(endIndex, 0, removed);
+	return result;
+};
+
+const move = <T,>(
+	source: T[],
+	destination: T[],
+	droppableSource: DraggableLocation,
+	droppableDestination: DraggableLocation,
+): { [key: string]: T[] } => {
+	const sourceClone = Array.from(source);
+	const destClone = Array.from(destination);
+	const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+	destClone.splice(droppableDestination.index, 0, removed);
+
+	const result: { [key: string]: T[] } = {};
+	result[droppableSource.droppableId] = sourceClone;
+	result[droppableDestination.droppableId] = destClone;
+
+	return result;
+};
 
 const Board = () => {
 	const dispatch = useAppDispatch();
 	const { boardId } = useParams<{ boardId: string }>();
-	const {
-		currentBoard: boardData,
-		status,
-		error,
-	} = useAppSelector((state) => state.boards);
+	const navigate = useNavigate();
+	const { currentBoard: boardData, error } = useAppSelector(
+		(state) => state.boards,
+	);
 
 	const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 	const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
@@ -39,10 +65,16 @@ const Board = () => {
 	const [newColumnName, setNewColumnName] = useState("");
 
 	useEffect(() => {
-		if (boardId && boardData?.id !== boardId && status === "idle") {
+		if (boardId) {
 			dispatch(fetchBoard(boardId));
 		}
-	}, [boardId, boardData?.id, status, dispatch]);
+	}, [boardId, dispatch]);
+
+	useEffect(() => {
+		if (error === "Error al cargar tablero") {
+			navigate("/404");
+		}
+	}, [error, navigate]);
 
 	const onDragEnd = useCallback(
 		(result: DropResult) => {
@@ -50,58 +82,90 @@ const Board = () => {
 			const { type, source, destination } = result;
 			if (!destination) return;
 
+			// Si el arrastre es de una columna a otra
 			if (type === "column") {
-				// 1. Optimistic update en Redux
-				const newLists = Array.from(boardData.lists);
-				const [removed] = newLists.splice(source.index, 1);
-				newLists.splice(destination.index, 0, removed);
-
+				const newLists = reorder(
+					boardData.lists,
+					source.index,
+					destination.index,
+				);
 				dispatch(updateColumnOrderLocal(newLists));
-
-				// 2. Persistencia en API
 				const newOrder = newLists.map((col) => col.id!.toString());
 				dispatch(updateColumnOrder({ boardId: boardData.id!, newOrder }));
 			} else {
+				// Si el arrastre es de una tarjeta
+				const sInd = source.droppableId;
+				const dInd = destination.droppableId;
+
 				const sourceCol = boardData.lists.find(
-					(c) => c.id?.toString() === source.droppableId,
+					(c) => c.id?.toString() === sInd,
 				);
-				const destCol = boardData.lists.find(
-					(c) => c.id?.toString() === destination.droppableId,
-				);
+				const destCol = boardData.lists.find((c) => c.id?.toString() === dInd);
 				if (!sourceCol || !destCol) return;
 
-				const task = sourceCol.cards[source.index];
+				let newSourceCards;
+				let newDestCards;
 
-				// 1. Optimistic update
-				const newSourceCards = Array.from(sourceCol.cards);
-				newSourceCards.splice(source.index, 1);
+				if (sInd === dInd) {
+					// Mover dentro de la misma lista
+					newSourceCards = reorder(
+						sourceCol.cards,
+						source.index,
+						destination.index,
+					);
+					newDestCards = newSourceCards;
+				} else {
+					// Mover entre listas diferentes
+					const result = move(
+						sourceCol.cards,
+						destCol.cards,
+						source,
+						destination,
+					);
+					newSourceCards = result[sInd];
+					newDestCards = result[dInd];
+				}
 
-				const newDestCards = Array.from(destCol.cards);
-				newDestCards.splice(destination.index, 0, task);
-
+				// 1. Actualización optimista en Redux
 				dispatch(
 					updateColumnsLocal({
-						sourceId: sourceCol.id!.toString(),
-						destId: destCol.id!.toString(),
+						sourceId: sInd,
+						destId: dInd,
 						newSourceCards,
 						newDestCards,
 					}),
 				);
 
-				// 2. Persistencia en API
-				// Recalcular posiciones en destino
+				// 2. Persistencia en la API
+				// Recalcula y actualiza las posiciones de las tarjetas en la lista de destino.
 				newDestCards.forEach((t, index) => {
 					dispatch(
 						updateTaskThunk({
-							columnId: destCol.id!.toString(),
+							columnId: dInd,
 							taskId: t.id!.toString(),
 							task: {
-								listId: Number(destCol.id),
+								listId: Number(dInd),
 								position: index,
 							},
 						}),
 					);
 				});
+
+				// Si el movimiento fue entre listas, actualiza también la lista de origen.
+				if (sInd !== dInd) {
+					newSourceCards.forEach((t, index) => {
+						dispatch(
+							updateTaskThunk({
+								columnId: sInd,
+								taskId: t.id!.toString(),
+								task: {
+									listId: Number(sInd),
+									position: index,
+								},
+							}),
+						);
+					});
+				}
 			}
 		},
 		[boardData, dispatch],
@@ -208,11 +272,10 @@ const Board = () => {
 		[boardData, dispatch],
 	);
 
-	if (status === "loading" || !boardData) return <LoginSkeleton />;
 	if (error) return <div>Error al cargar el tablero: {error}</div>;
 
 	return (
-		<div>
+		<Page>
 			<DragDropContext onDragEnd={onDragEnd}>
 				<Droppable droppableId="board" type="column" direction="horizontal">
 					{(provided) => (
@@ -221,7 +284,7 @@ const Board = () => {
 							{...provided.droppableProps}
 							className="custom-scrollbar flex h-[calc(100vh-8rem)] gap-6 overflow-x-auto px-4 py-8 sm:px-8"
 						>
-							{boardData.lists.map((column, index) => (
+							{boardData?.lists.map((column, index) => (
 								<Draggable
 									key={column.id}
 									draggableId={column.id!.toString()}
@@ -323,7 +386,7 @@ const Board = () => {
 					}
 				/>
 			)}
-		</div>
+		</Page>
 	);
 };
 

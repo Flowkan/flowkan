@@ -3,8 +3,15 @@ import { Board, Prisma, PrismaClient } from "@prisma/client";
 const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
   include: {
     lists: {
+      orderBy: {
+        position: "asc",
+      },
       include: {
-        cards: true,
+        cards: {
+          orderBy: {
+            position: "asc",
+          },
+        },
       },
     },
 

@@ -4,16 +4,16 @@ import { HomePage } from "./pages/home";
 import { NotFound } from "./pages/not-found";
 import { RegisterPage } from "./pages/register/register";
 import { Suspense, lazy, type ReactNode } from "react";
-import Board from "./pages/boards/board.tsx";
 import { useAppSelector } from "./store/hooks.ts";
 import LoginSkeleton from "./components/ui/LoginSkeleton.tsx";
-import BoardsList from "./pages/boards/boards-list.tsx";
 
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((module) => ({
 		default: module.LoginPage,
 	})),
 );
+const Board = lazy(() => import("./pages/boards/board"));
+const BoardsList = lazy(() => import("./pages/boards/boards-list"));
 
 interface AuthRouteProps {
 	children: ReactNode;
@@ -69,7 +69,9 @@ function App() {
 					path="boards"
 					element={
 						<AuthRoute requireAuth={true}>
-							<Outlet />
+							<Suspense fallback={<LoginSkeleton />}>
+								<Outlet />
+							</Suspense>
 						</AuthRoute>
 					}
 				>

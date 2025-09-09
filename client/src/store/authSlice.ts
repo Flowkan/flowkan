@@ -17,8 +17,9 @@ interface AuthState {
 }
 
 const token = localStorage.getItem("auth");
+const storedUser = localStorage.getItem("user");
 const initialState: AuthState = {
-	user: null,
+	user: storedUser ? JSON.parse(storedUser) : null,
 	isAuthenticated: !!token,
 	status: "idle",
 	error: null,
@@ -49,6 +50,7 @@ const authSlice = createSlice({
 			state.status = "idle";
 			state.error = null;
 			localStorage.removeItem("auth");
+			localStorage.removeItem("user");
 		},
 	},
 	extraReducers: (builder) => {
@@ -61,11 +63,14 @@ const authSlice = createSlice({
 				state.status = "succeeded";
 				state.user = action.payload;
 				state.isAuthenticated = true;
+				localStorage.setItem("user", JSON.stringify(action.payload));
 			})
 			.addCase(login.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.payload as string;
 				state.isAuthenticated = false;
+				localStorage.removeItem("auth");
+				localStorage.removeItem("user");
 			});
 	},
 });

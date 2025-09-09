@@ -231,17 +231,24 @@ const boardsSlice = createSlice({
 			}>,
 		) => {
 			if (!state.currentBoard) return;
+
 			const { sourceId, destId, newSourceCards, newDestCards } = action.payload;
 
-			const sourceCol = state.currentBoard.lists.find(
-				(c) => c.id?.toString() === sourceId.toString(),
-			);
-			const destCol = state.currentBoard.lists.find(
-				(c) => c.id?.toString() === destId.toString(),
-			);
-
-			if (sourceCol) sourceCol.cards = newSourceCards;
-			if (destCol) destCol.cards = newDestCards;
+			state.currentBoard.lists = state.currentBoard.lists.map((list) => {
+				if (list.id?.toString() === sourceId) {
+					return {
+						...list,
+						cards: newSourceCards,
+					};
+				}
+				if (list.id?.toString() === destId && sourceId !== destId) {
+					return {
+						...list,
+						cards: newDestCards,
+					};
+				}
+				return list;
+			});
 		},
 
 		updateColumnOrderLocal: (state, action: PayloadAction<Column[]>) => {
@@ -306,12 +313,13 @@ const boardsSlice = createSlice({
 			})
 			.addCase(updateColumnOrder.fulfilled, (state, action) => {
 				if (state.currentBoard) {
-					state.currentBoard.lists = action.payload.columnOrder
-						.map((columnId) => {
-							return state.currentBoard!.lists.find(
+					const newOrderIds = action.payload.columnOrder;
+					state.currentBoard.lists = newOrderIds
+						.map((columnId) =>
+							state.currentBoard!.lists.find(
 								(column) => column.id === columnId,
-							);
-						})
+							),
+						)
 						.filter(Boolean) as Column[];
 				}
 			})
