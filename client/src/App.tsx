@@ -8,6 +8,8 @@ import Board from "./pages/boards/board.tsx";
 import { useAppSelector } from "./store";
 import LoginSkeleton from "./components/ui/LoginSkeleton.tsx";
 import BoardsList from "./pages/boards/boards-list.tsx";
+import Profile from "./pages/profile/profile.tsx";
+
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((module) => ({
 		default: module.LoginPage,
@@ -54,6 +56,14 @@ function App() {
 					element={
 						<AuthRoute requireAuth={false} redirectTo="/login">
 							<RegisterPage />
+						</AuthRoute>
+					}
+				/>
+				<Route
+					path="profile"
+					element={
+						<AuthRoute requireAuth={true}>
+							<Profile />
 						</AuthRoute>
 					}
 				/>
