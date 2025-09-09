@@ -1,11 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { useBoardsAddAction } from "../../store/hooks";
 import { Form } from "../../components/ui/Form";
 import { FormFields } from "../../components/ui/FormFields";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import CloseButton from "../../components/ui/close-button";
 import "./new-board.css";
 import { Button } from "../../components/ui/Button";
+import { useDispatch } from "react-redux";
+import { addBoard } from "../../store/boardsSlice";
+import type { AppDispatch } from "../../store/store";
 
 interface NewBoardProps {
 	onClose: () => void;
@@ -14,7 +16,7 @@ interface NewBoardProps {
 const NewBoard = ({ onClose }: NewBoardProps) => {
 	const { t } = useTranslation();
 	const [titleInput, setTitleInput] = useState("");
-	const newBoard = useBoardsAddAction();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const isDisabled = !titleInput;
 
@@ -29,7 +31,12 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 			title: titleInput,
 		};
 
-		await newBoard(data);
+		try {
+			await dispatch(addBoard(data)).unwrap();
+			onClose(); // Cierra el modal solo si la creación fue exitosa
+		} catch (error) {
+			console.error("Error al crear el tablero:", error);
+		}
 	};
 
 	return (
