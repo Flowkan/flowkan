@@ -1,173 +1,179 @@
 {
-  "footer": {
-    "description": "FlowKan te ayuda a organizar tu trabajo y a tu equipo de forma visual y eficiente. Simplifica la gestión de proyectos y alcanza tus objetivos.",
-    "privacy": "Política de privacidad",
-    "terms": "Términos y condiciones de\tservicio",
-    "title": "Contacto",
-    "contact": {
-      "email": "Email",
-      "phone": "Teléfono"
-    },
-    "address": {
-      "label": "Dirección",
-      "street": "Calle",
-      "country": "España"
-    },
-    "clients": "Nuestros Clientes",
-    "copy": "Todos los derechos reservados"
-  },
-  "header": {
-    "title": "Flowkan",
-    "navbar": {
-      "features": "Características",
-      "solutions": "Soluciones",
-      "prices": "Precios"
-    },
-    "menu": {
-      "profile": "Perfil",
-      "settings": "Ajustes",
-      "logout": "Cerrar sesión"
-    },
-    "login": "Login",
-    "signup": "Registro"
-  },
-  "addbtn": "Nuevo tablero",
-  "confirm": {
-    "yes": "SI",
-    "no": "NO"
-  },
-  "arialabels": {
-    "component": {
-      "FormFields": {
-        "hidePass": "Ocultar contraseña",
-        "showPass": "Mostrar contraseña"
-      }
-    }
-  },
-  "boardsitem": {
-    "confirm": ""
-  },
-  "emptylist": {
-    "p1": "Todavía no tienes ningún tablero.",
-    "p2": "¿Quieres crear uno?"
-  },
-  "boardslist": {
-    "title": "Mis tableros"
-  },
-  "home": {
-    "banner": "Simplifica tus tareas, maximiza tu productividad",
-    "description": "Tarjetas de Tareas, Listas, Tableros",
-    "funtionality": "Arrastrar y soltar",
-    "more": "Saber Más",
-    "features": {
-      "title": "Características Destacadas",
-      "board": "Kanban Board",
-      "viewTask": "Visualiza y gestiona tus tareas con facilidad",
-      "collaborations": "Colaboración",
-      "jobsTeam": "Trabaja en equipo en tiempo real sin esfuerzo",
-      "follow": "Seguimiento de Progreso",
-      "upToDay": "Mantente al tanto del avance de tus proyectos",
-      "calendar": "Calendario Integrado",
-      "events": "Organiza tus plazos y eventos importantes"
-    },
-    "ourUsers": {
-      "title": "Lo que dicen nuestros usuarios",
-      "feedbacks": {
-        "first": {
-          "text": "Esta aplicación ha transformado la forma en que gestionamos nuestros proyectos. ¡Absolutamente indispensable!",
-          "user": "Ana García, CEO en Empresa X"
-        },
-        "second": {
-          "text": "La interfaz es increíblemente intuitiva y las funciones de\tcolaboración son de otro nivel.",
-          "user": "Juan Pérez, Product Manager"
-        },
-        "third": {
-          "text": "Nunca pensé que la gestión de tareas pudiera ser tan sencilla y visualmente agradable.",
-          "user": "Sofía Castro, Diseñadora UX"
-        }
-      }
-    },
-    "docs": {
-      "title": "Cómo puedes usar nuestra plataforma",
-      "management": {
-        "title": "Gestión de Proyectos",
-        "message": "Desde pequeños equipos hasta grandes empresas, nuestra\therramienta se adapta a tus necesidades de gestión de\tproyectos complejos."
-      },
-      "planning": {
-        "title": "Planificación de Eventos",
-        "message": "Organiza cada detalle de tus eventos, desde la logística hasta\tlas invitaciones, de manera visual."
-      },
-      "monitoring": {
-        "title": "Seguimiento Personal",
-        "message": "Gestiona tus tareas personales, objetivos y hábitos diarios con un sistema Kanban fácil de usar."
-      }
-    },
-    "moreInformation": "Más información"
-  },
-  "login": {
-    "toast": {
-      "message": {
-        "errorEmptyPassword": "La contraseña no puede estar vacía.",
-        "success": "Formulario enviado con éxito!",
-        "error": "Credenciales incorrectas"
-      }
-    },
-    "loginForm": {
-      "title": "Iniciar Sesión",
-      "question": "¿No tienes una cuenta?",
-      "signup": "Regístrate aquí",
-      "email": {
-        "emailLabel": "Dirección de Email",
-        "placeholder": "Correo electrónico"
-      },
-      "password": {
-        "passwordLabel": "Contraseña",
-        "passwordPlaceholder": "Contraseña"
-      },
-      "forgetPassword": "¿Olvidaste tu contraseña?",
-      "loginButton": {
-        "spinner": {
-          "loading": "Cargando...",
-          "default": "Iniciar Sesión"
-        }
-      }
-    }
-  },
-  "notFound": {
-    "title": "Página no encontrada",
-    "description": "Lo sentimos, no pudimos encontrar la página que buscas",
-    "backButton": "Volver a inicio"
-  },
-  "register": {
-    "registerForm": {
-      "title": "Crea tu Cuenta",
-      "question": "¿Ya tienes una cuenta?",
-      "login": "Inicia sesión aquí",
-      "name": {
-        "label": "Nombre Completo",
-        "placeholder": "Nombre completo"
-      },
-      "email": {
-        "label": "Dirección de Email",
-        "placeholder": "Correo electrónico"
-      },
-      "password": {
-        "label": "Contraseña",
-        "placeholder": "Contraseña"
-      },
-      "confirmPassword": {
-        "label": "Confirmar Contraseña",
-        "placeholder": "Confirmar contraseña"
-      },
-      "registerButton": {
-        "spinner": {
-          "loading": "Registrando...",
-          "default": "Registrarse"
-        }
-      }
-    },
-    "withOtherService": {
-      "otherTypeRegister": "O continúa con"
-    }
-  }
+	"footer": {
+		"description": "FlowKan te ayuda a organizar tu trabajo y a tu equipo de forma visual y eficiente. Simplifica la gestión de proyectos y alcanza tus objetivos.",
+		"privacy": "Política de privacidad",
+		"terms": "Términos y condiciones de\tservicio",
+		"title": "Contacto",
+		"contact": {
+			"email": "Email",
+			"phone": "Teléfono"
+		},
+		"address": {
+			"label": "Dirección",
+			"street": "Calle",
+			"country": "España"
+		},
+		"clients": "Nuestros Clientes",
+		"copy": "Todos los derechos reservados"
+	},
+	"header": {
+		"title": "Flowkan",
+		"navbar": {
+			"features": "Características",
+			"solutions": "Soluciones",
+			"prices": "Precios"
+		},
+		"menu": {
+			"profile": "Perfil",
+			"settings": "Ajustes",
+			"logout": "Cerrar sesión"
+		},
+		"login": "Login",
+		"signup": "Registro"
+	},
+	"addbtn": "Nuevo tablero",
+	"confirm": {
+		"yes": "SI",
+		"no": "NO"
+	},
+	"arialabels": {
+		"component": {
+			"FormFields": {
+				"hidePass": "Ocultar contraseña",
+				"showPass": "Mostrar contraseña"
+			}
+		}
+	},
+	"boardsitem": {
+		"confirm": ""
+	},
+	"emptylist": {
+		"p1": "Todavía no tienes ningún tablero.",
+		"p2": "¿Quieres crear uno?"
+	},
+	"boardslist": {
+		"title": "Mis tableros"
+	},
+	"newboard": {
+		"form": {
+			"header": "Crear tablero",
+			"title": "Título del tablero"
+		}
+	},
+	"home": {
+		"banner": "Simplifica tus tareas, maximiza tu productividad",
+		"description": "Tarjetas de Tareas, Listas, Tableros",
+		"funtionality": "Arrastrar y soltar",
+		"more": "Saber Más",
+		"features": {
+			"title": "Características Destacadas",
+			"board": "Kanban Board",
+			"viewTask": "Visualiza y gestiona tus tareas con facilidad",
+			"collaborations": "Colaboración",
+			"jobsTeam": "Trabaja en equipo en tiempo real sin esfuerzo",
+			"follow": "Seguimiento de Progreso",
+			"upToDay": "Mantente al tanto del avance de tus proyectos",
+			"calendar": "Calendario Integrado",
+			"events": "Organiza tus plazos y eventos importantes"
+		},
+		"ourUsers": {
+			"title": "Lo que dicen nuestros usuarios",
+			"feedbacks": {
+				"first": {
+					"text": "Esta aplicación ha transformado la forma en que gestionamos nuestros proyectos. ¡Absolutamente indispensable!",
+					"user": "Ana García, CEO en Empresa X"
+				},
+				"second": {
+					"text": "La interfaz es increíblemente intuitiva y las funciones de\tcolaboración son de otro nivel.",
+					"user": "Juan Pérez, Product Manager"
+				},
+				"third": {
+					"text": "Nunca pensé que la gestión de tareas pudiera ser tan sencilla y visualmente agradable.",
+					"user": "Sofía Castro, Diseñadora UX"
+				}
+			}
+		},
+		"docs": {
+			"title": "Cómo puedes usar nuestra plataforma",
+			"management": {
+				"title": "Gestión de Proyectos",
+				"message": "Desde pequeños equipos hasta grandes empresas, nuestra\therramienta se adapta a tus necesidades de gestión de\tproyectos complejos."
+			},
+			"planning": {
+				"title": "Planificación de Eventos",
+				"message": "Organiza cada detalle de tus eventos, desde la logística hasta\tlas invitaciones, de manera visual."
+			},
+			"monitoring": {
+				"title": "Seguimiento Personal",
+				"message": "Gestiona tus tareas personales, objetivos y hábitos diarios con un sistema Kanban fácil de usar."
+			}
+		},
+		"moreInformation": "Más información"
+	},
+	"login": {
+		"toast": {
+			"message": {
+				"errorEmptyPassword": "La contraseña no puede estar vacía.",
+				"success": "Formulario enviado con éxito!",
+				"error": "Credenciales incorrectas"
+			}
+		},
+		"loginForm": {
+			"title": "Iniciar Sesión",
+			"question": "¿No tienes una cuenta?",
+			"signup": "Regístrate aquí",
+			"email": {
+				"emailLabel": "Dirección de Email",
+				"placeholder": "Correo electrónico"
+			},
+			"password": {
+				"passwordLabel": "Contraseña",
+				"passwordPlaceholder": "Contraseña"
+			},
+			"forgetPassword": "¿Olvidaste tu contraseña?",
+			"loginButton": {
+				"spinner": {
+					"loading": "Cargando...",
+					"default": "Iniciar Sesión"
+				}
+			}
+		}
+	},
+	"notFound": {
+		"title": "Página no encontrada",
+		"description": "Lo sentimos, no pudimos encontrar la página que buscas",
+		"backButton": "Volver a inicio"
+	},
+	"register": {
+		"registerForm": {
+			"title": "Crea tu Cuenta",
+			"question": "¿Ya tienes una cuenta?",
+			"login": "Inicia sesión aquí",
+			"name": {
+				"label": "Nombre Completo",
+				"placeholder": "Nombre completo"
+			},
+			"email": {
+				"label": "Dirección de Email",
+				"placeholder": "Correo electrónico"
+			},
+			"password": {
+				"label": "Contraseña",
+				"placeholder": "Contraseña"
+			},
+			"confirmPassword": {
+				"label": "Confirmar Contraseña",
+				"placeholder": "Confirmar contraseña"
+			},
+			"registerButton": {
+				"spinner": {
+					"loading": "Registrando...",
+					"default": "Registrarse"
+				}
+			}
+		},
+		"withOtherService": {
+			"otherTypeRegister": "O continúa con"
+		}
+	}
 }

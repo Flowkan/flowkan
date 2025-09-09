@@ -8,6 +8,7 @@ import Board from "./pages/boards/board.tsx";
 import { useAppSelector } from "./store";
 import LoginSkeleton from "./components/ui/LoginSkeleton.tsx";
 import BoardsList from "./pages/boards/boards-list.tsx";
+import NewBoardPage from "./pages/boards/new-board.tsx";
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((module) => ({
 		default: module.LoginPage,
@@ -67,7 +68,7 @@ function App() {
 				>
 					<Route index element={<BoardsList />} />
 					<Route path=":id" element={<Board />} />
-					<Route path="new" />
+					{/* <Route path="new" element={<NewBoardPage />} /> */}
 				</Route>
 				<Route path="not-found" element={<NotFound />} />
 				<Route path="*" element={<Navigate to="/not-found" />} />

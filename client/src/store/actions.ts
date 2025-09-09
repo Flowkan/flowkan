@@ -201,16 +201,19 @@ export function boardsLoad(): AppThunk<Promise<void>> {
 }
 
 export const boardsAdd =
-	(boardData: BoardData): AppThunk<Promise<void>> =>
-	async (dispatch, _getState, { api }) => {
-		dispatch(boardsAddPending());
+	(boardData: BoardData): AppThunk<Promise<Board>> =>
+	async (dispatch, _getState, { api, router }) => {
 		try {
+			dispatch(boardsAddPending());
 			const newBoard = await api.boards.createBoard(boardData);
 			dispatch(boardsAddFulfilled(newBoard));
+			router.navigate(`/boards/${newBoard.id}`, { replace: true });
+			return newBoard;
 		} catch (error) {
 			if (error instanceof Error) {
 				dispatch(boardsAddRejected(error));
 			}
+			throw error;
 		}
 	};
 

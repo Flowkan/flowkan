@@ -2,7 +2,7 @@ import { type Actions, type ActionsRejected } from "./actions.ts";
 import type { Board } from "../pages/boards/types";
 
 export type State = {
-	auth: boolean;
+	auth: AuthState;
 	boards: {
 		loaded: boolean;
 		data: Board[];
@@ -31,7 +31,7 @@ const defaultAuthState: AuthState = {
 };
 
 const defaultState: State = {
-	auth: false,
+	auth: defaultAuthState,
 	boards: {
 		loaded: false,
 		data: [],
