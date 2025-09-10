@@ -1,106 +1,199 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
 	DragDropContext,
 	Droppable,
 	Draggable,
 	type DropResult,
+	type DraggableLocation,
 } from "@hello-pangea/dnd";
-import type { BoardData, Column as ColumnType, Task } from "../../types";
-import { handleColumnDrag, handleTaskDrag } from "../../lib/dragHandlers";
+import { useParams, useNavigate } from "react-router-dom";
 import Column from "../../components/Column";
 import TaskDetailModal from "../../components/TaskDetailModal";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import type { Task, Column as ColumnType } from "./types";
+import {
+	fetchBoard,
+	updateColumnOrder,
+	addBoardColumn,
+	updateColumnThunk,
+	deleteColumnThunk,
+	addTask,
+	updateTaskThunk,
+	deleteTaskThunk,
+	updateColumnsLocal,
+	updateColumnOrderLocal,
+} from "../../store/boardsSlice";
+import { Page } from "../../components/layout/page";
 
-const generateUniqueId = (): string => {
-	return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
+const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
+	const result = Array.from(list);
+	const [removed] = result.splice(startIndex, 1);
+	result.splice(endIndex, 0, removed);
+	return result;
 };
 
-const initialData: BoardData = {
-	columns: {
-		"col-1": {
-			id: "col-1",
-			title: "Por hacer",
-			isVisible: true,
-			items: [
-				{
-					id: generateUniqueId(),
-					content: "Comprar ingredientes para la cena",
-					description:
-						"Revisar lista de supermercado para los ingredientes faltantes.",
-				},
-				{ id: generateUniqueId(), content: "Revisar pull requests pendientes" },
-				{
-					id: generateUniqueId(),
-					content: "Planificar la reunión semanal del equipo",
-					description: "Crear agenda y enviar invitaciones.",
-				},
-			],
-		},
-		"col-2": {
-			id: "col-2",
-			title: "En progreso",
-			isVisible: true,
-			items: [
-				{
-					id: generateUniqueId(),
-					content: "Diseñar wireframes para nueva feature",
-				},
-				{
-					id: generateUniqueId(),
-					content: "Resolver bug crítico en producción",
-				},
-			],
-		},
-		"col-3": {
-			id: "col-3",
-			title: "Hecho",
-			isVisible: true,
-			items: [
-				{ id: generateUniqueId(), content: "Configurar entorno de desarrollo" },
-			],
-		},
-	},
-	columnOrder: ["col-1", "col-2", "col-3"],
+const move = <T,>(
+	source: T[],
+	destination: T[],
+	droppableSource: DraggableLocation,
+	droppableDestination: DraggableLocation,
+): { [key: string]: T[] } => {
+	const sourceClone = Array.from(source);
+	const destClone = Array.from(destination);
+	const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+	destClone.splice(droppableDestination.index, 0, removed);
+
+	const result: { [key: string]: T[] } = {};
+	result[droppableSource.droppableId] = sourceClone;
+	result[droppableDestination.droppableId] = destClone;
+
+	return result;
 };
 
 const Board = () => {
-	const [data, setData] = useState<BoardData>(initialData);
-	const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-	const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
-	const [newColumnIdInEdit, setNewColumnIdInEdit] = useState<string | null>(
-		null,
+	const dispatch = useAppDispatch();
+	const { boardId } = useParams<{ boardId: string }>();
+	const navigate = useNavigate();
+	const { currentBoard: boardData, error } = useAppSelector(
+		(state) => state.boards,
 	);
 
+	const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+	const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [newColumnName, setNewColumnName] = useState("");
 
-	const onDragEnd = useCallback((result: DropResult) => {
-		const { type, destination } = result;
-		if (!destination) return;
-
-		if (type === "column") {
-			setData((prev) => handleColumnDrag(prev, result));
-		} else {
-			setData((prev) => handleTaskDrag(prev, result));
+	useEffect(() => {
+		if (boardId) {
+			dispatch(fetchBoard(boardId));
 		}
-	}, []);
+	}, [boardId, dispatch]);
 
-	const handleAddTask = useCallback((columnId: string, content: string) => {
-		setData((prevData) => {
-			const newTaskId = generateUniqueId();
-			const newTask: Task = { id: newTaskId, content };
-			const newItems = [...prevData.columns[columnId].items, newTask];
-			return {
-				...prevData,
-				columns: {
-					...prevData.columns,
-					[columnId]: {
-						...prevData.columns[columnId],
-						items: newItems,
-					},
-				},
+	useEffect(() => {
+		if (error === "Error al cargar tablero") {
+			navigate("/404");
+		}
+	}, [error, navigate]);
+
+	const onDragEnd = useCallback(
+		(result: DropResult) => {
+			if (!boardData) return;
+			const { type, source, destination } = result;
+			if (!destination) return;
+
+			// Si el arrastre es de una columna a otra
+			if (type === "column") {
+				const newLists = reorder(
+					boardData.lists,
+					source.index,
+					destination.index,
+				);
+				dispatch(updateColumnOrderLocal(newLists));
+				const newOrder = newLists.map((col) => col.id!.toString());
+				dispatch(updateColumnOrder({ boardId: boardData.id!, newOrder }));
+			} else {
+				// Si el arrastre es de una tarjeta
+				const sInd = source.droppableId;
+				const dInd = destination.droppableId;
+
+				const sourceCol = boardData.lists.find(
+					(c) => c.id?.toString() === sInd,
+				);
+				const destCol = boardData.lists.find((c) => c.id?.toString() === dInd);
+				if (!sourceCol || !destCol) return;
+
+				let newSourceCards;
+				let newDestCards;
+
+				if (sInd === dInd) {
+					// Mover dentro de la misma lista
+					newSourceCards = reorder(
+						sourceCol.cards,
+						source.index,
+						destination.index,
+					);
+					newDestCards = newSourceCards;
+				} else {
+					// Mover entre listas diferentes
+					const result = move(
+						sourceCol.cards,
+						destCol.cards,
+						source,
+						destination,
+					);
+					newSourceCards = result[sInd];
+					newDestCards = result[dInd];
+				}
+
+				// 1. Actualización optimista en Redux
+				dispatch(
+					updateColumnsLocal({
+						sourceId: sInd,
+						destId: dInd,
+						newSourceCards,
+						newDestCards,
+					}),
+				);
+
+				// 2. Persistencia en la API
+				// Recalcula y actualiza las posiciones de las tarjetas en la lista de destino.
+				newDestCards.forEach((t, index) => {
+					dispatch(
+						updateTaskThunk({
+							columnId: dInd,
+							taskId: t.id!.toString(),
+							task: {
+								listId: Number(dInd),
+								position: index,
+							},
+						}),
+					);
+				});
+
+				// Si el movimiento fue entre listas, actualiza también la lista de origen.
+				if (sInd !== dInd) {
+					newSourceCards.forEach((t, index) => {
+						dispatch(
+							updateTaskThunk({
+								columnId: sInd,
+								taskId: t.id!.toString(),
+								task: {
+									listId: Number(sInd),
+									position: index,
+								},
+							}),
+						);
+					});
+				}
+			}
+		},
+		[boardData, dispatch],
+	);
+
+	const handleAddTask = useCallback(
+		(columnId: number, content: string) => {
+			if (!boardData) return;
+			const currentColumn = boardData.lists.find(
+				(c) => c.id?.toString() === columnId.toString(),
+			);
+			if (!currentColumn) return;
+			const newTask = {
+				title: content,
+				description: "",
+				position: (currentColumn.cards ?? []).length,
 			};
-		});
-	}, []);
+
+			dispatch(
+				addTask({
+					boardId: boardData.id!,
+					columnId: columnId,
+					task: newTask,
+				}),
+			);
+		},
+		[boardData, dispatch],
+	);
 
 	const handleEditTask = useCallback(
 		(
@@ -109,51 +202,24 @@ const Board = () => {
 			newContent: string,
 			newDescription?: string,
 		) => {
-			setData((prevData) => {
-				const newItems = prevData.columns[columnId].items.map((task) =>
-					task.id === taskId
-						? {
-								...task,
-								content: newContent,
-								description:
-									newDescription !== undefined
-										? newDescription
-										: task.description,
-							}
-						: task,
-				);
-				return {
-					...prevData,
-					columns: {
-						...prevData.columns,
-						[columnId]: {
-							...prevData.columns[columnId],
-							items: newItems,
-						},
-					},
-				};
-			});
+			dispatch(
+				updateTaskThunk({
+					columnId,
+					taskId,
+					task: { title: newContent, description: newDescription },
+				}),
+			);
 		},
-		[],
+		[dispatch],
 	);
 
-	const handleDeleteTask = useCallback((columnId: string, taskId: string) => {
-		setData((prevData) => {
-			const newItems = prevData.columns[columnId].items.filter(
-				(task) => task.id !== taskId,
-			);
-			return {
-				...prevData,
-				columns: {
-					...prevData.columns,
-					[columnId]: {
-						...prevData.columns[columnId],
-						items: newItems,
-					},
-				},
-			};
-		});
-	}, []);
+	const handleDeleteTask = useCallback(
+		(taskId: string, columnId: string) => {
+			if (!boardData) return;
+			dispatch(deleteTaskThunk({ boardId: boardData.id!, columnId, taskId }));
+		},
+		[boardData, dispatch],
+	);
 
 	const openTaskDetail = useCallback((task: Task, columnId: string) => {
 		setSelectedTask(task);
@@ -167,89 +233,49 @@ const Board = () => {
 
 	const handleEditColumnTitle = useCallback(
 		(columnId: string, newTitle: string) => {
-			setData((prevData) => ({
-				...prevData,
-				columns: {
-					...prevData.columns,
-					[columnId]: {
-						...prevData.columns[columnId],
-						title: newTitle,
-					},
-				},
-			}));
-
-			if (columnId === newColumnIdInEdit) {
-				setNewColumnIdInEdit(null);
-			}
+			if (!boardData) return;
+			const column = boardData.lists.find((c) => c.id === columnId);
+			if (!column) return;
+			dispatch(
+				updateColumnThunk({
+					columnId,
+					data: { ...column, title: newTitle },
+				}),
+			);
 		},
-		[newColumnIdInEdit],
+		[boardData, dispatch],
 	);
 
-	const handleAddColumn = useCallback(() => {
+	const handleAddColumnToggle = useCallback(() => {
 		setIsMenuOpen((prev) => !prev);
 	}, []);
 
 	const handleCreateColumn = useCallback(() => {
-		if (newColumnName.trim() !== "") {
-			const newColumnId = generateUniqueId();
+		if (newColumnName.trim() !== "" && boardData) {
 			const newColumn: ColumnType = {
-				id: newColumnId,
 				title: newColumnName,
-				items: [],
+				cards: [],
 				isVisible: true,
+				position: boardData.lists.length,
 			};
-
-			setData((prevData) => ({
-				...prevData,
-				columns: {
-					...prevData.columns,
-					[newColumnId]: newColumn,
-				},
-				columnOrder: [...prevData.columnOrder, newColumnId],
-			}));
-
+			dispatch(addBoardColumn({ boardId: boardData.id!, column: newColumn }));
 			setNewColumnName("");
 			setIsMenuOpen(false);
 		}
-	}, [newColumnName]);
+	}, [boardData, newColumnName, dispatch]);
 
-	const handleDeleteColumn = useCallback(
+	const handleDeleteColumnClick = useCallback(
 		(columnId: string) => {
-			setData((prevData) => {
-				const newColumns = { ...prevData.columns };
-				delete newColumns[columnId];
-				const newColumnOrder = prevData.columnOrder.filter(
-					(id) => id !== columnId,
-				);
-				return {
-					...prevData,
-					columns: newColumns,
-					columnOrder: newColumnOrder,
-				};
-			});
-
-			if (columnId === newColumnIdInEdit) {
-				setNewColumnIdInEdit(null);
-			}
+			if (!boardData) return;
+			dispatch(deleteColumnThunk({ columnId }));
 		},
-		[newColumnIdInEdit],
+		[boardData, dispatch],
 	);
 
-	const handleToggleVisibility = useCallback((columnId: string) => {
-		setData((prevData) => ({
-			...prevData,
-			columns: {
-				...prevData.columns,
-				[columnId]: {
-					...prevData.columns[columnId],
-					isVisible: !prevData.columns[columnId].isVisible,
-				},
-			},
-		}));
-	}, []);
+	if (error) return <div>Error al cargar el tablero: {error}</div>;
 
 	return (
-		<div>
+		<Page>
 			<DragDropContext onDragEnd={onDragEnd}>
 				<Droppable droppableId="board" type="column" direction="horizontal">
 					{(provided) => (
@@ -258,39 +284,58 @@ const Board = () => {
 							{...provided.droppableProps}
 							className="custom-scrollbar flex h-[calc(100vh-8rem)] gap-6 overflow-x-auto px-4 py-8 sm:px-8"
 						>
-							{data.columnOrder.map((colId, index) => {
-								const column = data.columns[colId];
-								return column.isVisible ? (
-									<Draggable key={colId} draggableId={colId} index={index}>
-										{(prov) => (
-											<div
-												ref={prov.innerRef}
-												{...prov.draggableProps}
-												style={prov.draggableProps.style}
-												className="flex flex-col"
-											>
-												<div {...prov.dragHandleProps} className="cursor-grab">
-													<Column
-														column={column}
-														onAddTask={handleAddTask}
-														onEditTask={handleEditTask}
-														onDeleteTask={handleDeleteTask}
-														onEditColumnTitle={handleEditColumnTitle}
-														onDeleteColumn={handleDeleteColumn}
-														onOpenTaskDetail={openTaskDetail}
-														isNewColumnInEditMode={colId === newColumnIdInEdit}
-													/>
-												</div>
+							{boardData?.lists.map((column, index) => (
+								<Draggable
+									key={column.id}
+									draggableId={column.id!.toString()}
+									index={index}
+								>
+									{(prov) => (
+										<div
+											ref={prov.innerRef}
+											{...prov.draggableProps}
+											style={prov.draggableProps.style}
+											className="flex flex-col"
+										>
+											<div {...prov.dragHandleProps} className="cursor-grab">
+												<Column
+													column={column}
+													onAddTask={(task) =>
+														handleAddTask(Number(column.id), task)
+													}
+													onEditTask={(taskId, newTitle, newDescription) =>
+														handleEditTask(
+															column.id!,
+															taskId,
+															newTitle,
+															newDescription,
+														)
+													}
+													onDeleteTask={(taskId) =>
+														handleDeleteTask(taskId, column.id!)
+													}
+													onEditColumnTitle={(newTitle) =>
+														handleEditColumnTitle(column.id!, newTitle)
+													}
+													onDeleteColumn={() =>
+														handleDeleteColumnClick(column.id!)
+													}
+													onOpenTaskDetail={(task) =>
+														openTaskDetail(task, column.id!)
+													}
+													isNewColumnInEditMode={false}
+												/>
 											</div>
-										)}
-									</Draggable>
-								) : null;
-							})}
+										</div>
+									)}
+								</Draggable>
+							))}
 							{provided.placeholder}
-							{/* Contenedor del botón y menú, ahora al inicio del div */}
+
+							{/* Add new column */}
 							<div className="items-left relative flex h-full w-80 flex-shrink-0 flex-col">
 								<button
-									onClick={handleAddColumn}
+									onClick={handleAddColumnToggle}
 									className="bg-background-column-light text-text-placeholder hover:bg-background-hover-column border-border-medium hover:border-accent flex h-14 w-14 items-center justify-center rounded-lg border-2 border-dashed text-2xl font-semibold shadow-md transition-colors duration-200"
 								>
 									+
@@ -315,33 +360,6 @@ const Board = () => {
 												Crear Columna
 											</button>
 										</div>
-										<ul className="custom-scrollbar max-h-40 overflow-y-auto">
-											{data.columnOrder.map((colId) => {
-												const col = data.columns[colId];
-												return (
-													<li
-														key={col.id}
-														className="flex items-center justify-between py-1"
-													>
-														<span
-															className={
-																!col.isVisible
-																	? "text-gray-400 italic"
-																	: "text-gray-800 dark:text-gray-200"
-															}
-														>
-															{col.title}
-														</span>
-														<button
-															onClick={() => handleToggleVisibility(col.id)}
-															className="ml-2 rounded bg-gray-200 px-2 py-1 text-sm text-gray-800 transition-colors duration-200 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-														>
-															{col.isVisible ? "Ocultar" : "Mostrar"}
-														</button>
-													</li>
-												);
-											})}
-										</ul>
 									</div>
 								)}
 							</div>
@@ -355,11 +373,20 @@ const Board = () => {
 					task={selectedTask}
 					columnId={selectedColumnId}
 					onClose={closeTaskDetail}
-					onEditTask={handleEditTask}
-					onDeleteTask={handleDeleteTask}
+					onEditTask={(title, desc) =>
+						handleEditTask(
+							selectedColumnId,
+							selectedTask.id!.toString(),
+							title,
+							desc,
+						)
+					}
+					onDeleteTask={() =>
+						handleDeleteTask(selectedTask.id!.toString(), selectedColumnId)
+					}
 				/>
 			)}
-		</div>
+		</Page>
 	);
 };
 

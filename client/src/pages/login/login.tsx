@@ -1,13 +1,12 @@
 import { Page } from "../../components/layout/page";
-import { NavLink } from "react-router-dom";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import type { Credentials } from "./types";
 import { useTranslation } from "react-i18next";
-import { useLoginAction, useUiResetError } from "../../store/hooks";
-import { useAppSelector } from "../../store";
-import { getUi } from "../../store/selectors";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { login } from "../../store/authSlice";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { Form } from "../../components/ui/Form";
 import { FormFields } from "../../components/ui/FormFields";
@@ -17,17 +16,25 @@ import { WithOtherServices } from "../register/withOtherServices/WithOtherServic
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
-	const loginAction = useLoginAction();
-	const uiResetErrorAction = useUiResetError();
-	const { pending: isFetching, error } = useAppSelector(getUi);
+	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+	const { status, error, isAuthenticated } = useAppSelector(
+		(state) => state.auth,
+	);
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
 	});
 
 	const { email, password } = formData;
-	const disabled = !email || !password || isFetching;
+	const disabled = !email || !password;
 	const [isLoading, setIsLoading] = useState(false);
+
+	useEffect(() => {
+		if (isAuthenticated) {
+			navigate("/boards");
+		}
+	}, [isAuthenticated, navigate]);
 
 	const validateEmail = (email: string): boolean => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -73,7 +80,7 @@ export const LoginPage = () => {
 				return;
 			}
 
-			await loginAction(formData);
+			await dispatch(login(formData));
 
 			// Si ambas validaciones pasan, mostrar el mensaje de éxito
 			toast.custom((t) => (
@@ -119,12 +126,7 @@ export const LoginPage = () => {
 							<div
 								className="rounded border border-red-200 bg-red-50 px-3 py-2 text-center text-sm text-red-600"
 								role="alert"
-								onClick={() => {
-									uiResetErrorAction();
-								}}
-							>
-								{error.message}
-							</div>
+							></div>
 						)}
 						<p className="text-text-body mt-2 text-center text-sm">
 							{t("login.loginForm.question", "¿No tienes una cuenta?")}
@@ -202,7 +204,7 @@ export const LoginPage = () => {
 								disabled={disabled}
 								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 							>
-								{isLoading ? (
+								{status === "loading" ? (
 									<SpinnerLoadingText
 										text={t(
 											"login.loginForm.loginButton.spinner.loading",
@@ -214,8 +216,9 @@ export const LoginPage = () => {
 										"login.loginForm.loginButton.spinner.default",
 										"Iniciar Sesión",
 									)
-								)}
+								)}{" "}
 							</Button>
+							{error && <p className="text-red-500">{error}</p>}
 						</div>
 					</Form>
 					<WithOtherServices />

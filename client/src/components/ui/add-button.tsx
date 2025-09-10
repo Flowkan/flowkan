@@ -1,16 +1,19 @@
-import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import AddIcon from "../icons/add-icon.svg";
 import "./add-button.css";
-import { useTranslation } from "react-i18next";
 
-const AddButton = () => {
+interface AddButtonProps {
+	showAddForm: () => void;
+}
+
+const AddButton = ({ showAddForm }: AddButtonProps) => {
 	const { t } = useTranslation();
 
 	return (
-		<Link className="add-btn" to="/boards/new">
-			<img src={AddIcon} alt="Add board" />
+		<button className="add-btn" onClick={showAddForm}>
+			<img src={AddIcon} alt="Add" />
 			<p className="p-add">{t("addbtn", "Nuevo tablero")}</p>
-		</Link>
+		</button>
 	);
 };
 

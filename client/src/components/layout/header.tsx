@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { useAppSelector } from "../../store";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageToggle from "../hooks/useLangToggle";
+import { logout } from "../../store/authSlice";
 
 export const Header: React.FC = () => {
 	const { t } = useTranslation();
-	const auth = useAppSelector((state) => state.auth);
+	const dispatch = useAppDispatch();
+	const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	const toggleMenu = () => setMenuOpen((prev) => !prev);
@@ -14,7 +16,6 @@ export const Header: React.FC = () => {
 
 	return (
 		<header className="bg-background-card flex items-center justify-between px-6 py-4 shadow-sm md:px-12">
-			{/* Logo + navbar */}
 			<div className="flex items-center space-x-8">
 				<NavLink to="/">
 					<div className="flex items-center">
@@ -49,14 +50,13 @@ export const Header: React.FC = () => {
 				</nav>
 			</div>
 
-			{/* Right side */}
 			<div className="flex items-center space-x-4">
 				<div className="flex items-center space-x-3">
 					<LanguageToggle />
 				</div>
 
 				<div className="relative">
-					{auth.isLogged && auth.user ? (
+					{isAuthenticated && user ? (
 						<>
 							<button
 								className="flex items-center rounded-full focus:outline-none"
@@ -64,11 +64,11 @@ export const Header: React.FC = () => {
 							>
 								<img
 									src={
-										auth.user.photo
-											? `${baseUrl}${auth.user.photo}`
+										user.photo
+											? `${baseUrl}${user.photo}`
 											: "/default-avatar.png"
 									}
-									alt={auth.user.name}
+									alt={user.name}
 									className="h-10 w-10 rounded-full object-cover"
 								/>
 							</button>
@@ -82,15 +82,13 @@ export const Header: React.FC = () => {
 										{t("header.menu.profile", "Perfil")}
 									</NavLink>
 									<NavLink
-										to="/settings"
+										to="/boards"
 										className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 									>
-										{t("header.menu.settings", "Ajustes")}
+										{t("header.menu.boards", "Mis tableros")}
 									</NavLink>
 									<button
-										onClick={() => {
-											// dispatch logout
-										}}
+										onClick={() => dispatch(logout())}
 										className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
 									>
 										{t("header.menu.logout", "Cerrar sesión")}
