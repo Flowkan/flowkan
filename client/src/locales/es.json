@@ -140,6 +140,10 @@
   },
   "register": {
     "registerForm": {
+      "message": {
+        "success": "Registro exitoso! Redirigiendo a la página de inicio de sesión.",
+        "error": "Ha ocurrido un error inesperado durante el registro."
+      },
       "title": "Crea tu Cuenta",
       "question": "¿Ya tienes una cuenta?",
       "login": "Inicia sesión aquí",
