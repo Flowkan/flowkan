@@ -25,7 +25,6 @@
 		},
 		"menu": {
 			"profile": "Profile",
-			"boards": "My boards",
 			"settings": "Settings",
 			"logout": "Log out"
 		},
@@ -141,6 +140,10 @@
 	},
 	"register": {
 		"registerForm": {
+			"message": {
+				"success": "Registration successful! Redirecting to the login page.",
+				"error": "An unexpected error occurred during registration."
+			},
 			"title": "Create your Account",
 			"question": "Already have an account?",
 			"login": "Login here",

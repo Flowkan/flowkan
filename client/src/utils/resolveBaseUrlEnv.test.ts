@@ -3,7 +3,7 @@ import { resolveBaseURL, type EnvType } from "./resolveBaseUrlEnv";
 describe("resolveBaseURL", () => {
 	test("retorna URL de desarrollo", () => {
 		const env: EnvType = {
-			MODE: "development",
+			VITE_MODE: "development",
 			VITE_BASE_DEV_URL: "http://localhost:3000",
 			VITE_BASE_PROD_URL: "https://flowkan.duckdns.org",
 		};
@@ -12,7 +12,7 @@ describe("resolveBaseURL", () => {
 
 	test("retorna URL de producción", () => {
 		const env: EnvType = {
-			MODE: "production",
+			VITE_MODE: "production",
 			VITE_BASE_DEV_URL: "http://localhost:3000",
 			VITE_BASE_PROD_URL: "https://flowkan.duckdns.org",
 		};
@@ -21,21 +21,21 @@ describe("resolveBaseURL", () => {
 
 	test("lanza error cuando falta URL de desarrollo", () => {
 		const env: EnvType = {
-			MODE: "development",
+			VITE_MODE: "development",
 			VITE_BASE_PROD_URL: "https://flowkan.duckdns.org",
 		};
 		expect(() => resolveBaseURL(env)).toThrow(
-			`baseURL not defined for ${env.MODE}, verify environment variables`,
+			`baseURL not defined for ${env.VITE_MODE}, verify environment variables`,
 		);
 	});
 
 	test("lanza error cuando falta URL de producción", () => {
 		const env: EnvType = {
-			MODE: "production",
+			VITE_MODE: "production",
 			VITE_BASE_DEV_URL: "http://localhost:3000",
 		};
 		expect(() => resolveBaseURL(env)).toThrow(
-			`baseURL not defined for ${env.MODE}, verify environment variables`,
+			`baseURL not defined for ${env.VITE_MODE}, verify environment variables`,
 		);
 	});
 });
