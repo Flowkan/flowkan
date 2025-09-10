@@ -14,7 +14,6 @@ import { FormFields } from "../../components/ui/FormFields";
 import { Button } from "../../components/ui/Button";
 import { __ } from "../../utils/i18nextHelper";
 import { WithOtherServices } from "../register/withOtherServices/WithOtherServices";
-import { getErrorMessage } from "../../utils/getErrorMessage";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
@@ -88,23 +87,21 @@ export const LoginPage = () => {
 				/>
 			));
 		} catch (error: unknown) {
-			const msg = getErrorMessage(
-				error instanceof Error 
-				? error 
-				: new Error(String(error)),
-			);
-			setFormData((prevData) => ({
-				...prevData,
-				email: "",
-				password: "",
-			}));
-			toast.custom((t) => (
-				<CustomToast
-					message={__("login.toast.message.error", { msg })}
-					t={t}
-					type="error"
-				/>
-			));
+			if (error instanceof Error) {
+				setFormData((prevData) => ({
+					...prevData,
+					email: "",
+					password: "",
+				}));
+				toast.custom((t) => (
+					<CustomToast
+						message={__("login.toast.message.error", "Credenciales incorrectas" )}
+						t={t}
+						type="error"
+					/>
+				));
+				return;
+			}
 		} finally {
 			setIsLoading(false);
 		}

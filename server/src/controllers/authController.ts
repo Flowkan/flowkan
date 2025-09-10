@@ -4,6 +4,7 @@ import AuthService from "../services/AuthService";
 import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
 import { Prisma } from "@prisma/client";
+import { success } from "zod";
 
 type UniqueConstraintError = Prisma.PrismaClientKnownRequestError & {
   code: "P2002";
@@ -18,16 +19,20 @@ export class AuthController {
     this.authService = authService;
   }
 
-  login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  login = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
       const user = await this.authService.validateCredentials(req.body);
 
-    if (!user) {
-      throw createHttpError(401, "Invalid credentials");
-    }
-    if (!process.env.JWT_SECRET) {
-      throw new Error("JWT_SECRET is not defined in environment variables");
-    }
+      if (!user) {
+        throw createHttpError(401, "Invalid credentials");
+      }
+      if (!process.env.JWT_SECRET) {
+        throw new Error("JWT_SECRET is not defined in environment variables");
+      }
 
       jwt.sign(
         { user_id: user.id } satisfies JwtPayload,
@@ -67,10 +72,16 @@ export class AuthController {
         photoUrl = `/uploads/${req.file.filename}`;
       }
       const { password, ...safeUser } = newUser;
-      res.status(201).json({ success: true, user: { ...safeUser, photo: photoUrl } });
+      res
+        .status(201)
+        .json({ success: true, user: { ...safeUser, photo: photoUrl } });
     } catch (err: unknown) {
       if (this.isPrismaUniqueConstraintError(err)) {
-        return next(createHttpError(400, "El email ya está registrado"));
+        res.status(400).json({
+          success: false,
+          message: "Registro fallido. Revisa los datos e inténtalo otra vez.",
+        });
+        return;
       }
       next(createHttpError(500, "Error al registrar usuario"));
     }
