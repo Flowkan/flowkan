@@ -59,6 +59,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 					</div>
 
 					<div className="share-icon container">
+						{/* TODO: Poro coherencia cambiar texto por icono. Esto para Paula que ponga icono del mismo estilo que los otros */}
 						<Button
 							onClick={handleShowShareForm}
 							className="share-btn"

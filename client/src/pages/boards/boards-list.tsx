@@ -1,12 +1,12 @@
 import BoardsItem from "./boards-list-item";
-import { Suspense, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import AddButton from "../../components/ui/add-button";
 import "./boards-list.css";
-import { Page } from "../../components/layout/page";
 import { useTranslation } from "react-i18next";
 import NewBoard from "./new-board";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { fetchBoards } from "../../store/boardsSlice";
+import { BackofficePage } from "../../components/layout/backoffice_page";
 
 /* function EmptyList() {
 	const { t } = useTranslation();
@@ -47,7 +47,7 @@ const BoardsList = () => {
 					onBoardCreated={() => setShouldRefetch(true)}
 				/>
 			)}
-			<Page title={t("boardslist.title", "Mis tableros")}>
+			<BackofficePage title={t("boardslist.title", "Mis tableros")}>
 				<section className="boards-list-container">
 					<h2 className="sr-only">Lista de tableros</h2>
 					{!boards.length ? (
@@ -74,7 +74,7 @@ const BoardsList = () => {
 						</div>
 					)}
 				</section>
-			</Page>
+			</BackofficePage>
 		</>
 	);
 };
