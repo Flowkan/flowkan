@@ -29,14 +29,19 @@ class AuthModel {
     if (!user) return null;
 
     const isValid = await bcrypt.compare(password, user.password);
-    if(!isValid) return null;
+    if (!isValid) return null;
 
     const { password: _, ...safeUser } = user;
 
     return safeUser as SafeUser;
   }
 
-  async register({ name, email, password, photo }: RegisterParams): Promise<User> {
+  async register({
+    name,
+    email,
+    password,
+    photo,
+  }: RegisterParams): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10);
     return this.prisma.user.create({
       data: {
@@ -46,6 +51,20 @@ class AuthModel {
         photo,
       },
     });
+  }
+
+  async findById(
+    id: number,
+  ): Promise<{ name: string; photo: string | null } | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        name: true,
+        photo: true,
+      },
+    });
+
+    return user;
   }
 }
 

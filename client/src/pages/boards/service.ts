@@ -88,3 +88,24 @@ export const updateTask = async (
 export const deleteTask = async (taskId: string): Promise<void> => {
 	await apiClient.delete(CARD_ENDPOINT.BY_ID(taskId));
 };
+
+export const createInvitationLink = async (boardId: string) => {
+	const response = await apiClient.get(
+		`${BOARD_ENDPOINTS.BY_ID(boardId)}/share`,
+	);
+	return response.data;
+};
+
+export const acceptInvitation = async (
+	boardId: string,
+	invitationToken: string,
+): Promise<void> => {
+	const response = await apiClient.post(
+		`${BOARD_ENDPOINTS.BY_ID(boardId)}/invite`,
+		{
+			token: invitationToken,
+			boardId: boardId,
+		},
+	);
+	return response.data;
+};

@@ -6,7 +6,6 @@ import { RegisterPage } from "./pages/register/register";
 import { Suspense, lazy, type ReactNode } from "react";
 import { useAppSelector } from "./store/hooks.ts";
 import LoginSkeleton from "./components/ui/LoginSkeleton.tsx";
-import NewBoardPage from "./pages/boards/new-board.tsx";
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((module) => ({
 		default: module.LoginPage,
@@ -14,6 +13,7 @@ const LoginPage = lazy(() =>
 );
 const Board = lazy(() => import("./pages/boards/board"));
 const BoardsList = lazy(() => import("./pages/boards/boards-list"));
+const InvitationPage = lazy(() => import("./pages/boards/invitation-page.tsx"));
 
 interface AuthRouteProps {
 	children: ReactNode;
@@ -77,8 +77,15 @@ function App() {
 				>
 					<Route index element={<BoardsList />} />
 					<Route path=":boardId" element={<Board />} />
-					{/* <Route path="new" element={<NewBoardPage />} /> */}
 				</Route>
+				<Route
+					path="invitacion"
+					element={
+						<Suspense fallback={<LoginSkeleton />}>
+							<InvitationPage />
+						</Suspense>
+					}
+				/>
 				<Route path="not-found" element={<NotFound />} />
 				<Route path="*" element={<Navigate to="/not-found" />} />
 			</Route>
