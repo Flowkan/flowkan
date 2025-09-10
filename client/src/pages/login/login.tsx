@@ -93,19 +93,22 @@ export const LoginPage = () => {
 					type="success"
 				/>
 			));
-		} catch (error) {
-			setFormData((prevData) => ({
-				...prevData,
-				email: "",
-				password: "",
-			}));
-			toast.custom((t) => (
-				<CustomToast
-					message={__("login.toast.message.error", "Credenciales incorrectas")}
-					t={t}
-					type="error"
-				/>
-			));
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				setFormData((prevData) => ({
+					...prevData,
+					email: "",
+					password: "",
+				}));
+				toast.custom((t) => (
+					<CustomToast
+						message={__("login.toast.message.error", "Credenciales incorrectas" )}
+						t={t}
+						type="error"
+					/>
+				));
+				return;
+			}
 		} finally {
 			setIsLoading(false);
 		}

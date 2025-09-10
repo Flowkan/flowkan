@@ -11,6 +11,7 @@ import { Form } from "../../components/ui/Form";
 import { FormFields } from "../../components/ui/FormFields";
 import { WithOtherServices } from "./withOtherServices/WithOtherServices";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
+import { __ } from "../../utils/i18nextHelper";
 
 export const RegisterPage = () => {
 	const navigate = useNavigate();
@@ -101,7 +102,7 @@ export const RegisterPage = () => {
 
 			toast.custom((t) => (
 				<CustomToast
-					message="Registro exitoso! Redirigiendo a la página de inicio de sesión."
+					message={__("register.registerForm.message.success", "Registro exitoso! Redirigiendo a la página de inicio de sesión.")}
 					t={t}
 					type="success"
 				/>
@@ -111,13 +112,16 @@ export const RegisterPage = () => {
 				navigate("/login");
 			}, 2000);
 		} catch (error) {
-			const errorMessage =
-				error instanceof Error
-					? error.message
-					: "Ha ocurrido un error inesperado durante el registro.";
-			toast.custom((t) => (
-				<CustomToast message={errorMessage} t={t} type="error" />
-			));
+			if (error instanceof Error) {
+				toast.custom((t) => (
+					<CustomToast
+						message={__("register.registerForm.message.error",  "Ha ocurrido un error inesperado durante el registro." )}
+						t={t}
+						type="error"
+					/>
+				));
+				return;
+			}
 		} finally {
 			setIsSubmitting(false);
 		}
