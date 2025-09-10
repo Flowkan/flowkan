@@ -4,6 +4,8 @@ import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageToggle from "../hooks/useLangToggle";
 import { logout } from "../../store/authSlice";
+import { Avatar } from "../ui/Avatar";
+import { Button } from "../ui/Button";
 
 export const Header: React.FC = () => {
 	const { t } = useTranslation();
@@ -58,20 +60,16 @@ export const Header: React.FC = () => {
 				<div className="relative">
 					{isAuthenticated && user ? (
 						<>
-							<button
+							<Button
 								className="flex items-center rounded-full focus:outline-none"
 								onClick={toggleMenu}
 							>
-								<img
-									src={
-										user.photo
-											? `${baseUrl}${user.photo}`
-											: "/default-avatar.png"
-									}
-									alt={user.name}
-									className="h-10 w-10 rounded-full object-cover"
+								<Avatar
+									name={user.name}
+									photo={user.photo ? `${baseUrl}${user.photo}` : null}
+									size={40}
 								/>
-							</button>
+							</Button>
 
 							{menuOpen && (
 								<div className="ring-opacity-5 absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black">
@@ -87,12 +85,12 @@ export const Header: React.FC = () => {
 									>
 										{t("header.menu.boards", "Mis tableros")}
 									</NavLink>
-									<button
+									<Button
 										onClick={() => dispatch(logout())}
 										className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
 									>
 										{t("header.menu.logout", "Cerrar sesión")}
-									</button>
+									</Button>
 								</div>
 							)}
 						</>

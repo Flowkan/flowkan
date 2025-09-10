@@ -95,6 +95,8 @@ export const RegisterPage = () => {
 					type="error"
 				/>
 			));
+			setIsSubmitting(false);
+			return;
 		}
 
 		try {
@@ -102,7 +104,10 @@ export const RegisterPage = () => {
 
 			toast.custom((t) => (
 				<CustomToast
-					message={__("register.registerForm.message.success", "Registro exitoso! Redirigiendo a la página de inicio de sesión.")}
+					message={__(
+						"register.registerForm.message.success",
+						"Registro exitoso! Redirigiendo a la página de inicio de sesión.",
+					)}
 					t={t}
 					type="success"
 				/>
@@ -115,7 +120,10 @@ export const RegisterPage = () => {
 			if (error instanceof Error) {
 				toast.custom((t) => (
 					<CustomToast
-						message={__("register.registerForm.message.error",  "Ha ocurrido un error inesperado durante el registro." )}
+						message={__(
+							"register.registerForm.message.error",
+							"Ha ocurrido un error inesperado durante el registro.",
+						)}
 						t={t}
 						type="error"
 					/>
