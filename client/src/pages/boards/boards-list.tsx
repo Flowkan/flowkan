@@ -1,6 +1,5 @@
 import BoardsItem from "./boards-list-item";
 import { Suspense, useState, useEffect } from "react";
-import LoginSkeleton from "../../components/ui/LoginSkeleton";
 import AddButton from "../../components/ui/add-button";
 import "./boards-list.css";
 import { Page } from "../../components/layout/page";
@@ -40,10 +39,6 @@ const BoardsList = () => {
 		}
 	}, [shouldRefetch, status, dispatch]);
 
-	if (status === "loading") {
-		return <LoginSkeleton />;
-	}
-
 	return (
 		<>
 			{showAddForm && (
@@ -70,13 +65,11 @@ const BoardsList = () => {
 							</div>
 
 							<div className="boards-list-content">
-								<Suspense fallback={<LoginSkeleton />}>
-									<ul className="boards-list">
-										{boards.map((board) => (
-											<BoardsItem key={board.id} board={board} />
-										))}
-									</ul>
-								</Suspense>
+								<ul className="boards-list">
+									{boards.map((board) => (
+										<BoardsItem key={board.id} board={board} />
+									))}
+								</ul>
 							</div>
 						</div>
 					)}
