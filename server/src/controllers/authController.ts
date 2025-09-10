@@ -67,14 +67,10 @@ export class AuthController {
         photoUrl = `/uploads/${req.file.filename}`;
       }
       const { password, ...safeUser } = newUser;
-      res.status(201).json({ success: true, user: safeUser });
+      res.status(201).json({ success: true, user: { ...safeUser, photo: photoUrl } });
     } catch (err: unknown) {
       if (this.isPrismaUniqueConstraintError(err)) {
-        res.status(400).json({
-          success: false,
-          message: "El email ya está registrado",
-        });
-        return;
+        return next(createHttpError(400, "El email ya está registrado"));
       }
       next(createHttpError(500, "Error al registrar usuario"));
     }
