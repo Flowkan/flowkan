@@ -38,10 +38,10 @@ function App() {
 				<Route
 					path="login"
 					element={
-						<AuthRoute requireAuth={false}>
-							<Suspense fallback={<LoginSkeleton />}>
-								<LoginPage />
-							</Suspense>
+						<AuthRoute requireAuth={false} redirectTo="/boards">
+								<Suspense fallback={<LoginSkeleton />}>
+									<LoginPage />
+								</Suspense>
 						</AuthRoute>
 					}
 				/>
