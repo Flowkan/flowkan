@@ -7,15 +7,16 @@ const ERRORS = {
 }
 
 
-export const ProfileSchema = z.object({
-    id:z.string(),
+export const ProfileUpdateSchema = z.object({    
     name:z.string().min(5,{error:ERRORS.min(5)}).max(100,{error:ERRORS.max(5)}),
-    username:z.string().min(5,ERRORS.min(5)).max(50),
-    email:z.email(),
-    photo:z.string().optional(),
-    bio:z.string().max(300,{error:ERRORS.max(300)}).optional(),
+    username:z.string().max(50)
+    .refine(value=> !value.includes(' '), {message: 'no debe contener espacios'})
+    .optional(),
+    email:z.email().readonly(),
+    photo:z.file().optional(),
     dateBirth:z.string().optional(),
-    location:z.string().max(100,{error:ERRORS.max(100)}).optional()
+    location:z.string().max(100,{error:ERRORS.max(100)}).optional(),
+    bio:z.string().max(300,{error:ERRORS.max(300)}).optional(),
 });
 
-export type ProfileType = z.infer<typeof ProfileSchema>
+export type ProfileUpdateType = z.infer<typeof ProfileUpdateSchema>
