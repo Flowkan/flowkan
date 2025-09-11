@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorBoundary from "./components/errors/error-boundary.tsx";
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
+import { type User } from "../src/pages/login/types.ts";
 
 import { I18nextProvider } from "react-i18next";
 import i18n from "../src/lib/i18nextHandlers.ts";
@@ -19,9 +20,13 @@ if (accessToken) {
 	setAuthorizationHeader(accessToken);
 }
 
+const storedUser = localStorage.getItem("user");
+
+const user = storedUser ? (JSON.parse(storedUser) as User) : null;
+
 const router = createBrowserRouter([{ path: "*", element: <App /> }]);
 const store = configureStore(
-	{ auth: { user: null, isAuthenticated: !!accessToken, error: null } },
+	{ auth: { user, isAuthenticated: !!accessToken, error: null } },
 	router,
 );
 
