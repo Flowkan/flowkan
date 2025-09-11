@@ -41,7 +41,10 @@ const BoardsList = () => {
 			{showAddForm && (
 				<NewBoard onClose={handleCloseAddForm} onBoardCreated={() => {}} />
 			)}
-			<BackofficePage title={t("boardslist.title", "Mis tableros")}>
+			<BackofficePage
+				className="page-container"
+				title={t("boardslist.title", "Mis tableros")}
+			>
 				<section className="boards-list-container">
 					<h2 className="sr-only">Lista de tableros</h2>
 					{!boards.length ? (
