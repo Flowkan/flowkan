@@ -1,71 +1,41 @@
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import LanguageToggle from "../hooks/useLangToggle";
-import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { useAppSelector } from "../../store/hooks";
+import { UserMenu } from "../hooks/useUserMenu";
 import { useTranslation } from "react-i18next";
-import { logout } from "../../store/authSlice";
 
 export const BackofficeHeader: React.FC = () => {
-	const { t } = useTranslation();
 	const baseUrl = import.meta.env.VITE_BASE_DEV_URL;
-	const [menuOpen, setMenuOpen] = useState(false);
-	const dispatch = useAppDispatch();
 	const { user } = useAppSelector((state) => state.auth);
-
-	const toggleMenu = () => setMenuOpen((prev) => !prev);
+	const { t } = useTranslation();
 
 	return (
 		<header className="flex w-full items-center justify-between bg-gray-800 px-6 py-4 text-white shadow-md">
-			<NavLink to="/backoffice">
-				<h1 className="text-xl font-bold">Backoffice</h1>
+			{/* Solo un título, con SVG y texto */}
+			<NavLink to="/">
+				<div className="flex items-center space-x-2">
+					<svg
+						className="text-accent h-6 w-6"
+						fill="currentColor"
+						viewBox="0 0 20 20"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							fillRule="evenodd"
+							d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-12a1 1 0 10-2 0v4a1 1 0 102 0V6zm4 0a1 1 010-2 0v4a1 1 0102 0V6z"
+							clipRule="evenodd"
+						/>
+					</svg>
+					<span className="text-2xl font-bold text-shadow-red-50">
+						{t("backoffice.title", "Backoffice")}
+					</span>
+				</div>
 			</NavLink>
 
 			<div className="flex items-center space-x-4">
-				<div className="flex items-center space-x-3">
-					<LanguageToggle />
-				</div>
+				<LanguageToggle />
 
-				<div className="relative">
-					<div>
-						<button
-							className="flex items-center rounded-full focus:outline-none"
-							onClick={toggleMenu}
-						>
-							<img
-								src={
-									user?.photo
-										? `${baseUrl}${user.photo}`
-										: "/default-avatar.png"
-								}
-								alt={user?.name}
-								className="h-10 w-10 rounded-full object-cover"
-							/>
-						</button>
-
-						{menuOpen && (
-							<div className="ring-opacity-5 absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black">
-								<NavLink
-									to="/profile"
-									className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-								>
-									{t("header.menu.profile", "Perfil")}
-								</NavLink>
-								<NavLink
-									to="/boards"
-									className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-								>
-									{t("header.menu.boards", "Mis tableros")}
-								</NavLink>
-								<button
-									onClick={() => dispatch(logout())}
-									className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-								>
-									{t("header.menu.logout", "Cerrar sesión")}
-								</button>
-							</div>
-						)}
-					</div>
-				</div>
+				<UserMenu user={user} baseUrl={baseUrl} avatarSize={40} />
 			</div>
 		</header>
 	);

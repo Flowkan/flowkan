@@ -2,30 +2,34 @@ interface AvatarProps {
 	name: string;
 	photo?: string | null;
 	size?: number;
+	baseUrl?: string;
 }
 
-export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40 }) => {
+export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40, baseUrl }) => {
 	const randomColor = (user: string): string => {
 		let r = 0,
 			g = 0,
 			b = 0;
-    let i = 0;
+		let i = 0;
 
 		for (const char of user) {
 			const code = char.charCodeAt(0);
 			r = (r + code * (i + 1)) % 256;
 			g = (g + code * (i + 2)) % 256;
 			b = (b + code * (i + 3)) % 256;
-      i += 1 ;
+			i += 1;
 		}
 		return `rgb(${r}, ${g}, ${b})`;
 	};
-  
+
 	const getInitialsName = (name: string) => {
 		const fullname = name.trim().split(/\s+/);
 		if (fullname.length === 0) return "";
 		if (fullname.length === 1) return fullname[0].substring(0, 2).toUpperCase();
-		return fullname.slice(0, 2).map((n) => n[0].toUpperCase()).join("");
+		return fullname
+			.slice(0, 2)
+			.map((n) => n[0].toUpperCase())
+			.join("");
 	};
 
 	const bgColor = randomColor(name);
@@ -34,7 +38,7 @@ export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40 }) => {
 	if (photo) {
 		return (
 			<img
-				src={photo}
+				src={baseUrl ? `${baseUrl}${photo}` : photo}
 				alt={name}
 				className="h-10 w-10 rounded-full object-cover"
 			/>
