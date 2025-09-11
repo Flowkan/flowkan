@@ -37,7 +37,7 @@ const NewBoard = ({ onClose, onBoardCreated }: NewBoardProps) => {
 			onBoardCreated();
 			onClose(); // Cierra el modal solo si la creación fue exitosa
 		} catch (error) {
-			console.error("Error al crear el tablero:", error);
+			console.error("Error al crear el tablero", error);
 		}
 	};
 

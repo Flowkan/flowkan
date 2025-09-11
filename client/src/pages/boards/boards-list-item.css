@@ -22,7 +22,8 @@
 		padding: 2px;
 
 		.edit-btn,
-		.trash-btn {
+		.trash-btn,
+		.share-btn {
 			cursor: pointer;
 			padding: 4px;
 		}

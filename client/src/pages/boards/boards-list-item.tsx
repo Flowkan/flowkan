@@ -5,6 +5,7 @@ import { useState } from "react";
 import EditButton from "../../components/ui/edit-button";
 import ConfirmDelete from "../../components/ui/confirm-delete";
 import ShareBoard from "../../components/ui/share-board";
+import ShareIcon from "../../components/icons/share-icon.svg";
 import { Button } from "../../components/ui/Button";
 import "./boards-list-item.css";
 import { useTranslation } from "react-i18next";
@@ -65,7 +66,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 							className="share-btn"
 							variant="secondary"
 						>
-							Compartir
+							<img src={ShareIcon} alt="Share board" />
 						</Button>
 					</div>
 				</div>
