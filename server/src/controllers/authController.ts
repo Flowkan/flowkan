@@ -74,7 +74,7 @@ export class AuthController {
       const { password, ...safeUser } = newUser;
       res
         .status(201)
-        .json({ success: true, user: { ...safeUser, photo: photoUrl } });
+        .json({ success: true, user: safeUser });
     } catch (err: unknown) {
       if (this.isPrismaUniqueConstraintError(err)) {
         res.status(400).json({
