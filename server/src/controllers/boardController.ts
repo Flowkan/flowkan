@@ -2,12 +2,28 @@ import { Request, Response } from "express";
 import BoardService from "../services/BoardService";
 import { Prisma } from "@prisma/client";
 import { BoardWithRelations } from "../models/BoardModel";
+import jwt from "jsonwebtoken";
+import AuthService from "../services/AuthService";
+
+interface InvitationJwtPayload {
+  boardId: string;
+  inviterId: number;
+  email: string;
+  type: "board-invitation";
+}
+
+interface AcceptInvitationPayload {
+  token: string;
+  userId: number;
+}
 
 export class BoardController {
-  private boardService: BoardService;
+  private readonly boardService: BoardService;
+  private readonly authService: AuthService;
 
-  constructor(boardService: BoardService) {
+  constructor(boardService: BoardService, authService: AuthService) {
     this.boardService = boardService;
+    this.authService = authService;
   }
 
   getAll = async (req: Request, res: Response) => {
@@ -66,6 +82,64 @@ export class BoardController {
     } catch (err) {
       console.log("errsaddsfdsdsafor", err);
       res.status(500).send("Error al eliminar el tablero");
+    }
+  };
+
+  shareBoard = async (req: Request, res: Response) => {
+    const JWT_SECRET = process.env.JWT_SECRET;
+    if (!JWT_SECRET) {
+      throw new Error("JWT_SECRET is not defined in environment variables");
+    }
+
+    try {
+      const userId = req.apiUserId;
+      const boardId = req.params.id;
+      const board = await this.boardService.get({ userId, boardId });
+      const inviter = await this.authService.findById(userId);
+      const payload = {
+        boardId: boardId,
+        inviterId: userId,
+        type: "board-invitation",
+      };
+
+      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
+
+      res.status(201).json({
+        token,
+        inviterName: inviter?.name,
+        boardTitle: board?.title,
+        inviterPhoto: inviter?.photo,
+        boardId,
+      });
+    } catch (err) {
+      console.error("Error generating invitation link:", err);
+      res.status(500).send("Error al generar el enlace de invitación");
+    }
+  };
+
+  acceptInvitation = async (req: Request, res: Response) => {
+    const JWT_SECRET = process.env.JWT_SECRET;
+    if (!JWT_SECRET) {
+      throw new Error("JWT_SECRET no está en las variables de entorno");
+    }
+
+    try {
+      const { token } = req.body as { token: string };
+      const userId = req.apiUserId;
+
+      const payload = jwt.verify(token, JWT_SECRET) as InvitationJwtPayload;
+      const { boardId } = payload;
+      await this.boardService.acceptInvitation({
+        boardId: Number(boardId),
+        userId,
+      });
+      res.status(200).send(`¡Invitación aceptada para el tablero ${boardId}!`);
+    } catch (err) {
+      console.error(err);
+      if (err instanceof jwt.JsonWebTokenError) {
+        return res.status(401).send("Enlace de invitación inválido o expirado");
+      }
+      res.status(500).send("Error al aceptar la invitación");
     }
   };
 }
