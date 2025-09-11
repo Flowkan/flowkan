@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useAppDispatch, useAppSelector } from ".";
 import type { BoardsData, Column, Task } from "../pages/boards/types";
 import type { Credentials } from "../pages/login/types";
@@ -86,9 +87,12 @@ export function useFetchBoardsAction() {
 
 export function useFetchBoardByIdAction() {
 	const dispatch = useAppDispatch();
-	return function (id: string) {
-		return dispatch(fetchBoard(id));
-	};
+	return useCallback(
+		(id: string) => {
+			dispatch(fetchBoard(id));
+		},
+		[dispatch],
+	);
 }
 
 export function useAddBoardAction() {
