@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAppSelector } from "../store/hooks";
+import { useAppSelector } from "../store";
 import { useNavigate } from "react-router-dom";
 import { acceptInvitation } from "../pages/boards/service";
 

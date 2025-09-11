@@ -1,18 +1,22 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import LanguageToggle from "../hooks/useLangToggle";
-import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { useAppSelector } from "../../store";
 import { useTranslation } from "react-i18next";
-import { logout } from "../../store/authSlice";
+import { useLogoutAction } from "../../store/hooks";
 
 export const BackofficeHeader: React.FC = () => {
 	const { t } = useTranslation();
 	const baseUrl = import.meta.env.VITE_BASE_DEV_URL;
 	const [menuOpen, setMenuOpen] = useState(false);
-	const dispatch = useAppDispatch();
+	const logoutAction = useLogoutAction();
 	const { user } = useAppSelector((state) => state.auth);
 
 	const toggleMenu = () => setMenuOpen((prev) => !prev);
+
+	const handleLogout = async () => {
+		logoutAction();
+	};
 
 	return (
 		<header className="flex w-full items-center justify-between bg-gray-800 px-6 py-4 text-white shadow-md">
@@ -57,7 +61,7 @@ export const BackofficeHeader: React.FC = () => {
 									{t("header.menu.boards", "Mis tableros")}
 								</NavLink>
 								<button
-									onClick={() => dispatch(logout())}
+									onClick={handleLogout}
 									className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
 								>
 									{t("header.menu.logout", "Cerrar sesión")}
