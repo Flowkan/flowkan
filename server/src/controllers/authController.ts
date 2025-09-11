@@ -72,9 +72,7 @@ export class AuthController {
         photoUrl = `/uploads/${req.file.filename}`;
       }
       const { password, ...safeUser } = newUser;
-      res
-        .status(201)
-        .json({ success: true, user: safeUser });
+      res.status(201).json({ success: true, user: safeUser });
     } catch (err: unknown) {
       if (this.isPrismaUniqueConstraintError(err)) {
         res.status(400).json({

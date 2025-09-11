@@ -12,7 +12,7 @@ import { Toaster } from "react-hot-toast";
 import { I18nextProvider } from "react-i18next";
 import i18n from "../src/lib/i18nextHandlers.ts";
 
-import { store } from "./store/store.ts";
+import configureStore from "./store/index.ts";
 
 const accessToken = storage.get("auth");
 if (accessToken) {
@@ -20,6 +20,10 @@ if (accessToken) {
 }
 
 const router = createBrowserRouter([{ path: "*", element: <App /> }]);
+const store = configureStore(
+	{ auth: { user: null, isAuthenticated: !!accessToken, error: null } },
+	router,
+);
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
