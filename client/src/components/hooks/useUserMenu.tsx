@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useAppDispatch } from "../../store/hooks";
-import { logout } from "../../store/authSlice";
 import { Avatar } from "../ui/Avatar";
 import { Button } from "../ui/Button";
+import { useLogoutAction } from "../../store/hooks";
 
 interface UserMenuProps {
 	user?: { name: string; photo?: string | null } | null;
@@ -18,7 +17,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 	avatarSize = 40,
 }) => {
 	const { t } = useTranslation();
-	const dispatch = useAppDispatch();
+	const logoutAction = useLogoutAction();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 
@@ -43,8 +42,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			<Button
 				className="flex items-center rounded-full focus:outline-none"
 				onClick={toggleMenu}
-        title={`Menu de ajustes de ${user.name}`}
-        aria-label="Menu del usuario"
+				title={`Menu de ajustes de ${user.name}`}
+				aria-label="Menu del usuario"
 			>
 				<Avatar
 					name={user.name}
@@ -68,7 +67,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 						{t("header.menu.boards", "Mis tableros")}
 					</NavLink>
 					<Button
-						onClick={() => dispatch(logout())}
+						onClick={() => logoutAction()}
 						className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
 					>
 						{t("header.menu.logout", "Cerrar sesión")}
