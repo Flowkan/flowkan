@@ -3,12 +3,14 @@ import type { Board } from "./types";
 import TrashButton from "../../components/ui/trash-button";
 import { useState } from "react";
 import EditButton from "../../components/ui/edit-button";
-import ConfirmDelete from "../../components/ui/confirm-delete";
+import ConfirmDelete from "./confirm-delete";
 import ShareBoard from "../../components/ui/share-board";
 import ShareIcon from "../../components/icons/share-icon.svg";
 import { Button } from "../../components/ui/Button";
 import "./boards-list-item.css";
 import { useTranslation } from "react-i18next";
+import { deleteBoard } from "../../store/actions";
+import { useAppDispatch } from "../../store";
 
 interface BoardsItemProps {
 	board: Board;
@@ -17,13 +19,16 @@ interface BoardsItemProps {
 const BoardsItem = ({ board }: BoardsItemProps) => {
 	const [showConfirm, setShowConfirm] = useState(false);
 	const [showShareForm, setShowShareForm] = useState(false);
+	const dispatch = useAppDispatch();
 
-	const handleShowConfirm = (event: React.MouseEvent) => {
-		event.preventDefault();
-		setShowConfirm(true);
+	const handleShowConfirm = () => setShowConfirm(true);
+
+	const handleDeleteBoard = async () => {
+		if (board) {
+			dispatch(deleteBoard(board.id));
+		}
 	};
 
-	const handleDeleteBoard = () => {};
 	const handleHideMessage = () => setShowConfirm(false);
 
 	const handleShowShareForm = (event: React.MouseEvent) => {
@@ -56,11 +61,10 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 						<EditButton />
 					</div>
 					<div className="trash-icon container">
-						<TrashButton showConfirm={() => handleShowConfirm} />
+						<TrashButton showConfirm={handleShowConfirm} />
 					</div>
 
 					<div className="share-icon container">
-						{/* TODO: Poro coherencia cambiar texto por icono. Esto para Paula que ponga icono del mismo estilo que los otros */}
 						<Button
 							onClick={handleShowShareForm}
 							className="share-btn"

@@ -45,7 +45,7 @@
 		}
 	},
 	"boardsitem": {
-		"confirm": ""
+		"confirm": "Are you sure you want to delete this board?"
 	},
 	"emptylist": {
 		"p1": "You don’t have any boards yet.",

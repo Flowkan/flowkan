@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import "./confirm-delete.css";
 
 interface ConfirmDeleteProps {
 	handleDeleteBoard: () => void;
@@ -16,11 +17,11 @@ const ConfirmDelete = ({
 		<div className="confirm-bg">
 			<article className="confirm-card">
 				<p className="confirm-p">{message}</p>
-				<div className="confirm-btns">
-					<button className="confirm-yes-btn" onClick={handleDeleteBoard}>
+				<div className="confirm-btns-container">
+					<button className="confirm-btn" onClick={handleDeleteBoard}>
 						{t("confirm.yes", "SI")}
 					</button>
-					<button className="confirm-yes-btn" onClick={handleHideMessage}>
+					<button className="confirm-btn" onClick={handleHideMessage}>
 						{t("confirm.no", "NO")}
 					</button>
 				</div>

@@ -1,0 +1,64 @@
+.confirm-bg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+
+	.confirm-card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		background-color: white;
+		padding: 30px;
+		border-radius: 8px;
+		width: 50%;
+		max-width: 500px;
+		gap: 50px;
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+
+		.confirm-p {
+			font-size: large;
+			font-weight: bold;
+		}
+
+		.confirm-btns-container {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+
+			.confirm-btn {
+				padding: 5px 10px;
+				border-radius: 5px;
+				width: 100px;
+				align-self: center;
+				background-color: var(--color-primary);
+				color: var(--color-text-on-accent);
+				transition: background-color 0.3s ease;
+
+				&:hover {
+					cursor: pointer;
+					background-color: var(--color-primary-hover);
+				}
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 838px) {
+	.confirm-bg {
+		.confirm-card {
+			.confirm-btns-container {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				padding: 0 50px;
+			}
+		}
+	}
+}

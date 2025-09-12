@@ -69,7 +69,6 @@ export function boards(
 	action: Actions,
 ): State["boards"] {
 	switch (action.type) {
-		case "boards/fetchBoards/pending":
 		case "boards/fetchBoard/pending":
 			return { ...state, loading: true, error: null };
 
@@ -79,7 +78,6 @@ export function boards(
 		case "boards/fetchBoard/fulfilled":
 			return { ...state, loading: false, currentBoard: action.payload };
 
-		case "boards/fetchBoards/rejected":
 		case "boards/fetchBoard/rejected":
 			return { ...state, loading: false, error: action.payload.message };
 

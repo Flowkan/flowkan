@@ -74,6 +74,12 @@ type AddColumnFulfilled = {
 	type: "boards/addColumn/fulfilled";
 	payload: Column;
 };
+
+type DeleteBoard = {
+	type: "boards/deleteBoards";
+	payload: string;
+};
+
 type EditColumnFulfilled = {
 	type: "boards/editColumn/fulfilled";
 	payload: { columnId: number; column: Column };
@@ -221,6 +227,13 @@ export function addBoard(data: BoardsData): AppThunk<Promise<void>> {
 	};
 }
 
+export function deleteBoard(boardId: string): AppThunk<Promise<void>> {
+	return async function (dispatch, _getState, { api }) {
+		await api.boards.deleteBoard(boardId);
+		dispatch({ type: "boards/deleteBoards", payload: boardId });
+	};
+}
+
 export function addColumn(
 	boardId: string,
 	data: Column,
@@ -315,6 +328,7 @@ export type Actions =
 	| FetchBoardFulfilled
 	| FetchBoardRejected
 	| AddBoardFulfilled
+	| DeleteBoard
 	| AddColumnFulfilled
 	| EditColumnFulfilled
 	| EditColumnRejected
