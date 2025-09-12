@@ -16,6 +16,8 @@ const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
     },
 
     members: { include: { user: true } },
+    labels: true,
+    owner: true,
   },
 });
 export type BoardWithRelations = Prisma.BoardGetPayload<
@@ -41,6 +43,22 @@ class BoardModel {
             userId: userId,
           },
         },
+      },
+      ...boardWithRelationsData,
+    });
+  }
+
+  async getBoardByTitle(
+    userId: number,
+    boardTitle: string,
+  ): Promise<BoardWithRelations | null> {
+    return this.prisma.board.findFirst({
+      where: {
+        title: {
+          contains: boardTitle,
+          mode: "insensitive",
+        },
+        OR: [{ ownerId: userId }, { members: { some: { userId } } }],
       },
       ...boardWithRelationsData,
     });

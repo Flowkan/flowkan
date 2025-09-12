@@ -49,6 +49,17 @@ export class BoardController {
     }
   };
 
+  getBoardByTitle = async (req: Request, res: Response) => {
+    try {
+      const userId = req.apiUserId;
+      const boardTitle = String(req.query.title) || "";
+      const boards = await this.boardService.getBoardByTitle(userId, boardTitle);
+      res.json(boards);
+    } catch (error) {
+      res.status(404).send("No existen tableros con este nombre");
+    }
+  };
+
   add = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;

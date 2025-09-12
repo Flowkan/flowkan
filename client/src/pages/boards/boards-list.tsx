@@ -1,13 +1,14 @@
 import BoardsItem from "./boards-list-item";
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
 import AddButton from "../../components/ui/add-button";
 import "./boards-list.css";
 import { useTranslation } from "react-i18next";
 import NewBoard from "./new-board";
 import { useAppSelector, useAppDispatch } from "../../store";
-import { getBoards } from "../../store/selectors";
+import { getBoards, getBoardsByTitle } from "../../store/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { fetchBoards } from "../../store/actions";
+import { FormFields } from "../../components/ui/FormFields";
 
 /* function EmptyList() {
 	const { t } = useTranslation();
@@ -24,6 +25,8 @@ import { fetchBoards } from "../../store/actions";
 
 const BoardsList = () => {
 	const [showAddForm, setShowAddForm] = useState(false);
+	const [searchBoard, setSearchBoard] = useState("");
+
 	const { t } = useTranslation();
 
 	const handleShowAddForm = () => setShowAddForm(true);
@@ -31,6 +34,15 @@ const BoardsList = () => {
 
 	const dispatch = useAppDispatch();
 	const boards = useAppSelector(getBoards);
+
+	const boardsByTitle = useAppSelector((state) =>
+		searchBoard ? getBoardsByTitle(state, searchBoard) : getBoards(state),
+	);
+
+	const handleFilter = (e: ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target;
+		setSearchBoard(value);
+	};
 
 	useEffect(() => {
 		dispatch(fetchBoards());
@@ -58,9 +70,20 @@ const BoardsList = () => {
 								<AddButton showAddForm={handleShowAddForm} />
 							</div>
 
+							{/* Filtrar tablero por nombre y usuarios(WIP) */}
+							<FormFields
+								type="text"
+								id="filterBoard"
+								name="filterBoard"
+								placeholder="Buscar tableros..."
+								value={searchBoard}
+								onChange={handleFilter}
+								className="w-56 rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+							/>
+
 							<div className="boards-list-content">
 								<ul className="boards-list">
-									{boards.map((board) => (
+									{boardsByTitle.map((board) => (
 										<BoardsItem key={board.id} board={board} />
 									))}
 								</ul>

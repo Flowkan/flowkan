@@ -12,6 +12,8 @@ export const getAuthError = (state: RootState) => state.auth.error;
 //
 export const getBoards = (state: RootState) => state.boards.boards;
 
+export const getBoardsByTitle = (state: RootState, title: string) => state.boards.boards.filter(b => b.title.toLowerCase().includes(title.toLowerCase()));
+
 export const getCurrentBoard = (state: RootState) => state.boards.currentBoard;
 
 export const getBoardsLoading = (state: RootState) => state.boards.loading;
