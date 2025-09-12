@@ -84,6 +84,12 @@ export function boards(
 		case "boards/addBoard/fulfilled":
 			return { ...state, boards: [...state.boards, action.payload] };
 
+		case "boards/deleteBoards":
+			return {
+				...state,
+				boards: state.boards.filter((board) => board.id !== action.payload),
+			};
+
 		case "boards/addColumn/fulfilled":
 			return state.currentBoard
 				? {
