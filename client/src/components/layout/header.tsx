@@ -1,4 +1,4 @@
-import { useAppSelector } from "../../store/hooks";
+import { useAppSelector } from "../../store";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageToggle from "../hooks/useLangToggle";
@@ -43,9 +43,7 @@ export const Header: React.FC = () => {
 						{t("header.navbar.prices", "Precios")}
 					</a>
 					{isAuthenticated && user && (
-						<NavLink to={"/boards"}>
-							{t("Backoffice")}
-						</NavLink>
+						<NavLink to={"/boards"}>{t("Backoffice")}</NavLink>
 					)}
 				</nav>
 			</div>

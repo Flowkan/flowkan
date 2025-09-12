@@ -1,7 +1,6 @@
 import { NavLink } from "react-router-dom";
 import LanguageToggle from "../hooks/useLangToggle";
-import { useAppSelector } from "../../store/hooks";
-import { UserMenu } from "../hooks/useUserMenu";
+import { useAppSelector } from "../../store";
 import { useTranslation } from "react-i18next";
 
 export const BackofficeHeader: React.FC = () => {

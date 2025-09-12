@@ -4,9 +4,10 @@ import AddButton from "../../components/ui/add-button";
 import "./boards-list.css";
 import { useTranslation } from "react-i18next";
 import NewBoard from "./new-board";
-import { useAppSelector, useAppDispatch } from "../../store/hooks";
-import { fetchBoards } from "../../store/boardsSlice";
+import { useAppSelector, useAppDispatch } from "../../store";
+import { getBoards } from "../../store/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
+import { fetchBoards } from "../../store/actions";
 
 /* function EmptyList() {
 	const { t } = useTranslation();
@@ -23,29 +24,22 @@ import { BackofficePage } from "../../components/layout/backoffice_page";
 
 const BoardsList = () => {
 	const [showAddForm, setShowAddForm] = useState(false);
-	const boards = useAppSelector((state) => state.boards.boards);
-	const dispatch = useAppDispatch();
-	const status = useAppSelector((state) => state.boards.status);
 	const { t } = useTranslation();
-	const [shouldRefetch, setShouldRefetch] = useState(false);
 
 	const handleShowAddForm = () => setShowAddForm(true);
 	const handleCloseAddForm = () => setShowAddForm(false);
 
+	const dispatch = useAppDispatch();
+	const boards = useAppSelector(getBoards);
+
 	useEffect(() => {
-		if (status === "idle" || shouldRefetch) {
-			dispatch(fetchBoards());
-			setShouldRefetch(false);
-		}
-	}, [shouldRefetch, status, dispatch]);
+		dispatch(fetchBoards());
+	}, [dispatch]);
 
 	return (
 		<>
 			{showAddForm && (
-				<NewBoard
-					onClose={handleCloseAddForm}
-					onBoardCreated={() => setShouldRefetch(true)}
-				/>
+				<NewBoard onClose={handleCloseAddForm} onBoardCreated={() => {}} />
 			)}
 			<BackofficePage title={t("boardslist.title", "Mis tableros")}>
 				<section className="boards-list-container">

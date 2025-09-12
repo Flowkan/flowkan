@@ -6,7 +6,7 @@ import { HomePage } from "./pages/home";
 import { NotFound } from "./pages/not-found";
 import { RegisterPage } from "./pages/register/register";
 import LoginSkeleton from "./components/ui/LoginSkeleton";
-import { useAppSelector } from "./store/hooks";
+import { useAppSelector } from "./store";
 
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((m) => ({ default: m.LoginPage })),
@@ -39,9 +39,9 @@ function App() {
 					path="login"
 					element={
 						<AuthRoute requireAuth={false} redirectTo="/boards">
-								<Suspense fallback={<LoginSkeleton />}>
-									<LoginPage />
-								</Suspense>
+							<Suspense fallback={<LoginSkeleton />}>
+								<LoginPage />
+							</Suspense>
 						</AuthRoute>
 					}
 				/>
