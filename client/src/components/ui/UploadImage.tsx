@@ -5,34 +5,43 @@ import { IconCamera } from "../icons/IconCamera";
 import { IconPlus } from "../icons/IconPlus";
 import { IconSave } from "../icons/IconSave";
 import { IconCancel } from "../icons/IconCancel";
+import type { ProfileUpdateType } from "../../pages/profile/types";
+// import type { ProfileUpdateType } from "../../pages/profile/types";
 // import type { C } from "vitest/dist/chunks/environment.d.cL3nLXbE.js";
 
 interface UploadImageProps {
 	previewUrl?: string;
-	onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-	// onChange: (file:File) => void;
+	onChange: (e: ChangeEvent<HTMLInputElement>,name:string) => void;
+	error?:boolean;
+	name:string;
 	icon?: JSX.Element;
+	onSubmit?:(field:keyof ProfileUpdateType)=>void;
 }
 
-const UploadImage = ({ previewUrl, onChange, icon }: UploadImageProps) => {
+const UploadImage = ({ previewUrl, onChange, icon,name,onSubmit,error=false }: UploadImageProps) => {
 	const fileRef = useRef<HTMLInputElement>(null);
 	const [newImage, setNewImage] = useState(previewUrl ?? "");
 	function handleChange(e: ChangeEvent<HTMLInputElement>) {
 		const file = fileRef.current?.files?.[0];
 		if (file) {
 			setNewImage(URL.createObjectURL(file));
-			onChange(e);
+			onChange(e,name);
 		}
 	}
 	function handleCancel(){
 		setNewImage(previewUrl ?? "");
 		const e = {
-			target:{value: "", name: "photo", files: null},
-			currentTarget:{value: "", name: "photo", files: null},			
+			target:{value: "", name, files: null, type:"file"},
+			currentTarget:{value: "", name, files: null,type:"file"},			
 		} as ChangeEvent<HTMLInputElement>;
-		onChange(e)
+		onChange(e,name)
 		// console.log(e);
 		
+	}
+	function handleSubmit(){
+		if(onSubmit){
+			onSubmit(name as keyof ProfileUpdateType)
+		}
 	}
 	return (
 		<>
@@ -41,15 +50,19 @@ const UploadImage = ({ previewUrl, onChange, icon }: UploadImageProps) => {
 					<img
 						src={newImage}
 						alt="Foto de perfil"
-						className="size-40 rounded-full border border-gray-300 object-cover shadow-md transition-transform group-hover:scale-105"
+						className={`size-40 rounded-full border border-gray-300 object-cover transition-transform group-hover:scale-105
+							shadow-primary shadow-[5px_1px_10px]
+							${error ? 'border-2 border-red-400' : ''}`}
 					/>
 				) : (
 					<div
 						onClick={() => fileRef.current?.click()}
-						className="flex size-40 cursor-pointer items-center justify-center rounded-full border border-gray-300 bg-gray-200 transition hover:bg-gray-300"
+						className={`flex size-40 cursor-pointer items-center justify-center rounded-full border border-gray-50 bg-primary/30 transition hover:bg-primary-hover/30 hover:border-primary
+							shadow-primary shadow-[5px_1px_10px] md:shadow-[5px_5px_15px]
+							${error ? 'border-4 border-red-400' : ''}`}
 						aria-label="Subir imagen"
 					>
-						<IconCamera className="size-20 text-gray-400" />
+						<IconCamera className="size-20 text-white transition-colors duration-300 ease-in group-hover:text-primary" />
 					</div>
 				)}
 
@@ -78,18 +91,17 @@ const UploadImage = ({ previewUrl, onChange, icon }: UploadImageProps) => {
 					<>
 						<Button
 							type="button"
+							onClick={handleSubmit}
 							className="flex items-center gap-3 rounded-md bg-sky-500 p-2 text-white hover:bg-sky-600"
 						>
-							<IconSave />
-							{/* <span>Actualizar Foto</span> */}
+							<IconSave />							
 						</Button>
 						<Button
 							onClick={handleCancel}
 							type="button"
 							className="flex items-center gap-3 rounded-md bg-red-400 p-2 text-white hover:bg-red-500"
 						>
-							<IconCancel />
-							{/* <span>Actualizar Foto</span> */}
+							<IconCancel />						
 						</Button>
 					</>
 				)}

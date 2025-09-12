@@ -18,6 +18,7 @@ interface EditableFieldProps {
 	disabled?: boolean;
 	rows?: number;
 	error?:boolean;
+	readonly?:boolean;
 	onEdit: (field:keyof ProfileUpdateType) => void;
 	onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,name: string,) => void;
 }
@@ -28,6 +29,7 @@ const EditableField = ({
 	classNameValue,
 	className="",
 	error=false,
+	readonly=false,
 	rows=0,
 	type="text",
 	as="input",
@@ -40,16 +42,9 @@ const EditableField = ({
 		setEnableEdit(!enableEdit);		
 	}
 	function handleSaveEdit() {
-		onEdit(name);
-		// if(error)return;
+		onEdit(name);		
 		setEnableEdit(false);
-	}
-	// useEffect(()=>{
-	// 	if(error){
-	// 		setEnableEdit(true);
-	// 	}
-	// },[error])
-	// console.log(error,name);
+	}	
 	function handleToValue(){
 		if(type === 'date'){
 			return formatDate(value)
@@ -70,20 +65,24 @@ const EditableField = ({
 			<div className="relative flex">
 				{!enableEdit && !error ? (
 					<>
-						<p className={`flex-1 ${classNameValue}`}>
+						<p className={`flex-1 py-1 ${classNameValue} ${readonly ? 'cursor-not-allowed' : ''}`}>
 							{handleToValue() || '...'}
 						</p>
-						<Button
-							onClick={handleEdit}
-							className="absolute top-1 right-0 hidden items-center justify-center text-gray-500 transition group-hover:flex hover:text-gray-700"
-							aria-label={`Editar ${label}`}
-						>
-							<IconEdit className="size-5" />
-						</Button>
+						{
+							!readonly && (
+								<Button
+									onClick={handleEdit}
+									className="absolute p-1 top-[50%] -translate-y-[50%] right-0 hidden items-center justify-center text-primary transition duration-300 ease-in-out group-hover:flex hover:text-primary-hover"
+									aria-label={`Editar ${label}`}
+								>
+									<IconEdit className="size-5" />
+								</Button>
+							)
+						}
+						
 					</>
 				) : (
-					<>
-						{/* {field} */}
+					<>						
 						<Field 
 						type={type}
 						name={name}
