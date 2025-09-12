@@ -5,6 +5,9 @@ import boardRoutes from "./routes/boards.routes.js";
 import listRoutes from "./routes/list.routes.js";
 import cardRoutes from "./routes/card.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+
+import profileRoutes from "./routes/profile.routes.js";
+
 import {
   ApiValidationError,
   ValidationError,
@@ -22,6 +25,8 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/boards", boardRoutes);
 app.use("/api/v1/lists", listRoutes);
 app.use("/api/v1/cards", cardRoutes);
+//Profile...
+app.use("/api/v1/profile", profileRoutes);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   if (!req.url.startsWith("/api")) {
