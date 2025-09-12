@@ -4,7 +4,7 @@ import type { BoardsData, Column, Task } from "../pages/boards/types";
 import type { Credentials } from "../pages/login/types";
 import {
 	login,
-	authLogout,
+	logout,
 	resetError,
 	fetchBoards,
 	fetchBoard,
@@ -15,6 +15,8 @@ import {
 	editTask,
 	removeTask,
 	editColumn,
+	addAssignee,
+	removeAssignee,
 } from "./actions";
 import {
 	isAuthenticated,
@@ -48,7 +50,7 @@ export function useLoginAction() {
 export function useLogoutAction() {
 	const dispatch = useAppDispatch();
 	return function () {
-		return dispatch(authLogout());
+		return dispatch(logout());
 	};
 }
 
@@ -141,6 +143,21 @@ export function useDeleteTaskction() {
 	const dispatch = useAppDispatch();
 	return function (columnId: string, taskId: string) {
 		return dispatch(removeTask(columnId, taskId));
+	};
+}
+
+// ─── ASSIGNEES ────────────────────────────────
+export function useAddAssigneeAction() {
+	const dispatch = useAppDispatch();
+	return function (cardId: number, userId: number) {
+		return dispatch(addAssignee(cardId, userId));
+	};
+}
+
+export function useRemoveAssigneeAction() {
+	const dispatch = useAppDispatch();
+	return function (cardId: number, userId: number) {
+		return dispatch(removeAssignee(cardId, userId));
 	};
 }
 

@@ -1,9 +1,9 @@
 import { apiClient } from "../../api/client";
 import { USER_ENDPOINTS } from "../../utils/endpoints";
-import type { User } from "./types";
+import type { UserRegister } from "./types";
 
-export const register = async (user: User) => {
-	await apiClient.post<User>(USER_ENDPOINTS.REGISTER, user, {
+export const register = async (user: UserRegister) => {
+	await apiClient.post<UserRegister>(USER_ENDPOINTS.REGISTER, user, {
 		headers: {
 			"Content-Type": "multipart/form-data",
 		},

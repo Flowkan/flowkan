@@ -1,20 +1,22 @@
-import { Board, Prisma, PrismaClient } from "@prisma/client";
+import { Board, Prisma, PrismaClient, User } from "@prisma/client";
 
 const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
   include: {
     lists: {
-      orderBy: {
-        position: "asc",
-      },
+      orderBy: { position: "asc" },
       include: {
         cards: {
-          orderBy: {
-            position: "asc",
+          orderBy: { position: "asc" },
+          include: {
+            assignees: {
+              include: {
+                user: true,
+              },
+            },
           },
         },
       },
     },
-
     members: { include: { user: true } },
   },
 });
@@ -153,6 +155,25 @@ class BoardModel {
         role: "member",
       },
     });
+  }
+
+  async getBoardUsers({
+    userId,
+    boardId,
+  }: {
+    userId: number;
+    boardId: string;
+  }): Promise<User[]> {
+    const members = await this.prisma.boardMember.findMany({
+      where: {
+        boardId: Number(boardId),
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return members.map((m) => m.user);
   }
 }
 

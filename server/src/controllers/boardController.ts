@@ -142,4 +142,16 @@ export class BoardController {
       res.status(500).send("Error al aceptar la invitación");
     }
   };
+
+  boardUsers = async (req: Request, res: Response) => {
+    try {
+      const userId = req.apiUserId;
+      const boardId = req.params.id;
+      const board = await this.boardService.getBoardUsers({ userId, boardId });
+      res.json(board);
+    } catch (err) {
+      console.log("error", err);
+      res.status(500).send("Error al obtener usuarios del tablero");
+    }
+  };
 }
