@@ -144,6 +144,16 @@ class BoardModel {
       },
     });
   }
+
+  async addMember(data: { boardId: number; userId: number }): Promise<void> {
+    await this.prisma.boardMember.create({
+      data: {
+        boardId: data.boardId,
+        userId: data.userId,
+        role: "member",
+      },
+    });
+  }
 }
 
 export default BoardModel;

@@ -9,21 +9,19 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import Column from "../../components/Column";
 import TaskDetailModal from "../../components/TaskDetailModal";
-import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import type { Task, Column as ColumnType } from "./types";
 import {
-	fetchBoard,
-	updateColumnOrder,
-	addBoardColumn,
-	updateColumnThunk,
-	deleteColumnThunk,
-	addTask,
-	updateTaskThunk,
-	deleteTaskThunk,
-	updateColumnsLocal,
-	updateColumnOrderLocal,
-} from "../../store/boardsSlice";
-import { Page } from "../../components/layout/page";
+	useFetchBoardByIdAction,
+	useAddTaskAction,
+	useUpdateTaskAction,
+	useCurrentBoard,
+	useBoardsError,
+	useAddColumnAction,
+	useDeleteColumnAction,
+	useDeleteTaskction,
+	useUpdateColumnAction,
+} from "../../store/hooks";
+import { BackofficePage } from "../../components/layout/backoffice_page";
 
 const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
 	const result = Array.from(list);
@@ -52,12 +50,17 @@ const move = <T,>(
 };
 
 const Board = () => {
-	const dispatch = useAppDispatch();
+	const fetchBoardAction = useFetchBoardByIdAction();
+	const addTaskAction = useAddTaskAction();
+	const updateTaskAction = useUpdateTaskAction();
+	const deleteTaskAction = useDeleteTaskction();
+	const addColumnAction = useAddColumnAction();
+	const updateColumnAction = useUpdateColumnAction();
+	const removeColumnAction = useDeleteColumnAction();
 	const { boardId } = useParams<{ boardId: string }>();
 	const navigate = useNavigate();
-	const { currentBoard: boardData, error } = useAppSelector(
-		(state) => state.boards,
-	);
+	const boardData = useCurrentBoard();
+	const error = useBoardsError();
 
 	const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 	const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
@@ -66,9 +69,9 @@ const Board = () => {
 
 	useEffect(() => {
 		if (boardId) {
-			dispatch(fetchBoard(boardId));
+			fetchBoardAction(boardId);
 		}
-	}, [boardId, dispatch]);
+	}, [boardId, fetchBoardAction]);
 
 	useEffect(() => {
 		if (error === "Error al cargar tablero") {
@@ -82,18 +85,22 @@ const Board = () => {
 			const { type, source, destination } = result;
 			if (!destination) return;
 
-			// Si el arrastre es de una columna a otra
+			// ARRASRTRE DE COLUMNAS
 			if (type === "column") {
 				const newLists = reorder(
 					boardData.lists,
 					source.index,
 					destination.index,
 				);
-				dispatch(updateColumnOrderLocal(newLists));
-				const newOrder = newLists.map((col) => col.id!.toString());
-				dispatch(updateColumnOrder({ boardId: boardData.id!, newOrder }));
+
+				// Actualización optimista local: directamente modificamos boardData
+				// O si quieres, puedes crear un hook para updateColumnOrderLocal
+				// Por simplicidad, actualizamos la posición en la API
+				newLists.forEach((col, index) => {
+					updateColumnAction(Number(col.id), { position: index });
+				});
 			} else {
-				// Si el arrastre es de una tarjeta
+				// ARRASRTRE DE TARJETAS
 				const sInd = source.droppableId;
 				const dInd = destination.droppableId;
 
@@ -107,7 +114,6 @@ const Board = () => {
 				let newDestCards;
 
 				if (sInd === dInd) {
-					// Mover dentro de la misma lista
 					newSourceCards = reorder(
 						sourceCol.cards,
 						source.index,
@@ -115,7 +121,6 @@ const Board = () => {
 					);
 					newDestCards = newSourceCards;
 				} else {
-					// Mover entre listas diferentes
 					const result = move(
 						sourceCol.cards,
 						destCol.cards,
@@ -126,49 +131,25 @@ const Board = () => {
 					newDestCards = result[dInd];
 				}
 
-				// 1. Actualización optimista en Redux
-				dispatch(
-					updateColumnsLocal({
-						sourceId: sInd,
-						destId: dInd,
-						newSourceCards,
-						newDestCards,
-					}),
-				);
-
-				// 2. Persistencia en la API
-				// Recalcula y actualiza las posiciones de las tarjetas en la lista de destino.
+				// Persistencia en API: actualizar posición de cada tarjeta
 				newDestCards.forEach((t, index) => {
-					dispatch(
-						updateTaskThunk({
-							columnId: dInd,
-							taskId: t.id!.toString(),
-							task: {
-								listId: Number(dInd),
-								position: index,
-							},
-						}),
-					);
+					updateTaskAction(Number(dInd), t.id!.toString(), {
+						listId: Number(dInd),
+						position: index,
+					});
 				});
 
-				// Si el movimiento fue entre listas, actualiza también la lista de origen.
 				if (sInd !== dInd) {
 					newSourceCards.forEach((t, index) => {
-						dispatch(
-							updateTaskThunk({
-								columnId: sInd,
-								taskId: t.id!.toString(),
-								task: {
-									listId: Number(sInd),
-									position: index,
-								},
-							}),
-						);
+						updateTaskAction(Number(sInd), t.id!.toString(), {
+							listId: Number(sInd),
+							position: index,
+						});
 					});
 				}
 			}
 		},
-		[boardData, dispatch],
+		[boardData, updateTaskAction, updateColumnAction],
 	);
 
 	const handleAddTask = useCallback(
@@ -184,15 +165,9 @@ const Board = () => {
 				position: (currentColumn.cards ?? []).length,
 			};
 
-			dispatch(
-				addTask({
-					boardId: boardData.id!,
-					columnId: columnId,
-					task: newTask,
-				}),
-			);
+			addTaskAction(Number(columnId), newTask);
 		},
-		[boardData, dispatch],
+		[boardData, addTaskAction],
 	);
 
 	const handleEditTask = useCallback(
@@ -202,23 +177,20 @@ const Board = () => {
 			newContent: string,
 			newDescription?: string,
 		) => {
-			dispatch(
-				updateTaskThunk({
-					columnId,
-					taskId,
-					task: { title: newContent, description: newDescription },
-				}),
-			);
+			updateTaskAction(Number(columnId), taskId, {
+				title: newContent,
+				description: newDescription,
+			});
 		},
-		[dispatch],
+		[updateTaskAction],
 	);
 
 	const handleDeleteTask = useCallback(
 		(taskId: string, columnId: string) => {
 			if (!boardData) return;
-			dispatch(deleteTaskThunk({ boardId: boardData.id!, columnId, taskId }));
+			deleteTaskAction(columnId, taskId);
 		},
-		[boardData, dispatch],
+		[boardData, deleteTaskAction],
 	);
 
 	const openTaskDetail = useCallback((task: Task, columnId: string) => {
@@ -236,14 +208,9 @@ const Board = () => {
 			if (!boardData) return;
 			const column = boardData.lists.find((c) => c.id === columnId);
 			if (!column) return;
-			dispatch(
-				updateColumnThunk({
-					columnId,
-					data: { ...column, title: newTitle },
-				}),
-			);
+			updateColumnAction(Number(columnId), { ...column, title: newTitle });
 		},
-		[boardData, dispatch],
+		[boardData, updateColumnAction],
 	);
 
 	const handleAddColumnToggle = useCallback(() => {
@@ -258,24 +225,24 @@ const Board = () => {
 				isVisible: true,
 				position: boardData.lists.length,
 			};
-			dispatch(addBoardColumn({ boardId: boardData.id!, column: newColumn }));
+			addColumnAction(boardData.id!, newColumn);
 			setNewColumnName("");
 			setIsMenuOpen(false);
 		}
-	}, [boardData, newColumnName, dispatch]);
+	}, [boardData, newColumnName, addColumnAction]);
 
 	const handleDeleteColumnClick = useCallback(
 		(columnId: string) => {
 			if (!boardData) return;
-			dispatch(deleteColumnThunk({ columnId }));
+			removeColumnAction(columnId);
 		},
-		[boardData, dispatch],
+		[boardData, removeColumnAction],
 	);
 
 	if (error) return <div>Error al cargar el tablero: {error}</div>;
 
 	return (
-		<Page>
+		<BackofficePage>
 			<DragDropContext onDragEnd={onDragEnd}>
 				<Droppable droppableId="board" type="column" direction="horizontal">
 					{(provided) => (
@@ -386,7 +353,7 @@ const Board = () => {
 					}
 				/>
 			)}
-		</Page>
+		</BackofficePage>
 	);
 };
 

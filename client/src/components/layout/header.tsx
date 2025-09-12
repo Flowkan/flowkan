@@ -1,17 +1,12 @@
-import { useState } from "react";
-import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { useAppSelector } from "../../store";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageToggle from "../hooks/useLangToggle";
-import { logout } from "../../store/authSlice";
+import { UserMenu } from "../hooks/useUserMenu";
 
 export const Header: React.FC = () => {
 	const { t } = useTranslation();
-	const dispatch = useAppDispatch();
 	const { user, isAuthenticated } = useAppSelector((state) => state.auth);
-	const [menuOpen, setMenuOpen] = useState(false);
-
-	const toggleMenu = () => setMenuOpen((prev) => !prev);
 	const baseUrl = import.meta.env.VITE_BASE_DEV_URL;
 
 	return (
@@ -47,6 +42,9 @@ export const Header: React.FC = () => {
 					<a href="#" className="hover:border-accent hover:border-b-2">
 						{t("header.navbar.prices", "Precios")}
 					</a>
+					{isAuthenticated && user && (
+						<NavLink to={"/boards"}>{t("Backoffice")}</NavLink>
+					)}
 				</nav>
 			</div>
 
@@ -57,45 +55,7 @@ export const Header: React.FC = () => {
 
 				<div className="relative">
 					{isAuthenticated && user ? (
-						<>
-							<button
-								className="flex items-center rounded-full focus:outline-none"
-								onClick={toggleMenu}
-							>
-								<img
-									src={
-										user.photo
-											? `${baseUrl}${user.photo}`
-											: "/default-avatar.png"
-									}
-									alt={user.name}
-									className="h-10 w-10 rounded-full object-cover"
-								/>
-							</button>
-
-							{menuOpen && (
-								<div className="ring-opacity-5 absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black">
-									<NavLink
-										to="/profile"
-										className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-									>
-										{t("header.menu.profile", "Perfil")}
-									</NavLink>
-									<NavLink
-										to="/boards"
-										className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-									>
-										{t("header.menu.boards", "Mis tableros")}
-									</NavLink>
-									<button
-										onClick={() => dispatch(logout())}
-										className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-									>
-										{t("header.menu.logout", "Cerrar sesión")}
-									</button>
-								</div>
-							)}
-						</>
+						<UserMenu user={user} baseUrl={baseUrl} />
 					) : (
 						<div className="flex space-x-2">
 							<NavLink

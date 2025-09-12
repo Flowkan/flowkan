@@ -6,8 +6,8 @@ import CloseButton from "../../components/ui/close-button";
 import "./new-board.css";
 import { Button } from "../../components/ui/Button";
 import { useDispatch } from "react-redux";
-import { addBoard } from "../../store/boardsSlice";
-import type { AppDispatch } from "../../store/store";
+import { addBoard } from "../../store/actions";
+import type { AppDispatch } from "../../store";
 
 interface NewBoardProps {
 	onClose: () => void;
@@ -33,7 +33,7 @@ const NewBoard = ({ onClose, onBoardCreated }: NewBoardProps) => {
 		};
 
 		try {
-			await dispatch(addBoard(data)).unwrap();
+			await dispatch(addBoard(data));
 			onBoardCreated();
 			onClose(); // Cierra el modal solo si la creación fue exitosa
 		} catch (error) {
@@ -69,5 +69,6 @@ const NewBoard = ({ onClose, onBoardCreated }: NewBoardProps) => {
 		</div>
 	);
 };
+
 
 export default NewBoard;

@@ -5,22 +5,20 @@ import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import type { Credentials } from "./types";
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { login } from "../../store/authSlice";
+import { useLoginAction } from "../../store/hooks";
+import { useAppSelector } from "../../store";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { Form } from "../../components/ui/Form";
 import { FormFields } from "../../components/ui/FormFields";
 import { Button } from "../../components/ui/Button";
 import { __ } from "../../utils/i18nextHelper";
 import { WithOtherServices } from "../register/withOtherServices/WithOtherServices";
+import { getUi } from "../../store/selectors";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
-	const dispatch = useAppDispatch();
-	const navigate = useNavigate();
-	const { status, error, isAuthenticated } = useAppSelector(
-		(state) => state.auth,
-	);
+	const loginAction = useLoginAction();
+	const { error } = useAppSelector(getUi);
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
@@ -28,13 +26,6 @@ export const LoginPage = () => {
 
 	const { email, password } = formData;
 	const disabled = !email || !password;
-	const [isLoading, setIsLoading] = useState(false);
-
-	useEffect(() => {
-		if (isAuthenticated) {
-			navigate("/boards");
-		}
-	}, [isAuthenticated, navigate]);
 
 	const validateEmail = (email: string): boolean => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -51,7 +42,6 @@ export const LoginPage = () => {
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setIsLoading(true);
 		try {
 			// Validar el email primero
 			if (!validateEmail(formData.email)) {
@@ -102,15 +92,16 @@ export const LoginPage = () => {
 				}));
 				toast.custom((t) => (
 					<CustomToast
-						message={__("login.toast.message.error", "Credenciales incorrectas" )}
+						message={__(
+							"login.toast.message.error",
+							"Credenciales incorrectas",
+						)}
 						t={t}
 						type="error"
 					/>
 				));
 				return;
 			}
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
@@ -218,7 +209,7 @@ export const LoginPage = () => {
 									)
 								)}{" "}
 							</Button>
-							{error && <p className="text-red-500">{error}</p>}
+							{error && <p className="text-red-500">{error.message}</p>}
 						</div>
 					</Form>
 					<WithOtherServices />
