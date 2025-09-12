@@ -11,10 +11,9 @@ import type { AppDispatch } from "../../store";
 
 interface NewBoardProps {
 	onClose: () => void;
-	onBoardCreated: () => void;
 }
 
-const NewBoard = ({ onClose, onBoardCreated }: NewBoardProps) => {
+const NewBoard = ({ onClose }: NewBoardProps) => {
 	const { t } = useTranslation();
 	const [titleInput, setTitleInput] = useState("");
 	const dispatch = useDispatch<AppDispatch>();
@@ -34,7 +33,6 @@ const NewBoard = ({ onClose, onBoardCreated }: NewBoardProps) => {
 
 		try {
 			await dispatch(addBoard(data));
-			onBoardCreated();
 			onClose(); // Cierra el modal solo si la creación fue exitosa
 		} catch (error) {
 			console.error("Error al crear el tablero", error);

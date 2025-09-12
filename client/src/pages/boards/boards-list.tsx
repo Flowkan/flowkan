@@ -38,9 +38,7 @@ const BoardsList = () => {
 
 	return (
 		<>
-			{showAddForm && (
-				<NewBoard onClose={handleCloseAddForm} onBoardCreated={() => {}} />
-			)}
+			{showAddForm && <NewBoard onClose={handleCloseAddForm} />}
 			<BackofficePage
 				className="page-container"
 				title={t("boardslist.title", "Mis tableros")}

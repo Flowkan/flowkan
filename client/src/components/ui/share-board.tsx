@@ -7,10 +7,10 @@ import { createInvitationLink } from "../../pages/boards/service";
 
 interface ShareBoardProps {
 	board: Board;
-	onClose: () => void;
+	handleHideMessage: () => void;
 }
 
-const ShareBoard = ({ board, onClose }: ShareBoardProps) => {
+const ShareBoard = ({ board, handleHideMessage }: ShareBoardProps) => {
 	const { t } = useTranslation();
 	const [invitationLink, setInvitationLink] = useState<string | null>(null);
 	const [status, setStatus] = useState<
@@ -53,7 +53,7 @@ const ShareBoard = ({ board, onClose }: ShareBoardProps) => {
 	};
 
 	const handleClose = () => {
-		onClose();
+		handleHideMessage();
 	};
 
 	return (

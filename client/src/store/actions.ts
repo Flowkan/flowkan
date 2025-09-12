@@ -70,14 +70,25 @@ type FetchBoardRejected = {
 };
 
 type AddBoardFulfilled = { type: "boards/addBoard/fulfilled"; payload: Board };
+
+type DeleteBoardFulfilled = {
+	type: "boards/deleteBoards";
+	payload: string;
+};
+
+type EditBoardFulfilled = {
+	type: "boards/editBoard/fulfilled";
+	payload: { boardId: string; data: BoardsData };
+};
+
+type EditBoardRejected = {
+	type: "boards/editBoard/rejected";
+	payload: Error;
+};
+
 type AddColumnFulfilled = {
 	type: "boards/addColumn/fulfilled";
 	payload: Column;
-};
-
-type DeleteBoard = {
-	type: "boards/deleteBoards";
-	payload: string;
 };
 
 type EditColumnFulfilled = {
@@ -137,6 +148,19 @@ export const fetchBoardRejected = (error: Error): FetchBoardRejected => ({
 export const addBoardFulfilled = (board: Board): AddBoardFulfilled => ({
 	type: "boards/addBoard/fulfilled",
 	payload: board,
+});
+
+export const editBoardFulfilled = (
+	boardId: string,
+	data: BoardsData,
+): EditBoardFulfilled => ({
+	type: "boards/editBoard/fulfilled",
+	payload: { boardId, data },
+});
+
+export const editBoardRejected = (error: Error): EditBoardRejected => ({
+	type: "boards/editBoard/rejected",
+	payload: error,
 });
 
 export const addColumnFulfilled = (column: Column): AddColumnFulfilled => ({
@@ -234,6 +258,22 @@ export function deleteBoard(boardId: string): AppThunk<Promise<void>> {
 	};
 }
 
+export function editBoard(
+	boardId: string,
+	data: BoardsData,
+): AppThunk<Promise<void>> {
+	return async function (dispatch, _getState, { api }) {
+		try {
+			await api.boards.updateBoard(boardId, data);
+			dispatch(editBoardFulfilled(boardId, data));
+		} catch (error) {
+			if (error instanceof Error) {
+				dispatch(editBoardRejected(error));
+			}
+		}
+	};
+}
+
 export function addColumn(
 	boardId: string,
 	data: Column,
@@ -328,7 +368,9 @@ export type Actions =
 	| FetchBoardFulfilled
 	| FetchBoardRejected
 	| AddBoardFulfilled
-	| DeleteBoard
+	| DeleteBoardFulfilled
+	| EditBoardFulfilled
+	| EditBoardRejected
 	| AddColumnFulfilled
 	| EditColumnFulfilled
 	| EditColumnRejected

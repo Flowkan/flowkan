@@ -90,6 +90,16 @@ export function boards(
 				boards: state.boards.filter((board) => board.id !== action.payload),
 			};
 
+		case "boards/editBoard/fulfilled":
+			return {
+				...state,
+				boards: state.boards.map((board) => {
+					if (board.id !== action.payload.boardId) return board;
+
+					return { ...board, title: action.payload.data.title };
+				}),
+			};
+
 		case "boards/addColumn/fulfilled":
 			return state.currentBoard
 				? {

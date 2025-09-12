@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { Board } from "./types";
+import type { Board, BoardsData } from "./types";
 import TrashButton from "../../components/ui/trash-button";
 import { useState } from "react";
 import EditButton from "../../components/ui/edit-button";
@@ -9,8 +9,9 @@ import ShareIcon from "../../components/icons/share-icon.svg";
 import { Button } from "../../components/ui/Button";
 import "./boards-list-item.css";
 import { useTranslation } from "react-i18next";
-import { deleteBoard } from "../../store/actions";
+import { deleteBoard, editBoard } from "../../store/actions";
 import { useAppDispatch } from "../../store";
+import EditBoard from "../../components/ui/edit-board";
 
 interface BoardsItemProps {
 	board: Board;
@@ -18,6 +19,7 @@ interface BoardsItemProps {
 
 const BoardsItem = ({ board }: BoardsItemProps) => {
 	const [showConfirm, setShowConfirm] = useState(false);
+	const [showEditForm, setShowEditForm] = useState(false);
 	const [showShareForm, setShowShareForm] = useState(false);
 	const dispatch = useAppDispatch();
 
@@ -30,6 +32,16 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 	};
 
 	const handleHideMessage = () => setShowConfirm(false);
+
+	const handleShowEditForm = () => setShowEditForm(true);
+
+	const handleEditForm = async (newData: string) => {
+		if (board) {
+			dispatch(editBoard(board.id, { title: newData }));
+		}
+	};
+
+	const handleHideEdit = () => setShowEditForm(false);
 
 	const handleShowShareForm = (event: React.MouseEvent) => {
 		event.preventDefault();
@@ -49,8 +61,14 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 					message={t("boardsitem.confirm")}
 				/>
 			)}
+			{showEditForm && (
+				<EditBoard
+					handleEditForm={handleEditForm}
+					handleHideMessage={handleHideEdit}
+				/>
+			)}
 			{showShareForm && (
-				<ShareBoard board={board} onClose={handleCloseShareForm} />
+				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
 			)}
 			<li className="board-item">
 				<Link to={`/boards/${board.id}`} className="board-link">
@@ -58,7 +76,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 				</Link>
 				<div className="edit-trash">
 					<div className="edit-icon container">
-						<EditButton />
+						<EditButton showEditForm={handleShowEditForm} />
 					</div>
 					<div className="trash-icon container">
 						<TrashButton showConfirm={handleShowConfirm} />
