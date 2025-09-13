@@ -3,7 +3,7 @@ import UploadImage from "../../components/ui/UploadImage";
 import { IconEdit } from "../../components/icons/IconEdit";
 import EditableField from "../../components/ui/EditableField";
 import { ProfileUpdateSchema, type ProfileUpdateType } from "./types";
-import { useAppSelector } from "../../store/hooks";
+import { useAppSelector } from "../../store";
 import z from "zod";
 import Banner from "../../components/icons/Banner";
 

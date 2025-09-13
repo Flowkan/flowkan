@@ -1,6 +1,6 @@
 import { Page } from "../../components/layout/page";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { NavLink } from "react-router-dom";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import type { Credentials } from "./types";
@@ -70,7 +70,7 @@ export const LoginPage = () => {
 				return;
 			}
 
-			await dispatch(login(formData));
+			await loginAction(formData);
 
 			// Si ambas validaciones pasan, mostrar el mensaje de éxito
 			toast.custom((t) => (

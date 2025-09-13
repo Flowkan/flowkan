@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import {
-	type TypedUseSelectorHook,
-	useDispatch,
-	useSelector,
-} from "react-redux";
-import type { RootState, AppDispatch } from "./store";
-
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-=======
 import { useCallback } from "react";
 import { useAppDispatch, useAppSelector } from ".";
 import type { BoardsData, Column, Task } from "../pages/boards/types";
@@ -165,4 +154,3 @@ export function useUiPending() {
 export function useUiError() {
 	return useAppSelector(getUiError);
 }
->>>>>>> origin/main
