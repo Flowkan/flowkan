@@ -15,8 +15,21 @@ const controller = new CardController(service);
 
 router.get("/", jwtAuth.guard, controller.getAllCards);
 router.get("/:id", jwtAuth.guard, controller.getCard);
-router.post("/", jwtAuth.guard, validateCard(cardCreateSchema), controller.addCard);
-router.put("/:id", jwtAuth.guard, validateCard(cardUpdateSchema), controller.updateCard);
+router.post(
+  "/",
+  jwtAuth.guard,
+  validateCard(cardCreateSchema),
+  controller.addCard,
+);
+router.put(
+  "/:id",
+  jwtAuth.guard,
+  validateCard(cardUpdateSchema),
+  controller.updateCard,
+);
 router.delete("/:id", jwtAuth.guard, controller.deleteCard);
+
+router.post("/addAssignee", jwtAuth.guard, controller.addAssignee);
+router.delete("/removeAssignee", jwtAuth.guard, controller.removeAssignee);
 
 export default router;

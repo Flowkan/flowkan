@@ -1,33 +1,45 @@
 import type { AppThunk } from ".";
-import type { Credentials } from "../pages/login/types";
+import type { Credentials, User } from "../pages/login/types";
 import type { Board, BoardsData, Column, Task } from "../pages/boards/types";
 
 //
 // ─── AUTH ──────────────────────────────────────────────
 //
 type AuthLoginPending = { type: "auth/login/pending" };
-type AuthLoginFulfilled = { type: "auth/login/fulfilled" };
+type AuthLoginFulfilled = { type: "auth/login/fulfilled"; payload: User };
 type AuthLoginRejected = { type: "auth/login/rejected"; payload: Error };
-type AuthLogout = { type: "auth/logout" };
+type AuthLogoutPending = { type: "auth/logout/pending" };
+type AuthLogoutFulfilled = { type: "auth/logout/fulfilled" };
+type AuthLogoutRejected = { type: "auth/logout/rejected"; payload: Error };
 
 export const authLoginPending = (): AuthLoginPending => ({
 	type: "auth/login/pending",
 });
-export const authLoginFulfilled = (): AuthLoginFulfilled => ({
+export const authLoginFulfilled = (user: User): AuthLoginFulfilled => ({
 	type: "auth/login/fulfilled",
+	payload: user,
 });
 export const authLoginRejected = (error: Error): AuthLoginRejected => ({
 	type: "auth/login/rejected",
 	payload: error,
 });
-export const authLogout = (): AuthLogout => ({ type: "auth/logout" });
+export const authLogoutPending = (): AuthLogoutPending => ({
+	type: "auth/logout/pending",
+});
+export const authLogoutFulfilled = (): AuthLogoutFulfilled => ({
+	type: "auth/logout/fulfilled",
+});
+export const authLogoutRejected = (error: Error): AuthLogoutRejected => ({
+	type: "auth/logout/rejected",
+	payload: error,
+});
 
 export function login(credentials: Credentials): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api, router }) => {
 		dispatch(authLoginPending());
 		try {
-			await api.auth.login(credentials);
-			dispatch(authLoginFulfilled());
+			const user = await api.auth.login(credentials);
+			dispatch(authLoginFulfilled(user));
 			const to = router.state.location.state?.from ?? "/boards";
 			router.navigate(to, { replace: true });
 		} catch (error) {
@@ -40,9 +52,18 @@ export function login(credentials: Credentials): AppThunk<Promise<void>> {
 }
 
 export function logout(): AppThunk<Promise<void>> {
-	return async (dispatch, _getState, { api }) => {
-		await api.auth.logout();
-		dispatch(authLogout());
+	return async (dispatch, _getState, { api, router }) => {
+		dispatch(authLogoutPending());
+		try {
+			await api.auth.logout();
+			dispatch(authLogoutFulfilled());
+			router.navigate("/login", { replace: true });
+		} catch (error) {
+			if (error instanceof Error) {
+				dispatch(authLogoutRejected(error));
+			}
+			throw error;
+		}
 	};
 }
 
@@ -66,6 +87,16 @@ type FetchBoardFulfilled = {
 };
 type FetchBoardRejected = {
 	type: "boards/fetchBoard/rejected";
+	payload: Error;
+};
+
+type GetBoardUsersPending = { type: "boards/getBoardUsers/pending" };
+type GetBoardUsersFulfilled = {
+	type: "boards/getBoardUsers/fulfilled";
+	payload: User[];
+};
+type GetBoardUsersRejected = {
+	type: "boards/getBoardUsers/rejected";
 	payload: Error;
 };
 
@@ -128,6 +159,20 @@ export const fetchBoardRejected = (error: Error): FetchBoardRejected => ({
 	payload: error,
 });
 
+export const getBoardUsersPending = (): GetBoardUsersPending => ({
+	type: "boards/getBoardUsers/pending",
+});
+export const getBoardUsersFulfilled = (
+	users: User[],
+): GetBoardUsersFulfilled => ({
+	type: "boards/getBoardUsers/fulfilled",
+	payload: users,
+});
+export const getBoardUsersRejected = (error: Error): GetBoardUsersRejected => ({
+	type: "boards/getBoardUsers/rejected",
+	payload: error,
+});
+
 export const addBoardFulfilled = (board: Board): AddBoardFulfilled => ({
 	type: "boards/addBoard/fulfilled",
 	payload: board,
@@ -185,6 +230,34 @@ export const deleteTaskFulfilled = (
 	payload: { columnId, taskId },
 });
 
+// ─── ASSIGNEES ──────────────────────────────────────────────
+
+type AddAssigneeFulfilled = {
+	type: "cards/addAssignee/fulfilled";
+	payload: { cardId: number; user: User };
+};
+
+type RemoveAssigneeFulfilled = {
+	type: "cards/removeAssignee/fulfilled";
+	payload: { cardId: number; userId: number };
+};
+
+export const addAssigneeFulfilled = (
+	cardId: number,
+	user: User,
+): AddAssigneeFulfilled => ({
+	type: "cards/addAssignee/fulfilled",
+	payload: { cardId, user },
+});
+
+export const removeAssigneeFulfilled = (
+	cardId: number,
+	userId: number,
+): RemoveAssigneeFulfilled => ({
+	type: "cards/removeAssignee/fulfilled",
+	payload: { cardId, userId },
+});
+
 // ─── Thunks ─────────────────────────────
 export function fetchBoards(): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
@@ -209,6 +282,20 @@ export function fetchBoard(id: string): AppThunk<Promise<void>> {
 		} catch (error) {
 			if (error instanceof Error) {
 				dispatch(fetchBoardRejected(error));
+			}
+		}
+	};
+}
+
+export function getBoardUsers(id: string): AppThunk<Promise<void>> {
+	return async (dispatch, _getState, { api }) => {
+		dispatch(getBoardUsersPending());
+		try {
+			const users = await api.boards.getBoardUsers(id);
+			dispatch(getBoardUsersFulfilled(users));
+		} catch (error) {
+			if (error instanceof Error) {
+				dispatch(getBoardUsersRejected(error));
 			}
 		}
 	};
@@ -294,6 +381,26 @@ export function removeTask(
 	};
 }
 
+export function addAssignee(
+	cardId: number,
+	userId: number,
+): AppThunk<Promise<void>> {
+	return async (dispatch, _getState, { api }) => {
+		const user = await api.boards.addAssignee(cardId, userId);
+		dispatch(addAssigneeFulfilled(cardId, user));
+	};
+}
+
+export function removeAssignee(
+	cardId: number,
+	userId: number,
+): AppThunk<Promise<void>> {
+	return async (dispatch, _getState, { api }) => {
+		await api.boards.removeAssignee(cardId, userId);
+		dispatch(removeAssigneeFulfilled(cardId, userId));
+	};
+}
+
 //
 // ─── UI ──────────────────────────────────────────────
 //
@@ -307,7 +414,9 @@ export type Actions =
 	| AuthLoginPending
 	| AuthLoginFulfilled
 	| AuthLoginRejected
-	| AuthLogout
+	| AuthLogoutPending
+	| AuthLogoutFulfilled
+	| AuthLogoutRejected
 	| FetchBoardsPending
 	| FetchBoardsFulfilled
 	| FetchBoardsRejected
@@ -323,11 +432,18 @@ export type Actions =
 	| EditTaskFulfilled
 	| EditTaskRejected
 	| DeleteTaskFulfilled
+	| GetBoardUsersPending
+	| GetBoardUsersFulfilled
+	| GetBoardUsersRejected
+	| AddAssigneeFulfilled
+	| RemoveAssigneeFulfilled
 	| UiResetError;
 
 export type ActionsRejected =
 	| AuthLoginRejected
+	| AuthLogoutRejected
 	| FetchBoardsRejected
 	| FetchBoardRejected
 	| EditColumnRejected
-	| EditTaskRejected;
+	| EditTaskRejected
+	| GetBoardUsersRejected;

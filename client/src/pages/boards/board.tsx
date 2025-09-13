@@ -338,6 +338,7 @@ const Board = () => {
 			{selectedTask && selectedColumnId && (
 				<TaskDetailModal
 					task={selectedTask}
+					boardId={boardId}
 					columnId={selectedColumnId}
 					onClose={closeTaskDetail}
 					onEditTask={(title, desc) =>

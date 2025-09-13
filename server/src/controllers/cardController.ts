@@ -3,7 +3,7 @@ import CardService from "../services/CardService";
 import createHttpError from "http-errors";
 
 export class CardController {
-  private cardService: CardService
+  private cardService: CardService;
   constructor(cardService: CardService) {
     this.cardService = cardService;
   }
@@ -43,9 +43,13 @@ export class CardController {
       res.status(201).json(card);
     } catch (err) {
       if (err instanceof Error) {
-        return next(createHttpError(500, err.message || "Error al crear la tarjeta"));
+        return next(
+          createHttpError(500, err.message || "Error al crear la tarjeta"),
+        );
       }
-      return next(createHttpError(500, "Error desconocido al crear la tarjeta"))
+      return next(
+        createHttpError(500, "Error desconocido al crear la tarjeta"),
+      );
     }
   };
 
@@ -58,7 +62,9 @@ export class CardController {
       res.json(card);
     } catch (err) {
       if (err instanceof Error && err.message.includes("permiso")) {
-        return next(createHttpError(403, err.message ||  "Error al actualizar la tarjeta"));
+        return next(
+          createHttpError(403, err.message || "Error al actualizar la tarjeta"),
+        );
       }
       next(err);
     }
@@ -72,9 +78,52 @@ export class CardController {
       res.status(204).send();
     } catch (err) {
       if (err instanceof Error && err.message.includes("permiso")) {
-        return next(createHttpError(403, err.message ? err.message :  "Error al eliminar la lista"));
+        return next(
+          createHttpError(
+            403,
+            err.message ? err.message : "Error al eliminar la lista",
+          ),
+        );
       }
       next(err);
+    }
+  };
+
+  addAssignee = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.apiUserId;
+      const { cardId, assigneeId } = req.body;
+
+      const user = await this.cardService.addAssignee(
+        userId,
+        cardId,
+        assigneeId,
+      );
+      res.status(201).json(user);
+    } catch (err) {
+      next(
+        createHttpError(
+          500,
+          (err as Error).message || "Error al asignar usuario a la tarjeta",
+        ),
+      );
+    }
+  };
+
+  removeAssignee = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.apiUserId;
+      const { cardId, assigneeId } = req.body;
+
+      await this.cardService.removeAssignee(userId, cardId, assigneeId);
+      res.status(204).send();
+    } catch (err) {
+      next(
+        createHttpError(
+          500,
+          (err as Error).message || "Error al eliminar asignación",
+        ),
+      );
     }
   };
 }
