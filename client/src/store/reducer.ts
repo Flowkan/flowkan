@@ -144,27 +144,37 @@ export function boards(
 						},
 					}
 				: state;
-		case "boards/editTask/fulfilled":
+		case "boards/editTask/fulfilled": {
 			if (!state.currentBoard) return state;
+
+			const { task } = action.payload;
+
 			return {
 				...state,
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.map((col) => {
-						if (col.id?.toString() === action.payload.columnId.toString()) {
+						if (col.id?.toString() === task.listId.toString()) {
+							const withoutTask = col.cards.filter((t) => t.id !== task.id);
+							const withTask = [...withoutTask, task];
+
+							withTask.sort((a, b) => a.position - b.position);
+
 							return {
 								...col,
-								cards: col.cards.map((task) =>
-									task.id === action.payload.task.id
-										? action.payload.task
-										: task,
-								),
+								cards: withTask,
 							};
 						}
-						return col;
+
+						return {
+							...col,
+							cards: col.cards.filter((t) => t.id !== task.id),
+						};
 					}),
 				},
 			};
+		}
+
 		case "boards/deleteTask/fulfilled":
 			if (!state.currentBoard) return state;
 			return {
