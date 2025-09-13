@@ -93,9 +93,6 @@ const Board = () => {
 					destination.index,
 				);
 
-				// Actualización optimista local: directamente modificamos boardData
-				// O si quieres, puedes crear un hook para updateColumnOrderLocal
-				// Por simplicidad, actualizamos la posición en la API
 				newLists.forEach((col, index) => {
 					updateColumnAction(Number(col.id), { position: index });
 				});
@@ -338,6 +335,7 @@ const Board = () => {
 			{selectedTask && selectedColumnId && (
 				<TaskDetailModal
 					task={selectedTask}
+					boardId={boardId}
 					columnId={selectedColumnId}
 					onClose={closeTaskDetail}
 					onEditTask={(title, desc) =>

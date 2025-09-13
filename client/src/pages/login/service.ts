@@ -18,10 +18,13 @@ export const login = async (credentials: Credentials) => {
 	storage.set("auth", accessToken);
 	setAuthorizationHeader(accessToken);
 
+	storage.set("user", user);
+
 	return user;
 };
 
 export const logout = async () => {
 	storage.remove("auth");
+	storage.remove("user");
 	removeAuthorizationHeader();
 };

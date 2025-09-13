@@ -1,6 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
-
 export interface CardCreateParams {
   title: string;
   description: string;
@@ -59,10 +58,17 @@ export default class CardModel {
     });
   }
 
-  async update(cardId: number, data: Prisma.ListUpdateInput) {
+  async update(cardId: number, data: Prisma.CardUpdateInput) {
     return this.prisma.card.update({
       where: { id: cardId },
       data,
+      include: {
+        assignees: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
   }
 
@@ -97,5 +103,28 @@ export default class CardModel {
     });
 
     return !!board;
+  }
+
+  async addAssignee(cardId: number, userId: number) {
+    return this.prisma.cardAssignee.create({
+      data: {
+        cardId,
+        userId,
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
+
+  async removeAssignee(cardId: number, userId: number) {
+    return this.prisma.cardAssignee.delete({
+      where: {
+        cardId_userId: {
+          cardId,
+          userId,
+        },
+      },
+    });
   }
 }

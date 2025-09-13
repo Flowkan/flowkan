@@ -1,6 +1,14 @@
+import type { User } from "../login/types";
+
 export interface BoardsData {
 	title: string;
 }
+
+export type CardAssignee = {
+	cardId: number;
+	userId: number;
+	user: User;
+};
 
 export type Task = {
 	id?: number;
@@ -8,6 +16,7 @@ export type Task = {
 	listId: number;
 	description?: string;
 	position: number;
+	assignees: CardAssignee[];
 };
 
 export type Column = {

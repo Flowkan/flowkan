@@ -25,4 +25,6 @@ router.delete("/:id", jwtAuth.guard, controller.delete);
 router.get("/:id/share", jwtAuth.guard, controller.shareBoard);
 router.post("/:id/invite", jwtAuth.guard, controller.acceptInvitation);
 
+router.get("/:id/users", jwtAuth.guard, controller.boardUsers);
+
 export default router;
