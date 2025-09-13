@@ -37,6 +37,10 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 
 	if (!user) return null;
 
+	const handleLogout = async () => {
+		logoutAction();
+	};
+
 	return (
 		<div ref={menuRef} className="relative">
 			<Button
@@ -67,7 +71,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 						{t("header.menu.boards", "Mis tableros")}
 					</NavLink>
 					<Button
-						onClick={() => logoutAction()}
+						onClick={handleLogout}
 						className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
 					>
 						{t("header.menu.logout", "Cerrar sesión")}

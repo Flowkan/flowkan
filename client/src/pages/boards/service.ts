@@ -4,6 +4,7 @@ import {
 	CARD_ENDPOINT,
 	LIST_ENDPOINT,
 } from "../../utils/endpoints";
+import type { User } from "../login/types";
 import type { Board, BoardsData, Column, Task } from "./types";
 
 export const getBoards = async (): Promise<Board[]> => {
@@ -108,4 +109,32 @@ export const acceptInvitation = async (
 		},
 	);
 	return response.data;
+};
+
+export const getBoardUsers = async (boardId: string): Promise<User[]> => {
+	const response = await apiClient.get<User[]>(
+		`${BOARD_ENDPOINTS.BY_ID(boardId)}/users`,
+	);
+	return response.data;
+};
+
+export const addAssignee = async (
+	cardId: number,
+	assigneeId: number,
+): Promise<User> => {
+	const { data } = await apiClient.post(`${CARD_ENDPOINT.CARDS}/addAssignee`, {
+		cardId,
+		assigneeId,
+	});
+
+	return data;
+};
+
+export const removeAssignee = async (
+	cardId: number,
+	assigneeId: number,
+): Promise<void> => {
+	await apiClient.delete(`${CARD_ENDPOINT.CARDS}/removeAssignee`, {
+		data: { cardId, assigneeId },
+	});
 };

@@ -1,6 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
-
 export interface CardCreateParams {
   title: string;
   description: string;
@@ -97,5 +96,28 @@ export default class CardModel {
     });
 
     return !!board;
+  }
+
+  async addAssignee(cardId: number, userId: number) {
+    return this.prisma.cardAssignee.create({
+      data: {
+        cardId,
+        userId,
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
+
+  async removeAssignee(cardId: number, userId: number) {
+    return this.prisma.cardAssignee.delete({
+      where: {
+        cardId_userId: {
+          cardId,
+          userId,
+        },
+      },
+    });
   }
 }

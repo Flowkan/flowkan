@@ -1,4 +1,4 @@
-import { Board, Prisma } from "@prisma/client";
+import { Board, Prisma, User } from "@prisma/client";
 import BoardModel, { BoardWithRelations } from "../models/BoardModel";
 
 class BoardService {
@@ -48,6 +48,13 @@ class BoardService {
     userId: number;
   }): Promise<void> {
     return this.boardModel.addMember(data);
+  }
+
+  async getBoardUsers(data: {
+    userId: number;
+    boardId: string;
+  }): Promise<User[]> {
+    return this.boardModel.getBoardUsers(data);
   }
 }
 
