@@ -1,4 +1,4 @@
-.newboardform-bg {
+.modal-bg {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -10,7 +10,7 @@
 	align-items: center;
 	z-index: 1000;
 
-	.newboardform-card {
+	.modal-card {
 		position: relative;
 		display: flex;
 		flex-direction: column;
@@ -28,12 +28,16 @@
 			align-self: flex-end;
 		}
 
-		.newboardform-header {
+		.modal-header {
 			font-size: large;
 			font-weight: bold;
+
+			&.confirm {
+				text-align: center;
+			}
 		}
 
-		.new-board-form {
+		.modal-form {
 			display: flex;
 			flex-direction: column;
 			gap: 30px;
@@ -51,6 +55,41 @@
 				&:hover {
 					background-color: var(--color-primary-hover);
 				}
+			}
+		}
+
+		.modal-btns-container {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+			margin-top: 30px;
+
+			.modal-btn {
+				padding: 5px 10px;
+				border-radius: 5px;
+				width: 100px;
+				align-self: center;
+				background-color: var(--color-primary);
+				color: var(--color-text-on-accent);
+				transition: background-color 0.3s ease;
+
+				&:hover {
+					cursor: pointer;
+					background-color: var(--color-primary-hover);
+				}
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 838px) {
+	.modal-bg {
+		.modal-card {
+			.modal-btns-container {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				padding: 0 50px;
 			}
 		}
 	}

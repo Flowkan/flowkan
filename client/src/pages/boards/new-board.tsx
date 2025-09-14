@@ -3,7 +3,7 @@ import { Form } from "../../components/ui/Form";
 import { FormFields } from "../../components/ui/FormFields";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import CloseButton from "../../components/ui/close-button";
-import "./new-board.css";
+import "./modal-boards.css";
 import { Button } from "../../components/ui/Button";
 import { useDispatch } from "react-redux";
 import { addBoard } from "../../store/actions";
@@ -40,13 +40,13 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 	};
 
 	return (
-		<div className="newboardform-bg">
-			<article className="newboardform-card">
+		<div className="modal-bg">
+			<article className="modal-card">
 				<CloseButton className="closebtn-form" onClick={onClose} />
-				<h3 className="newboardform-header">
+				<h3 className="modal-header">
 					{t("newboard.form.header", "Crear tablero")}
 				</h3>
-				<Form className="new-board-form" method="POST" onSubmit={handleSubmit}>
+				<Form className="modal-form" method="POST" onSubmit={handleSubmit}>
 					<div className="form-element">
 						<FormFields
 							id="boardtitle"

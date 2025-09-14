@@ -2,7 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Form } from "../../components/ui/Form";
 import { FormFields } from "../../components/ui/FormFields";
-import "./edit-board.css";
+import "./modal-boards.css";
 import CloseButton from "../../components/ui/close-button";
 import { Button } from "../../components/ui/Button";
 
