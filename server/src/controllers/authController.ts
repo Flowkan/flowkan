@@ -95,7 +95,7 @@ export class AuthController {
         newUser.email,
         "Confirma tu cuenta",
         `<h1>Bienvenido ${newUser.name}!</h1>
-              <p>Haz click <a href="${process.env.FRONTEND_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
+              <p>Haz click <a href="${process.env.FRONTEND_WEB_DEV_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
       );
 
       res.status(201).json({ success: true, user: safeUser });

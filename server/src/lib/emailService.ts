@@ -5,13 +5,13 @@ dotenv.config();
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendEmail(to: string, subject: string, text: string) {
+export async function sendEmail(to: string, subject: string, html: string) {
   try {
     const data = await resend.emails.send({
-      from: `Mi App <${process.env.EMAIL_FROM}>`,
+      from: `Flowkan <${process.env.EMAIL_FROM}>`,
       to,
       subject,
-      text,
+      html,
     });
     console.log("Email enviado:", data);
     return data;
