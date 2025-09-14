@@ -1,15 +1,10 @@
 import type { Actions, ActionsRejected } from "./actions";
 import type { Board, Column } from "../pages/boards/types";
+import type { User } from "../pages/login/types";
 
 //
 // ─── STATE GLOBAL ──────────────────────────────────────────────
 //
-interface User {
-	id: number;
-	name: string;
-	email: string;
-	photo?: string;
-}
 
 export type State = {
 	auth: {
@@ -49,13 +44,29 @@ export function auth(
 ): State["auth"] {
 	switch (action.type) {
 		case "auth/login/pending":
-			return { ...state, error: null };
+			return { ...state, error: null, isAuthenticated: false, user: null };
 		case "auth/login/fulfilled":
-			return { ...state, isAuthenticated: true };
+			return { ...state, isAuthenticated: true, user: action.payload };
 		case "auth/login/rejected":
-			return { ...state, error: action.payload.message };
-		case "auth/logout":
-			return { ...state, isAuthenticated: false };
+			return {
+				...state,
+				error: action.payload.message,
+				isAuthenticated: false,
+				user: null,
+			};
+		case "auth/logout/pending":
+			return { ...state, error: null, isAuthenticated: true, user: state.user };
+
+		case "auth/logout/fulfilled":
+			return { ...state, isAuthenticated: false, user: null };
+
+		case "auth/logout/rejected":
+			return {
+				...state,
+				error: action.payload.message,
+				isAuthenticated: true,
+				user: state.user,
+			};
 		default:
 			return state;
 	}
@@ -147,27 +158,37 @@ export function boards(
 						},
 					}
 				: state;
-		case "boards/editTask/fulfilled":
+		case "boards/editTask/fulfilled": {
 			if (!state.currentBoard) return state;
+
+			const { task } = action.payload;
+
 			return {
 				...state,
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.map((col) => {
-						if (col.id?.toString() === action.payload.columnId.toString()) {
+						if (col.id?.toString() === task.listId.toString()) {
+							const withoutTask = col.cards.filter((t) => t.id !== task.id);
+							const withTask = [...withoutTask, task];
+
+							withTask.sort((a, b) => a.position - b.position);
+
 							return {
 								...col,
-								cards: col.cards.map((task) =>
-									task.id === action.payload.task.id
-										? action.payload.task
-										: task,
-								),
+								cards: withTask,
 							};
 						}
-						return col;
+
+						return {
+							...col,
+							cards: col.cards.filter((t) => t.id !== task.id),
+						};
 					}),
 				},
 			};
+		}
+
 		case "boards/deleteTask/fulfilled":
 			if (!state.currentBoard) return state;
 			return {
@@ -184,6 +205,56 @@ export function boards(
 								}
 							: col,
 					),
+				},
+			};
+		case "cards/addAssignee/fulfilled":
+			if (!state.currentBoard) return state;
+
+			return {
+				...state,
+				currentBoard: {
+					...state.currentBoard,
+					lists: state.currentBoard.lists.map((col) => ({
+						...col,
+						cards: col.cards.map((task) =>
+							task.id === action.payload.cardId
+								? {
+										...task,
+										assignees: [
+											...task.assignees,
+											{
+												cardId: action.payload.cardId,
+												userId: action.payload.user.id,
+												user: action.payload.user,
+											},
+										],
+									}
+								: task,
+						),
+					})),
+				},
+			};
+
+		case "cards/removeAssignee/fulfilled":
+			if (!state.currentBoard) return state;
+			return {
+				...state,
+				currentBoard: {
+					...state.currentBoard,
+					lists: state.currentBoard.lists.map((col) => ({
+						...col,
+						cards: col.cards.map((task) =>
+							task.id === action.payload.cardId
+								? {
+										...task,
+										assignees:
+											task.assignees?.filter(
+												(user) => user.userId !== action.payload.userId,
+											) || [],
+									}
+								: task,
+						),
+					})),
 				},
 			};
 
