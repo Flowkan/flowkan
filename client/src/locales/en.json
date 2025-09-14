@@ -54,6 +54,13 @@
 	"boardslist": {
 		"title": "My boards"
 	},
+	"editboard": {
+		"form": {
+			"newtitle": "New title"
+		},
+		"edit": "EDIT",
+		"cancel": "CANCEL"
+	},
 	"home": {
 		"banner": "Simplify your tasks, maximize your productivity",
 		"description": "Task Cards, Lists, Boards",

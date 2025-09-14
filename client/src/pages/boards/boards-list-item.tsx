@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { Board, BoardsData } from "./types";
+import type { Board } from "./types";
 import TrashButton from "../../components/ui/trash-button";
 import { useState } from "react";
 import EditButton from "../../components/ui/edit-button";

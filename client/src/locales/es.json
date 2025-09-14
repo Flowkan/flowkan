@@ -54,6 +54,13 @@
 	"boardslist": {
 		"title": "Mis tableros"
 	},
+	"editboard": {
+		"form": {
+			"newtitle": "Nuevo título"
+		},
+		"edit": "EDITAR",
+		"cancel": "CANCELAR"
+	},
 	"home": {
 		"banner": "Simplifica tus tareas, maximiza tu productividad",
 		"description": "Tarjetas de Tareas, Listas, Tableros",

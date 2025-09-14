@@ -46,10 +46,10 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 				</Form>
 				<div className="confirm-btns-container">
 					<button className="confirm-btn" form="edittitleform">
-						{t("confirm.yes", "SI")}
+						{t("editboard.edit", "EDITAR")}
 					</button>
 					<button className="confirm-btn" onClick={handleHideMessage}>
-						{t("confirm.no", "NO")}
+						{t("editboard.cancel", "CANCELAR")}
 					</button>
 				</div>
 			</article>
