@@ -31,4 +31,11 @@ export type Board = {
 	id?: string;
 	title: string;
 	lists: Column[];
+	members: BoardMember[];
+};
+
+export type BoardMember = {
+	userId: number;
+	role: string;
+	user: User;
 };

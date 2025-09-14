@@ -66,6 +66,28 @@ class BoardModel {
     });
   }
 
+  async getBoardByMember(
+    userId: number,
+    memberSearch: string,
+  ): Promise<BoardWithRelations[]> {
+    return this.prisma.board.findMany({
+      where: {
+        OR: [{ ownerId: userId }, { members: { some: { userId } } }],
+        members: {
+          some: {
+            user: {
+              OR: [
+                { name: { contains: memberSearch, mode: "insensitive" } },
+                { email: { contains: memberSearch, mode: "insensitive" } },
+              ],
+            },
+          },
+        },
+      },
+      ...boardWithRelationsData,
+    });
+  }
+
   async get({
     userId,
     boardId,

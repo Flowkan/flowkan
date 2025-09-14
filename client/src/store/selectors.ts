@@ -12,7 +12,27 @@ export const getAuthError = (state: RootState) => state.auth.error;
 //
 export const getBoards = (state: RootState) => state.boards.boards;
 
-export const getBoardsByTitle = (state: RootState, title: string) => state.boards.boards.filter(b => b.title.toLowerCase().includes(title.toLowerCase()));
+export const getBoardsByTitle = (state: RootState, seachTitle: string) =>
+	state.boards.boards.filter((b) =>
+		b.title.toLowerCase().includes(seachTitle.toLowerCase()),
+	);
+
+export const getBoardByMember = (state: RootState, searchMember: string) =>
+	state.boards.boards.filter((b) =>
+		b.members?.some((m) =>
+			m.user.name.toLowerCase().includes(searchMember.toLowerCase()) ||
+    	m.user.email.toLowerCase().includes(searchMember.toLowerCase() && "@"),
+		),
+	);
+
+export const getBoardFilterCombine = (state: RootState, searchTitle:string, searchMember:string) => {
+  const boardTitle = searchTitle ? getBoardsByTitle(state, searchTitle) : getBoards(state);
+  const boardMember = searchMember ? getBoardByMember(state, searchMember) : boardTitle;
+  if(searchTitle && searchMember) {
+    return boardTitle.filter((b) => boardMember.includes(b));
+  }
+  return boardMember;
+}
 
 export const getCurrentBoard = (state: RootState) => state.boards.currentBoard;
 

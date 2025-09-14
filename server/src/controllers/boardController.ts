@@ -60,6 +60,17 @@ export class BoardController {
     }
   };
 
+  getBoardByMember = async (req: Request, res: Response) => {
+    try {
+      const userId = req.apiUserId;
+      const boardMember = String(req.query.member) || "";
+      const boards = await this.boardService.getBoardByMember(userId, boardMember);
+      res.json(boards);
+    } catch (error) {
+      res.status(404).send("No hay tableros con este miembro")
+    }
+  }
+
   add = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;

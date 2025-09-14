@@ -5,7 +5,7 @@ import "./boards-list.css";
 import { useTranslation } from "react-i18next";
 import NewBoard from "./new-board";
 import { useAppSelector, useAppDispatch } from "../../store";
-import { getBoards, getBoardsByTitle } from "../../store/selectors";
+import { getBoardFilterCombine, getBoards } from "../../store/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { fetchBoards } from "../../store/actions";
 import { FormFields } from "../../components/ui/FormFields";
@@ -26,6 +26,7 @@ import { FormFields } from "../../components/ui/FormFields";
 const BoardsList = () => {
 	const [showAddForm, setShowAddForm] = useState(false);
 	const [searchBoard, setSearchBoard] = useState("");
+	const [searchUser, setSearchUser] = useState("");
 
 	const { t } = useTranslation();
 
@@ -35,13 +36,18 @@ const BoardsList = () => {
 	const dispatch = useAppDispatch();
 	const boards = useAppSelector(getBoards);
 
-	const boardsByTitle = useAppSelector((state) =>
-		searchBoard ? getBoardsByTitle(state, searchBoard) : getBoards(state),
+	const showBoards = useAppSelector((state) =>
+		getBoardFilterCombine(state, searchBoard, searchUser),
 	);
 
-	const handleFilter = (e: ChangeEvent<HTMLInputElement>) => {
+	const handleFilterByTitle = (e: ChangeEvent<HTMLInputElement>) => {
 		const { value } = e.target;
 		setSearchBoard(value);
+	};
+
+	const handlerFilterMember = (e: ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target;
+		setSearchUser(value);
 	};
 
 	useEffect(() => {
@@ -70,20 +76,35 @@ const BoardsList = () => {
 								<AddButton showAddForm={handleShowAddForm} />
 							</div>
 
-							{/* Filtrar tablero por nombre y usuarios(WIP) */}
+							{/* Filtra tablero por titulo */}
 							<FormFields
 								type="text"
 								id="filterBoard"
 								name="filterBoard"
-								placeholder="Buscar tableros..."
+								placeholder={t(
+									"boardslist.filter.nameBoard",
+									"Buscar tableros...",
+								)}
 								value={searchBoard}
-								onChange={handleFilter}
+								onChange={handleFilterByTitle}
 								className="w-56 rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+							/>
+
+							{/* Filtra por nombre y email */}
+							<FormFields
+								type="text"
+								id="filterUser"
+								name="filterUSer"
+								placeholder={t(
+									"boardslist.filter.userOrEmail",
+									"Filtrar por nombre o email...",
+								)}
+								onChange={handlerFilterMember}
 							/>
 
 							<div className="boards-list-content">
 								<ul className="boards-list">
-									{boardsByTitle.map((board) => (
+									{showBoards.map((board) => (
 										<BoardsItem key={board.id} board={board} />
 									))}
 								</ul>

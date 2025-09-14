@@ -20,6 +20,10 @@ class BoardService {
     return this.boardModel.getBoardByTitle(userId, boardName)
   }
 
+  async getBoardByMember(userId: number, boardName: string) {
+    return this.boardModel.getBoardByMember(userId, boardName)
+  }
+
   async get(data: {
     userId: number;
     boardId: string;
