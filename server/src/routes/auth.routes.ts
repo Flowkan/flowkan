@@ -22,4 +22,6 @@ router.post(
   controller.register,
 );
 
+router.post("/confirm", controller.confirmEmail);
+
 export default router;

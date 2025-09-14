@@ -5,6 +5,7 @@ import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
 import { Prisma } from "@prisma/client";
 import { success } from "zod";
+import { sendEmail } from "../lib/emailService";
 
 type UniqueConstraintError = Prisma.PrismaClientKnownRequestError & {
   code: "P2002";
@@ -28,10 +29,12 @@ export class AuthController {
       const user = await this.authService.validateCredentials(req.body);
 
       if (!user) {
-        throw createHttpError(401, "Invalid credentials");
+        throw createHttpError(403, "Cuenta no verificada o datos incorrectos.");
       }
       if (!process.env.JWT_SECRET) {
-        throw new Error("JWT_SECRET is not defined in environment variables");
+        throw new Error(
+          "No se puede autenticar el usuario. Contacte con flowkan",
+        );
       }
 
       jwt.sign(
@@ -66,13 +69,35 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const newUser = await this.authService.register(req.body);
+      const { name, email, password } = req.body;
+      const userData = {
+        name,
+        email,
+        password,
+        photo: req.file ? req.file.filename : null,
+      };
+      const newUser = await this.authService.register(userData);
       let photoUrl = null;
       if (req.file) {
         photoUrl = `/uploads/${req.file.filename}`;
-        newUser.photo = photoUrl
+        newUser.photo = photoUrl;
       }
-      const { password, ...safeUser } = newUser;
+      const { password: _omit, ...safeUser } = newUser;
+
+      if (!process.env.JWT_SECRET) {
+        throw new Error("No se puede registrar usuario. Contacte con flowkan");
+      }
+      const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET, {
+        expiresIn: "1d",
+      });
+
+      await sendEmail(
+        newUser.email,
+        "Confirma tu cuenta",
+        `<h1>Bienvenido ${newUser.name}!</h1>
+              <p>Haz click <a href="${process.env.FRONTEND_WEB_DEV_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
+      );
+
       res.status(201).json({ success: true, user: safeUser });
     } catch (err: unknown) {
       if (this.isPrismaUniqueConstraintError(err)) {
@@ -85,6 +110,31 @@ export class AuthController {
       next(createHttpError(500, "Error al registrar usuario"));
     }
   };
+
+  confirmEmail = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { token } = req.body;
+
+      if (!token) throw createHttpError(400, "Token no proporcionado");
+      if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET no definido");
+
+      let payload: { userId: number };
+      try {
+        payload = jwt.verify(token, process.env.JWT_SECRET) as {
+          userId: number;
+        };
+      } catch (err) {
+        throw createHttpError(400, "Token inválido o expirado");
+      }
+
+      await this.authService.activateUser(payload.userId);
+
+      res.status(200).json({ message: "Cuenta confirmada correctamente" });
+    } catch (err) {
+      next(err);
+    }
+  };
+
   // Prisma: Unique constraint failed
   private isPrismaUniqueConstraintError(
     err: unknown,

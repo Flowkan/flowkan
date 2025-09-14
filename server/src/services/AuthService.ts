@@ -30,6 +30,10 @@ class AuthService {
   async findById(id: number) {
     return this.authModel.findById(id);
   }
+
+  async activateUser(userId: number) {
+    return this.authModel.updateUser(userId, { status: true });
+  }
 }
 
 export default AuthService;
