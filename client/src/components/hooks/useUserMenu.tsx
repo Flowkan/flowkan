@@ -7,13 +7,11 @@ import { useLogoutAction } from "../../store/hooks";
 
 interface UserMenuProps {
 	user?: { name: string; photo?: string | null } | null;
-	baseUrl: string;
 	avatarSize?: number;
 }
 
 export const UserMenu: React.FC<UserMenuProps> = ({
 	user,
-	baseUrl,
 	avatarSize = 40,
 }) => {
 	const { t } = useTranslation();
@@ -51,7 +49,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			>
 				<Avatar
 					name={user.name}
-					photo={user.photo ? `${baseUrl}/uploads/${user.photo}` : null}
+					photo={user.photo ? user.photo : null}
 					size={avatarSize}
 				/>
 			</Button>
