@@ -11,7 +11,7 @@ import "./boards-list-item.css";
 import { useTranslation } from "react-i18next";
 import { deleteBoard, editBoard } from "../../store/actions";
 import { useAppDispatch } from "../../store";
-import EditBoard from "../../components/ui/edit-board";
+import EditBoard from "./edit-board";
 
 interface BoardsItemProps {
 	board: Board;

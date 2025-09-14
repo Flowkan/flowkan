@@ -56,6 +56,7 @@
 	},
 	"editboard": {
 		"form": {
+			"header": "Editar tablero",
 			"newtitle": "Nuevo título"
 		},
 		"edit": "EDITAR",

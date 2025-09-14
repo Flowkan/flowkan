@@ -1,7 +1,10 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { Form } from "./Form";
-import { FormFields } from "./FormFields";
+import { Form } from "../../components/ui/Form";
+import { FormFields } from "../../components/ui/FormFields";
+import "./edit-board.css";
+import CloseButton from "../../components/ui/close-button";
+import { Button } from "../../components/ui/Button";
 
 interface EditFormProps {
 	handleEditForm: (newData: string) => void;
@@ -11,6 +14,8 @@ interface EditFormProps {
 const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 	const [titleInput, setTitleInput] = useState("");
 	const { t } = useTranslation();
+
+	const isDisabled = !titleInput;
 
 	const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setTitleInput(event.target.value);
@@ -23,11 +28,15 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 	};
 
 	return (
-		<div className="edit-bg">
-			<article className="edit-card">
+		<div className="modal-bg">
+			<article className="modal-card">
+				<CloseButton className="closebtn-form" onClick={handleHideMessage} />
+				<h3 className="modal-header">
+					{t("editboard.form.header", "Editar tablero")}
+				</h3>
 				<Form
 					id="edittitleform"
-					className="edit-board-form"
+					className="modal-form"
 					onSubmit={handleSubmit}
 					method="POST"
 				>
@@ -43,15 +52,10 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 							onChange={handleTitleChange}
 						/>
 					</div>
+					<Button type="submit" className="form-btn" disabled={isDisabled}>
+						{t("editboard.form.button", "EDITAR")}
+					</Button>
 				</Form>
-				<div className="confirm-btns-container">
-					<button className="confirm-btn" form="edittitleform">
-						{t("editboard.edit", "EDITAR")}
-					</button>
-					<button className="confirm-btn" onClick={handleHideMessage}>
-						{t("editboard.cancel", "CANCELAR")}
-					</button>
-				</div>
 			</article>
 		</div>
 	);
