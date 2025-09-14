@@ -3,15 +3,15 @@ import type { Board } from "./types";
 import TrashButton from "../../components/ui/trash-button";
 import { useState } from "react";
 import EditButton from "../../components/ui/edit-button";
-import ConfirmDelete from "./confirm-delete";
-import ShareBoard from "../../components/ui/share-board";
+import ConfirmDelete from "../../components/ui/modals/confirm-delete";
+import ShareBoard from "../../components/ui/modals/share-board";
 import ShareIcon from "../../components/icons/share-icon.svg";
 import { Button } from "../../components/ui/Button";
 import "./boards-list-item.css";
 import { useTranslation } from "react-i18next";
 import { deleteBoard, editBoard } from "../../store/actions";
 import { useAppDispatch } from "../../store";
-import EditBoard from "./edit-board";
+import EditBoard from "../../components/ui/modals/edit-board";
 
 interface BoardsItemProps {
 	board: Board;

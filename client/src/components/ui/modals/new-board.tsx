@@ -1,13 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { Form } from "../../components/ui/Form";
-import { FormFields } from "../../components/ui/FormFields";
+import { Form } from "../Form";
+import { FormFields } from "../FormFields";
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import CloseButton from "../../components/ui/close-button";
+import CloseButton from "../close-button";
 import "./modal-boards.css";
-import { Button } from "../../components/ui/Button";
+import { Button } from "../Button";
 import { useDispatch } from "react-redux";
-import { addBoard } from "../../store/actions";
-import type { AppDispatch } from "../../store";
+import { addBoard } from "../../../store/actions";
+import type { AppDispatch } from "../../../store";
 
 interface NewBoardProps {
 	onClose: () => void;

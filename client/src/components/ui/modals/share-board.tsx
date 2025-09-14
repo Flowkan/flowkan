@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "./Button";
-import CloseButton from "./close-button";
-import type { Board } from "../../pages/boards/types";
-import { createInvitationLink } from "../../pages/boards/service";
+import { Button } from "../Button";
+import CloseButton from "../close-button";
+import type { Board } from "../../../pages/boards/types";
+import { createInvitationLink } from "../../../pages/boards/service";
+import "./modal-boards.css";
 
 interface ShareBoardProps {
 	board: Board;
@@ -74,7 +75,7 @@ const ShareBoard = ({ board, handleHideMessage }: ShareBoardProps) => {
 						<Button
 							type="button"
 							onClick={handleGenerateLink}
-							className="w-full rounded-md bg-blue-500 px-4 py-2 font-bold text-white transition-colors hover:bg-blue-600"
+							className="w-full rounded-md bg-[var(--color-primary)] px-4 py-2 font-bold text-[var(--color-text-on-accent)] transition-colors duration-500 ease-in-out hover:bg-[var(--color-primary-hover)]"
 							disabled={status === "loading"}
 						>
 							{status === "loading"

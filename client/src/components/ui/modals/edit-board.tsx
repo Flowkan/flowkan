@@ -1,10 +1,10 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { Form } from "../../components/ui/Form";
-import { FormFields } from "../../components/ui/FormFields";
+import { Form } from "../Form";
+import { FormFields } from "../FormFields";
 import "./modal-boards.css";
-import CloseButton from "../../components/ui/close-button";
-import { Button } from "../../components/ui/Button";
+import CloseButton from "../close-button";
+import { Button } from "../Button";
 
 interface EditFormProps {
 	handleEditForm: (newData: string) => void;

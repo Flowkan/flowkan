@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import AddButton from "../../components/ui/add-button";
 import "./boards-list.css";
 import { useTranslation } from "react-i18next";
-import NewBoard from "./new-board";
+import NewBoard from "../../components/ui/modals/new-board";
 import { useAppSelector, useAppDispatch } from "../../store";
 import { getBoards } from "../../store/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
