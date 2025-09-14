@@ -16,9 +16,8 @@
 	"dependencies": {
 		"@hello-pangea/dnd": "18.0.1",
 		"@redux-devtools/extension": "^3.3.0",
-		"redux": "^5.0.1",
-		"redux-thunk": "^3.1.0",
 		"@tailwindcss/vite": "4.1.11",
+		"@tinymce/tinymce-react": "6.3.0",
 		"axios": "1.10.0",
 		"clsx": "2.1.1",
 		"i18next": "25.4.2",
@@ -29,6 +28,8 @@
 		"react-i18next": "15.7.2",
 		"react-redux": "9.2.0",
 		"react-router-dom": "7.7.0",
+		"redux": "^5.0.1",
+		"redux-thunk": "^3.1.0",
 		"tailwindcss": "4.1.11",
 		"zod": "4.0.5"
 	},
