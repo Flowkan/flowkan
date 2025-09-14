@@ -69,9 +69,11 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
+			const target = event.target as Node;
 			if (
 				modalRef.current &&
-				!modalRef.current.contains(event.target as Node)
+				!modalRef.current.contains(target) &&
+				!(target as HTMLElement).closest(".tox")
 			) {
 				handleSave();
 				onClose();
