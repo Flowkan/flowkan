@@ -58,10 +58,17 @@ export default class CardModel {
     });
   }
 
-  async update(cardId: number, data: Prisma.ListUpdateInput) {
+  async update(cardId: number, data: Prisma.CardUpdateInput) {
     return this.prisma.card.update({
       where: { id: cardId },
       data,
+      include: {
+        assignees: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
   }
 

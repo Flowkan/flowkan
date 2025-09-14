@@ -42,7 +42,7 @@ const TaskCard = ({ task, index, columnId, onOpenTaskDetail }: Props) => {
 						{task.title}
 					</span>
 
-					{task.assignees.length > 0 && (
+					{(task.assignees ?? []).length > 0 && (
 						<div className="flex gap-1">
 							{task.assignees.map((assignee) => (
 								<Avatar
