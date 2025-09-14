@@ -23,7 +23,10 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 	const [showShareForm, setShowShareForm] = useState(false);
 	const dispatch = useAppDispatch();
 
-	const handleShowConfirm = () => setShowConfirm(true);
+	const handleShowConfirm = (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.preventDefault();
+		setShowConfirm(true);
+	};
 
 	const handleDeleteBoard = async () => {
 		if (board) {
@@ -33,7 +36,10 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 
 	const handleHideMessage = () => setShowConfirm(false);
 
-	const handleShowEditForm = () => setShowEditForm(true);
+	const handleShowEditForm = (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.preventDefault();
+		setShowEditForm(true);
+	};
 
 	const handleEditForm = async (newData: string) => {
 		if (board) {
@@ -43,7 +49,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 
 	const handleHideEdit = () => setShowEditForm(false);
 
-	const handleShowShareForm = (event: React.MouseEvent) => {
+	const handleShowShareForm = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
 		setShowShareForm(true);
 	};
@@ -73,25 +79,25 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 			<li className="board-item">
 				<Link to={`/boards/${board.id}`} className="board-link">
 					<div className="board-title">{board.title}</div>
-				</Link>
-				<div className="edit-trash">
-					<div className="edit-icon container">
-						<EditButton showEditForm={handleShowEditForm} />
-					</div>
-					<div className="trash-icon container">
-						<TrashButton showConfirm={handleShowConfirm} />
-					</div>
+					<div className="edit-trash-share-wrap">
+						<div className="edit-icon container">
+							<EditButton showEditForm={handleShowEditForm} />
+						</div>
+						<div className="trash-icon container">
+							<TrashButton showConfirm={handleShowConfirm} />
+						</div>
 
-					<div className="share-icon container">
-						<Button
-							onClick={handleShowShareForm}
-							className="share-btn"
-							variant="secondary"
-						>
-							<img src={ShareIcon} alt="Share board" />
-						</Button>
+						<div className="share-icon container">
+							<Button
+								onClick={handleShowShareForm}
+								className="share-btn"
+								variant="secondary"
+							>
+								<img src={ShareIcon} alt="Share board" />
+							</Button>
+						</div>
 					</div>
-				</div>
+				</Link>
 			</li>
 		</>
 	);
