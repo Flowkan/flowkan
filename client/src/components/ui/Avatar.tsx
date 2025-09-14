@@ -5,7 +5,12 @@ interface AvatarProps {
 	baseUrl?: string;
 }
 
-export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40, baseUrl }) => {
+export const Avatar: React.FC<AvatarProps> = ({
+	name,
+	photo,
+	size = 40,
+	baseUrl,
+}) => {
 	const randomColor = (user: string): string => {
 		let r = 0,
 			g = 0,
@@ -38,7 +43,7 @@ export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40, baseUrl 
 	if (photo) {
 		return (
 			<img
-				src={baseUrl ? `${baseUrl}${photo}` : photo}
+				src={baseUrl ? `${baseUrl}/uploads/${photo}` : photo}
 				alt={name}
 				className="h-10 w-10 rounded-full object-cover"
 			/>

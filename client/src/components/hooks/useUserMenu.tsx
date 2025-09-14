@@ -51,7 +51,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			>
 				<Avatar
 					name={user.name}
-					photo={user.photo ? `${baseUrl}${user.photo}` : null}
+					photo={user.photo ? `${baseUrl}/uploads/${user.photo}` : null}
 					size={avatarSize}
 				/>
 			</Button>
