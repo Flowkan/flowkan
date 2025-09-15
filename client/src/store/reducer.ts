@@ -128,7 +128,9 @@ export function boards(
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.map((col) =>
-						col.id === action.payload.column.id ? action.payload.column : col,
+						col.id === action.payload.column.id
+							? { ...col, title: action.payload.column.title }
+							: col,
 					),
 				},
 			};

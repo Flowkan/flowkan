@@ -7,12 +7,7 @@ import DropdownMenu from "./DropdownMenu";
 interface Props {
 	column: ColumnType;
 	onAddTask: (content: string) => void;
-	onEditTask: (
-		columnId: string,
-		taskId: string,
-		newContent: string,
-		newDescription?: string,
-	) => void;
+	onEditTask: (updatedFields: { title?: string; description?: string }) => void;
 	onDeleteTask: (columnId: string, taskId: string) => void;
 	onEditColumnTitle: (columnId: string, newTitle: string) => void;
 	onDeleteColumn: (columnId: string) => void;
@@ -309,7 +304,7 @@ const Column = ({
 								task={item}
 								index={index}
 								columnId={String(column.id)}
-								onEditTask={onEditTask}
+								onEditTask={(updatedFields) => onEditTask(updatedFields)}
 								onDeleteTask={onDeleteTask}
 								onOpenTaskDetail={onOpenTaskDetail}
 							/>
