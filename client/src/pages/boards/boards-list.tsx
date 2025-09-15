@@ -62,16 +62,16 @@ const BoardsList = () => {
 						</div>
 					) : (
 						<div className="boards-wrapper">
-							<div className="add-board-btn">
+							{/* Barra de herramientas con botones alineados */}
+							<div className="boards-toolbar">
 								<AddButton showAddForm={handleShowAddForm} />
+								<BoardFilters
+									searchBoard={searchBoard}
+									searchMember={searchMember}
+									setSearchBoard={setSearchBoard}
+									setSearchMember={setSearchMember}
+								/>
 							</div>
-
-							<BoardFilters
-								searchBoard={searchBoard}
-								searchMember={searchMember}
-								setSearchBoard={setSearchBoard}
-								setSearchMember={setSearchMember}
-							/>
 							<div className="boards-list-content">
 								<ul className="boards-list">
 									{showBoards.map((board) => (

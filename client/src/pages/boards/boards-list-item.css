@@ -1,10 +1,14 @@
 .board-item {
 	display: flex;
 	justify-content: space-between;
-	border-width: 1px;
-	border-radius: 5px;
-	padding: 8px 25px;
-	margin: 10px 0;
+	align-items: center;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	padding: 16px 24px;
+	margin: 8px auto;
+	width: 100%;
+	max-width: 100%;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
 	.board-link {
 		align-self: center;

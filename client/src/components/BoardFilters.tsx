@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { Form } from "react-router-dom";
 import { FormFields } from "./ui/FormFields";
 import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
+import { useDismiss } from "./hooks/useDismissClickAndEsc";
 
 interface FilterProps {
 	searchBoard: string;
@@ -18,22 +18,25 @@ export const BoardFilters = ({
 	setSearchBoard,
 	setSearchMember,
 }: FilterProps) => {
-	const [showFilters, setShowFilters] = useState(false);
-  const { t } = useTranslation();
+	const { t } = useTranslation();
+	const { open, setOpen, ref } = useDismiss<HTMLDivElement>();
+	const toggleFilter = () => setOpen((prev) => !prev);
 
 	return (
-		<div className="mt-6">
+		<div ref={ref}>
 			{/* Botón toggle */}
 			<Button
 				id="filters"
-        title="Filtros"
-        aria-label="Filtros"
-				onClick={() => setShowFilters(!showFilters)}
-				className="jus flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm hover:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+				title="Filtros"
+				aria-label="Filtros"
+				onClick={toggleFilter}
+				className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 			>
 				{/* Icono filtro */}
-				<span className="sr-only">{t("backoffice.filters.icon", "Filtros")}</span>
-				{showFilters ? (
+				<span className="sr-only">
+					{t("backoffice.filters.icon", "Filtros")}
+				</span>
+				{open ? (
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="1.5em"
@@ -58,44 +61,53 @@ export const BoardFilters = ({
 				)}
 			</Button>
 
-			{showFilters && (
+			{open && (
 				<Form
 					onSubmit={(e) => e.preventDefault()}
-					className="animate-fadeIn mt-4 rounded-xl bg-gray-100 p-4 shadow-inner"
+					className="filters-form animate-fadeIn mt-4 rounded-xl bg-gray-100 p-4 shadow-inner"
 				>
 					<h2 className="mb-4 text-center text-lg font-medium text-gray-800">
-						{t("backoffice.filtersForm.title","Filtrar tableros")}
+						{t("backoffice.filtersForm.title", "Filtrar tableros")}
 					</h2>
 
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 						{/* Filtra por título */}
-
 						<FormFields
 							id="filterBoard"
 							name="filterBoard"
-							label={t("backoffice.filtersForm.filterBoardLabel", "Nombre del tablero")}
+							label={t(
+								"backoffice.filtersForm.filterBoardLabel",
+								"Nombre del tablero",
+							)}
 							labelClassName="mb-1 block text-sm font-medium text-gray-700"
-							placeholder={t("backoffice.filtersForm.filterBoardPlaceholder", "Buscar tableros")}
+							placeholder={t(
+								"backoffice.filtersForm.filterBoardPlaceholder",
+								"Buscar tableros",
+							)}
 							value={searchBoard}
 							onChange={(e) => setSearchBoard(e.target.value)}
 							className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
 						/>
 
 						{/* Filtra por miembro/email */}
-
 						<FormFields
-							label={t("backoffice.filtersForm.filterMemberLabel", "Miembro o email")}
+							label={t(
+								"backoffice.filtersForm.filterMemberLabel",
+								"Miembro o email",
+							)}
 							labelClassName="mb-1 block text-sm font-medium text-gray-700"
 							id="filterMember"
 							name="filterMember"
-							placeholder={t("backoffice.filtersForm.filterMemberPlaceholder", "Filtrar por miembro o email")}
+							placeholder={t(
+								"backoffice.filtersForm.filterMemberPlaceholder",
+								"Filtrar por miembro o email",
+							)}
 							value={searchMember}
 							onChange={(e) => setSearchMember(e.target.value)}
 							className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
 						/>
 					</div>
 
-					{/* Botones */}
 					<div className="mt-4 flex justify-end gap-3">
 						<Button
 							onClick={() => {
