@@ -23,14 +23,19 @@ class AuthModel {
     email,
     password,
   }: ValidateCredentialsParams): Promise<SafeUser | null> {
+
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
+
+    console.log(user);
+    
     if (!user) return null;
 
-    if (!user.status) return null;
-
+    if (!user.status) return null;    
+    
     const isValid = await bcrypt.compare(password, user.password);
+    
     if (!isValid) return null;
 
     const { password: _, ...safeUser } = user;

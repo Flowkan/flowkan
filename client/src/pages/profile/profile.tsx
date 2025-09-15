@@ -1,4 +1,4 @@
-import { useCallback, useState, type ChangeEvent } from "react";
+import { useCallback, useEffect, useState, type ChangeEvent } from "react";
 import UploadImage from "../../components/ui/UploadImage";
 import { IconEdit } from "../../components/icons/IconEdit";
 import EditableField from "../../components/ui/EditableField";
@@ -9,7 +9,7 @@ import Banner from "../../components/icons/Banner";
 import { getProfile, getUserLogged } from "../../store/selectors";
 import { resolveBaseURLFromEnv } from "../../utils/resolveBaseUrlEnv";
 import { updateFieldProfile } from "./service";
-import { useUpdatedProfile } from "../../store/hooks";
+import { useLoadedProfile, useUpdatedProfile } from "../../store/hooks";
 import Switch from "../../components/ui/Switch";
 
 type EventInput = (e: ChangeEvent<HTMLInputElement>) => void;
@@ -20,31 +20,32 @@ const Profile = () => {
 
 	const updatedProfileAction = useUpdatedProfile();
 
-	// const [editableFields,setEditableFields] = useState<ProfileCardType|null>(null)
-	
-	// useEffect(()=>{
-	// 	if(userData){
-	// 		setEditableFields({
-	// 			user:{
-	// 				name:userData.name,
-	// 				photo:userData.photo ?? ''
-	// 			},
-	// 			profile:{
-	// 				...profileData,
-	// 				allowNotifications:true
-	// 			}
-	// 		})
-	// 	}
-	// },[userData])
-	
+	const loadProfileAction = useLoadedProfile();
+
+	useEffect(()=>{
+		loadProfileAction()
+	},[])
+
 	const [user, setUser] = useState<ProfileUpdateType>({
 		name: userData?.name ?? "",
 		email: userData?.email ?? "",
 		photo:userData?.photo ?? "",
-		...profileData
-		// dateBirth: "",
-		// allowNotifications:true
+		allowNotifications:profileData?.allowNotifications ?? true
 	});
+
+	useEffect(()=>{
+		if(profileData){						
+			setUser({
+				...user,
+				username:profileData.username,
+				dateBirth:profileData.dateBirth,
+				allowNotifications:profileData.allowNotifications,
+				location:profileData.location,
+				bio:profileData.bio
+			})
+		}
+	},[profileData])
+
 	const [errors, setErrors] = useState({
 		name: { error: false, message: "" },
 		photo: { error: false, message: "" },
@@ -56,8 +57,10 @@ const Profile = () => {
 	});
 
 	const previewImage = user.photo && typeof user.photo === 'string'
-	? `${resolveBaseURLFromEnv()}${user.photo}`	
+	? `${resolveBaseURLFromEnv()}uploads/${user.photo}`	
 	: "";
+	// console.log(user.photo);
+	
 	
 	const handleSubmitEditField = useCallback(
 		async (field: keyof ProfileUpdateType) => {
@@ -95,30 +98,11 @@ const Profile = () => {
 						}
 						break;						
 				}
-				const { user:userUpdated,profile } = await updateFieldProfile(userData.id.toString(),formData)
+				const { user:userUpdated,profile } = await updateFieldProfile(userData.id.toString(),formData)							
 				updatedProfileAction({
 						user:userUpdated,
 						profile
-				})
-				// if(field === 'photo'){
-				// 	formData.append(field,user[field] as File)
-				// 	const { user:userUpdated,profile } = await updateFieldProfile(userData.id.toString(),formData)
-				// 	// setFieldsEdited(prev=>({...prev,photo:userUpdated.photo ?? ''}))								
-				// 	updatedProfileAction({
-				// 		user:userUpdated,
-				// 		profile
-				// 	})					
-				// }
-				// if(field === 'name'){
-				// 	formData.append(field,user[field])
-				// 	const { user:userUpdated,profile } = await updateFieldProfile(userData.id.toString(),formData)					
-				// 	// setFieldsEdited(prev=>({...prev,name:userUpdated.name}))
-				// 	updatedProfileAction({
-				// 		user:userUpdated,
-				// 		profile
-				// 	})	
-				// 	// console.log(userData);					
-				// }
+				})				
 			}
 		},
 		[errors, user],
@@ -138,17 +122,15 @@ const Profile = () => {
 			value = target.files?.[0] || null; // File or null
 		} else {
 			value = target.value; // string
-		}
-		// console.log({ ...user, [name]: value });
-		// const usertemp = { ...user,[name]:value }
-		// console.log(usertemp);
-		setUser((prev) => ({ ...prev, [name]: value }));
+		}		
+		// setUser((prev) => ({ ...prev, [name]: value }));
+		setUser({ ...user,[name]:value })
 	}
 
 	return (
 		<div>
 			<div className="mx-auto my-10 flex flex-col gap-12 rounded-xl shadow-[2px_2px_10px] shadow-primary md:max-w-3xl">
-				<h2 className="relative h-[150px] md:h-[250px]">					
+				<h2 className="relative h-[150px] md:h-[250px] -z-10">					
 					<Banner className="inline-block h-full w-full rounded-t-xl" />
 					<span className="md:w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-center text-3xl md:text-5xl font-bold text-gray-50">
 						Perfil de Usuario
@@ -158,8 +140,7 @@ const Profile = () => {
 					<div className="flex gap-5 md:flex-col">
 						<div className="flex flex-col gap-4 px-5 md:items-center md:gap-0">
 							<UploadImage
-								name="photo"
-								// previewUrl={fieldsEdited.photo}								
+								name="photo"							
 								previewUrl={previewImage}
 								onChange={handleChangeField as EventInput}
 								onSubmit={handleSubmitEditField}
@@ -188,7 +169,7 @@ const Profile = () => {
 										{errors.name.message}
 									</span>
 								</div>
-								<div>
+								<div className="flex">
 									<Switch 
 									label="Permitir envío de notificaciones"
 									name="allowNotifications"
@@ -196,22 +177,24 @@ const Profile = () => {
 									checked={user.allowNotifications} 
 									onSubmit={handleSubmitEditField}
 									/>
-								</div>
-								<EditableField
-									label=""
+								</div>								
+							</div>
+							<div className="mt-auto flex flex-col gap-0 md:gap-3">
+								<div>
+									<EditableField
+									label="username"
 									name="username"
 									error={errors.username.error}
 									value={user.username ? user.username : ""}
-									className="flex-1 rounded-l-lg border px-3 py-1"
+									className="flex-1 rounded-l-lg border px-3"
 									onChange={handleChangeField}
-									classNameValue="text-lg font-medium text-primary/80"
+									classNameValue="text-lg font-medium text-gray-500 font-semibold"
 									onEdit={handleSubmitEditField}
-								/>
-								<span className="text-xs text-red-500">
-									{errors.username.message}
-								</span>
-							</div>
-							<div className="mt-auto">
+									/>
+									<span className="text-xs text-red-500">
+										{errors.username.message}
+									</span>
+								</div>
 								<div>
 									<EditableField
 										label="Email"
@@ -222,20 +205,20 @@ const Profile = () => {
 										readonly
 										onChange={handleChangeField}
 										className="flex-1 rounded-l-lg border px-3 py-1"
-										classNameValue="text-base text-gray-800"
+										classNameValue="text-base text-gray-800 text-xs"
 										onEdit={() => {}}
 									/>
 								</div>
 								<div>
 									<EditableField
-										label="Fec. Nacimiento"
-										classNameValue="text-base text-gray-800"
+										label="Fec. Nacimiento"										
 										type="date"
 										name="dateBirth"
 										error={errors.dateBirth.error}
 										onChange={handleChangeField}
 										value={user.dateBirth as string}
 										className="flex-1 rounded-l-lg border px-3 py-1"
+										classNameValue="text-base text-gray-800 text-xs"
 										onEdit={handleSubmitEditField}
 									/>
 									<span className="text-xs text-red-500">
@@ -251,7 +234,7 @@ const Profile = () => {
 										error={errors.location.error}
 										onChange={handleChangeField}
 										className="flex-1 rounded-l-lg border px-3 py-1"
-										classNameValue="text-base text-gray-800"
+										classNameValue="text-base text-xs text-gray-800"
 										onEdit={handleSubmitEditField}
 									/>
 									<span className="text-xs text-red-500">
@@ -261,8 +244,8 @@ const Profile = () => {
 							</div>
 						</div>
 					</div>
-					<div>
-						<div className="border-t border-gray-300 pt-6">
+					<div className="pt-2 md:pt-6">
+						<div className="border-t border-accent/30 pt-2 md:pt-6">
 							<EditableField
 								label="Biografía"
 								as="textarea"

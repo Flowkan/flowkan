@@ -13,7 +13,7 @@ export type State = {
 		isAuthenticated: boolean;
 		error: string | null;
 	};
-	profile: ProfileType;
+	profile: ProfileType | null;
 	boards: {
 		boards: Board[];
 		currentBoard: Board | null;
@@ -33,13 +33,7 @@ const defaultState: State = {
 		error: null,
 		user: storedUser ? JSON.parse(storedUser) : null,
 	},
-	profile:{
-		username:'',
-		dateBirth:'',
-		location:'',
-		allowNotifications:true,
-		bio:''
-	},
+	profile:null,
 	boards: { boards: [], currentBoard: null, loading: false, error: null },
 	ui: { pending: false, error: null },
 };
@@ -98,10 +92,11 @@ export function profile(state=defaultState.profile,action:Actions):State['profil
 		case "profile/update/rejected":
 		case "profile/loaded/pending":
 		case "profile/loaded/rejected":
-			return state;
+			return null;
 		case "profile/update/fulfilled":
 		case "profile/loaded/fulfilled":
-			return { ...action.payload }	
+			// console.log(action.payload);									
+			return {...action.payload}	
 		default:
 			return state;
 	}

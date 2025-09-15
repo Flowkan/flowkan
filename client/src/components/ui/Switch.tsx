@@ -1,4 +1,4 @@
-import React, { useEffect, type ChangeEvent } from "react";
+import React, { useCallback, useEffect, type ChangeEvent } from "react";
 import Field from "./Field";
 import { IconNotification } from "../icons/IconNotification";
 import { IconNotNotification } from "../icons/IconNotNotification";
@@ -24,18 +24,17 @@ const Switch = ({ checked, name = "",label='', onChange, onSubmit }: SwitchProps
 			onChange(e, name);
 		}
 	}
-	function handleSubmit(){
+	const handleSubmit = useCallback(()=>{
 		if(onSubmit){
 			onSubmit(name as keyof ProfileUpdateType)
 		}
-	}
+	},[checked])
 	useEffect(()=>{
-		handleSubmit()
+		// handleSubmit()
 	},[checked])
 	return (
-		<div>
-			<div className="space-y-2">
-				<label className="flex w-full cursor-pointer items-center justify-between rounded-md text-accent bg-white/40 p-4 shadow-primary shadow-xs hover:bg-white/20 has-[:checked]:bg-white/30 has-[:checked]:text-primary/80">
+			<button className="space-y-2 flex-1 transition-all duration-300 hover:scale-[1.01] rounded-lg shadow-primary shadow-xs hover:shadow-md" onClick={handleSubmit}>
+				<label className="flex w-full cursor-pointer items-center justify-between text-accent bg-white/40 p-4 hover:bg-white/20 has-[:checked]:bg-white/30 has-[:checked]:text-primary/80">
 					<div className="flex items-center space-x-5">
 						<div className="flex items-center">							
 							<IconNotification className="md:text-2xl" />
@@ -59,8 +58,7 @@ const Switch = ({ checked, name = "",label='', onChange, onSubmit }: SwitchProps
                     </div>				
                     
 				</label>	                
-			</div>
-		</div>
+			</button>		
 	);
 };
 

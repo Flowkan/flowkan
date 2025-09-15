@@ -26,6 +26,7 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> => {
     try {
+
       const user = await this.authService.validateCredentials(req.body);
 
       if (!user) {
