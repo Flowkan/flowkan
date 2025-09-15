@@ -203,9 +203,7 @@ const Board = () => {
 	const handleEditColumnTitle = useCallback(
 		(columnId: string, newTitle: string) => {
 			if (!boardData) return;
-			const column = boardData.lists.find((c) => c.id === columnId);
-			if (!column) return;
-			updateColumnAction(Number(columnId), { ...column, title: newTitle });
+			updateColumnAction(Number(columnId), { title: newTitle });
 		},
 		[boardData, updateColumnAction],
 	);
@@ -278,9 +276,7 @@ const Board = () => {
 													onDeleteTask={(taskId) =>
 														handleDeleteTask(taskId, column.id!)
 													}
-													onEditColumnTitle={(newTitle) =>
-														handleEditColumnTitle(column.id!, newTitle)
-													}
+													onEditColumnTitle={handleEditColumnTitle}
 													onDeleteColumn={() =>
 														handleDeleteColumnClick(column.id!)
 													}
