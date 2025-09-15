@@ -5,7 +5,7 @@ import { useState } from "react";
 import EditButton from "../../components/ui/edit-button";
 import ConfirmDelete from "../../components/ui/confirm-delete";
 import ShareBoard from "../../components/ui/share-board";
-import { Button } from "../../components/ui/Button";
+import ShareButton from "../../components/ui/share-button";
 import "./boards-list-item.css";
 import { useTranslation } from "react-i18next";
 
@@ -59,14 +59,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 					</div>
 
 					<div className="share-icon container">
-						{/* TODO: Poro coherencia cambiar texto por icono. Esto para Paula que ponga icono del mismo estilo que los otros */}
-						<Button
-							onClick={handleShowShareForm}
-							className="share-btn"
-							variant="secondary"
-						>
-							Compartir
-						</Button>
+						<ShareButton showShareForm={handleShowShareForm} />
 					</div>
 				</div>
 			</li>
