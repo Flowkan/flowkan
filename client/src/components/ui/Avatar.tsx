@@ -38,7 +38,7 @@ export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40 }) => {
 		const baseUrl = import.meta.env.VITE_BASE_DEV_URL;
 		return (
 			<img
-				src={`${baseUrl}/uploads/${photo}`}
+				src={`${baseUrl}uploads/${photo}`}
 				alt={name}
 				className="h-10 w-10 rounded-full object-cover"
 				style={{
