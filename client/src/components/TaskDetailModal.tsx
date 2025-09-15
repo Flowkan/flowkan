@@ -11,12 +11,7 @@ interface TaskDetailModalProps {
 	columnId: string;
 	boardId?: string;
 	onClose: () => void;
-	onEditTask: (
-		columnId: string,
-		taskId: string,
-		newContent: string,
-		newDescription?: string,
-	) => void;
+	onEditTask: (updatedFields: { title?: string; description?: string }) => void;
 	onDeleteTask: (columnId: string, taskId: string) => void;
 }
 
@@ -53,19 +48,17 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		if (contentInputRef.current) contentInputRef.current.focus();
 	}, []);
 
-	const handleSave = React.useCallback(() => {
-		if (
-			editedContent.trim() !== (task.title || "").trim() ||
-			editedDescription.trim() !== (task.description || "").trim()
-		) {
-			onEditTask(
-				columnId,
-				task.id!.toString(),
-				editedContent.trim(),
-				editedDescription.trim(),
-			);
+	const handleSaveTitle = () => {
+		if (editedContent.trim() !== (task.title || "").trim()) {
+			onEditTask({ title: editedContent.trim() });
 		}
-	}, [editedContent, editedDescription, columnId, task, onEditTask]);
+	};
+
+	const handleSaveDescription = () => {
+		if (editedDescription.trim() !== (task.description || "").trim()) {
+			onEditTask({ description: editedDescription.trim() });
+		}
+	};
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -75,13 +68,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 				!modalRef.current.contains(target) &&
 				!(target as HTMLElement).closest(".tox")
 			) {
-				handleSave();
 				onClose();
 			}
 		};
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [onClose, editedContent, editedDescription, handleSave]);
+	}, [onClose, editedContent, editedDescription]);
 
 	useEffect(() => {
 		if (!showUsers) return;
@@ -156,7 +148,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 			>
 				<button
 					onClick={() => {
-						handleSave();
 						onClose();
 					}}
 					className="text-text-placeholder hover:text-text-body absolute top-3 right-3 text-4xl leading-none"
@@ -173,7 +164,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							type="text"
 							value={editedContent}
 							onChange={(e) => setEditedContent(e.target.value)}
-							onBlur={handleSave}
+							onBlur={handleSaveTitle}
 							className="border-border-medium focus:border-accent w-full border-b bg-transparent text-2xl font-bold outline-none"
 						/>
 					</div>
@@ -303,7 +294,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									"body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
 							}}
 							onEditorChange={(newContent) => setEditedDescription(newContent)}
-							onBlur={handleSave}
+							onBlur={handleSaveDescription}
 						/>
 					</div>
 				</div>

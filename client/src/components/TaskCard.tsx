@@ -6,12 +6,7 @@ interface Props {
 	task: Task;
 	index: number;
 	columnId: string;
-	onEditTask: (
-		columnId: string,
-		taskId: string,
-		newContent: string,
-		newDescription?: string,
-	) => void;
+	onEditTask: (updatedFields: { title?: string; description?: string }) => void;
 	onDeleteTask: (columnId: string, taskId: string) => void;
 	onOpenTaskDetail: (task: Task, columnId: string) => void;
 }
