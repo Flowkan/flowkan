@@ -9,3 +9,7 @@ export const register = async (user: UserRegister) => {
 		},
 	});
 };
+
+export const confirmEmail = async (token: string) => {
+	return await apiClient.post(USER_ENDPOINTS.CONFIRM, { token });
+};

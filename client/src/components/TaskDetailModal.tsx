@@ -4,18 +4,14 @@ import type { User } from "../pages/login/types";
 import { getBoardUsers } from "../pages/boards/service";
 import { Avatar } from "./ui/Avatar";
 import { useAddAssigneeAction, useRemoveAssigneeAction } from "../store/hooks";
+import { Editor } from "@tinymce/tinymce-react";
 
 interface TaskDetailModalProps {
 	task: Task;
 	columnId: string;
 	boardId?: string;
 	onClose: () => void;
-	onEditTask: (
-		columnId: string,
-		taskId: string,
-		newContent: string,
-		newDescription?: string,
-	) => void;
+	onEditTask: (updatedFields: { title?: string; description?: string }) => void;
 	onDeleteTask: (columnId: string, taskId: string) => void;
 }
 
@@ -46,38 +42,38 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const modalRef = useRef<HTMLDivElement>(null);
 	const contentInputRef = useRef<HTMLInputElement>(null);
 	const usersRef = useRef<HTMLDivElement>(null);
+	const editorRef = useRef(null);
 
 	useEffect(() => {
 		if (contentInputRef.current) contentInputRef.current.focus();
 	}, []);
 
-	const handleSave = React.useCallback(() => {
-		if (
-			editedContent.trim() !== (task.title || "").trim() ||
-			editedDescription.trim() !== (task.description || "").trim()
-		) {
-			onEditTask(
-				columnId,
-				task.id!.toString(),
-				editedContent.trim(),
-				editedDescription.trim(),
-			);
+	const handleSaveTitle = () => {
+		if (editedContent.trim() !== (task.title || "").trim()) {
+			onEditTask({ title: editedContent.trim() });
 		}
-	}, [editedContent, editedDescription, columnId, task, onEditTask]);
+	};
+
+	const handleSaveDescription = () => {
+		if (editedDescription.trim() !== (task.description || "").trim()) {
+			onEditTask({ description: editedDescription.trim() });
+		}
+	};
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
+			const target = event.target as Node;
 			if (
 				modalRef.current &&
-				!modalRef.current.contains(event.target as Node)
+				!modalRef.current.contains(target) &&
+				!(target as HTMLElement).closest(".tox")
 			) {
-				handleSave();
 				onClose();
 			}
 		};
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [onClose, editedContent, editedDescription, handleSave]);
+	}, [onClose, editedContent, editedDescription]);
 
 	useEffect(() => {
 		if (!showUsers) return;
@@ -152,7 +148,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 			>
 				<button
 					onClick={() => {
-						handleSave();
 						onClose();
 					}}
 					className="text-text-placeholder hover:text-text-body absolute top-3 right-3 text-4xl leading-none"
@@ -169,7 +164,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							type="text"
 							value={editedContent}
 							onChange={(e) => setEditedContent(e.target.value)}
-							onBlur={handleSave}
+							onBlur={handleSaveTitle}
 							className="border-border-medium focus:border-accent w-full border-b bg-transparent text-2xl font-bold outline-none"
 						/>
 					</div>
@@ -263,12 +258,43 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							<span className="text-text-placeholder text-lg">📝</span>{" "}
 							Descripción
 						</h4>
-						<textarea
+						<Editor
+							apiKey={import.meta.env.VITE_TINY_MCE}
+							onInit={(_evt, editor) => (editorRef.current = editor)}
 							value={editedDescription}
-							onChange={(e) => setEditedDescription(e.target.value)}
-							onBlur={handleSave}
-							placeholder="Añade una descripción más detallada..."
-							className="border-border-medium focus:ring-accent bg-background-input text-text-body placeholder-text-placeholder min-h-[120px] w-full resize-y rounded-md border p-3 focus:ring-1 focus:outline-none"
+							init={{
+								height: 200,
+								menubar: false,
+								plugins: [
+									"advlist",
+									"autolink",
+									"lists",
+									"link",
+									"image",
+									"charmap",
+									"preview",
+									"anchor",
+									"searchreplace",
+									"visualblocks",
+									"code",
+									"fullscreen",
+									"insertdatetime",
+									"media",
+									"table",
+									"code",
+									"help",
+									"wordcount",
+								],
+								toolbar:
+									"undo redo | blocks | " +
+									"bold italic forecolor | alignleft aligncenter " +
+									"alignright alignjustify | bullist numlist outdent indent | " +
+									"removeformat | help",
+								content_style:
+									"body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+							}}
+							onEditorChange={(newContent) => setEditedDescription(newContent)}
+							onBlur={handleSaveDescription}
 						/>
 					</div>
 				</div>

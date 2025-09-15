@@ -80,7 +80,6 @@ export function boards(
 	action: Actions,
 ): State["boards"] {
 	switch (action.type) {
-		case "boards/fetchBoards/pending":
 		case "boards/fetchBoard/pending":
 			return { ...state, loading: true, error: null };
 
@@ -90,12 +89,27 @@ export function boards(
 		case "boards/fetchBoard/fulfilled":
 			return { ...state, loading: false, currentBoard: action.payload };
 
-		case "boards/fetchBoards/rejected":
 		case "boards/fetchBoard/rejected":
 			return { ...state, loading: false, error: action.payload.message };
 
 		case "boards/addBoard/fulfilled":
 			return { ...state, boards: [...state.boards, action.payload] };
+
+		case "boards/deleteBoards":
+			return {
+				...state,
+				boards: state.boards.filter((board) => board.id !== action.payload),
+			};
+
+		case "boards/editBoard/fulfilled":
+			return {
+				...state,
+				boards: state.boards.map((board) => {
+					if (board.id !== action.payload.boardId) return board;
+
+					return { ...board, title: action.payload.data.title };
+				}),
+			};
 
 		case "boards/addColumn/fulfilled":
 			return state.currentBoard
@@ -114,7 +128,9 @@ export function boards(
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.map((col) =>
-						col.id === action.payload.column.id ? action.payload.column : col,
+						col.id === action.payload.column.id
+							? { ...col, title: action.payload.column.title }
+							: col,
 					),
 				},
 			};
@@ -182,7 +198,7 @@ export function boards(
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.map((col) =>
-						col.id?.toString() === action.payload.columnId
+						col.id === action.payload.columnId
 							? {
 									...col,
 									cards: col.cards.filter(

@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/Button";
 import { Page } from "../../components/layout/page";
 import { useTranslation } from "react-i18next";
+import { Avatar } from "../../components/ui/Avatar";
 
 const InvitationPage = () => {
 	const { t } = useTranslation();
@@ -39,12 +40,12 @@ const InvitationPage = () => {
 					{invitatorName}{" "}
 					{t("invitation.shared", "te ha compartido el tablero:")} {boardTitle}
 				</h1>
-				<div className="my-6">
+				<div className="my-6 flex flex-col items-center">
 					{invitatorPhoto !== null ? (
-						<img
-							src={invitatorPhoto}
-							alt={invitatorName || ""}
-							className="mx-auto mb-4 h-24 w-24 rounded-full object-cover"
+						<Avatar
+							name={invitatorName || ""}
+							photo={invitatorPhoto}
+							size={90}
 						/>
 					) : (
 						<div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gray-300">

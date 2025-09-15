@@ -17,6 +17,7 @@ export const USER_ENDPOINTS = {
 	LOGIN: `/api/${VERSION}/auth/login`,
 	AUTH: `/api/${VERSION}/auth/me`,
 	PROFILE: `/api/${VERSION}/auth/profile`,
+	CONFIRM: `/api/${VERSION}/auth/confirm`,
 	BY_ID: byId("profile"),
 };
 
