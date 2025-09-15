@@ -9,6 +9,7 @@ import { getBoardFilterCombine, getBoards } from "../../store/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { fetchBoards } from "../../store/actions";
 import { FormFields } from "../../components/ui/FormFields";
+import { Form } from "react-router-dom";
 
 /* function EmptyList() {
 	const { t } = useTranslation();
@@ -76,31 +77,38 @@ const BoardsList = () => {
 								<AddButton showAddForm={handleShowAddForm} />
 							</div>
 
-							{/* Filtra tablero por titulo */}
-							<FormFields
-								type="text"
-								id="filterBoard"
-								name="filterBoard"
-								placeholder={t(
-									"boardslist.filter.nameBoard",
-									"Buscar tableros...",
-								)}
-								value={searchBoard}
-								onChange={handleFilterByTitle}
-								className="w-56 rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-							/>
+							<Form>
+								{/* Filtra tablero por titulo */}
+								<FormFields
+									label="filterBoard"
+									labelClassName="sr-only"
+									type="text"
+									id="filterBoard"
+									name="filterBoard"
+									placeholder={t(
+										"boardslist.filter.nameBoard",
+										"Buscar tableros...",
+									)}
+									value={searchBoard}
+									onChange={handleFilterByTitle}
+									className="w-56 rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+								/>
 
-							{/* Filtra por nombre y email */}
-							<FormFields
-								type="text"
-								id="filterUser"
-								name="filterUSer"
-								placeholder={t(
-									"boardslist.filter.userOrEmail",
-									"Filtrar por nombre o email...",
-								)}
-								onChange={handlerFilterMember}
-							/>
+								{/* Filtra por nombre y email */}
+								<FormFields
+									label="filterUser"
+									labelClassName="sr-only"
+									type="text"
+									id="filterUser"
+									name="filterUSer"
+									placeholder={t(
+										"boardslist.filter.userOrEmail",
+										"Filtrar por nombre o email...",
+									)}
+									onChange={handlerFilterMember}
+									className="w-56 rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+								/>
+							</Form>
 
 							<div className="boards-list-content">
 								<ul className="boards-list">

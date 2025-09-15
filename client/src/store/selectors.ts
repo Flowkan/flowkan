@@ -17,21 +17,31 @@ export const getBoardsByTitle = (state: RootState, seachTitle: string) =>
 		b.title.toLowerCase().includes(seachTitle.toLowerCase()),
 	);
 
-export const getBoardByMember = (state: RootState, searchMember: string) =>
-	state.boards.boards.filter((b) =>
-		b.members?.some((m) =>
-			m.user.name.toLowerCase().includes(searchMember.toLowerCase()) ||
-    	m.user.email.toLowerCase().includes(searchMember.toLowerCase() && "@"),
-		),
-	);
+export const getBoardByMember = (state: RootState, searchMember: string) => {
+  if (searchMember.includes("@")) {
+    return state.boards.boards.filter((b) => b.members.some(m => m.user.email.toLowerCase().includes(searchMember.toLowerCase()) ))
+  }
+  return state.boards.boards.filter((b) =>
+    b.members.some(
+      (m) =>
+        m.user.name.toLowerCase().includes(searchMember.toLowerCase()) ||
+        m.user.email.toLowerCase().includes(searchMember.toLowerCase()),
+    ),
+  );
+};
 
 export const getBoardFilterCombine = (state: RootState, searchTitle:string, searchMember:string) => {
-  const boardTitle = searchTitle ? getBoardsByTitle(state, searchTitle) : getBoards(state);
-  const boardMember = searchMember ? getBoardByMember(state, searchMember) : boardTitle;
   if(searchTitle && searchMember) {
-    return boardTitle.filter((b) => boardMember.includes(b));
-  }
-  return boardMember;
+    const boardTitle = getBoardsByTitle(state, searchTitle);
+    const boardMember = getBoardByMember(state, searchMember);
+
+    return boardTitle.filter((board) => 
+      boardMember.some(memberBoard => memberBoard.id === board.id)
+    );
+  } 
+  if(searchTitle) return getBoardsByTitle(state, searchTitle);
+  if(searchMember) return getBoardByMember(state, searchMember);
+  return getBoards(state);
 }
 
 export const getCurrentBoard = (state: RootState) => state.boards.currentBoard;
