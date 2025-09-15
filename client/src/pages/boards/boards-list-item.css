@@ -17,7 +17,7 @@
 
 	.edit-trash {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		margin: 0;
 		padding: 2px;
 

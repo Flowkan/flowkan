@@ -18,6 +18,7 @@ export function BackofficeLayout() {
 						id: boardId,
 						title: "",
 						lists: [],
+						members: [],
 					}}
 				/>
 			)}

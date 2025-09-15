@@ -1,5 +1,5 @@
 import BoardsItem from "./boards-list-item";
-import { useState, useEffect, type ChangeEvent } from "react";
+import { useState, useEffect } from "react";
 import AddButton from "../../components/ui/add-button";
 import "./boards-list.css";
 import { useTranslation } from "react-i18next";
@@ -8,8 +8,7 @@ import { useAppSelector, useAppDispatch } from "../../store";
 import { getBoardFilterCombine, getBoards } from "../../store/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { fetchBoards } from "../../store/actions";
-import { FormFields } from "../../components/ui/FormFields";
-import { Form } from "react-router-dom";
+import { BoardFilters } from "../../components/BoardFilters";
 
 /* function EmptyList() {
 	const { t } = useTranslation();
@@ -27,7 +26,7 @@ import { Form } from "react-router-dom";
 const BoardsList = () => {
 	const [showAddForm, setShowAddForm] = useState(false);
 	const [searchBoard, setSearchBoard] = useState("");
-	const [searchUser, setSearchUser] = useState("");
+	const [searchMember, setSearchMember] = useState("");
 
 	const { t } = useTranslation();
 
@@ -38,18 +37,8 @@ const BoardsList = () => {
 	const boards = useAppSelector(getBoards);
 
 	const showBoards = useAppSelector((state) =>
-		getBoardFilterCombine(state, searchBoard, searchUser),
+		getBoardFilterCombine(state, searchBoard, searchMember),
 	);
-
-	const handleFilterByTitle = (e: ChangeEvent<HTMLInputElement>) => {
-		const { value } = e.target;
-		setSearchBoard(value);
-	};
-
-	const handlerFilterMember = (e: ChangeEvent<HTMLInputElement>) => {
-		const { value } = e.target;
-		setSearchUser(value);
-	};
 
 	useEffect(() => {
 		dispatch(fetchBoards());
@@ -77,39 +66,12 @@ const BoardsList = () => {
 								<AddButton showAddForm={handleShowAddForm} />
 							</div>
 
-							<Form>
-								{/* Filtra tablero por titulo */}
-								<FormFields
-									label="filterBoard"
-									labelClassName="sr-only"
-									type="text"
-									id="filterBoard"
-									name="filterBoard"
-									placeholder={t(
-										"boardslist.filter.nameBoard",
-										"Buscar tableros...",
-									)}
-									value={searchBoard}
-									onChange={handleFilterByTitle}
-									className="w-56 rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-								/>
-
-								{/* Filtra por nombre y email */}
-								<FormFields
-									label="filterUser"
-									labelClassName="sr-only"
-									type="text"
-									id="filterUser"
-									name="filterUSer"
-									placeholder={t(
-										"boardslist.filter.userOrEmail",
-										"Filtrar por nombre o email...",
-									)}
-									onChange={handlerFilterMember}
-									className="w-56 rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-								/>
-							</Form>
-
+							<BoardFilters
+								searchBoard={searchBoard}
+								searchMember={searchMember}
+								setSearchBoard={setSearchBoard}
+								setSearchMember={setSearchMember}
+							/>
 							<div className="boards-list-content">
 								<ul className="boards-list">
 									{showBoards.map((board) => (
