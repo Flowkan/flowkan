@@ -198,7 +198,7 @@ export function boards(
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.map((col) =>
-						col.id?.toString() === action.payload.columnId
+						col.id === action.payload.columnId
 							? {
 									...col,
 									cards: col.cards.filter(

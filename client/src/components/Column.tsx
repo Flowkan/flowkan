@@ -8,7 +8,7 @@ interface Props {
 	column: ColumnType;
 	onAddTask: (content: string) => void;
 	onEditTask: (updatedFields: { title?: string; description?: string }) => void;
-	onDeleteTask: (columnId: string, taskId: string) => void;
+	onDeleteTask: (taskId: string, columnId: string) => void;
 	onEditColumnTitle: (columnId: string, newTitle: string) => void;
 	onDeleteColumn: (columnId: string) => void;
 	onOpenTaskDetail: (task: Task, columnId: string) => void;
