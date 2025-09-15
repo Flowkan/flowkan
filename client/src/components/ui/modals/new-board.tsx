@@ -68,4 +68,5 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 	);
 };
 
+
 export default NewBoard;

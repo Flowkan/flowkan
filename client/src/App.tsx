@@ -5,9 +5,12 @@ import { BackofficeLayout } from "./components/layout/backoffice_layout.tsx";
 import { HomePage } from "./pages/home";
 import { NotFound } from "./pages/not-found";
 import { RegisterPage } from "./pages/register/register";
+import Profile from "./pages/profile/profile.tsx";
 import LoginSkeleton from "./components/ui/LoginSkeleton";
 import { useAppSelector } from "./store";
 import { ConfirmPage } from "./pages/register/ConfirmPage.tsx";
+
+
 
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((m) => ({ default: m.LoginPage })),
@@ -54,6 +57,14 @@ function App() {
 						</AuthRoute>
 					}
 				/>
+				<Route
+					path="profile"
+					element={
+						<AuthRoute requireAuth={true}>
+							<Profile />
+						</AuthRoute>
+					}
+				/>				
 				<Route
 					path="/invitacion"
 					element={

@@ -149,4 +149,18 @@ export class AuthController {
       err.meta.target.every((t) => typeof t === "string")
     );
   }
+  me = async (req: Request,res: Response,next: NextFunction) => {
+    try {
+      const userId = req.apiUserId
+      const user = await this.authService.findById(userId)
+      if(user){
+        res.json({result:user})
+        return
+      }
+      res.status(500).json({error:'Usuario no loggeado'})
+    } catch (error) {
+      next(error)
+    }
+    
+  }
 }

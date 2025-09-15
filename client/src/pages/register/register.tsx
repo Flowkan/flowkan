@@ -169,7 +169,7 @@ export const RegisterPage = () => {
 					>
 						<div className="-space-y-px rounded-md shadow-sm">
 							<div className="mb-6 flex flex-col items-center">
-								<div className="relative">
+								<div className="relative">									
 									{previewUrl ? (
 										<img
 											src={previewUrl}

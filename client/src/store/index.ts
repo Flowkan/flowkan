@@ -4,6 +4,7 @@ import * as thunk from "redux-thunk";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as authApi from "../pages/login/service";
+import * as profileApi from "../pages/profile/service";
 import * as boardsApi from "../pages/boards/service";
 import * as reducers from "./reducer";
 import type { Actions } from "./actions";
@@ -15,7 +16,7 @@ const rootReducer = combineReducers(reducers);
 export type Router = ReturnType<typeof createBrowserRouter>;
 
 type ExtraArgument = {
-	api: { auth: typeof authApi; boards: typeof boardsApi };
+	api: { auth: typeof authApi; boards: typeof boardsApi;profile: typeof profileApi };
 	router: Router;
 };
 
@@ -52,7 +53,7 @@ export default function configureStore(
 					ReturnType<typeof rootReducer>,
 					Actions,
 					ExtraArgument
-				>({ api: { auth: authApi, boards: boardsApi }, router }),
+				>({ api: { auth: authApi, boards: boardsApi,profile:profileApi }, router }),
 				failureRedirects(router),
 			),
 		),

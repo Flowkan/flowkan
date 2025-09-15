@@ -7,6 +7,9 @@ import { validateUserFields } from "../validators/authValidator";
 import { loginSchema, registerSchema } from "../validators/authSchema";
 import upload from "../lib/uploadConfigure";
 
+//temporal
+import * as jwtAuth from "../middlewares/jwtAuthMiddleware.js";
+
 const router = Router();
 
 const model = new AuthModel(prisma);
@@ -22,6 +25,7 @@ router.post(
   controller.register,
 );
 
+router.get("/me", jwtAuth.guard, controller.me);
 router.post("/confirm", controller.confirmEmail);
 
 export default router;

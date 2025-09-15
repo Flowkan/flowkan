@@ -1,6 +1,7 @@
 import type { Actions, ActionsRejected } from "./actions";
 import type { Board, Column } from "../pages/boards/types";
 import type { User } from "../pages/login/types";
+import type { ProfileType } from "../pages/profile/types";
 
 //
 // ─── STATE GLOBAL ──────────────────────────────────────────────
@@ -12,6 +13,7 @@ export type State = {
 		isAuthenticated: boolean;
 		error: string | null;
 	};
+	profile: ProfileType;
 	boards: {
 		boards: Board[];
 		currentBoard: Board | null;
@@ -30,6 +32,13 @@ const defaultState: State = {
 		isAuthenticated: false,
 		error: null,
 		user: storedUser ? JSON.parse(storedUser) : null,
+	},
+	profile:{
+		username:'',
+		dateBirth:'',
+		location:'',
+		allowNotifications:true,
+		bio:''
 	},
 	boards: { boards: [], currentBoard: null, loading: false, error: null },
 	ui: { pending: false, error: null },
@@ -66,11 +75,38 @@ export function auth(
 				error: action.payload.message,
 				isAuthenticated: true,
 				user: state.user,
-			};
+			};	
+		case "user/update/pending":
+		case "user/update/rejected":
+			return state;
+		case "user/update/fulfilled":
+			return {
+				...state,
+				user:action.payload
+			}
 		default:
 			return state;
 	}
 }
+
+//
+// ─── PROFILE REDUCER ──────────────────────────────────────────────
+//
+export function profile(state=defaultState.profile,action:Actions):State['profile']{
+	switch (action.type) {
+		case "profile/update/pending":
+		case "profile/update/rejected":
+		case "profile/loaded/pending":
+		case "profile/loaded/rejected":
+			return state;
+		case "profile/update/fulfilled":
+		case "profile/loaded/fulfilled":
+			return { ...action.payload }	
+		default:
+			return state;
+	}
+}
+
 
 //
 // ─── BOARDS REDUCER ──────────────────────────────────────────────
