@@ -82,7 +82,8 @@ const EditableField = ({
 						
 					</>
 				) : (
-					<>						
+					<>	
+					<div className="transition-all duration-300 hover:ring ring-accent hover:shadow-md hover:shadow-accent flex rounded-lg">					
 						<Field 
 						type={type}
 						name={name}
@@ -90,7 +91,7 @@ const EditableField = ({
 						as={as}
 						rows={rows}
 						onChange={onChange}
-						className={`${className} ${error ? 'border border-red-600' : ''}`}
+						className={`${className} border-accent text-accent text-lg font-semibold tracking-wider focus:outline-accent ${error ? 'border-red-600' : ''}`}
 						// className="flex-1 rounded-l-lg border px-3 py-1"
 						/>
 						<Button
@@ -100,6 +101,7 @@ const EditableField = ({
 						>
 							<IconSave className="text-white" />
 						</Button>
+					</div>					
 					</>
 				)}
 			</div>

@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import type { Credentials } from "./types";
 import { useTranslation } from "react-i18next";
-import { useLoginAction } from "../../store/hooks";
+import { useLoadedProfile, useLoginAction } from "../../store/hooks";
 import { useAppSelector } from "../../store";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { Form } from "../../components/ui/Form";
@@ -18,6 +18,7 @@ import { getUi } from "../../store/selectors";
 export const LoginPage = () => {
 	const { t } = useTranslation();
 	const loginAction = useLoginAction();
+	const profileLoadedAction = useLoadedProfile()
 	const { error } = useAppSelector(getUi);
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
@@ -26,6 +27,10 @@ export const LoginPage = () => {
 
 	const { email, password } = formData;
 	const disabled = !email || !password;
+
+	// useEffect(()=>{
+		
+	// },[])
 
 	const validateEmail = (email: string): boolean => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -71,6 +76,7 @@ export const LoginPage = () => {
 			}
 
 			await loginAction(formData);
+			await profileLoadedAction()
 
 			// Si ambas validaciones pasan, mostrar el mensaje de éxito
 			toast.custom((t) => (

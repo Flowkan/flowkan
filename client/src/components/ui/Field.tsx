@@ -3,6 +3,7 @@ import type { ChangeEvent, HTMLInputTypeAttribute } from "react";
 interface FieldProps {
     name: string;
     value: string;
+    checked?:boolean;
     as?: "input" | "textarea";
     type?: HTMLInputTypeAttribute;
     className?: string;
@@ -18,6 +19,7 @@ function Field({
     type = "text",
     rows = 0,
     disabled = false,
+    checked=false,
     className='',
     onChange,
 }: FieldProps) {
@@ -50,6 +52,7 @@ function Field({
                         type={type}
                         name={name}
                         value={value}
+                        checked={checked}
                         className={className}
                         onChange={handleChange}
                     />

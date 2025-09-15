@@ -8,6 +8,13 @@ export const isAuthenticated = (state: RootState) => state.auth.isAuthenticated;
 export const getAuthError = (state: RootState) => state.auth.error;
 
 //
+// ─── PROFILE ──────────────────────────────────────────────
+//
+export const getUserLogged = (state:RootState) => state.auth.user;
+
+export const getProfile = (state:RootState) => state.profile;
+
+//
 // ─── BOARDS ──────────────────────────────────────────────
 //
 export const getBoards = (state: RootState) => state.boards.boards;

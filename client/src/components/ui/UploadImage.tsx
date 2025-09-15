@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent, type JSX } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type JSX } from "react";
 import { Button } from "./Button";
 import { FormFields } from "./FormFields";
 import { IconCamera } from "../icons/IconCamera";
@@ -41,8 +41,13 @@ const UploadImage = ({ previewUrl, onChange, icon,name,onSubmit,error=false }: U
 	function handleSubmit(){
 		if(onSubmit){
 			onSubmit(name as keyof ProfileUpdateType)
+			// setNewImage(previewUrl as string)			
 		}
-	}
+	}	
+	useEffect(()=>{
+		setNewImage(previewUrl ?? "")
+	},[previewUrl])
+	
 	return (
 		<>
 			<div className="group relative w-fit">
@@ -51,7 +56,7 @@ const UploadImage = ({ previewUrl, onChange, icon,name,onSubmit,error=false }: U
 						src={newImage}
 						alt="Foto de perfil"
 						className={`size-40 rounded-full border border-gray-300 object-cover transition-transform group-hover:scale-105
-							shadow-primary shadow-[5px_1px_10px]
+							shadow-primary shadow-[3px_0px_8px]
 							${error ? 'border-2 border-red-400' : ''}`}
 					/>
 				) : (
@@ -92,7 +97,7 @@ const UploadImage = ({ previewUrl, onChange, icon,name,onSubmit,error=false }: U
 						<Button
 							type="button"
 							onClick={handleSubmit}
-							className="flex items-center gap-3 rounded-md bg-sky-500 p-2 text-white hover:bg-sky-600"
+							className="flex items-center gap-3 rounded-md bg-accent p-2 text-white hover:bg-accent-hover"
 						>
 							<IconSave />							
 						</Button>

@@ -5,14 +5,14 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "db:init": "docker exec -it flowkan-server npx tsx src/init-db.ts",
     "db:migrate": "docker exec -it flowkan-server npx prisma migrate dev --name init",
     "db": "npm run db:migrate && npm run db:init",
     "db:reset": "docker exec -it flowkan-server npx prisma migrate reset && npx prisma generate && npm run db:init",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1"    
   },
   "keywords": [],
   "author": "",
@@ -26,6 +26,7 @@
     "express": "5.1.0",
     "http-errors": "2.0.0",
     "jsonwebtoken": "9.0.2",
+    "morgan": "1.10.1",
     "multer": "2.0.2",
     "pg": "8.16.3",
     "react": "19.1.1",
@@ -38,6 +39,7 @@
     "@types/express": "5.0.3",
     "@types/http-errors": "2.0.5",
     "@types/jsonwebtoken": "9.0.10",
+    "@types/morgan": "1.9.10",
     "@types/multer": "2.0.0",
     "@types/node": "24.3.0",
     "@types/pg": "8.15.5",

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useAppDispatch, useAppSelector } from ".";
 import type { BoardsData, Column, Task } from "../pages/boards/types";
-import type { Credentials } from "../pages/login/types";
+import type { Credentials, User } from "../pages/login/types";
 import {
 	login,
 	logout,
@@ -17,6 +17,8 @@ import {
 	editColumn,
 	addAssignee,
 	removeAssignee,
+	updateProfile,
+	loadedProfile,
 } from "./actions";
 import {
 	isAuthenticated,
@@ -28,6 +30,7 @@ import {
 	getUiPending,
 	getUiError,
 } from "./selectors";
+import type { ProfileType } from "../pages/profile/types";
 
 //
 // ─── AUTH HOOKS ──────────────────────────────────────────────
@@ -59,6 +62,23 @@ export function useUiResetError() {
 	return function () {
 		return dispatch(resetError());
 	};
+}
+
+//
+// ─── BOARDS PROFILE ──────────────────────────────────────────────
+//
+export function useUpdatedProfile(){
+	const dispatch = useAppDispatch();
+	return function ({user,profile}:{user:User,profile:ProfileType}){
+		return dispatch(updateProfile({user,profile}))
+	}
+}
+
+export function useLoadedProfile(){
+	const dispatch = useAppDispatch();
+	return function (){
+		return dispatch(loadedProfile())
+	}
 }
 
 //
