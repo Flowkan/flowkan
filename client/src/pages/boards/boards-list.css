@@ -2,6 +2,8 @@
 	display: flex;
 	flex-direction: column;
 	padding: 20px;
+	max-width: 750px;
+	margin: 0 auto;
 	gap: 30px;
 
 	.boards-list-container {
@@ -33,8 +35,8 @@
 }
 
 @media screen and (width > 768px) {
-	.boards-wrapper {
-		justify-content: center;
-		width: 90%;
+	.page-container {
+		max-width: 750px;
+		margin: 0 auto;
 	}
 }

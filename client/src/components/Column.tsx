@@ -7,13 +7,8 @@ import DropdownMenu from "./DropdownMenu";
 interface Props {
 	column: ColumnType;
 	onAddTask: (content: string) => void;
-	onEditTask: (
-		columnId: string,
-		taskId: string,
-		newContent: string,
-		newDescription?: string,
-	) => void;
-	onDeleteTask: (columnId: string, taskId: string) => void;
+	onEditTask: (updatedFields: { title?: string; description?: string }) => void;
+	onDeleteTask: (taskId: string, columnId: string) => void;
 	onEditColumnTitle: (columnId: string, newTitle: string) => void;
 	onDeleteColumn: (columnId: string) => void;
 	onOpenTaskDetail: (task: Task, columnId: string) => void;
@@ -46,7 +41,7 @@ const Column = ({
 		}
 	}, [newTaskContent, onAddTask]);
 
-	const handleTitleDoubleClick = useCallback(() => {
+	const handleTitleClick = useCallback(() => {
 		setIsEditingTitle(true);
 	}, []);
 
@@ -59,7 +54,7 @@ const Column = ({
 				setEditedTitle(column.title);
 			}
 		} else if (editedTitle.trim() !== column.title && column.id) {
-			onEditColumnTitle(column.id, editedTitle.trim());
+			onEditColumnTitle(column.id!, editedTitle.trim());
 		}
 	}, [
 		editedTitle,
@@ -77,7 +72,7 @@ const Column = ({
 				if (editedTitle.trim() === "") {
 					e.currentTarget.blur();
 				} else if (column.id) {
-					onEditColumnTitle(column.id, editedTitle.trim());
+					onEditColumnTitle(column.id!, editedTitle.trim());
 				}
 			} else if (e.key === "Escape") {
 				setIsEditingTitle(false);
@@ -159,8 +154,8 @@ const Column = ({
 		<div className="bg-background-column flex h-full max-h-[calc(100vh-160px)] w-80 flex-shrink-0 flex-col rounded-lg p-4 shadow-xl">
 			<div className="mb-4 flex items-center justify-between">
 				<h3
-					onDoubleClick={handleTitleDoubleClick}
-					className="text-text-heading mr-2 flex-grow cursor-pointer px-2 py-1 text-xl font-bold select-none"
+					onClick={handleTitleClick}
+					className="mr-2 flex-grow cursor-pointer px-2 py-1 text-xl font-bold select-none"
 				>
 					{isEditingTitle ? (
 						<input
@@ -170,15 +165,16 @@ const Column = ({
 							onChange={(e) => setEditedTitle(e.target.value)}
 							onBlur={handleTitleBlur}
 							onKeyDown={handleTitleKeyDown}
-							className="border-accent focus:border-accent-dark text-text-heading w-full border-b bg-transparent text-xl font-bold outline-none"
+							className="text-text-heading w-full border border-blue-500 bg-transparent px-2 py-1 text-xl font-bold outline-none"
 						/>
 					) : (
-						column.title ||
-						(isNewColumnInEditMode
-							? "Haz doble clic para editar"
-							: "Título de la columna")
+						column.title || "Haz clic para editar"
 					)}
+					<span className="bg-dark-footer ml-1 rounded-full px-2 py-1 text-sm font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-200">
+						{column.cards?.length ?? 0}
+					</span>
 				</h3>
+
 				<DropdownMenu
 					buttonContent={
 						<span className="-mt-1 text-3xl leading-none">&#x22EE;</span>
@@ -308,7 +304,7 @@ const Column = ({
 								task={item}
 								index={index}
 								columnId={String(column.id)}
-								onEditTask={onEditTask}
+								onEditTask={(updatedFields) => onEditTask(updatedFields)}
 								onDeleteTask={onDeleteTask}
 								onOpenTaskDetail={onOpenTaskDetail}
 							/>

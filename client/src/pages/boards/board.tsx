@@ -171,13 +171,9 @@ const Board = () => {
 		(
 			columnId: string,
 			taskId: string,
-			newContent: string,
-			newDescription?: string,
+			updatedFields: { title?: string; description?: string },
 		) => {
-			updateTaskAction(Number(columnId), taskId, {
-				title: newContent,
-				description: newDescription,
-			});
+			updateTaskAction(Number(columnId), taskId, updatedFields);
 		},
 		[updateTaskAction],
 	);
@@ -203,9 +199,7 @@ const Board = () => {
 	const handleEditColumnTitle = useCallback(
 		(columnId: string, newTitle: string) => {
 			if (!boardData) return;
-			const column = boardData.lists.find((c) => c.id === columnId);
-			if (!column) return;
-			updateColumnAction(Number(columnId), { ...column, title: newTitle });
+			updateColumnAction(Number(columnId), { title: newTitle });
 		},
 		[boardData, updateColumnAction],
 	);
@@ -229,9 +223,9 @@ const Board = () => {
 	}, [boardData, newColumnName, addColumnAction]);
 
 	const handleDeleteColumnClick = useCallback(
-		(columnId: string) => {
+		(columnId: string | number) => {
 			if (!boardData) return;
-			removeColumnAction(columnId);
+			removeColumnAction(columnId.toString());
 		},
 		[boardData, removeColumnAction],
 	);
@@ -267,20 +261,19 @@ const Board = () => {
 													onAddTask={(task) =>
 														handleAddTask(Number(column.id), task)
 													}
-													onEditTask={(taskId, newTitle, newDescription) =>
-														handleEditTask(
-															column.id!,
-															taskId,
-															newTitle,
-															newDescription,
-														)
+													onEditTask={(updatedFields) =>
+														selectedColumnId && selectedTask
+															? handleEditTask(
+																	selectedColumnId,
+																	selectedTask.id!.toString(),
+																	updatedFields,
+																)
+															: undefined
 													}
 													onDeleteTask={(taskId) =>
 														handleDeleteTask(taskId, column.id!)
 													}
-													onEditColumnTitle={(newTitle) =>
-														handleEditColumnTitle(column.id!, newTitle)
-													}
+													onEditColumnTitle={handleEditColumnTitle}
 													onDeleteColumn={() =>
 														handleDeleteColumnClick(column.id!)
 													}
@@ -338,12 +331,11 @@ const Board = () => {
 					boardId={boardId}
 					columnId={selectedColumnId}
 					onClose={closeTaskDetail}
-					onEditTask={(title, desc) =>
+					onEditTask={(updatedFields) =>
 						handleEditTask(
 							selectedColumnId,
 							selectedTask.id!.toString(),
-							title,
-							desc,
+							updatedFields,
 						)
 					}
 					onDeleteTask={() =>

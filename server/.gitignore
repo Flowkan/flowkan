@@ -5,4 +5,4 @@ node_modules/
 .DS_Store
 Thumbs.db
 /generated/prisma
-/server/src/uploads
+/public/uploads

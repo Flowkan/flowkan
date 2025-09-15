@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ShareBoard from "../../components/ui/share-board";
+import ShareBoard from "../ui/modals/share-board";
 import type { Board } from "../../pages/boards/types";
 
 interface BoardToolbarProps {
@@ -32,7 +32,7 @@ export function BoardToolbar({ board }: BoardToolbarProps) {
 
 			{/* Modal de compartir */}
 			{showShareForm && (
-				<ShareBoard board={board} onClose={handleCloseShareForm} />
+				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
 			)}
 		</>
 	);

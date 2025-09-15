@@ -25,6 +25,7 @@ router.post(
   controller.register,
 );
 
-router.get('/me',jwtAuth.guard,controller.me)
+router.get("/me", jwtAuth.guard, controller.me);
+router.post("/confirm", controller.confirmEmail);
 
 export default router;

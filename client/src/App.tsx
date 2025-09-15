@@ -8,6 +8,7 @@ import { RegisterPage } from "./pages/register/register";
 import Profile from "./pages/profile/profile.tsx";
 import LoginSkeleton from "./components/ui/LoginSkeleton";
 import { useAppSelector } from "./store";
+import { ConfirmPage } from "./pages/register/ConfirmPage.tsx";
 
 
 
@@ -70,6 +71,14 @@ function App() {
 						<Suspense fallback={<LoginSkeleton />}>
 							<InvitationPage />
 						</Suspense>
+					}
+				/>
+				<Route
+					path="confirm"
+					element={
+						<AuthRoute requireAuth={false} redirectTo="/boards">
+							<ConfirmPage />
+						</AuthRoute>
 					}
 				/>
 				<Route path="not-found" element={<NotFound />} />
