@@ -178,6 +178,9 @@ const Column = ({
 							? "Haz doble clic para editar"
 							: "Título de la columna")
 					)}
+					<span className="bg-dark-footer ml-1 rounded-full px-2 py-1 text-sm font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-200">
+						{column.cards?.length ?? 0}
+					</span>
 				</h3>
 				<DropdownMenu
 					buttonContent={
