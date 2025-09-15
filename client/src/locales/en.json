@@ -23,7 +23,8 @@
 		"navbar": {
 			"features": "Features",
 			"solutions": "Solutions",
-			"prices": "Pricing"
+			"prices": "Pricing",
+			"backoffice": "Backoffice"
 		},
 		"login": "Login",
 		"signup": "Sign Up"
@@ -45,7 +46,6 @@
 		"clients": "Our Clients",
 		"copy": "All rights reserved"
 	},
-	"Backoffice": "",
 	"addbtn": "New Board",
 	"confirm": {
 		"yes": "YES",
