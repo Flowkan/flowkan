@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from "react";
 import {
 	DragDropContext,
 	Droppable,
-	Draggable,
 	type DropResult,
 	type DraggableLocation,
 } from "@hello-pangea/dnd";
@@ -242,50 +241,28 @@ const Board = () => {
 							{...provided.droppableProps}
 							className="custom-scrollbar flex h-[calc(100vh-8rem)] gap-6 overflow-x-auto px-4 py-8 sm:px-8"
 						>
-							{boardData?.lists.map((column, index) => (
-								<Draggable
+							{boardData?.lists.map((column) => (
+								<Column
 									key={column.id}
-									draggableId={column.id!.toString()}
-									index={index}
-								>
-									{(prov) => (
-										<div
-											ref={prov.innerRef}
-											{...prov.draggableProps}
-											style={prov.draggableProps.style}
-											className="flex flex-col"
-										>
-											<div {...prov.dragHandleProps} className="cursor-grab">
-												<Column
-													column={column}
-													onAddTask={(task) =>
-														handleAddTask(Number(column.id), task)
-													}
-													onEditTask={(updatedFields) =>
-														selectedColumnId && selectedTask
-															? handleEditTask(
-																	selectedColumnId,
-																	selectedTask.id!.toString(),
-																	updatedFields,
-																)
-															: undefined
-													}
-													onDeleteTask={(taskId) =>
-														handleDeleteTask(taskId, column.id!)
-													}
-													onEditColumnTitle={handleEditColumnTitle}
-													onDeleteColumn={() =>
-														handleDeleteColumnClick(column.id!)
-													}
-													onOpenTaskDetail={(task) =>
-														openTaskDetail(task, column.id!)
-													}
-													isNewColumnInEditMode={false}
-												/>
-											</div>
-										</div>
-									)}
-								</Draggable>
+									column={column}
+									onAddTask={(task) => handleAddTask(Number(column.id), task)}
+									onEditTask={(updatedFields) =>
+										selectedColumnId && selectedTask
+											? handleEditTask(
+													selectedColumnId,
+													selectedTask.id!.toString(),
+													updatedFields,
+												)
+											: undefined
+									}
+									onDeleteTask={(taskId) =>
+										handleDeleteTask(taskId, column.id!)
+									}
+									onEditColumnTitle={handleEditColumnTitle}
+									onDeleteColumn={() => handleDeleteColumnClick(column.id!)}
+									onOpenTaskDetail={(task) => openTaskDetail(task, column.id!)}
+									isNewColumnInEditMode={false}
+								/>
 							))}
 							{provided.placeholder}
 
