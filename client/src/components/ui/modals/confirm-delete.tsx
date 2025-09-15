@@ -1,4 +1,6 @@
 import { useTranslation } from "react-i18next";
+/* import "./confirm-delete.css"; */
+import "./modal-boards.css";
 
 interface ConfirmDeleteProps {
 	handleDeleteBoard: () => void;
@@ -13,14 +15,14 @@ const ConfirmDelete = ({
 }: ConfirmDeleteProps) => {
 	const { t } = useTranslation();
 	return (
-		<div className="confirm-bg">
-			<article className="confirm-card">
-				<p className="confirm-p">{message}</p>
-				<div className="confirm-btns">
-					<button className="confirm-yes-btn" onClick={handleDeleteBoard}>
+		<div className="modal-bg">
+			<article className="modal-card">
+				<h3 className="modal-header confirm">{message}</h3>
+				<div className="modal-btns-container">
+					<button className="modal-btn" onClick={handleDeleteBoard}>
 						{t("confirm.yes", "SI")}
 					</button>
-					<button className="confirm-yes-btn" onClick={handleHideMessage}>
+					<button className="modal-btn" onClick={handleHideMessage}>
 						{t("confirm.no", "NO")}
 					</button>
 				</div>

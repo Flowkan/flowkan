@@ -2,12 +2,12 @@ import TrashIcon from "../icons/trash-icon.svg";
 import "../../pages/boards/boards-list-item.css";
 
 interface TrashButtonProps {
-	showConfirm: () => void;
+	showConfirm: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const TrashButton = ({ showConfirm }: TrashButtonProps) => {
 	return (
-		<button className="trash-btn" onClick={showConfirm}>
+		<button className="trash-btn" onClick={(ev) => showConfirm(ev)}>
 			<img src={TrashIcon} alt="Delete board" />
 		</button>
 	);
