@@ -32,7 +32,7 @@ export function BoardToolbar({ board }: BoardToolbarProps) {
 
 			{/* Modal de compartir */}
 			{showShareForm && (
-				<ShareBoard board={board} onClose={handleCloseShareForm} />
+				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
 			)}
 		</>
 	);

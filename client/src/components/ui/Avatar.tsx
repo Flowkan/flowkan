@@ -41,6 +41,10 @@ export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40 }) => {
 				src={`${baseUrl}/uploads/${photo}`}
 				alt={name}
 				className="h-10 w-10 rounded-full object-cover"
+				style={{
+					width: size,
+					height: size,
+				}}
 			/>
 		);
 	}
