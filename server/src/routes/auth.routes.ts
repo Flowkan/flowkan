@@ -9,6 +9,7 @@ import { upload, processAvatar } from "../lib/uploadConfigure";
 
 //temporal
 import * as jwtAuth from "../middlewares/jwtAuthMiddleware.js";
+import passport from "passport";
 
 const router = Router();
 
@@ -28,5 +29,27 @@ router.post(
 
 router.get("/me", jwtAuth.guard, controller.me);
 router.post("/confirm", controller.confirmEmail);
+
+router.get("/google", controller.googleAuth);
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: "/login",
+  }),
+  controller.handleOAuthCallback,
+);
+
+router.get("/github", controller.githubAuth);
+
+router.get(
+  "/github/callback",
+  passport.authenticate("github", {
+    session: false,
+    failureRedirect: "/login",
+  }),
+  controller.handleOAuthCallback,
+);
 
 export default router;
