@@ -23,10 +23,8 @@ export function BackofficeLayout() {
 				/>
 			)}
 
-			<main className="flex flex-1 items-center justify-center p-4">
-				<div className="w-full max-w-4xl">
-					<Outlet />
-				</div>
+			<main className="flex-1 p-4">
+				<Outlet />
 			</main>
 		</div>
 	);
