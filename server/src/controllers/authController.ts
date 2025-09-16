@@ -3,9 +3,10 @@ import jwt from "jsonwebtoken";
 import AuthService from "../services/AuthService";
 import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
-import { Prisma } from "@prisma/client";
-import { success } from "zod";
+import { Prisma, User } from "@prisma/client";
+import passport from "passport";
 import { sendEmail } from "../lib/emailService";
+import "../config/passport.ts";
 
 type UniqueConstraintError = Prisma.PrismaClientKnownRequestError & {
   code: "P2002";
@@ -38,7 +39,7 @@ export class AuthController {
       }
 
       jwt.sign(
-        { user_id: user.id } satisfies JwtPayload,
+        { userId: user.id } satisfies JwtPayload,
         process.env.JWT_SECRET,
         {
           expiresIn: "1d",
@@ -74,12 +75,12 @@ export class AuthController {
         name,
         email,
         password,
-        photo: req.file ? req.file.filename : null,
+        photo: req.body.photo || null,
       };
       const newUser = await this.authService.register(userData);
       let photoUrl = null;
-      if (req.file) {
-        photoUrl = `/uploads/${req.file.filename}`;
+      if (req.body.photo) {
+        photoUrl = `/uploads/${req.body.avatar}`;
         newUser.photo = photoUrl;
       }
       const { password: _omit, ...safeUser } = newUser;
@@ -95,7 +96,7 @@ export class AuthController {
         newUser.email,
         "Confirma tu cuenta",
         `<h1>Bienvenido ${newUser.name}!</h1>
-              <p>Haz click <a href="${process.env.FRONTEND_WEB_DEV_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
+              <p>Haz click <a href="${process.env.FRONTEND_WEB_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
       );
 
       res.status(201).json({ success: true, user: safeUser });
@@ -149,18 +150,41 @@ export class AuthController {
       err.meta.target.every((t) => typeof t === "string")
     );
   }
-  me = async (req: Request,res: Response,next: NextFunction) => {
+  me = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.apiUserId
-      const user = await this.authService.findById(userId)
-      if(user){
-        res.json({result:user})
-        return
+      const userId = req.apiUserId;
+      const user = await this.authService.findById(userId);
+      if (user) {
+        res.json({ result: user });
+        return;
       }
-      res.status(500).json({error:'Usuario no loggeado'})
+      res.status(500).json({ error: "Usuario no loggeado" });
     } catch (error) {
-      next(error)
+      next(error);
     }
-    
-  }
+  };
+
+  googleAuth = passport.authenticate("google", { scope: ["profile", "email"] });
+
+  githubAuth = passport.authenticate("github", { scope: ["user:email"] });
+
+  handleOAuthCallback = (req: Request, res: Response) => {
+    if (!req.user) {
+      return res.status(401).json({ message: "Usuario no autenticado" });
+    }
+
+    const userId = (req.user as User).id;
+
+    if (!process.env.JWT_SECRET || !process.env.FRONTEND_WEB_URL) {
+      return res
+        .status(500)
+        .json({ message: "Configuración del servidor incompleta" });
+    }
+
+    const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.redirect(`${process.env.FRONTEND_WEB_URL}/login?token=${token}`);
+  };
 }
