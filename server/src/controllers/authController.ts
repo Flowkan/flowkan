@@ -75,12 +75,12 @@ export class AuthController {
         name,
         email,
         password,
-        photo: req.file ? req.file.filename : null,
+        photo: req.body.photo || null,
       };
       const newUser = await this.authService.register(userData);
       let photoUrl = null;
-      if (req.file) {
-        photoUrl = `/uploads/${req.file.filename}`;
+      if (req.body.photo) {
+        photoUrl = `/uploads/${req.body.avatar}`;
         newUser.photo = photoUrl;
       }
       const { password: _omit, ...safeUser } = newUser;

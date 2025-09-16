@@ -5,7 +5,7 @@ import AuthService from "../services/AuthService.js";
 import { AuthController } from "../controllers/authController.js";
 import { validateUserFields } from "../validators/authValidator";
 import { loginSchema, registerSchema } from "../validators/authSchema";
-import upload from "../lib/uploadConfigure";
+import { upload, processAvatar } from "../lib/uploadConfigure";
 
 //temporal
 import * as jwtAuth from "../middlewares/jwtAuthMiddleware.js";
@@ -22,6 +22,7 @@ router.post("/login", validateUserFields(loginSchema), controller.login);
 router.post(
   "/register",
   upload.single("photo"),
+  processAvatar,
   validateUserFields(registerSchema),
   controller.register,
 );
