@@ -1,6 +1,7 @@
 import type { AppThunk } from ".";
 import type { Credentials, User } from "../pages/login/types";
 import type { Board, BoardsData, Column, Task } from "../pages/boards/types";
+import type { ProfileType } from "../pages/profile/types";
 
 //
 // ─── AUTH ──────────────────────────────────────────────
@@ -38,7 +39,7 @@ export function login(credentials: Credentials): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api, router }) => {
 		dispatch(authLoginPending());
 		try {
-			const user = await api.auth.login(credentials);
+			const user = await api.auth.login(credentials);			
 			dispatch(authLoginFulfilled(user));
 			const to = router.state.location.state?.from ?? "/boards";
 			router.navigate(to, { replace: true });
@@ -65,6 +66,96 @@ export function logout(): AppThunk<Promise<void>> {
 			throw error;
 		}
 	};
+}
+
+//
+// ─── PROFILE ──────────────────────────────────────────────
+//
+
+type UserUpdatePending = { type: "user/update/pending" };
+type UserUpdateFulfilled = { type: "user/update/fulfilled"; payload: User };
+type UserUpdateRejected = { type: "user/update/rejected"; payload: Error };
+
+export const userUpdatePending = ():UserUpdatePending => ({
+	type:'user/update/pending'
+})
+export const userUpdateFulFilled = (user:User):UserUpdateFulfilled => ({
+	type:'user/update/fulfilled',
+	payload:user
+})
+export const userUpdateRejected = (error:Error):UserUpdateRejected => ({
+	type:'user/update/rejected',
+	payload:error
+})
+
+type ProfileUpdatePending = { type: "profile/update/pending" };
+type ProfileUpdateFulfilled = { type: "profile/update/fulfilled"; payload: ProfileType };
+type ProfileUpdateRejected = { type: "profile/update/rejected"; payload: Error };
+
+export const profileUpdatePending = ():ProfileUpdatePending => ({
+	type:'profile/update/pending'
+})
+export const profileUpdateFulFilled = (profile:ProfileType):ProfileUpdateFulfilled => ({
+	type:'profile/update/fulfilled',
+	payload:profile
+})
+export const profileUpdateRejected = (error:Error):ProfileUpdateRejected => ({
+	type:'profile/update/rejected',
+	payload:error
+})
+
+type ProfileLoadedPending = { type: "profile/loaded/pending" };
+type ProfileLoadedFulfilled = { type: "profile/loaded/fulfilled"; payload: ProfileType };
+type ProfileLoadedRejected = { type: "profile/loaded/rejected"; payload: Error };
+
+export const profileLoadedPending = ():ProfileLoadedPending => ({
+	type:'profile/loaded/pending'
+})
+export const profileLoadedFulFilled = (profile:ProfileType):ProfileLoadedFulfilled => ({
+	type:'profile/loaded/fulfilled',
+	payload:profile
+})
+export const profileLoadedRejected = (error:Error):ProfileLoadedRejected => ({
+	type:'profile/loaded/rejected',
+	payload:error
+})
+
+export function loadedProfile():AppThunk<Promise<void>>{
+	return async(dispatch,_getStore,{api})=>{
+		dispatch(profileLoadedPending())
+		try {
+			const { error,profile } = await api.profile.getProfileData();
+			if(error){
+				throw new Error(error)
+			}
+			if(profile){
+				console.log(profile);
+				
+				dispatch(profileLoadedFulFilled(profile))
+			}
+		} catch (error) {
+			if(error instanceof Error){
+				dispatch(profileLoadedRejected(error))
+			}
+		}
+	}
+}
+
+
+export function updateProfile({user,profile}:{user:User,profile:ProfileType}):AppThunk<Promise<void>>{
+	return async (dispatch) => {
+		dispatch(userUpdatePending())
+		dispatch(profileUpdatePending())
+		try {					
+			dispatch(userUpdateFulFilled(user))
+			dispatch(profileUpdateFulFilled(profile))
+			// console.log(getState().auth.user);			
+		} catch (error) {
+			if(error instanceof Error){
+				dispatch(userUpdateRejected(error))
+			}
+		}
+	}
 }
 
 //
@@ -101,10 +192,27 @@ type GetBoardUsersRejected = {
 };
 
 type AddBoardFulfilled = { type: "boards/addBoard/fulfilled"; payload: Board };
+
+type DeleteBoardFulfilled = {
+	type: "boards/deleteBoards";
+	payload: string;
+};
+
+type EditBoardFulfilled = {
+	type: "boards/editBoard/fulfilled";
+	payload: { boardId: string; data: BoardsData };
+};
+
+type EditBoardRejected = {
+	type: "boards/editBoard/rejected";
+	payload: Error;
+};
+
 type AddColumnFulfilled = {
 	type: "boards/addColumn/fulfilled";
 	payload: Column;
 };
+
 type EditColumnFulfilled = {
 	type: "boards/editColumn/fulfilled";
 	payload: { columnId: number; column: Column };
@@ -176,6 +284,19 @@ export const getBoardUsersRejected = (error: Error): GetBoardUsersRejected => ({
 export const addBoardFulfilled = (board: Board): AddBoardFulfilled => ({
 	type: "boards/addBoard/fulfilled",
 	payload: board,
+});
+
+export const editBoardFulfilled = (
+	boardId: string,
+	data: BoardsData,
+): EditBoardFulfilled => ({
+	type: "boards/editBoard/fulfilled",
+	payload: { boardId, data },
+});
+
+export const editBoardRejected = (error: Error): EditBoardRejected => ({
+	type: "boards/editBoard/rejected",
+	payload: error,
 });
 
 export const addColumnFulfilled = (column: Column): AddColumnFulfilled => ({
@@ -308,6 +429,29 @@ export function addBoard(data: BoardsData): AppThunk<Promise<void>> {
 	};
 }
 
+export function deleteBoard(boardId: string): AppThunk<Promise<void>> {
+	return async function (dispatch, _getState, { api }) {
+		await api.boards.deleteBoard(boardId);
+		dispatch({ type: "boards/deleteBoards", payload: boardId });
+	};
+}
+
+export function editBoard(
+	boardId: string,
+	data: BoardsData,
+): AppThunk<Promise<void>> {
+	return async function (dispatch, _getState, { api }) {
+		try {
+			await api.boards.updateBoard(boardId, data);
+			dispatch(editBoardFulfilled(boardId, data));
+		} catch (error) {
+			if (error instanceof Error) {
+				dispatch(editBoardRejected(error));
+			}
+		}
+	};
+}
+
 export function addColumn(
 	boardId: string,
 	data: Column,
@@ -417,6 +561,15 @@ export type Actions =
 	| AuthLogoutPending
 	| AuthLogoutFulfilled
 	| AuthLogoutRejected
+	| UserUpdatePending //User
+	| UserUpdateFulfilled //User
+	| UserUpdateRejected //User
+	| ProfileUpdatePending //Profile
+	| ProfileUpdateFulfilled //Profile
+	| ProfileUpdateRejected //Profile
+	| ProfileLoadedFulfilled //Profile Loaded
+	| ProfileLoadedPending //Profile Loaded
+	| ProfileLoadedRejected //Profile Loaded
 	| FetchBoardsPending
 	| FetchBoardsFulfilled
 	| FetchBoardsRejected
@@ -424,6 +577,9 @@ export type Actions =
 	| FetchBoardFulfilled
 	| FetchBoardRejected
 	| AddBoardFulfilled
+	| DeleteBoardFulfilled
+	| EditBoardFulfilled
+	| EditBoardRejected
 	| AddColumnFulfilled
 	| EditColumnFulfilled
 	| EditColumnRejected
@@ -442,6 +598,9 @@ export type Actions =
 export type ActionsRejected =
 	| AuthLoginRejected
 	| AuthLogoutRejected
+	| UserUpdateRejected // User
+	| ProfileUpdateRejected // Profile
+	| ProfileLoadedRejected // Profile
 	| FetchBoardsRejected
 	| FetchBoardRejected
 	| EditColumnRejected

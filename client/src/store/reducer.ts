@@ -1,6 +1,7 @@
 import type { Actions, ActionsRejected } from "./actions";
 import type { Board, Column } from "../pages/boards/types";
 import type { User } from "../pages/login/types";
+import type { ProfileType } from "../pages/profile/types";
 
 //
 // ─── STATE GLOBAL ──────────────────────────────────────────────
@@ -12,6 +13,7 @@ export type State = {
 		isAuthenticated: boolean;
 		error: string | null;
 	};
+	profile: ProfileType;
 	boards: {
 		boards: Board[];
 		currentBoard: Board | null;
@@ -30,6 +32,13 @@ const defaultState: State = {
 		isAuthenticated: false,
 		error: null,
 		user: storedUser ? JSON.parse(storedUser) : null,
+	},
+	profile:{
+		username:'',
+		dateBirth:'',
+		location:'',
+		allowNotifications:true,
+		bio:''
 	},
 	boards: { boards: [], currentBoard: null, loading: false, error: null },
 	ui: { pending: false, error: null },
@@ -66,11 +75,38 @@ export function auth(
 				error: action.payload.message,
 				isAuthenticated: true,
 				user: state.user,
-			};
+			};	
+		case "user/update/pending":
+		case "user/update/rejected":
+			return state;
+		case "user/update/fulfilled":
+			return {
+				...state,
+				user:action.payload
+			}
 		default:
 			return state;
 	}
 }
+
+//
+// ─── PROFILE REDUCER ──────────────────────────────────────────────
+//
+export function profile(state=defaultState.profile,action:Actions):State['profile']{
+	switch (action.type) {
+		case "profile/update/pending":
+		case "profile/update/rejected":
+		case "profile/loaded/pending":
+		case "profile/loaded/rejected":
+			return state;
+		case "profile/update/fulfilled":
+		case "profile/loaded/fulfilled":
+			return { ...action.payload }	
+		default:
+			return state;
+	}
+}
+
 
 //
 // ─── BOARDS REDUCER ──────────────────────────────────────────────
@@ -80,7 +116,6 @@ export function boards(
 	action: Actions,
 ): State["boards"] {
 	switch (action.type) {
-		case "boards/fetchBoards/pending":
 		case "boards/fetchBoard/pending":
 			return { ...state, loading: true, error: null };
 
@@ -90,12 +125,27 @@ export function boards(
 		case "boards/fetchBoard/fulfilled":
 			return { ...state, loading: false, currentBoard: action.payload };
 
-		case "boards/fetchBoards/rejected":
 		case "boards/fetchBoard/rejected":
 			return { ...state, loading: false, error: action.payload.message };
 
 		case "boards/addBoard/fulfilled":
 			return { ...state, boards: [...state.boards, action.payload] };
+
+		case "boards/deleteBoards":
+			return {
+				...state,
+				boards: state.boards.filter((board) => board.id !== action.payload),
+			};
+
+		case "boards/editBoard/fulfilled":
+			return {
+				...state,
+				boards: state.boards.map((board) => {
+					if (board.id !== action.payload.boardId) return board;
+
+					return { ...board, title: action.payload.data.title };
+				}),
+			};
 
 		case "boards/addColumn/fulfilled":
 			return state.currentBoard
@@ -114,7 +164,9 @@ export function boards(
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.map((col) =>
-						col.id === action.payload.column.id ? action.payload.column : col,
+						col.id === action.payload.column.id
+							? { ...col, title: action.payload.column.title }
+							: col,
 					),
 				},
 			};
@@ -182,7 +234,7 @@ export function boards(
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.map((col) =>
-						col.id?.toString() === action.payload.columnId
+						col.id === action.payload.columnId
 							? {
 									...col,
 									cards: col.cards.filter(

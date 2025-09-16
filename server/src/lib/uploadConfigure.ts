@@ -4,14 +4,22 @@ import path from "path";
 import fs from "fs";
 
 const storage = multer.diskStorage({
-  destination: function (_req: Request, _file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
-    const route = path.join(__dirname, "..", "uploads");
-    if (!fs.existsSync(route)) {
-      fs.mkdirSync(route, { recursive: true });
+  destination: function (
+    _req: Request,
+    _file: Express.Multer.File,
+    cb: (error: Error | null, destination: string) => void,
+  ) {
+    const pathName = path.join(process.cwd(), "public", "uploads");
+    if (!fs.existsSync(pathName)) {
+      fs.mkdirSync(pathName, { recursive: true });
     }
-    cb(null, route);
+    cb(null, pathName);
   },
-  filename: function (_req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
+  filename: function (
+    _req: Request,
+    file: Express.Multer.File,
+    cb: (error: Error | null, filename: string) => void,
+  ) {
     const filename = `${Date.now()}-${file.originalname}`;
     cb(null, filename);
   },
@@ -21,12 +29,17 @@ const storage = multer.diskStorage({
 function imageFileFilter(
   _req: Request,
   file: Express.Multer.File,
-  cb: multer.FileFilterCallback
+  cb: multer.FileFilterCallback,
 ) {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
-    cb(new multer.MulterError("LIMIT_UNEXPECTED_FILE", "Only image files are allowed"));
+    cb(
+      new multer.MulterError(
+        "LIMIT_UNEXPECTED_FILE",
+        "Only image files are allowed",
+      ),
+    );
   }
 }
 

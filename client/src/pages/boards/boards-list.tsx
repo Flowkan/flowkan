@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import AddButton from "../../components/ui/add-button";
 import "./boards-list.css";
 import { useTranslation } from "react-i18next";
-import NewBoard from "./new-board";
+import NewBoard from "../../components/ui/modals/new-board";
 import { useAppSelector, useAppDispatch } from "../../store";
 import { getBoardFilterCombine, getBoards } from "../../store/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
@@ -46,10 +46,11 @@ const BoardsList = () => {
 
 	return (
 		<>
-			{showAddForm && (
-				<NewBoard onClose={handleCloseAddForm} onBoardCreated={() => {}} />
-			)}
-			<BackofficePage title={t("boardslist.title", "Mis tableros")}>
+			{showAddForm && <NewBoard onClose={handleCloseAddForm} />}
+			<BackofficePage
+				className="page-container"
+				title={t("boardslist.title", "Mis tableros")}
+			>
 				<section className="boards-list-container">
 					<h2 className="sr-only">Lista de tableros</h2>
 					{!boards.length ? (

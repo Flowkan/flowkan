@@ -28,6 +28,8 @@ class AuthModel {
     });
     if (!user) return null;
 
+    if (!user.status) return null;
+
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) return null;
 
@@ -65,6 +67,13 @@ class AuthModel {
     });
 
     return user;
+  }
+
+  async updateUser(userId: number, data: { status: boolean }) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data,
+    });
   }
 }
 

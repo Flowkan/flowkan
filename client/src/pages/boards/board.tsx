@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from "react";
 import {
 	DragDropContext,
 	Droppable,
-	Draggable,
 	type DropResult,
 	type DraggableLocation,
 } from "@hello-pangea/dnd";
@@ -171,13 +170,9 @@ const Board = () => {
 		(
 			columnId: string,
 			taskId: string,
-			newContent: string,
-			newDescription?: string,
+			updatedFields: { title?: string; description?: string },
 		) => {
-			updateTaskAction(Number(columnId), taskId, {
-				title: newContent,
-				description: newDescription,
-			});
+			updateTaskAction(Number(columnId), taskId, updatedFields);
 		},
 		[updateTaskAction],
 	);
@@ -203,9 +198,7 @@ const Board = () => {
 	const handleEditColumnTitle = useCallback(
 		(columnId: string, newTitle: string) => {
 			if (!boardData) return;
-			const column = boardData.lists.find((c) => c.id === columnId);
-			if (!column) return;
-			updateColumnAction(Number(columnId), { ...column, title: newTitle });
+			updateColumnAction(Number(columnId), { title: newTitle });
 		},
 		[boardData, updateColumnAction],
 	);
@@ -229,9 +222,9 @@ const Board = () => {
 	}, [boardData, newColumnName, addColumnAction]);
 
 	const handleDeleteColumnClick = useCallback(
-		(columnId: string) => {
+		(columnId: string | number) => {
 			if (!boardData) return;
-			removeColumnAction(columnId);
+			removeColumnAction(columnId.toString());
 		},
 		[boardData, removeColumnAction],
 	);
@@ -248,51 +241,28 @@ const Board = () => {
 							{...provided.droppableProps}
 							className="custom-scrollbar flex h-[calc(100vh-8rem)] gap-6 overflow-x-auto px-4 py-8 sm:px-8"
 						>
-							{boardData?.lists.map((column, index) => (
-								<Draggable
+							{boardData?.lists.map((column) => (
+								<Column
 									key={column.id}
-									draggableId={column.id!.toString()}
-									index={index}
-								>
-									{(prov) => (
-										<div
-											ref={prov.innerRef}
-											{...prov.draggableProps}
-											style={prov.draggableProps.style}
-											className="flex flex-col"
-										>
-											<div {...prov.dragHandleProps} className="cursor-grab">
-												<Column
-													column={column}
-													onAddTask={(task) =>
-														handleAddTask(Number(column.id), task)
-													}
-													onEditTask={(taskId, newTitle, newDescription) =>
-														handleEditTask(
-															column.id!,
-															taskId,
-															newTitle,
-															newDescription,
-														)
-													}
-													onDeleteTask={(taskId) =>
-														handleDeleteTask(taskId, column.id!)
-													}
-													onEditColumnTitle={(newTitle) =>
-														handleEditColumnTitle(column.id!, newTitle)
-													}
-													onDeleteColumn={() =>
-														handleDeleteColumnClick(column.id!)
-													}
-													onOpenTaskDetail={(task) =>
-														openTaskDetail(task, column.id!)
-													}
-													isNewColumnInEditMode={false}
-												/>
-											</div>
-										</div>
-									)}
-								</Draggable>
+									column={column}
+									onAddTask={(task) => handleAddTask(Number(column.id), task)}
+									onEditTask={(updatedFields) =>
+										selectedColumnId && selectedTask
+											? handleEditTask(
+													selectedColumnId,
+													selectedTask.id!.toString(),
+													updatedFields,
+												)
+											: undefined
+									}
+									onDeleteTask={(taskId) =>
+										handleDeleteTask(taskId, column.id!)
+									}
+									onEditColumnTitle={handleEditColumnTitle}
+									onDeleteColumn={() => handleDeleteColumnClick(column.id!)}
+									onOpenTaskDetail={(task) => openTaskDetail(task, column.id!)}
+									isNewColumnInEditMode={false}
+								/>
 							))}
 							{provided.placeholder}
 
@@ -338,12 +308,11 @@ const Board = () => {
 					boardId={boardId}
 					columnId={selectedColumnId}
 					onClose={closeTaskDetail}
-					onEditTask={(title, desc) =>
+					onEditTask={(updatedFields) =>
 						handleEditTask(
 							selectedColumnId,
 							selectedTask.id!.toString(),
-							title,
-							desc,
+							updatedFields,
 						)
 					}
 					onDeleteTask={() =>

@@ -7,7 +7,6 @@ import { UserMenu } from "../ui/UserMenu";
 export const Header: React.FC = () => {
 	const { t } = useTranslation();
 	const { user, isAuthenticated } = useAppSelector((state) => state.auth);
-	const baseUrl = import.meta.env.VITE_BASE_DEV_URL;
 
 	return (
 		<header className="bg-background-card flex items-center justify-between px-6 py-4 shadow-sm md:px-12">
@@ -57,7 +56,7 @@ export const Header: React.FC = () => {
 
 				<div className="relative">
 					{isAuthenticated && user ? (
-						<UserMenu user={user} baseUrl={baseUrl} />
+						<UserMenu user={user} />
 					) : (
 						<div className="flex space-x-2">
 							<NavLink

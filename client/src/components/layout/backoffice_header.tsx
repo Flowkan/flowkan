@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { UserMenu } from "../ui/UserMenu";
 
 export const BackofficeHeader: React.FC = () => {
-	const baseUrl = import.meta.env.VITE_BASE_DEV_URL;
 	const { user } = useAppSelector((state) => state.auth);
 	const { t } = useTranslation();
 
@@ -35,7 +34,7 @@ export const BackofficeHeader: React.FC = () => {
 			<div className="flex items-center space-x-4">
 				<LanguageToggle />
 
-				<UserMenu user={user} baseUrl={baseUrl} avatarSize={40} />
+				<UserMenu user={user} avatarSize={40} />
 			</div>
 		</header>
 	);

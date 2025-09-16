@@ -3,11 +3,15 @@ import type { Board } from "./types";
 import TrashButton from "../../components/ui/trash-button";
 import { useState } from "react";
 import EditButton from "../../components/ui/edit-button";
-import ConfirmDelete from "../../components/ui/confirm-delete";
-import ShareBoard from "../../components/ui/share-board";
-import ShareButton from "../../components/ui/share-button";
+import ConfirmDelete from "../../components/ui/modals/confirm-delete";
+import ShareBoard from "../../components/ui/modals/share-board";
+import ShareIcon from "../../components/icons/share-icon.svg";
+import { Button } from "../../components/ui/Button";
 import "./boards-list-item.css";
 import { useTranslation } from "react-i18next";
+import { deleteBoard, editBoard } from "../../store/actions";
+import { useAppDispatch } from "../../store";
+import EditBoard from "../../components/ui/modals/edit-board";
 
 interface BoardsItemProps {
 	board: Board;
@@ -15,17 +19,37 @@ interface BoardsItemProps {
 
 const BoardsItem = ({ board }: BoardsItemProps) => {
 	const [showConfirm, setShowConfirm] = useState(false);
+	const [showEditForm, setShowEditForm] = useState(false);
 	const [showShareForm, setShowShareForm] = useState(false);
+	const dispatch = useAppDispatch();
 
-	const handleShowConfirm = (event: React.MouseEvent) => {
+	const handleShowConfirm = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
 		setShowConfirm(true);
 	};
 
-	const handleDeleteBoard = () => {};
+	const handleDeleteBoard = async () => {
+		if (board) {
+			dispatch(deleteBoard(board.id));
+		}
+	};
+
 	const handleHideMessage = () => setShowConfirm(false);
 
-	const handleShowShareForm = (event: React.MouseEvent) => {
+	const handleShowEditForm = (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.preventDefault();
+		setShowEditForm(true);
+	};
+
+	const handleEditForm = async (newData: string) => {
+		if (board) {
+			dispatch(editBoard(board.id, { title: newData }));
+		}
+	};
+
+	const handleHideEdit = () => setShowEditForm(false);
+
+	const handleShowShareForm = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
 		setShowShareForm(true);
 	};
@@ -43,25 +67,37 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 					message={t("boardsitem.confirm")}
 				/>
 			)}
+			{showEditForm && (
+				<EditBoard
+					handleEditForm={handleEditForm}
+					handleHideMessage={handleHideEdit}
+				/>
+			)}
 			{showShareForm && (
-				<ShareBoard board={board} onClose={handleCloseShareForm} />
+				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
 			)}
 			<li className="board-item">
 				<Link to={`/boards/${board.id}`} className="board-link">
 					<div className="board-title">{board.title}</div>
-				</Link>
-				<div className="edit-trash">
-					<div className="edit-icon container">
-						<EditButton />
-					</div>
-					<div className="trash-icon container">
-						<TrashButton showConfirm={() => handleShowConfirm} />
-					</div>
+					<div className="edit-trash-share-wrap">
+						<div className="edit-icon container">
+							<EditButton showEditForm={handleShowEditForm} />
+						</div>
+						<div className="trash-icon container">
+							<TrashButton showConfirm={handleShowConfirm} />
+						</div>
 
-					<div className="share-icon container">
-						<ShareButton showShareForm={handleShowShareForm} />
+						<div className="share-icon container">
+							<Button
+								onClick={handleShowShareForm}
+								className="share-btn"
+								variant="secondary"
+							>
+								<img src={ShareIcon} alt="Share board" />
+							</Button>
+						</div>
 					</div>
-				</div>
+				</Link>
 			</li>
 		</>
 	);
