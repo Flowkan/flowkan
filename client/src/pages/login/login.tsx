@@ -1,12 +1,12 @@
 import { Page } from "../../components/layout/page";
 import { NavLink } from "react-router-dom";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import type { Credentials } from "./types";
 import { useTranslation } from "react-i18next";
 import { useLoadedProfile, useLoginAction } from "../../store/hooks";
-import { useAppSelector } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { Form } from "../../components/ui/Form";
 import { FormFields } from "../../components/ui/FormFields";
@@ -14,11 +14,13 @@ import { Button } from "../../components/ui/Button";
 import { __ } from "../../utils/i18nextHelper";
 import { WithOtherServices } from "../register/withOtherServices/WithOtherServices";
 import { getUi } from "../../store/selectors";
+import { loginWithOAuth } from "../../store/actions";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
 	const loginAction = useLoginAction();
-	const profileLoadedAction = useLoadedProfile()
+	const profileLoadedAction = useLoadedProfile();
+	const dispatch = useAppDispatch();
 	const { error } = useAppSelector(getUi);
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
@@ -28,9 +30,14 @@ export const LoginPage = () => {
 	const { email, password } = formData;
 	const disabled = !email || !password;
 
-	// useEffect(()=>{
-		
-	// },[])
+	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
+		const token = params.get("token");
+		console.log("Token OAuth:", token);
+		if (token) {
+			dispatch(loginWithOAuth(token));
+		}
+	}, [dispatch]);
 
 	const validateEmail = (email: string): boolean => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -76,7 +83,7 @@ export const LoginPage = () => {
 			}
 
 			await loginAction(formData);
-			await profileLoadedAction()
+			await profileLoadedAction();
 
 			// Si ambas validaciones pasan, mostrar el mensaje de éxito
 			toast.custom((t) => (
