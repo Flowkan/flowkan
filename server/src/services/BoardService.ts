@@ -7,13 +7,12 @@ class BoardService {
   constructor(boardModel: BoardModel) {
     this.boardModel = boardModel;
   }
-
-  async getAllBoardsByUserId(userId: number): Promise<BoardWithRelations[]> {
-    return this.boardModel.getAllByUserId(userId);
+  async getAllBoardsByUserId(userId: number, limit: number = 10, skip: number = 0): Promise<BoardWithRelations[]> {
+    return this.boardModel.getAllByUserId(userId, limit, skip);
   }
 
-  async getAllBoards(): Promise<BoardWithRelations[]> {
-    return this.boardModel.getAll();
+  async getAllBoards(limit: number = 10, skip: number = 0): Promise<BoardWithRelations[]> {
+    return this.boardModel.getAll(limit, skip);
   }
 
   async getBoardByTitle(userId: number, boardName: string) {

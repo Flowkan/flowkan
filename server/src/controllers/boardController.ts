@@ -29,8 +29,13 @@ export class BoardController {
   getAll = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const page = parseInt(req.query.page as string) || 1;
+      const skip = (page - 1) * limit < 0 ? 0 : (page - 1) * limit;
+
       const boards: BoardWithRelations[] =
-        await this.boardService.getAllBoardsByUserId(userId);
+        await this.boardService.getAllBoardsByUserId(userId, limit, skip);
+
       res.json(boards);
     } catch (err) {
       res.status(500).send("Error al obtener los tableros");
@@ -53,7 +58,10 @@ export class BoardController {
     try {
       const userId = req.apiUserId;
       const boardTitle = String(req.query.title) || "";
-      const boards = await this.boardService.getBoardByTitle(userId, boardTitle);
+      const boards = await this.boardService.getBoardByTitle(
+        userId,
+        boardTitle,
+      );
       res.json(boards);
     } catch (error) {
       res.status(404).send("No existen tableros con este nombre");
@@ -64,12 +72,15 @@ export class BoardController {
     try {
       const userId = req.apiUserId;
       const boardMember = String(req.query.member) || "";
-      const boards = await this.boardService.getBoardByMember(userId, boardMember);
+      const boards = await this.boardService.getBoardByMember(
+        userId,
+        boardMember,
+      );
       res.json(boards);
     } catch (error) {
-      res.status(404).send("No hay tableros con este miembro")
+      res.status(404).send("No hay tableros con este miembro");
     }
-  }
+  };
 
   add = async (req: Request, res: Response) => {
     try {

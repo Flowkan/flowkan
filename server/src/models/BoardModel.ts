@@ -6,7 +6,7 @@ const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
       orderBy: { position: "asc" },
       include: {
         cards: {
-          orderBy: { position: "asc" },
+          orderBy: { position: "desc" },
           include: {
             assignees: {
               include: {
@@ -33,11 +33,11 @@ class BoardModel {
     this.prisma = prisma;
   }
 
-  async getAll(): Promise<BoardWithRelations[]> {
-    return await this.prisma.board.findMany(boardWithRelationsData);
+  async getAll(limit: number, skip: number): Promise<BoardWithRelations[]> {
+    return await this.prisma.board.findMany({...boardWithRelationsData, take: limit, skip});
   }
 
-  async getAllByUserId(userId: number): Promise<BoardWithRelations[]> {
+  async getAllByUserId(userId: number, limit: number = 10, skip: number = 0): Promise<BoardWithRelations[]> {
     return await this.prisma.board.findMany({
       where: {
         members: {
@@ -47,6 +47,8 @@ class BoardModel {
         },
       },
       ...boardWithRelationsData,
+      take: limit,
+      skip: skip,
     });
   }
 
