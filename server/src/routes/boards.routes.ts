@@ -1,11 +1,11 @@
 import { Router } from "express";
-import prisma from "../config/db.js";
-import BoardModel from "../models/BoardModel.js";
-import BoardService from "../services/BoardService.js";
-import { BoardController } from "../controllers/boardController.js";
-import * as jwtAuth from "../middlewares/jwtAuthMiddleware.js";
-import AuthService from "../services/AuthService.js";
-import AuthModel from "../models/AuthModel.js";
+import prisma from "../config/db";
+import BoardModel from "../models/BoardModel";
+import BoardService from "../services/BoardService";
+import { BoardController } from "../controllers/boardController";
+import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
+import AuthService from "../services/AuthService";
+import AuthModel from "../models/AuthModel";
 
 const router = Router();
 
