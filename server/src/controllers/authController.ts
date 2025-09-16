@@ -74,12 +74,12 @@ export class AuthController {
         name,
         email,
         password,
-        photo: req.file ? req.file.filename : null,
+        photo: req.body.photo || null,
       };
       const newUser = await this.authService.register(userData);
       let photoUrl = null;
-      if (req.file) {
-        photoUrl = `/uploads/${req.file.filename}`;
+      if (req.body.photo) {
+        photoUrl = `/uploads/${req.body.avatar}`;
         newUser.photo = photoUrl;
       }
       const { password: _omit, ...safeUser } = newUser;
@@ -149,18 +149,17 @@ export class AuthController {
       err.meta.target.every((t) => typeof t === "string")
     );
   }
-  me = async (req: Request,res: Response,next: NextFunction) => {
+  me = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.apiUserId
-      const user = await this.authService.findById(userId)
-      if(user){
-        res.json({result:user})
-        return
+      const userId = req.apiUserId;
+      const user = await this.authService.findById(userId);
+      if (user) {
+        res.json({ result: user });
+        return;
       }
-      res.status(500).json({error:'Usuario no loggeado'})
+      res.status(500).json({ error: "Usuario no loggeado" });
     } catch (error) {
-      next(error)
+      next(error);
     }
-    
-  }
+  };
 }
