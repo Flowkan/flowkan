@@ -46,7 +46,7 @@ jobs:
 
       - name: Install DB migrations
         working-directory: server
-        run: npm run db:prod
+        run: npx prisma migrate dev
 
       - name: Check Linting (Server)
         working-directory: server
