@@ -1,14 +1,12 @@
 import { Router } from "express";
-import prisma from "../config/db.js";
-import AuthModel from "../models/AuthModel.js";
-import AuthService from "../services/AuthService.js";
-import { AuthController } from "../controllers/authController.js";
+import prisma from "../config/db";
+import AuthModel from "../models/AuthModel";
+import AuthService from "../services/AuthService";
+import { AuthController } from "../controllers/authController";
 import { validateUserFields } from "../validators/authValidator";
 import { loginSchema, registerSchema } from "../validators/authSchema";
 import { upload, processAvatar } from "../lib/uploadConfigure";
-
-//temporal
-import * as jwtAuth from "../middlewares/jwtAuthMiddleware.js";
+import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
 import passport from "passport";
 
 const router = Router();

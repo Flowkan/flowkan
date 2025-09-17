@@ -1,6 +1,6 @@
 import { Router } from "express";
-import * as jwtAuth from "../middlewares/jwtAuthMiddleware.js";
-import { ProfileController } from "../controllers/profileController.js";
+import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
+import { ProfileController } from "../controllers/profileController";
 import { upload, processAvatar } from "../lib/uploadConfigure";
 
 const router = Router();
