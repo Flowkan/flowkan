@@ -52,6 +52,18 @@ class BoardModel {
     });
   }
 
+  async getBoardCountByUserId(userId: number): Promise<number> {
+    return this.prisma.board.count({
+      where: {
+        members: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+    });
+  }
+
   async getBoardByTitle(
     userId: number,
     boardTitle: string,

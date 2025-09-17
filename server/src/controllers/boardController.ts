@@ -29,9 +29,24 @@ export class BoardController {
   getAll = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const limit = parseInt(req.query.limit as string) || 10;
-      const page = parseInt(req.query.page as string) || 1;
+      const limit = Math.max(parseInt(req.query.limit as string) || 10, 1);
+      const page = Math.max(parseInt(req.query.page as string) || 1, 1);
       const skip = (page - 1) * limit < 0 ? 0 : (page - 1) * limit;
+      const withCount = req.query.withCount === "true";
+
+      if (withCount) {
+        const [boards, totalCount]: [BoardWithRelations[], number] =
+          await Promise.all([
+            this.boardService.getAllBoardsByUserId(userId, limit, skip),
+            this.boardService.getBoardCountByUserId(userId),
+          ]);
+        return res.json({
+          boards,
+          totalCount,
+          page,
+          limit,
+        });
+      }
 
       const boards: BoardWithRelations[] =
         await this.boardService.getAllBoardsByUserId(userId, limit, skip);
@@ -49,7 +64,6 @@ export class BoardController {
       const board = await this.boardService.get({ userId, boardId });
       res.json(board);
     } catch (err) {
-      console.log("eaer", err);
       res.status(500).send("Error al obtener el tablero");
     }
   };

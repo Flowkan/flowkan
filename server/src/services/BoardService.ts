@@ -15,6 +15,10 @@ class BoardService {
     return this.boardModel.getAll(limit, skip);
   }
 
+  async getBoardCountByUserId(userId: number): Promise<number> {
+    return this.boardModel.getBoardCountByUserId(userId);
+  }  
+
   async getBoardByTitle(userId: number, boardName: string) {
     return this.boardModel.getBoardByTitle(userId, boardName)
   }
