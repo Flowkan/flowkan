@@ -1,41 +1,51 @@
-import { resolveBaseURL, type EnvType } from "./resolveBaseUrlEnv";
+import { resolveBaseURLFromEnv } from "./resolveBaseUrlEnv";
 
-describe("resolveBaseURL", () => {
-	test("retorna URL de desarrollo", () => {
-		const env: EnvType = {
-			VITE_MODE: "development",
-			VITE_BASE_DEV_URL: "http://localhost:3000",
-			VITE_BASE_PROD_URL: "https://flowkan.duckdns.org",
-		};
-		expect(resolveBaseURL(env)).toBe("http://localhost:3000");
+describe("resolveBaseURLFromEnv", () => {
+	const OLD_ENV = import.meta.env;
+
+	afterEach(() => {
+		// Restaurar las variables originales después de cada test
+		Object.defineProperty(import.meta, "env", {
+			value: OLD_ENV,
+			writable: true,
+		});
 	});
 
-	test("retorna URL de producción", () => {
-		const env: EnvType = {
-			VITE_MODE: "production",
-			VITE_BASE_DEV_URL: "http://localhost:3000",
-			VITE_BASE_PROD_URL: "https://flowkan.duckdns.org",
-		};
-		expect(resolveBaseURL(env)).toBe("https://flowkan.duckdns.org");
+	test("retorna la URL definida en VITE_BASE_URL", () => {
+		Object.defineProperty(import.meta, "env", {
+			value: {
+				...OLD_ENV,
+				MODE: "development",
+				VITE_BASE_URL: "http://localhost:3000",
+			},
+			writable: true,
+		});
+
+		expect(resolveBaseURLFromEnv()).toBe("http://localhost:3000");
 	});
 
-	test("lanza error cuando falta URL de desarrollo", () => {
-		const env: EnvType = {
-			VITE_MODE: "development",
-			VITE_BASE_PROD_URL: "https://flowkan.duckdns.org",
-		};
-		expect(() => resolveBaseURL(env)).toThrow(
-			`baseURL not defined for ${env.VITE_MODE}, verify environment variables`,
-		);
+	test("retorna la URL de producción", () => {
+		Object.defineProperty(import.meta, "env", {
+			value: {
+				...OLD_ENV,
+				MODE: "production",
+				VITE_BASE_URL: "https://flowkan.duckdns.org",
+			},
+			writable: true,
+		});
+
+		expect(resolveBaseURLFromEnv()).toBe("https://flowkan.duckdns.org");
 	});
 
-	test("lanza error cuando falta URL de producción", () => {
-		const env: EnvType = {
-			VITE_MODE: "production",
-			VITE_BASE_DEV_URL: "http://localhost:3000",
-		};
-		expect(() => resolveBaseURL(env)).toThrow(
-			`baseURL not defined for ${env.VITE_MODE}, verify environment variables`,
-		);
+	test("lanza error si falta VITE_BASE_URL", () => {
+		Object.defineProperty(import.meta, "env", {
+			value: {
+				...OLD_ENV,
+				MODE: "production",
+			},
+			writable: true,
+		});
+
+		expect(() => resolveBaseURLFromEnv()).toThrow(/VITE_BASE_URL not defined/);
 	});
 });
