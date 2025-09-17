@@ -203,11 +203,7 @@ export const LoginPage = () => {
 										"login.loginForm.forgetPassword",
 										"¿Olvidaste tu contraseña?",
 									)}
-								</button>
-								<ForgotPassword 
-								show={showModal} 
-								onClose={handleCloseModal} 
-								/>
+								</button>								
 							</div>
 						</div>
 						<div>
@@ -233,6 +229,10 @@ export const LoginPage = () => {
 							{error && <p className="text-red-500">{error.message}</p>}
 						</div>
 					</Form>
+					<ForgotPassword 
+					show={showModal} 
+					onClose={handleCloseModal} 
+					/>
 					<WithOtherServices />
 				</div>
 			</div>

@@ -2,6 +2,9 @@ import { useEffect, useRef, useState, type ChangeEvent, type ComponentProps, typ
 import { FormFields } from '../FormFields';
 import { IconCancel } from '../../icons/IconCancel';
 import { resetPassword } from '../../../pages/login/service';
+import { validationForm } from '../../../utils/validations';
+import type { FormSendEmail } from '../../../pages/login/types';
+import { ForgotPasswordSchema } from '../../../utils/auth.schema';
 
 
 interface ForgotPasswordProps extends Omit<ComponentProps<"dialog">,"ref"|"onSubmit"> {
@@ -12,20 +15,27 @@ interface ForgotPasswordProps extends Omit<ComponentProps<"dialog">,"ref"|"onSub
 }
 
 const ForgotPassword = ({onClose,show=false,...props}:ForgotPasswordProps) => {
-    const [email,setEmail] = useState('admin@demo.com');
+    const [email,setEmail] = useState('jairom94@gmail.com');
+    const [errorsForm,setErrorsForm] = useState<{
+        [k in keyof FormSendEmail]?:string[]
+    }>({});
     const modalForgotPassword = useRef<HTMLDialogElement|null>(null)
-    const inputEmail = useRef<HTMLInputElement>(null)    
+    const inputEmail = useRef<HTMLInputElement>(null)        
     async function handleSubmit(e:FormEvent<HTMLFormElement>){
         e.preventDefault()
-		const validateData = validationForm({email})
-        if(validateData){
-            await resetPassword(validateData.email)
-            handleClose()
+		const {error,data} = validationForm<FormSendEmail>(ForgotPasswordSchema,{email})        
+        if(error){            
+            setErrorsForm(error.errorsList)            
+            return            
         }
+        await resetPassword(data.email)
+        handleClose()
     }
     function handleClose(){
         if(onClose){
             onClose()
+            setEmail('')
+            setErrorsForm({})
         }
     }
     function handleChange(e:ChangeEvent<HTMLInputElement>){
@@ -41,8 +51,7 @@ const ForgotPassword = ({onClose,show=false,...props}:ForgotPasswordProps) => {
     },[show])
     useEffect(()=>{
         const modal = modalForgotPassword.current
-        function handleKeyUp(e:KeyboardEvent){
-            console.log(e.key);
+        function handleKeyUp(e:KeyboardEvent){            
             if(e.key === 'Escape'){
                 if(onClose){
                     onClose()
@@ -53,20 +62,20 @@ const ForgotPassword = ({onClose,show=false,...props}:ForgotPasswordProps) => {
             modal.addEventListener('keydown',handleKeyUp)
         }
         return () => {
-            modal?.removeEventListener('keydown',handleKeyUp)
+            modal?.removeEventListener('keydown',handleKeyUp)            
         }
     },[])
     return (
         <dialog className={`
         backdrop:backdrop-blur-xl backdrop:bg-gradient-to-b 
-        backdrop:from-white/20 backdrop:to-transparent
+        backdrop:from-primary/20 backdrop:to-transparent
         backdrop:pointer-events-none m-auto rounded-md
-        shadow-2xl
+        shadow-2xl shadow-accent/60
         `} ref={modalForgotPassword}  {...props}>
-            <div className='w-[80vw] rounded-lg'>
-                <div className='bg-gray-800 flex items-center justify-between px-3 py-4'>
-                    <p className='text-white text-xl font-semibold tracking-wider'>Recuperar Contraseña</p>
-                    <button className='hover:bg-gray-600 p-2 rounded-md cursor-pointer' type='button'
+            <div className='w-[80vw] md:w-[40dvw] rounded-lg '>
+                <div className='bg-accent-hover flex items-center justify-between px-3 py-4'>
+                    <p className='text-white text-lg font-thin tracking-wide'>Recuperar Contraseña</p>
+                    <button className='hover:bg-accent transition-colors duration-300 p-2 rounded-md cursor-pointer' type='button'
                     onClick={handleClose}
                     >
                         <IconCancel className='text-white stroke-white' />
@@ -75,20 +84,33 @@ const ForgotPassword = ({onClose,show=false,...props}:ForgotPasswordProps) => {
                 <form className='flex flex-col p-5 gap-4' onSubmit={handleSubmit}
                 >                    
                     <div className='flex-1'>
-                        <label htmlFor="forgot-password">Corre electrónico</label>
+                        <label 
+                        className='text-lg font-bold'
+                        htmlFor="forgot-password">Correo electrónico</label>
                         <FormFields 
                         type='email'
                         name='forgot-password'
                         id='forgot-password'
-                        className='w-full inline-block flex-1 border border-accent px-2 py-1 rounded-lg text-lg'
+                        className={`
+                            w-full inline-block flex-1 border border-accent p-2 
+                            rounded-lg text-md tracking-wide focus:outline-2 focus:outline-accent
+                            ${errorsForm.email ? 'border-red-500 focus:outline-2 focus:outline-red-500 placeholder:text-red-300' : ''}
+                            `}
                         placeholder='Correo electrónico'
                         value={email}
                         onChange={handleChange}
                         ref={inputEmail}
                         />
+                        <ul className='text-xs text-red-600 px-1 pt-1'>
+                            { errorsForm.email && errorsForm.email.map(err => (
+                                <li key={err}>{err}</li>
+                            ))}
+                        </ul>
                     </div>
                     <div className='flex gap-2'>
-                        <button className='cursor-pointer px-4 py-2 bg-primary rounded-lg text-white hover:bg-primary-hover transition-colors duration-300' type="submit">Send</button>
+                        <input 
+                        className='cursor-pointer px-4 py-2 bg-primary rounded-lg text-white hover:bg-primary-hover transition-colors duration-300'
+                        type="submit" value="Enviar" />
                         <button className='cursor-pointer px-4 py-2 transition-colors duration-300 rounded-lg text-white bg-accent hover:bg-accent-hover' type='button' onClick={handleClose}>Cancel</button>
                     </div>
                 </form>
