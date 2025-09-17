@@ -35,6 +35,7 @@ model Board {
   members   BoardMember[]
   lists     List[]
   labels    Label[]
+  image     String?
 }
 
 model BoardMember {
