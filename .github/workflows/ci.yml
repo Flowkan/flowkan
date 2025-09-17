@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - 'server/**'
+      - "server/**"
   pull_request:
     branches:
-      - '**'
+      - "**"
     paths:
-      - 'server/**'
+      - "server/**"
   workflow_dispatch:
 
 jobs:
@@ -43,6 +43,8 @@ jobs:
       - name: Install Dependencies (Server)
         working-directory: server
         run: npm install
+      - name: Install DB migrations
+        run: npm run db:prod
 
       - name: Check Linting (Server)
         working-directory: server

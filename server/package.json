@@ -12,6 +12,7 @@
     "db:migrate": "docker exec -it flowkan-server npx prisma migrate dev --name init",
     "db": "npm run db:migrate && npm run db:init",
     "db:reset": "docker exec -it flowkan-server npx prisma migrate reset && npx prisma generate && npm run db:init",
+    "db:prod": "docker exec -it flowkan-server npx prisma migrate deploy",
     "test": "jest"
   },
   "keywords": [],
