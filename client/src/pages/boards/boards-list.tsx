@@ -5,10 +5,14 @@ import "./boards-list.css";
 import { useTranslation } from "react-i18next";
 import NewBoard from "../../components/ui/modals/new-board";
 import { useAppSelector, useAppDispatch } from "../../store";
-import { getBoardFilterCombine, getBoards } from "../../store/selectors";
+import {
+	getBoardFilterCombine,
+	getBoards,
+} from "../../store/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { fetchBoards } from "../../store/actions";
 import { BoardFilters } from "../../components/BoardFilters";
+import { Button } from "../../components/ui/Button";
 
 /* function EmptyList() {
 	const { t } = useTranslation();
@@ -28,6 +32,9 @@ const BoardsList = () => {
 	const [searchBoard, setSearchBoard] = useState("");
 	const [searchMember, setSearchMember] = useState("");
 
+	const limit = 10;
+	const [skip, setSkip] = useState(0);
+
 	const { t } = useTranslation();
 
 	const handleShowAddForm = () => setShowAddForm(true);
@@ -40,9 +47,13 @@ const BoardsList = () => {
 		getBoardFilterCombine(state, searchBoard, searchMember),
 	);
 
+	const handleLoadMore = () => {
+		setSkip((prev) => prev + limit);
+	};
+
 	useEffect(() => {
-		dispatch(fetchBoards());
-	}, [dispatch]);
+		dispatch(fetchBoards(skip, limit));
+	}, [dispatch, skip, limit]);
 
 	return (
 		<>
@@ -79,6 +90,15 @@ const BoardsList = () => {
 										<BoardsItem key={board.id} board={board} />
 									))}
 								</ul>
+								<div className="mt-6 flex justify-center">
+									<Button
+										onClick={handleLoadMore}
+										disabled={boards.length % limit !== 0}
+										className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+									>
+										{t("boardslist.pagination.loadMore", "Cargar más")}
+									</Button>
+								</div>
 							</div>
 						</div>
 					)}
