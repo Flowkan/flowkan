@@ -4,7 +4,7 @@ import AuthModel from "../models/AuthModel.js";
 import AuthService from "../services/AuthService.js";
 import { AuthController } from "../controllers/authController.js";
 import { validateUserFields } from "../validators/authValidator";
-import { loginSchema, registerSchema } from "../validators/authSchema";
+import { changePasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from "../validators/authSchema";
 import upload from "../lib/uploadConfigure";
 
 //temporal
@@ -27,5 +27,8 @@ router.post(
 
 router.get("/me", jwtAuth.guard, controller.me);
 router.post("/confirm", controller.confirmEmail);
+router.post("/reset_password",validateUserFields(resetPasswordSchema), controller.resetPassword);
+router.post("/change_password",validateUserFields(changePasswordSchema), controller.changePassword);
+
 
 export default router;

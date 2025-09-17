@@ -10,6 +10,9 @@ class AuthService {
   constructor(authModel: AuthModel) {
     this.authModel = authModel;
   }
+  async changePassword(userId:number,password:string){
+    return this.authModel.changePassword(userId,password)
+  }
 
   async validateCredentials(
     data: ValidateCredentialsParams,
@@ -34,6 +37,11 @@ class AuthService {
   async activateUser(userId: number) {
     return this.authModel.updateUser(userId, { status: true });
   }
+
+  async findByEmail(email:string) {
+    return this.authModel.findByEmail(email)
+  }
+
 }
 
 export default AuthService;

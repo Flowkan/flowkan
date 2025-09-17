@@ -1,8 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { loginSchema, registerSchema } from "./authSchema";
+import { changePasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from "./authSchema";
 import { ValidationError } from "./validationError";
 
-export type AuthSchema = typeof registerSchema | typeof loginSchema;
+export type AuthSchema = 
+| typeof registerSchema 
+| typeof loginSchema 
+| typeof resetPasswordSchema
+| typeof changePasswordSchema;
 
 export const validateUserFields =
   (schema: AuthSchema) => (req: Request, res: Response, next: NextFunction) => {

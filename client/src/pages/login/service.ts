@@ -28,3 +28,22 @@ export const logout = async () => {
 	storage.remove("user");
 	removeAuthorizationHeader();
 };
+
+
+export const resetPassword = async (email:string) => {
+	const response = await apiClient.post<{message:string}>(
+		USER_ENDPOINTS.RESET_PASSWORD,{
+			email
+		}
+	)
+	return response.data
+}
+
+export const changePassword = async (password:string) => {
+	const response = await apiClient.post<{message:string}>(
+		USER_ENDPOINTS.RESET_PASSWORD,{
+			password
+		}
+	)
+	return response.data
+}

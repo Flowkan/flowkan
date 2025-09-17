@@ -9,6 +9,7 @@ import Profile from "./pages/profile/profile.tsx";
 import LoginSkeleton from "./components/ui/LoginSkeleton";
 import { useAppSelector } from "./store";
 import { ConfirmPage } from "./pages/register/ConfirmPage.tsx";
+import ChangePassword from "./pages/login/change_password.tsx";
 
 
 
@@ -46,6 +47,14 @@ function App() {
 							<Suspense fallback={<LoginSkeleton />}>
 								<LoginPage />
 							</Suspense>
+						</AuthRoute>
+					}
+				/>
+				<Route
+					path="change-password"
+					element={
+						<AuthRoute requireAuth={false} redirectTo="/login">							
+							<ChangePassword />
 						</AuthRoute>
 					}
 				/>

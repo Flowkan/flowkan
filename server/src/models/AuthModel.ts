@@ -19,6 +19,20 @@ class AuthModel {
     this.prisma = prisma;
   }
 
+  async changePassword(userId:number,password:string){
+    const user = await this.prisma.user.findUnique({
+      where:{id:userId}
+    })
+    if(!user){
+      return null;
+    }
+    const passwordHashed = await bcrypt.hash(password, 10);
+    return await this.prisma.user.update({
+      where:{id:userId},
+      data:{password:passwordHashed}
+    })
+  }
+
   async validateCredentials({
     email,
     password,
@@ -27,8 +41,7 @@ class AuthModel {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
-
-    console.log(user);
+    
     
     if (!user) return null;
 
@@ -80,6 +93,13 @@ class AuthModel {
       data,
     });
   }
+
+  async findByEmail(email:string){
+    return this.prisma.user.findUnique({
+      where:{email}
+    })
+  }
+
 }
 
 export default AuthModel;

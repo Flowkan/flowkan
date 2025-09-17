@@ -26,7 +26,6 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-
       const user = await this.authService.validateCredentials(req.body);
 
       if (!user) {
@@ -150,18 +149,77 @@ export class AuthController {
       err.meta.target.every((t) => typeof t === "string")
     );
   }
-  me = async (req: Request,res: Response,next: NextFunction) => {
+  me = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.apiUserId
-      const user = await this.authService.findById(userId)
-      if(user){
-        res.json({result:user})
-        return
+      const userId = req.apiUserId;
+      const user = await this.authService.findById(userId);
+      if (user) {
+        res.json({ result: user });
+        return;
       }
-      res.status(500).json({error:'Usuario no loggeado'})
+      res.status(500).json({ error: "Usuario no loggeado" });
+    } catch (error) {
+      next(error);
+    }
+  };
+  resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email } = req.body;
+      const user = await this.authService.findByEmail(email);
+      if (user) {
+        if (!process.env.JWT_SECRET) {
+          throw new Error(
+            "No se puede cambiar su contraseña. Contacte con flowkan",
+          );
+        }
+        
+        const token = await new Promise((resolve, reject) => {
+          if (!process.env.JWT_SECRET) {
+            throw new Error(
+              "No se puede cambiar su contraseña. Contacte con flowkan",
+            );
+          }
+          jwt.sign(
+            { user_id: user.id } satisfies JwtPayload,
+            process.env.JWT_SECRET,
+            {
+              expiresIn: "1d",
+            },
+            (err, tokenJWT) => {
+              if (err) {
+                return next(err);
+              }
+              resolve(tokenJWT)              
+            },
+          );
+        });
+
+        await sendEmail(
+          user.email,
+          "Cambiar contraseña",
+          `<h1>${user.name}, va a cambiar su contraseña!</h1>
+                    <p>Haz click <a href="${process.env.FRONTEND_WEB_DEV_URL}/change-password?token=${token}">aquí</a> para cambiar la contraseña de cuenta.</p>`,
+        );
+
+        res.json({message:'Se ha enviado un link a su correo para cambiar su cotraseña'})
+
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  changePassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.apiUserId;      
+      const { password } = req.body
+      const change = this.authService.changePassword(userId,password)
+      if(!change){
+        throw createHttpError(500, "No se pudo cambiar su contraseña, contactese con Flowkan")        
+      }
+      res.json({message:'Su contraseña ha sido cambiada, inicie sesión con su nueva contraseña'})
     } catch (error) {
       next(error)
     }
-    
   }
 }

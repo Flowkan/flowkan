@@ -14,12 +14,16 @@ import { Button } from "../../components/ui/Button";
 import { __ } from "../../utils/i18nextHelper";
 import { WithOtherServices } from "../register/withOtherServices/WithOtherServices";
 import { getUi } from "../../store/selectors";
+import ForgotPassword from "../../components/ui/modals/forgot-password";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
 	const loginAction = useLoginAction();
 	const profileLoadedAction = useLoadedProfile()
 	const { error } = useAppSelector(getUi);
+	// const modalForgotPassword = useRef<HTMLDialogElement|null>(null)
+	const [showModal,setShowModal] = useState(false);
+
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
@@ -111,6 +115,12 @@ export const LoginPage = () => {
 		}
 	};
 
+	function handleShowModal(){
+		setShowModal(true)
+	}
+	function handleCloseModal(){
+		setShowModal(false)
+	}
 	return (
 		<Page>
 			<div className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
@@ -184,15 +194,20 @@ export const LoginPage = () => {
 
 						<div className="flex items-center justify-between">
 							<div className="text-sm">
-								<a
-									href="#"
-									className="text-text-link hover:text-accent-hover font-medium"
+								<button
+									onClick={handleShowModal}
+									type="button"
+									className="text-text-link hover:cursor-pointer hover:text-accent-hover font-medium"
 								>
 									{t(
 										"login.loginForm.forgetPassword",
 										"¿Olvidaste tu contraseña?",
 									)}
-								</a>
+								</button>
+								<ForgotPassword 
+								show={showModal} 
+								onClose={handleCloseModal} 
+								/>
 							</div>
 						</div>
 						<div>
