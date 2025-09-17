@@ -43,7 +43,9 @@ jobs:
       - name: Install Dependencies (Server)
         working-directory: server
         run: npm install
+
       - name: Install DB migrations
+        working-directory: server
         run: npm run db:prod
 
       - name: Check Linting (Server)
