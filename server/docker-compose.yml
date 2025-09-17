@@ -9,6 +9,7 @@ services:
     depends_on:
       - db
     volumes:
+      - ./server:/usr/src/app
       - .:/usr/src/app:delegated
       - /usr/src/app/node_modules
       - ./src:/usr/src/app/src:delegated,consistency=cached
