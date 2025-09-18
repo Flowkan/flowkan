@@ -10,6 +10,9 @@ import LoginSkeleton from "./components/ui/LoginSkeleton";
 import { useAppSelector } from "./store";
 import { ConfirmPage } from "./pages/register/ConfirmPage.tsx";
 import { VerifyPendingPage } from "./pages/register/VerifyPendingPage.tsx";
+import { PricingPage } from "./pages/PricingPage.tsx";
+import { FeaturesPage } from "./pages/FeaturesPage.tsx";
+import { SolutionsPage } from "./pages/SolutionsPage.tsx";
 
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((m) => ({ default: m.LoginPage })),
@@ -88,6 +91,9 @@ function App() {
 						</Suspense>
 					}
 				/>
+				<Route path="features" element={<FeaturesPage />} />
+				<Route path="solutions" element={<SolutionsPage />} />
+				<Route path="prices" element={<PricingPage />} />
 				<Route path="not-found" element={<NotFound />} />
 				<Route path="*" element={<Navigate to="/not-found" />} />
 			</Route>

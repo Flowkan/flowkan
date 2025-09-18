@@ -2,6 +2,41 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+const clientLogos = [
+	{
+		src: "https://eodhistoricaldata.com/img/logos/US/MSFT.png?_gl=1*194tavy*_gcl_au*MTMxOTM5MTkwMC4xNzUzNDMzMDg4*FPAU*MTMxOTM5MTkwMC4xNzUzNDMzMDg4",
+		alt: "Logo Cliente Microsoft",
+	},
+	{
+		src: "https://imgs.search.brave.com/7Ev6F4Y44DFV2Ic7s--NpSt1UfOz8gnUJBACe6ubdIU/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi8wLzA2L0Ft/YXpvbl8yMDI0LnN2/Zy8yNTBweC1BbWF6/b25fMjAyNC5zdmcu/cG5n",
+		alt: "Logo Cliente Amazon",
+	},
+	{
+		src: "https://keepcoding.io/wp-content/uploads/2024/11/Logo-kc.svg",
+		alt: "Logo Cliente KeepCoding",
+	},
+	{
+		src: "https://imgs.search.brave.com/r2CbaG60D2VNes-mVPEVBC_iJl_Uh1Hc7iFRXRS-tEM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9wbGF5/LWxoLmdvb2dsZXVz/ZXJjb250ZW50LmNv/bS96YlFTSFRjOURH/bE5rVjhzcXlWUUNp/RTdINzAwZkppM2R3/ZmNLeXBiTGNCejgx/TjE1UmlMN1JhY0dt/Rk03MHVWaGFPNg",
+		alt: "Logo Cliente Google Play",
+	},
+	{
+		src: "https://keepcoding.io/wp-content/uploads/2024/11/Logo-kc.svg",
+		alt: "Logo Cliente KeepCoding",
+	},
+	{
+		src: "https://keepcoding.io/wp-content/uploads/2024/11/Logo-kc.svg",
+		alt: "Logo Cliente KeepCoding",
+	},
+	{
+		src: "https://keepcoding.io/wp-content/uploads/2024/11/Logo-kc.svg",
+		alt: "Logo Cliente KeepCoding",
+	},
+	{
+		src: "https://keepcoding.io/wp-content/uploads/2024/11/Logo-kc.svg",
+		alt: "Logo Cliente KeepCoding",
+	},
+];
+
 export const Footer: React.FC = () => {
 	const { t } = useTranslation();
 	return (
@@ -21,10 +56,9 @@ export const Footer: React.FC = () => {
 								{t("footer.privacy", "Política de privacidad")}
 							</a>
 						</li>
-
 						<li>
 							<a href="#" className="hover:text-accent-hover transition-colors">
-								{t("footer.terms", "Términos y condiciones de	servicio")}
+								{t("footer.terms", "Términos y condiciones de servicio")}
 							</a>
 						</li>
 					</ul>
@@ -47,8 +81,8 @@ export const Footer: React.FC = () => {
 						<li>{t("footer.contact.phone", "Teléfono")}: +34 123 45 67 89</li>
 						<li>
 							{t("footer.address.label", "Dirección")}:{" "}
-							{t("footer.address.street", "Calle")} Ficticia 123, 28001
-							Madrid, {t("footer.address.country", "España")}
+							{t("footer.address.street", "Calle")} Ficticia 123, 28001 Madrid,{" "}
+							{t("footer.address.country", "España")}
 						</li>
 					</ul>
 					<div className="mt-4 flex space-x-4">
@@ -83,47 +117,20 @@ export const Footer: React.FC = () => {
 					<h4 className="text-text-on-accent mb-4 font-bold">
 						{t("footer.clients", "Nuestros Clientes")}
 					</h4>
-					<div className="grid grid-cols-3 items-center gap-4 sm:grid-cols-4 lg:grid-cols-5">
-						<img
-							src="https://eodhistoricaldata.com/img/logos/US/MSFT.png?_gl=1*194tavy*_gcl_au*MTMxOTM5MTkwMC4xNzUzNDMzMDg4*FPAU*MTMxOTM5MTkwMC4xNzUzNDMzMDg4"
-							alt="Logo Cliente Microsoft"
-							className="h-10 w-auto object-contain grayscale transition-all duration-300 hover:grayscale-0"
-						/>
-						<img
-							src="https://imgs.search.brave.com/7Ev6F4Y44DFV2Ic7s--NpSt1UfOz8gnUJBACe6ubdIU/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi8wLzA2L0Ft/YXpvbl8yMDI0LnN2/Zy8yNTBweC1BbWF6/b25fMjAyNC5zdmcu/cG5n"
-							alt="Logo Cliente Amazon"
-							className="h-10 w-auto object-contain grayscale transition-all duration-300 hover:grayscale-0"
-						/>
-						<img
-							src="https://keepcoding.io/wp-content/uploads/2024/11/Logo-kc.svg"
-							alt="Logo Cliente KeepCoding"
-							className="h-10 w-auto object-contain grayscale transition-all duration-300 hover:grayscale-0"
-						/>
-						<img
-							src="https://imgs.search.brave.com/r2CbaG60D2VNes-mVPEVBC_iJl_Uh1Hc7iFRXRS-tEM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9wbGF5/LWxoLmdvb2dsZXVz/ZXJjb250ZW50LmNv/bS96YlFTSFRjOURH/bE5rVjhzcXlWUUNp/RTdINzAwZkppM2R3/ZmNLeXBiTGNCejgx/TjE1UmlMN1JhY0dt/Rk03MHVWaGFPNg"
-							alt="Logo Cliente Google Play"
-							className="h-10 w-auto object-contain grayscale transition-all duration-300 hover:grayscale-0"
-						/>
-						<img
-							src="https://keepcoding.io/wp-content/uploads/2024/11/Logo-kc.svg"
-							alt="Logo Cliente Tech Solutions"
-							className="h-10 w-auto object-contain grayscale transition-all duration-300 hover:grayscale-0"
-						/>
-						<img
-							src="https://keepcoding.io/wp-content/uploads/2024/11/Logo-kc.svg"
-							alt="Logo Cliente Global Corp"
-							className="h-10 w-auto object-contain grayscale transition-all duration-300 hover:grayscale-0"
-						/>
-						<img
-							src="https://keepcoding.io/wp-content/uploads/2024/11/Logo-kc.svg"
-							alt="Logo Cliente Innovate"
-							className="h-10 w-auto object-contain grayscale transition-all duration-300 hover:grayscale-0"
-						/>
-						<img
-							src="https://keepcoding.io/wp-content/uploads/2024/11/Logo-kc.svg"
-							alt="Logo Cliente Synergy"
-							className="h-10 w-auto object-contain grayscale transition-all duration-300 hover:grayscale-0"
-						/>
+
+					<div className="grid grid-cols-4 gap-4">
+						{clientLogos.map((logo, index) => (
+							<div
+								key={index}
+								className="flex h-12 w-full flex-shrink-0 items-center justify-center"
+							>
+								<img
+									src={logo.src}
+									alt={logo.alt}
+									className="h-10 w-auto max-w-full object-contain grayscale transition-all duration-300 hover:grayscale-0"
+								/>
+							</div>
+						))}
 					</div>
 				</div>
 			</div>

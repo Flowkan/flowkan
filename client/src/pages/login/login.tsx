@@ -33,8 +33,19 @@ export const LoginPage = () => {
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
 		const token = params.get("token");
+		const userEncoded = params.get("user");
 		if (token) {
-			dispatch(loginWithOAuth(token));
+			let user = null;
+			if (userEncoded) {
+				try {
+					const userDecoded = decodeURIComponent(userEncoded);
+					user = JSON.parse(userDecoded);
+				} catch (e) {
+					console.error("Error al parsear el objeto de usuario OAuth:", e);
+					toast.error("Error al procesar la información del usuario.");
+				}
+			}
+			dispatch(loginWithOAuth({ token, user }));
 		}
 	}, [dispatch]);
 
@@ -119,7 +130,7 @@ export const LoginPage = () => {
 
 	return (
 		<Page>
-			<div className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+			<div className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 sm:px-6 lg:px-8">
 				<div className="bg-background-card w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl transition-all duration-300 hover:scale-[1.01]">
 					<div>
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">

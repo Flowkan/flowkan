@@ -53,12 +53,21 @@ export function login(credentials: Credentials): AppThunk<Promise<void>> {
 	};
 }
 
-export function loginWithOAuth(token: string): AppThunk<Promise<void>> {
+interface OAuthLoginPayload {
+	token: string;
+	user: User;
+}
+
+export function loginWithOAuth(
+	payload: OAuthLoginPayload,
+): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api, router }) => {
+		const { token, user: userObj } = payload;
 		dispatch(authLoginPending());
 		try {
 			localStorage.setItem("auth", token);
 			setAuthorizationHeader(token);
+			localStorage.setItem("user", JSON.stringify(userObj));
 
 			const user = await api.auth.me();
 
@@ -423,7 +432,10 @@ export const removeAssigneeFulfilled = (
 });
 
 // ─── Thunks ─────────────────────────────
-export function fetchBoards(skip: number, limit: number): AppThunk<Promise<void>> {
+export function fetchBoards(
+	skip: number,
+	limit: number,
+): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
 		dispatch(fetchBoardsPending());
 		try {
