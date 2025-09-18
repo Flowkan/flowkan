@@ -12,7 +12,7 @@ export const BackofficePage = ({
 	className,
 }: BackofficePageProps) => {
 	return (
-		<div className={`w-full p-6 ${className ?? ""}`}>
+		<div className={`w-full ${className ?? ""}`}>
 			{title && <h1 className="mb-4 text-2xl font-bold">{title}</h1>}
 			{children}
 		</div>
