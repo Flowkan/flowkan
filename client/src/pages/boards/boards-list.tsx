@@ -5,14 +5,12 @@ import "./boards-list.css";
 import { useTranslation } from "react-i18next";
 import NewBoard from "../../components/ui/modals/new-board";
 import { useAppSelector, useAppDispatch } from "../../store";
-import {
-	getBoardFilterCombine,
-	getBoards,
-} from "../../store/selectors";
+import { getBoardFilterCombine, getBoards } from "../../store/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { fetchBoards } from "../../store/actions";
 import { BoardFilters } from "../../components/BoardFilters";
-import { Button } from "../../components/ui/Button";
+import { useInfiniteScroll } from "../../components/hooks/useInfiniteScroll";
+import { SpinnerLoadingText } from "../../components/ui/Spinner";
 
 /* function EmptyList() {
 	const { t } = useTranslation();
@@ -28,32 +26,38 @@ import { Button } from "../../components/ui/Button";
 } */
 
 const BoardsList = () => {
+	const { t } = useTranslation();
 	const [showAddForm, setShowAddForm] = useState(false);
 	const [searchBoard, setSearchBoard] = useState("");
 	const [searchMember, setSearchMember] = useState("");
-
-	const limit = 10;
 	const [skip, setSkip] = useState(0);
 
-	const { t } = useTranslation();
-
-	const handleShowAddForm = () => setShowAddForm(true);
-	const handleCloseAddForm = () => setShowAddForm(false);
+	const LIMIT = 10; // pendiente ajustar la cantidad según style
 
 	const dispatch = useAppDispatch();
 	const boards = useAppSelector(getBoards);
+	const hasMore = boards.length > 0 && boards.length % LIMIT === 0;
 
 	const showBoards = useAppSelector((state) =>
 		getBoardFilterCombine(state, searchBoard, searchMember),
 	);
 
+	const handleShowAddForm = () => setShowAddForm(true);
+	const handleCloseAddForm = () => setShowAddForm(false);
 	const handleLoadMore = () => {
-		setSkip((prev) => prev + limit);
+		setSkip((prev) => prev + LIMIT);
 	};
 
+	const loaderRef = useInfiniteScroll({
+		hasMoreData: hasMore,
+		fetchMoreData: handleLoadMore,
+		threshold: 0,
+		rootMargin: "200px",
+	});
+
 	useEffect(() => {
-		dispatch(fetchBoards(skip, limit));
-	}, [dispatch, skip, limit]);
+		dispatch(fetchBoards(skip, LIMIT));
+	}, [dispatch, skip, LIMIT]);
 
 	return (
 		<>
@@ -74,7 +78,6 @@ const BoardsList = () => {
 						</div>
 					) : (
 						<div className="boards-wrapper">
-							{/* Barra de herramientas con botones alineados */}
 							<div className="boards-toolbar">
 								<AddButton showAddForm={handleShowAddForm} />
 								<BoardFilters
@@ -90,15 +93,25 @@ const BoardsList = () => {
 										<BoardsItem key={board.id} board={board} />
 									))}
 								</ul>
-								<div className="mt-6 flex justify-center">
-									<Button
-										onClick={handleLoadMore}
-										disabled={boards.length % limit !== 0}
-										className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
-									>
-										{t("boardslist.pagination.loadMore", "Cargar más")}
-									</Button>
-								</div>
+								{/* <div className="mt-6 flex justify-center text-gray-500"> */}
+									{hasMore ? (
+										<div ref={loaderRef}>
+											<SpinnerLoadingText
+												text={t(
+													"boardslist.pagination.loading",
+													"Cargando más...",
+												)}
+											/>
+										</div>
+									) : (
+										<p className="text-sm text-gray-400 sr-only">
+											{t(
+												"boardslist.pagination.endLoading",
+												"No hay más resultados.",
+											)}
+										</p>
+									)}
+								{/* </div> */}
 							</div>
 						</div>
 					)}
