@@ -9,6 +9,7 @@ import Profile from "./pages/profile/profile.tsx";
 import LoginSkeleton from "./components/ui/LoginSkeleton";
 import { useAppSelector } from "./store";
 import { ConfirmPage } from "./pages/register/ConfirmPage.tsx";
+import { VerifyPendingPage } from "./pages/register/VerifyPendingPage.tsx";
 import { PricingPage } from "./pages/PricingPage.tsx";
 import { FeaturesPage } from "./pages/FeaturesPage.tsx";
 import { SolutionsPage } from "./pages/SolutionsPage.tsx";
@@ -80,6 +81,14 @@ function App() {
 						<AuthRoute requireAuth={false} redirectTo="/boards">
 							<ConfirmPage />
 						</AuthRoute>
+					}
+				/>
+				<Route
+					path="/verify-pending"
+					element={
+						<Suspense fallback={<LoginSkeleton />}>
+							<VerifyPendingPage />
+						</Suspense>
 					}
 				/>
 				<Route path="features" element={<FeaturesPage />} />
