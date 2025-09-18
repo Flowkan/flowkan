@@ -34,10 +34,18 @@ class BoardModel {
   }
 
   async getAll(limit: number, skip: number): Promise<BoardWithRelations[]> {
-    return await this.prisma.board.findMany({...boardWithRelationsData, take: limit, skip});
+    return await this.prisma.board.findMany({
+      ...boardWithRelationsData,
+      take: limit,
+      skip,
+    });
   }
 
-  async getAllByUserId(userId: number, limit: number = 10, skip: number = 0): Promise<BoardWithRelations[]> {
+  async getAllByUserId(
+    userId: number,
+    limit: number = 10,
+    skip: number = 0,
+  ): Promise<BoardWithRelations[]> {
     return await this.prisma.board.findMany({
       where: {
         members: {
@@ -215,7 +223,7 @@ class BoardModel {
     userId,
     boardId,
   }: {
-    userId: number;
+    userId?: number;
     boardId: string;
   }): Promise<User[]> {
     const members = await this.prisma.boardMember.findMany({
