@@ -144,19 +144,26 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black p-4">
 			<div
 				ref={modalRef}
-				className="bg-background-card relative flex max-h-5/6 w-full max-w-5xl gap-6 rounded-lg p-6 shadow-2xl"
+				// CLASES MODIFICADAS PARA RESPONSIVIDAD:
+				// - Añadido 'flex-col' por defecto (móvil).
+				// - Añadido 'md:flex-row' para el diseño de dos columnas en escritorio.
+				// - Eliminado 'gap-6'.
+				// - Añadido 'overflow-y-auto' para permitir el scroll vertical del modal.
+				className="bg-background-card relative flex max-h-5/6 w-full max-w-5xl flex-col overflow-y-auto rounded-lg p-6 shadow-2xl md:flex-row"
 			>
 				<button
 					onClick={() => {
 						onClose();
 					}}
-					className="text-text-placeholder hover:text-text-body absolute top-3 right-3 text-4xl leading-none"
+					className="text-text-placeholder hover:text-text-body absolute top-3 right-3 z-10 text-4xl leading-none"
 					title="Cerrar y guardar"
 				>
 					&times;
 				</button>
 
-				<div className="relative flex flex-grow flex-col">
+				{/* COLUMNA PRINCIPAL (Contenido) */}
+				{/* Añadimos 'md:mr-6' para el espacio lateral en desktop */}
+				<div className="relative flex flex-grow flex-col md:mr-6">
 					<div className="mb-4 flex items-center gap-2">
 						<span className="text-text-placeholder text-2xl">📋</span>
 						<input
@@ -173,7 +180,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						<h4 className="text-text-placeholder mb-2 text-sm font-semibold">
 							Añadir a la tarjeta
 						</h4>
-						<div className="flex flex-wrap gap-2">
+						<div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
 							<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
 								<span className="text-lg">+</span> Añadir
 							</button>
@@ -197,7 +204,8 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						{showUsers && (
 							<div
 								ref={usersRef}
-								className="border-border-medium bg-background-light-grey absolute top-full right-0 z-50 mt-2 max-h-60 w-64 overflow-y-auto rounded-md border p-2 shadow-lg"
+								// MODIFICACIÓN: En móvil (w-full y centrado), en desktop (md:w-64 y a la derecha)
+								className="border-border-medium bg-background-light-grey absolute top-full left-1/2 z-50 mt-2 max-h-60 w-[calc(100%-1rem)] -translate-x-1/2 overflow-y-auto rounded-md border p-2 shadow-lg md:right-0 md:left-auto md:w-64 md:translate-x-0"
 							>
 								<input
 									type="text"
@@ -299,7 +307,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 					</div>
 				</div>
 
-				<div className="w-64 flex-shrink-0 pt-10">
+				{/* COLUMNA DE OPCIONES (Lateral) */}
+				{/* CLASES MODIFICADAS: 'w-full' para móvil, 'md:w-64' para desktop. 'pt-6' para separación en móvil */}
+				<div className="w-full flex-shrink-0 pt-6 md:w-64 md:pt-10">
 					<h4 className="text-text-placeholder mb-3 text-sm font-semibold">
 						Opciones
 					</h4>
