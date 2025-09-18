@@ -101,21 +101,11 @@ export const RegisterPage = () => {
 
 		try {
 			await register(formData);
-
-			toast.custom((t) => (
-				<CustomToast
-					message={__(
-						"register.registerForm.message.success",
-						"Registro exitoso! Redirigiendo a la página de inicio de sesión.",
-					)}
-					t={t}
-					type="success"
-				/>
-			));
-
-			setTimeout(() => {
-				navigate("/login");
-			}, 2000);
+			navigate("/verify-pending", {
+				state: {
+					email: formData.email,
+				},
+			});
 		} catch (error) {
 			if (error instanceof Error) {
 				toast.custom((t) => (
