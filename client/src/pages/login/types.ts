@@ -1,5 +1,5 @@
 import z from "zod";
-import type { ForgotPasswordSchema } from "../../utils/auth.schema";
+import type { ForgotPasswordSchema, ResponseChangePasswordSchema } from "../../utils/auth.schema";
 
 
 export interface Credentials {
@@ -21,3 +21,5 @@ export interface User {
 
 
 export type FormSendEmail = z.infer<typeof ForgotPasswordSchema>
+
+export type ResponseChangePassword = z.infer<typeof ResponseChangePasswordSchema>

@@ -2,59 +2,135 @@ import { t } from "i18next";
 import IconLogo from "../../components/icons/IconLogo";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { validationForm } from "../../utils/validations";
+import { NewPasswordSchema } from "../../utils/auth.schema";
+import { changePassword } from "./service";
+import { FormFields } from "../../components/ui/FormFields";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { CustomToast } from "../../components/CustomToast";
+import { __ } from "../../utils/i18nextHelper";
+import { AxiosError } from "axios";
 
 const ChangePassword = () => {
-    const [passwords,setPasswords] = useState({
-        password:'',
-        confirmPassword:''
-    })
-    const { password,confirmPassword } = passwords;
-    function handleChange(e:ChangeEvent<HTMLInputElement>){
-        const prevPass = {...passwords}
-        setPasswords({...prevPass,[e.target.name]:e.target.value})
-    }
-    function handleSubmit(e:FormEvent){
-        const {error,data} = validationForm()
-    }
-    return (
-        <div className="w-full min-h-[calc(100vh-638px)] md:min-h-[calc(100vh-351px)] flex">
-        <div className="w-full h-h-full flex justify-center items-center p-6">
-            <form 
-            onSubmit={handleSubmit}
-            className="w-[80%] md:w-[40%] flex flex-col gap-4 backdrop-blur-md bg-black/25 drop-shadow-lg border-white p-5 rounded-lg shadow-2xl">
-                <div className="flex justify-center items-center py-5">
-                    <IconLogo className="text-accent mr-2 h-6 w-6" />
-                    <span className="text-gray-100 text-2xl font-bold">
-							{t("header.title", "Flowkan")}
-					</span>
-                </div>
-                <div className="flex flex-col gap-2">
-                    <label className="text-gray-100 text-xs font-thin tracking-tight" htmlFor="password-1">Nueva contraseña</label>
-                    <input 
-                    value={password}
-                    name="password"
-                    onChange={handleChange}
-                    className="transition-all duration-300 hover:bg-black/20 text-md rounded-lg p-2 backdrop-blur-2xl bg-black/5 text-gray-300 " 
-                    type="password" id="password-1" />                    
-                </div>
-                <div className="flex flex-col gap-2">
-                    <label className="text-gray-100 text-xs font-thin tracking-tight" htmlFor="password-2">Repetir contraseña</label>
-                    <input 
-                    value={confirmPassword}
-                    name="confirmPassword"
-                    onChange={handleChange}
-                    className="transition-all duration-300 hover:bg-black/20 text-md rounded-lg p-2 backdrop-blur-2xl bg-black/5 text-gray-300" 
-                    type="password" id="password-2" />
-                </div>
-                <div className="flex flex-col">
-                    <input                    
-                    className="bg-primary px-4 py-3 rounded-2xl text-gray-100 font-thin text-xs tracking-wide"
-                    type="submit" value="Guardar Cambios"/>
-                </div>
-            </form>
-        </div>
-        </div>
-    );
+	const [passwords, setPasswords] = useState({
+		password: "",
+		confirmPassword: "",
+	});
+	const [errorsForm, setErrorsForm] = useState<{
+		[k in keyof typeof passwords]?: string[];
+	}>({});
+
+	const [searchParams] = useSearchParams();
+	const token = searchParams.get("token");
+	const navigate = useNavigate();
+
+	const { password, confirmPassword } = passwords;
+	function handleChange(e: ChangeEvent<HTMLInputElement>) {
+		const prevPass = { ...passwords };
+		setPasswords({ ...prevPass, [e.target.name]: e.target.value });
+	}
+	async function handleSubmit(e: FormEvent) {
+		e.preventDefault();
+		const { error, data } = validationForm(NewPasswordSchema, passwords);
+		if (error) {
+			setErrorsForm(error.errorsList);
+			return;
+		}
+		if (!token) {
+			return navigate("/login", { replace: true });
+		}
+		try {
+			const { message } = await changePassword(data.password, token);
+			navigate("/login", { replace: true });
+			toast.custom((t) => (
+				<CustomToast
+					message={__("login.change_password.toast.message.success", message)}
+					t={t}
+					type="success"
+				/>
+			));
+		} catch (error) {
+			if(error instanceof AxiosError){
+				const message = error.response?.data.error ?? ""
+				toast.custom((t) => (
+				<CustomToast
+						message={__("login.change_password.toast.message.error", message)}
+						t={t}
+						type="error"
+					/>
+				));
+			}
+		}
+	}
+	return (
+		<div className="flex min-h-[calc(100vh-638px)] w-full md:min-h-[calc(100vh-351px)]">
+			<div className="h-h-full flex w-full items-center justify-center p-6">
+				<form
+					onSubmit={handleSubmit}
+					className="flex w-[80%] flex-col gap-4 rounded-lg border-white bg-black/25 p-5 shadow-2xl drop-shadow-lg backdrop-blur-md md:w-[40%]"
+				>
+					<div className="flex flex-col items-center justify-center py-5">
+						<div className="flex">
+							<IconLogo className="text-accent mr-2 h-6 w-6" />
+							<span className="text-2xl font-bold text-gray-100">
+								{t("header.title", "Flowkan")}
+							</span>
+						</div>
+						<h2 className="text-lg font-semibold text-zinc-300 md:text-xl">
+							{t("recovery_password.form.title", "Cambiar Contraseña")}
+						</h2>
+					</div>
+					<div className="flex flex-col gap-2">
+						<FormFields
+							value={password}
+							label={t(
+								"recovery_password.form.field.new_password",
+								"Nueva contraseña",
+							)}
+							labelClassName="text-xs font-thin tracking-tight text-gray-100"
+							name="password"
+							onChange={handleChange}
+							className={`text-md w-full rounded-lg border bg-black/5 p-2 text-gray-300 backdrop-blur-2xl transition-all duration-300 hover:bg-black/20 ${errorsForm.password ? "border-red-500 placeholder:text-red-300 focus:outline-2 focus:outline-red-500" : ""} `}
+							type="password"
+							id="password-1"
+						/>
+						<ul className="px-1 text-xs text-red-600">
+							{errorsForm.password &&
+								errorsForm.password.map((err) => <li key={err}>{err}</li>)}
+						</ul>
+					</div>
+					<div className="flex flex-col gap-2">
+						<FormFields
+							label={t(
+								"recovery_password.form.field.confirm_password",
+								"Repetir contraseña",
+							)}
+							labelClassName="text-xs font-thin tracking-tight text-gray-100"
+							value={confirmPassword}
+							name="confirmPassword"
+							onChange={handleChange}
+							className={`text-md w-full rounded-lg border bg-black/5 p-2 text-gray-300 backdrop-blur-2xl transition-all duration-300 hover:bg-black/20 ${errorsForm.confirmPassword ? "border-red-500 placeholder:text-red-300 focus:outline-2 focus:outline-red-500" : ""} `}
+							type="password"
+							id="password-2"
+						/>
+						<ul className="px-1 text-xs text-red-600">
+							{errorsForm.confirmPassword &&
+								errorsForm.confirmPassword.map((err) => (
+									<li key={err}>{err}</li>
+								))}
+						</ul>
+					</div>
+					<div className="flex flex-col">
+						<input
+							className="bg-primary hover:bg-primary-hover cursor-pointer rounded-2xl px-4 py-3 text-xs font-thin tracking-wide text-gray-100 transition-colors duration-300"
+							type="submit"
+							value="Guardar Cambios"
+						/>
+					</div>
+				</form>
+			</div>
+		</div>
+	);
 };
 
 export default ChangePassword;

@@ -41,6 +41,20 @@ class AuthService {
   async findByEmail(email:string) {
     return this.authModel.findByEmail(email)
   }
+  async generatedToken(userId:number,token:string){
+    return this.authModel.createToken(userId,token)
+  }
+  async existToken(token:string){
+    return this.authModel.isTokenCreated(token)
+  }
+  async changeTokenToUsed(token:string) {
+    return this.authModel.changeTokenToUsed(token)
+  }
+
+  async hasTokenRecently(userId:number){
+    return this.authModel.hasTokenRecently(userId)
+  }
+
 
 }
 

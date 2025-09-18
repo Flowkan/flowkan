@@ -5,7 +5,8 @@ import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
 import { Prisma } from "@prisma/client";
 import { success } from "zod";
-import { sendEmail } from "../lib/emailService";
+import { sendChangePasswordEmail, sendEmail } from "../lib/emailService";
+
 
 type UniqueConstraintError = Prisma.PrismaClientKnownRequestError & {
   code: "P2002";
@@ -167,13 +168,18 @@ export class AuthController {
       const { email } = req.body;
       const user = await this.authService.findByEmail(email);
       if (user) {
-        if (!process.env.JWT_SECRET) {
+        if (!process.env.JWT_SECRET || !process.env.FRONTEND_WEB_DEV_URL) {
           throw new Error(
             "No se puede cambiar su contraseña. Contacte con flowkan",
           );
         }
+
+        const hasToken = await this.authService.hasTokenRecently(user.id)
+        if(hasToken){
+          return next(createHttpError(409,"Revise su bandeja de email, tiene un token activo"))
+        }
         
-        const token = await new Promise((resolve, reject) => {
+        const token = await new Promise<string>((resolve, reject) => {
           if (!process.env.JWT_SECRET) {
             throw new Error(
               "No se puede cambiar su contraseña. Contacte con flowkan",
@@ -183,23 +189,31 @@ export class AuthController {
             { user_id: user.id } satisfies JwtPayload,
             process.env.JWT_SECRET,
             {
-              expiresIn: "1d",
+              expiresIn: "15m",
             },
             (err, tokenJWT) => {
               if (err) {
-                return next(err);
+                reject(err)
+                // return next(err);
+              }
+              if(!tokenJWT){
+                return next(createHttpError(500,"No se puede cambiar su contraseña. Contacte con flowkan"))                
               }
               resolve(tokenJWT)              
             },
           );
         });
 
-        await sendEmail(
-          user.email,
-          "Cambiar contraseña",
-          `<h1>${user.name}, va a cambiar su contraseña!</h1>
-                    <p>Haz click <a href="${process.env.FRONTEND_WEB_DEV_URL}/change-password?token=${token}">aquí</a> para cambiar la contraseña de cuenta.</p>`,
-        );
+        const headerEmail={
+          to:user.email,
+          subject:"Cambiar contraseña"
+        }
+        await sendChangePasswordEmail(headerEmail,{
+          url_frontend:process.env.FRONTEND_WEB_DEV_URL,
+          token
+        })
+
+        await this.authService.generatedToken(user.id,token)
 
         res.json({message:'Se ha enviado un link a su correo para cambiar su cotraseña'})
 
@@ -212,11 +226,13 @@ export class AuthController {
   changePassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.apiUserId;      
-      const { password } = req.body
-      const change = this.authService.changePassword(userId,password)
-      if(!change){
+      const tokenFromUser = req.tokenToChangePassword      
+      const { password } = req.body          
+      const change = await this.authService.changePassword(userId,password)
+      if(!change || !tokenFromUser){
         throw createHttpError(500, "No se pudo cambiar su contraseña, contactese con Flowkan")        
       }
+      await this.authService.changeTokenToUsed(tokenFromUser)
       res.json({message:'Su contraseña ha sido cambiada, inicie sesión con su nueva contraseña'})
     } catch (error) {
       next(error)

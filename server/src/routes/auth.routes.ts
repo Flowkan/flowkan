@@ -28,7 +28,7 @@ router.post(
 router.get("/me", jwtAuth.guard, controller.me);
 router.post("/confirm", controller.confirmEmail);
 router.post("/reset_password",validateUserFields(resetPasswordSchema), controller.resetPassword);
-router.post("/change_password",validateUserFields(changePasswordSchema), controller.changePassword);
+router.post("/change_password",jwtAuth.verifyTokenEnabled,validateUserFields(changePasswordSchema), controller.changePassword);
 
 
 export default router;

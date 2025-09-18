@@ -3,7 +3,7 @@ import {
 	removeAuthorizationHeader,
 	setAuthorizationHeader,
 } from "../../api/client";
-import type { Credentials } from "./types";
+import type { Credentials, ResponseChangePassword } from "./types";
 import storage from "../../utils/storage";
 import { USER_ENDPOINTS } from "../../utils/endpoints";
 
@@ -39,11 +39,12 @@ export const resetPassword = async (email:string) => {
 	return response.data
 }
 
-export const changePassword = async (password:string) => {
-	const response = await apiClient.post<{message:string}>(
-		USER_ENDPOINTS.RESET_PASSWORD,{
+export const changePassword = async (password:string,token:string) => {
+	setAuthorizationHeader(token)
+	const response = await apiClient.post<ResponseChangePassword>(
+		USER_ENDPOINTS.CHANGE_PASSWORD,{
 			password
 		}
-	)
+	)	
 	return response.data
 }

@@ -1,5 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { addMinutes } from 'date-fns'
 
 export interface ValidateCredentialsParams {
   email: string;
@@ -97,6 +98,44 @@ class AuthModel {
   async findByEmail(email:string){
     return this.prisma.user.findUnique({
       where:{email}
+    })
+  }
+
+  async createToken(userId:number,token:string){
+    return this.prisma.passwordResetToken.create({
+      data:{
+        token,
+        userId,
+        expiresAt:addMinutes(new Date(),15)
+      }
+    })
+  }
+
+  async isTokenCreated(token:string){
+    const tokenGenerated = await this.prisma.passwordResetToken.findUnique({
+      where:{token}
+    })
+    return tokenGenerated
+  }
+
+  async changeTokenToUsed(token:string){
+    const tokenUsed = await this.prisma.passwordResetToken.update({
+      where:{token},
+      data:{used:true}
+    })
+    return tokenUsed
+  }
+
+  async hasTokenRecently(userId:number){
+    return await this.prisma.passwordResetToken.findFirst({
+      where:{
+        userId,
+        expiresAt:{gte:new Date()},
+        used:false        
+      },
+      orderBy:{
+        expiresAt:'asc'
+      }
     })
   }
 
