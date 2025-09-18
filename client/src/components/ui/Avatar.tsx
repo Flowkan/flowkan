@@ -43,10 +43,10 @@ export const Avatar: React.FC<AvatarProps> = ({
 	const initialsName = getInitialsName(name);
 
 	if (photo) {
-		const baseUrl = import.meta.env.VITE_BASE_DEV_URL;
+		const baseUrl = import.meta.env.VITE_BASE_URL;
 		return (
 			<img
-				src={`${baseUrl}uploads/${photo}_${format}.webp`}
+				src={`${baseUrl}/uploads/${photo}_${format}.webp`}
 				alt={name}
 				className={`${className} rounded-full object-cover`}
 				style={{
