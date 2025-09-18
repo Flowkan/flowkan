@@ -6,7 +6,7 @@ import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
 import { Prisma, User } from "@prisma/client";
 import passport from "passport";
 import { sendEmail } from "../lib/emailService";
-import "../config/passport.ts";
+import "../config/passport";
 
 type UniqueConstraintError = Prisma.PrismaClientKnownRequestError & {
   code: "P2002";
@@ -75,12 +75,12 @@ export class AuthController {
         name,
         email,
         password,
-        photo: req.file ? req.file.filename : null,
+        photo: req.body.photo || null,
       };
       const newUser = await this.authService.register(userData);
       let photoUrl = null;
-      if (req.file) {
-        photoUrl = `/uploads/${req.file.filename}`;
+      if (req.body.photo) {
+        photoUrl = `/uploads/${req.body.avatar}`;
         newUser.photo = photoUrl;
       }
       const { password: _omit, ...safeUser } = newUser;

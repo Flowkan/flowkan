@@ -1,31 +1,16 @@
-import { Request } from "express";
+import { Request, Response, NextFunction } from "express";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import sharp from "sharp";
 
-const storage = multer.diskStorage({
-  destination: function (
-    _req: Request,
-    _file: Express.Multer.File,
-    cb: (error: Error | null, destination: string) => void,
-  ) {
-    const pathName = path.join(process.cwd(), "public", "uploads");
-    if (!fs.existsSync(pathName)) {
-      fs.mkdirSync(pathName, { recursive: true });
-    }
-    cb(null, pathName);
-  },
-  filename: function (
-    _req: Request,
-    file: Express.Multer.File,
-    cb: (error: Error | null, filename: string) => void,
-  ) {
-    const filename = `${Date.now()}-${file.originalname}`;
-    cb(null, filename);
-  },
-});
+const uploadPath = path.join(process.cwd(), "public", "uploads");
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
 
-// Filter para imágenes
+const storage = multer.memoryStorage();
+
 function imageFileFilter(
   _req: Request,
   file: Express.Multer.File,
@@ -34,20 +19,40 @@ function imageFileFilter(
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
-    cb(
-      new multer.MulterError(
-        "LIMIT_UNEXPECTED_FILE",
-        "Only image files are allowed",
-      ),
-    );
+    cb(new Error("Only image files are allowed"));
   }
 }
 
-// Exportar multer tipado
-const upload: multer.Multer = multer({
+export const upload = multer({
   storage,
   fileFilter: imageFileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB máximo
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
 });
 
-export default upload;
+export async function processAvatar(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    if (!req.file) return next();
+
+    const baseName = `${Date.now()}`;
+
+    const originalPath = path.join(uploadPath, `${baseName}_o.webp`);
+    const thumbPath = path.join(uploadPath, `${baseName}_t.webp`);
+
+    await sharp(req.file.buffer).webp({ quality: 90 }).toFile(originalPath);
+
+    await sharp(req.file.buffer)
+      .resize(100, 100)
+      .webp({ quality: 80 })
+      .toFile(thumbPath);
+
+    req.body.photo = baseName;
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+}

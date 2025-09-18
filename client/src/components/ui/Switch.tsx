@@ -1,4 +1,4 @@
-import React, { useEffect, type ChangeEvent } from "react";
+import { useEffect, type ChangeEvent } from "react";
 import Field from "./Field";
 import { IconNotification } from "../icons/IconNotification";
 import { IconNotNotification } from "../icons/IconNotNotification";
@@ -8,15 +8,21 @@ import type { ProfileUpdateType } from "../../pages/profile/types";
 interface SwitchProps {
 	checked: boolean;
 	name?: string;
-    label?:string;
+	label?: string;
 	onChange?: (
 		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
 		name: string,
 	) => void;
-	onSubmit?:(field: keyof ProfileUpdateType)=>void;
+	onSubmit?: (field: keyof ProfileUpdateType) => void;
 }
 
-const Switch = ({ checked, name = "",label='', onChange, onSubmit }: SwitchProps) => {
+const Switch = ({
+	checked,
+	name = "",
+	label = "",
+	onChange,
+	onSubmit,
+}: SwitchProps) => {
 	function handleChange(
 		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
 	) {
@@ -24,41 +30,40 @@ const Switch = ({ checked, name = "",label='', onChange, onSubmit }: SwitchProps
 			onChange(e, name);
 		}
 	}
-	function handleSubmit(){
-		if(onSubmit){
-			onSubmit(name as keyof ProfileUpdateType)
+	function handleSubmit() {
+		if (onSubmit) {
+			onSubmit(name as keyof ProfileUpdateType);
 		}
 	}
-	useEffect(()=>{
-		handleSubmit()
-	},[checked])
+	useEffect(() => {
+		handleSubmit();
+	}, [checked]);
 	return (
 		<div>
 			<div className="space-y-2">
-				<label className="flex w-full cursor-pointer items-center justify-between rounded-md text-accent bg-white/40 p-4 shadow-primary shadow-xs hover:bg-white/20 has-[:checked]:bg-white/30 has-[:checked]:text-primary/80">
+				<label className="text-accent shadow-primary has-[:checked]:text-primary/80 flex w-full cursor-pointer items-center justify-between rounded-md bg-white/40 p-4 shadow-xs hover:bg-white/20 has-[:checked]:bg-white/30">
 					<div className="flex items-center space-x-5">
-						<div className="flex items-center">							
+						<div className="flex items-center">
 							<IconNotification className="md:text-2xl" />
 						</div>
 						<h2 className="text-xs md:text-lg">{label}</h2>
-					</div>	
-                    <div className="relative inline-flex items-center cursor-pointer">
-                    <Field
-					type="checkbox"
-					name={name}
-					checked={checked}
-					value=""
-					as="input"
-                    className="h-5 w-5 checked:border-indigo-500 sr-only peer"
-					onChange={handleChange}
-				    />
-                    <div className="group peer ring-0 bg-accent rounded-full outline-none duration-300 after:duration-300 w-24 h-12  shadow-md peer-checked:bg-primary  peer-focus:outline-none  after:content-[''] after:rounded-full after:absolute after:bg-gray-50 after:outline-none after:h-10 after:w-10 after:top-1 after:left-1 after:flex after:justify-center after:items-center peer-checked:after:translate-x-12 peer-hover:after:scale-95">
-                        <IconNotification className="absolute top-2 left-2 size-8 text-primary-hover stroke-2 stroke-white"/>
-                        <IconNotNotification className="absolute top-2 left-14 size-8 text-white" />
-                    </div>
-                    </div>				
-                    
-				</label>	                
+					</div>
+					<div className="relative inline-flex cursor-pointer items-center">
+						<Field
+							type="checkbox"
+							name={name}
+							checked={checked}
+							value=""
+							as="input"
+							className="peer sr-only h-5 w-5 checked:border-indigo-500"
+							onChange={handleChange}
+						/>
+						<div className="group peer bg-accent peer-checked:bg-primary h-12 w-24 rounded-full shadow-md ring-0 duration-300 outline-none peer-focus:outline-none after:absolute after:top-1 after:left-1 after:flex after:h-10 after:w-10 after:items-center after:justify-center after:rounded-full after:bg-gray-50 after:duration-300 after:content-[''] after:outline-none peer-checked:after:translate-x-12 peer-hover:after:scale-95">
+							<IconNotification className="text-primary-hover absolute top-2 left-2 size-8 stroke-white stroke-2" />
+							<IconNotNotification className="absolute top-2 left-14 size-8 text-white" />
+						</div>
+					</div>
+				</label>
 			</div>
 		</div>
 	);

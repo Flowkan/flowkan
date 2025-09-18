@@ -33,7 +33,6 @@ export const LoginPage = () => {
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
 		const token = params.get("token");
-		console.log("Token OAuth:", token);
 		if (token) {
 			dispatch(loginWithOAuth(token));
 		}

@@ -19,7 +19,7 @@ const ConfirmDelete = ({
 			<article className="modal-card">
 				<h3 className="modal-header confirm">{message}</h3>
 				<div className="modal-btns-container">
-					<button className="modal-btn" onClick={handleDeleteBoard}>
+					<button className="modal-btn yes" onClick={handleDeleteBoard}>
 						{t("confirm.yes", "SI")}
 					</button>
 					<button className="modal-btn" onClick={handleHideMessage}>

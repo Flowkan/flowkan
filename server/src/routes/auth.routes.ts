@@ -1,14 +1,12 @@
 import { Router } from "express";
-import prisma from "../config/db.js";
-import AuthModel from "../models/AuthModel.js";
-import AuthService from "../services/AuthService.js";
-import { AuthController } from "../controllers/authController.js";
+import prisma from "../config/db";
+import AuthModel from "../models/AuthModel";
+import AuthService from "../services/AuthService";
+import { AuthController } from "../controllers/authController";
 import { validateUserFields } from "../validators/authValidator";
 import { loginSchema, registerSchema } from "../validators/authSchema";
-import upload from "../lib/uploadConfigure";
-
-//temporal
-import * as jwtAuth from "../middlewares/jwtAuthMiddleware.js";
+import { upload, processAvatar } from "../lib/uploadConfigure";
+import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
 import passport from "passport";
 
 const router = Router();
@@ -22,6 +20,7 @@ router.post("/login", validateUserFields(loginSchema), controller.login);
 router.post(
   "/register",
   upload.single("photo"),
+  processAvatar,
   validateUserFields(registerSchema),
   controller.register,
 );

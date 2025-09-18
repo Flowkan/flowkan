@@ -2,9 +2,15 @@ interface AvatarProps {
 	name: string;
 	photo?: string | null;
 	size?: number;
+	format?: string;
 }
 
-export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40 }) => {
+export const Avatar: React.FC<AvatarProps> = ({
+	name,
+	photo,
+	size = 40,
+	format = "t",
+}) => {
 	const randomColor = (user: string): string => {
 		let r = 0,
 			g = 0,
@@ -38,7 +44,7 @@ export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40 }) => {
 		const baseUrl = import.meta.env.VITE_BASE_DEV_URL;
 		return (
 			<img
-				src={`${baseUrl}uploads/${photo}`}
+				src={`${baseUrl}uploads/${photo}_${format}.webp`}
 				alt={name}
 				className="h-10 w-10 rounded-full object-cover"
 				style={{
