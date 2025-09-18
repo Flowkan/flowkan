@@ -2,28 +2,16 @@
 
 import prisma from "../config/db";
 import dotenv from "dotenv";
+import pickDefaultImage from "../lib/pickDefaultImage";
 
 dotenv.config();
-
-function pickDefault() {
-  const backend = process.env.BACKEND_URL;
-  const defaults = [
-    `${backend}/uploads/defaults/1.png`,
-    `${backend}/uploads/defaults/2.png`,
-    `${backend}/uploads/defaults/3.png`,
-    `${backend}/uploads/defaults/4.png`,
-    `${backend}/uploads/defaults/5.png`,
-    `${backend}/uploads/defaults/6.png`,
-  ];
-  return defaults[Math.floor(Math.random() * defaults.length)];
-}
 
 async function main() {
   const boards = await prisma.board.findMany({ where: { image: null } });
   for (const b of boards) {
     await prisma.board.update({
       where: { id: b.id },
-      data: { image: pickDefault() },
+      data: { image: pickDefaultImage() },
     });
   }
 

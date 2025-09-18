@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { BoardWithRelations } from "../models/BoardModel";
 import jwt from "jsonwebtoken";
 import AuthService from "../services/AuthService";
+import pickDefaultImage from "../lib/pickDefaultImage";
 
 interface InvitationJwtPayload {
   boardId: string;
@@ -98,12 +99,24 @@ export class BoardController {
 
   add = async (req: Request, res: Response) => {
     try {
+      console.log("BODY en ADD:", req.body);
+
       const userId = req.apiUserId;
       const { title }: { title: string } = req.body;
-      const board = await this.boardService.add({ userId, title });
+
+      const image = req.body.image
+        ? `/uploads/boards/${req.body.image}_o.webp`
+        : pickDefaultImage();
+
+      console.log("IMAGE PATH EN ADD:", image);
+
+      const board = await this.boardService.add({ userId, title, image });
       res.status(201).json(board);
     } catch (err) {
-      res.status(500).send("Error al crear tablero :(");
+      console.error("ERROR EN ADD:", err);
+      if (err instanceof Error) {
+        res.status(500).json({ error: err.message });
+      }
     }
   };
 
