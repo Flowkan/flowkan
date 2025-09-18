@@ -7,8 +7,11 @@ import {
 import type { User } from "../login/types";
 import type { Board, BoardsData, Column, Task } from "./types";
 
-export const getBoards = async (): Promise<Board[]> => {
-	const response = await apiClient.get<Board[]>(BOARD_ENDPOINTS.BOARDS);
+export const getBoards = async (limit: number, skip: number): Promise<Board[]> => {
+	const response = await apiClient.get<Board[]>(BOARD_ENDPOINTS.BOARDS, {
+		params: { limit, skip },
+	});
+
 	return response.data;
 };
 

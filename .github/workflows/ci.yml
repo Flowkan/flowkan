@@ -44,12 +44,6 @@ jobs:
         working-directory: server
         run: npm install
 
-      - name: Install DB migrations
-        working-directory: server
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npx prisma migrate dev
-
       - name: Check Linting (Server)
         working-directory: server
         run: npm run lint

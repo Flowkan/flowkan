@@ -2,10 +2,10 @@
 	display: inline-flex;
 	align-items: center;
 	padding: 8px 12px;
-	gap: 5px;
+	gap: 8px;
 	border: none;
 	border-radius: 5px;
-	background-color: #2159bf;
+	background-color: #2563eb;
 	color: #ffffff;
 	transition: background-color 0.3s ease;
 
@@ -14,7 +14,7 @@
 	}
 
 	&:hover {
-		background-color: #3264c2;
+		background-color: #1d4ed8;
 		cursor: pointer;
 	}
 }

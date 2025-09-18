@@ -1,4 +1,34 @@
 {
+	"backoffice": {
+		"filters": {
+			"icon": "Filtros"
+		},
+		"filtersForm": {
+			"title": "Filtrar tableros",
+			"filterBoardLabel": "Nombre del tablero",
+			"filterBoardPlaceholder": "Buscar tableros",
+			"filterMemberLabel": "Miembro o email",
+			"filterMemberPlaceholder": "Filtrar por miembro o email",
+			"clearFilters": "Borrar"
+		},
+		"title": "Backoffice"
+	},
+	"header": {
+		"menu": {
+			"profile": "Perfil",
+			"boards": "Mis tableros",
+			"logout": "Cerrar sesión"
+		},
+		"title": "Flowkan",
+		"navbar": {
+			"features": "Características",
+			"solutions": "Soluciones",
+			"prices": "Precios",
+			"backoffice": "Backoffice"
+		},
+		"login": "Login",
+		"signup": "Registro"
+	},
 	"footer": {
 		"description": "FlowKan te ayuda a organizar tu trabajo y a tu equipo de forma visual y eficiente. Simplifica la gestión de proyectos y alcanza tus objetivos.",
 		"privacy": "Política de privacidad",
@@ -16,21 +46,6 @@
 		"clients": "Nuestros Clientes",
 		"copy": "Todos los derechos reservados"
 	},
-	"header": {
-		"title": "Flowkan",
-		"navbar": {
-			"features": "Características",
-			"solutions": "Soluciones",
-			"prices": "Precios"
-		},
-		"menu": {
-			"profile": "Perfil",
-			"settings": "Ajustes",
-			"logout": "Cerrar sesión"
-		},
-		"login": "Login",
-		"signup": "Registro"
-	},
 	"addbtn": "Nuevo tablero",
 	"confirm": {
 		"yes": "SI",
@@ -44,8 +59,17 @@
 			}
 		}
 	},
+	"share": {
+		"board": {
+			"title": "Compartir tablero",
+			"link": {
+				"text": "Genera un enlace de invitación que puedes compartir con quien quieras.",
+				"button": "Generar enlace de invitación"
+			}
+		}
+	},
 	"boardsitem": {
-		"confirm": "¿Seguro que quieres borrar este tablero?"
+		"confirm": ""
 	},
 	"emptylist": {
 		"p1": "Todavía no tienes ningún tablero.",
@@ -54,13 +78,19 @@
 	"boardslist": {
 		"title": "Mis tableros"
 	},
-	"editboard": {
+	"invitation": {
+		"title": "Invitación a tablero",
+		"shared": "te ha compartido el tablero:",
+		"collaborate": "Colabora en este tablero junto a",
+		"register_button": "Registrarse",
+		"login_button": "Iniciar sesión"
+	},
+	"newboard": {
 		"form": {
-			"header": "Editar tablero",
-			"newtitle": "Nuevo título"
-		},
-		"edit": "EDITAR",
-		"cancel": "CANCELAR"
+			"header": "Crear tablero",
+			"title": "Título del tablero",
+			"button": "CREAR"
+		}
 	},
 	"home": {
 		"banner": "Simplifica tus tareas, maximiza tu productividad",

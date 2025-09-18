@@ -1,4 +1,34 @@
 {
+	"backoffice": {
+		"filters": {
+			"icon": "Filters"
+		},
+		"filtersForm": {
+			"title": "Filter Boards",
+			"filterBoardLabel": "Board Name",
+			"filterBoardPlaceholder": "Search boards",
+			"filterMemberLabel": "Member or email",
+			"filterMemberPlaceholder": "Filter by member or email",
+			"clearFilters": "Clear"
+		},
+		"title": "Backoffice"
+	},
+	"header": {
+		"menu": {
+			"profile": "Profile",
+			"boards": "My Boards",
+			"logout": "Log out"
+		},
+		"title": "Flowkan",
+		"navbar": {
+			"features": "Features",
+			"solutions": "Solutions",
+			"prices": "Pricing",
+			"backoffice": "Backoffice"
+		},
+		"login": "Login",
+		"signup": "Sign Up"
+	},
 	"footer": {
 		"description": "FlowKan helps you organize your work and your team visually and efficiently. Simplify project management and achieve your goals.",
 		"privacy": "Privacy Policy",
@@ -16,22 +46,7 @@
 		"clients": "Our Clients",
 		"copy": "All rights reserved"
 	},
-	"header": {
-		"title": "Flowkan",
-		"navbar": {
-			"features": "Features",
-			"solutions": "Solutions",
-			"prices": "Pricing"
-		},
-		"menu": {
-			"profile": "Profile",
-			"settings": "Settings",
-			"logout": "Log out"
-		},
-		"login": "Login",
-		"signup": "Sign Up"
-	},
-	"addbtn": "New board",
+	"addbtn": "New Board",
 	"confirm": {
 		"yes": "YES",
 		"no": "NO"
@@ -44,6 +59,15 @@
 			}
 		}
 	},
+	"share": {
+		"board": {
+			"title": "Share Board",
+			"link": {
+				"text": "Generate an invitation link you can share with anyone.",
+				"button": "Generate Invitation Link"
+			}
+		}
+	},
 	"boardsitem": {
 		"confirm": "Are you sure you want to delete this board?"
 	},
@@ -52,7 +76,21 @@
 		"p2": "Do you want to create one?"
 	},
 	"boardslist": {
-		"title": "My boards"
+		"title": "My Boards"
+	},
+	"invitation": {
+		"title": "Board Invitation",
+		"shared": "has shared the board with you:",
+		"collaborate": "Collaborate on this board with",
+		"register_button": "Register",
+		"login_button": "Log In"
+	},
+	"newboard": {
+		"form": {
+			"header": "Create Board",
+			"title": "Board Title",
+			"button": "CREATE"
+		}
 	},
 	"editboard": {
 		"form": {
@@ -72,9 +110,9 @@
 			"board": "Kanban Board",
 			"viewTask": "View and manage your tasks with ease",
 			"collaborations": "Collaboration",
-			"jobsTeam": "Work effortlessly in real time with your team",
+			"jobsTeam": "Work effortlessly with your team in real time",
 			"follow": "Progress Tracking",
-			"upToDay": "Stay up to date with your project progress",
+			"upToDay": "Stay up to date with your project’s progress",
 			"calendar": "Integrated Calendar",
 			"events": "Organize your deadlines and important events"
 		},
@@ -86,11 +124,11 @@
 					"user": "Ana García, CEO at Company X"
 				},
 				"second": {
-					"text": "The interface is incredibly intuitive and the collaboration features are next level.",
+					"text": "The interface is incredibly intuitive and the collaboration features are on another level.",
 					"user": "Juan Pérez, Product Manager"
 				},
 				"third": {
-					"text": "I never thought task management could be so simple and visually pleasant.",
+					"text": "I never thought task management could be so simple and visually appealing.",
 					"user": "Sofía Castro, UX Designer"
 				}
 			}
@@ -103,14 +141,14 @@
 			},
 			"planning": {
 				"title": "Event Planning",
-				"message": "Organize every detail of your events, from logistics to invitations, visually."
+				"message": "Organize every detail of your events, from logistics to invitations, in a visual way."
 			},
 			"monitoring": {
 				"title": "Personal Tracking",
 				"message": "Manage your personal tasks, goals, and daily habits with an easy-to-use Kanban system."
 			}
 		},
-		"moreInformation": "More information"
+		"moreInformation": "More Information"
 	},
 	"login": {
 		"toast": {
@@ -121,7 +159,7 @@
 			}
 		},
 		"loginForm": {
-			"title": "Login",
+			"title": "Log In",
 			"question": "Don’t have an account?",
 			"signup": "Sign up here",
 			"email": {
@@ -136,7 +174,7 @@
 			"loginButton": {
 				"spinner": {
 					"loading": "Loading...",
-					"default": "Login"
+					"default": "Log In"
 				}
 			}
 		}
@@ -152,9 +190,9 @@
 				"success": "Registration successful! Redirecting to the login page.",
 				"error": "An unexpected error occurred during registration."
 			},
-			"title": "Create your Account",
+			"title": "Create Your Account",
 			"question": "Already have an account?",
-			"login": "Login here",
+			"login": "Log in here",
 			"name": {
 				"label": "Full Name",
 				"placeholder": "Full name"
@@ -174,7 +212,7 @@
 			"registerButton": {
 				"spinner": {
 					"loading": "Registering...",
-					"default": "Sign Up"
+					"default": "Register"
 				}
 			}
 		},

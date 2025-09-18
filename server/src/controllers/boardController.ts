@@ -29,8 +29,28 @@ export class BoardController {
   getAll = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
+      const limit = Math.max(parseInt(req.query.limit as string) || 10, 1);
+      const page = Math.max(parseInt(req.query.page as string) || 1, 1);
+      const skip = (page - 1) * limit < 0 ? 0 : (page - 1) * limit;
+      const withCount = req.query.withCount === "true";
+
+      if (withCount) {
+        const [boards, totalCount]: [BoardWithRelations[], number] =
+          await Promise.all([
+            this.boardService.getAllBoardsByUserId(userId, limit, skip),
+            this.boardService.getBoardCountByUserId(userId),
+          ]);
+        return res.json({
+          boards,
+          totalCount,
+          page,
+          limit,
+        });
+      }
+
       const boards: BoardWithRelations[] =
-        await this.boardService.getAllBoardsByUserId(userId);
+        await this.boardService.getAllBoardsByUserId(userId, limit, skip);
+
       res.json(boards);
     } catch (err) {
       res.status(500).send("Error al obtener los tableros");
@@ -44,8 +64,35 @@ export class BoardController {
       const board = await this.boardService.get({ userId, boardId });
       res.json(board);
     } catch (err) {
-      console.log("eaer", err);
       res.status(500).send("Error al obtener el tablero");
+    }
+  };
+
+  getBoardByTitle = async (req: Request, res: Response) => {
+    try {
+      const userId = req.apiUserId;
+      const boardTitle = String(req.query.title) || "";
+      const boards = await this.boardService.getBoardByTitle(
+        userId,
+        boardTitle,
+      );
+      res.json(boards);
+    } catch (error) {
+      res.status(404).send("No existen tableros con este nombre");
+    }
+  };
+
+  getBoardByMember = async (req: Request, res: Response) => {
+    try {
+      const userId = req.apiUserId;
+      const boardMember = String(req.query.member) || "";
+      const boards = await this.boardService.getBoardByMember(
+        userId,
+        boardMember,
+      );
+      res.json(boards);
+    } catch (error) {
+      res.status(404).send("No hay tableros con este miembro");
     }
   };
 

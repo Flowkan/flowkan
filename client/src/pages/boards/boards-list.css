@@ -2,13 +2,13 @@
 	display: flex;
 	flex-direction: column;
 	padding: 20px;
-	max-width: 750px;
 	margin: 0 auto;
 	gap: 30px;
 
 	.boards-list-container {
 		display: flex;
 		justify-content: center;
+		width: 100%;
 
 		.empty-list {
 			display: flex;
@@ -27,11 +27,61 @@
 		.boards-wrapper {
 			display: flex;
 			flex-direction: column;
-			justify-content: center;
+			align-items: center;
 			width: 100%;
+			max-width: 800px;
+			margin: 0 auto;
 			gap: 10px;
 		}
 	}
+}
+
+.boards-list-content {
+	width: 100%;
+}
+
+.boards-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+}
+
+.boards-toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	width: 100%;
+	margin-bottom: 20px;
+	gap: 1rem;
+	position: relative;
+}
+
+/* Filtro desplegable hacia arriba */
+.filters-form {
+	position: absolute;
+	bottom: 10%;
+	left: 0;
+	right: 0;
+	width: 100%;
+	z-index: 5;
+	background: rgba(255, 255, 255, 0.95);
+	border: 1px solid #ddd;
+	padding: 10px;
+	box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+	border-radius: 6px;
+}
+
+
+.boards-toolbar.open-filters {
+	margin-bottom: 20px;
+}
+
+.add-board-btn {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	margin-bottom: 20px;
 }
 
 @media screen and (width > 768px) {
