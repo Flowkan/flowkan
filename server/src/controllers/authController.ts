@@ -6,7 +6,7 @@ import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
 import { Prisma, User } from "@prisma/client";
 import passport from "passport";
 import { sendEmail } from "../lib/emailService";
-import "../config/passport.ts";
+import "../config/passport";
 
 type UniqueConstraintError = Prisma.PrismaClientKnownRequestError & {
   code: "P2002";

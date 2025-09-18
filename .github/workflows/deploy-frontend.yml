@@ -3,9 +3,9 @@ name: Build and Deploy Frontend
 on:
   push:
     tags:
-      - '*'   # Triggers on any tag push
+      - "*" # Triggers on any tag push
     paths:
-      - 'client/**'
+      - "client/**"
   workflow_dispatch:
 
 jobs:
@@ -21,11 +21,18 @@ jobs:
         with:
           node-version: 22
 
+      - name: Inject Production Env
+        working-directory: client
+        run: |
+          echo "VITE_BASE_URL=${{ secrets.VITE_BASE_URL }}" > .env.production
+          echo "VITE_API_VERSION=${{ secrets.VITE_API_VERSION }}" >> .env.production
+          echo "VITE_TINY_MCE=${{ secrets.VITE_TINY_MCE }}" >> .env.production
+
       - name: Install and Build (Vite)
         working-directory: client
         run: |
           npm ci
-          npm run build
+          npm run build -- --mode production
 
       - name: Deploy to Server via SCP
         uses: appleboy/scp-action@v0.1.7

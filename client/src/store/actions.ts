@@ -423,11 +423,11 @@ export const removeAssigneeFulfilled = (
 });
 
 // ─── Thunks ─────────────────────────────
-export function fetchBoards(): AppThunk<Promise<void>> {
+export function fetchBoards(skip: number, limit: number): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
 		dispatch(fetchBoardsPending());
 		try {
-			const boards = await api.boards.getBoards();
+			const boards = await api.boards.getBoards(skip, limit);
 			dispatch(fetchBoardsFulfilled(boards));
 		} catch (error) {
 			if (error instanceof Error) {

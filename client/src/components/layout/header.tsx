@@ -2,7 +2,7 @@ import { useAppSelector } from "../../store";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageToggle from "../hooks/useLangToggle";
-import { UserMenu } from "../hooks/useUserMenu";
+import { UserMenu } from "../ui/UserMenu";
 
 export const Header: React.FC = () => {
 	const { t } = useTranslation();
@@ -42,7 +42,9 @@ export const Header: React.FC = () => {
 						{t("header.navbar.prices", "Precios")}
 					</a>
 					{isAuthenticated && user && (
-						<NavLink to={"/boards"}>{t("Backoffice")}</NavLink>
+						<NavLink to={"/boards"}>
+							{t("header.navbar.backoffice", "Backoffice")}
+						</NavLink>
 					)}
 				</nav>
 			</div>

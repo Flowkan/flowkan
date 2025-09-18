@@ -1,6 +1,6 @@
 import { Page } from "../../components/layout/page";
 import { NavLink, useNavigate } from "react-router-dom";
-import type { User } from "./types";
+import type { UserRegister } from "./types";
 import toast from "react-hot-toast";
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { CustomToast } from "../../components/CustomToast";
@@ -16,7 +16,7 @@ import { __ } from "../../utils/i18nextHelper";
 export const RegisterPage = () => {
 	const navigate = useNavigate();
 	const { t } = useTranslation();
-	const [formData, setFormData] = useState<User>({
+	const [formData, setFormData] = useState<UserRegister>({
 		name: "",
 		email: "",
 		password: "",
@@ -38,7 +38,7 @@ export const RegisterPage = () => {
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, type, value, files } = e.target;
-		setFormData((prevData) => ({
+		setFormData((prevData: UserRegister) => ({
 			...prevData,
 			[name]: type === "file" ? (files?.[0] ?? null) : value,
 		}));
@@ -169,7 +169,7 @@ export const RegisterPage = () => {
 					>
 						<div className="-space-y-px rounded-md shadow-sm">
 							<div className="mb-6 flex flex-col items-center">
-								<div className="relative">									
+								<div className="relative">
 									{previewUrl ? (
 										<img
 											src={previewUrl}

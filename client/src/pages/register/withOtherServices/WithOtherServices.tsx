@@ -27,9 +27,9 @@ export const WithOtherServices = () => {
 	const getOAuthUrl = (label: string) => {
 		switch (label.toLowerCase()) {
 			case "google":
-				return `${import.meta.env.VITE_BASE_DEV_URL}/api/${import.meta.env.VITE_API_VERSION}/auth/google`;
+				return `${import.meta.env.VITE_BASE_URL}/api/${import.meta.env.VITE_API_VERSION}/auth/google`;
 			case "github":
-				return `${import.meta.env.VITE_BASE_DEV_URL}/api/${import.meta.env.VITE_API_VERSION}/auth/github`;
+				return `${import.meta.env.VITE_BASE_URL}/api/${import.meta.env.VITE_API_VERSION}/auth/github`;
 			default:
 				return "#";
 		}

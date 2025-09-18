@@ -6,7 +6,7 @@ const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
       orderBy: { position: "asc" },
       include: {
         cards: {
-          orderBy: { position: "asc" },
+          orderBy: { position: "desc" },
           include: {
             assignees: {
               include: {
@@ -18,6 +18,8 @@ const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
       },
     },
     members: { include: { user: true } },
+    labels: true,
+    owner: true,
   },
 });
 export type BoardWithRelations = Prisma.BoardGetPayload<
@@ -31,16 +33,68 @@ class BoardModel {
     this.prisma = prisma;
   }
 
-  async getAll(): Promise<BoardWithRelations[]> {
-    return await this.prisma.board.findMany(boardWithRelationsData);
+  async getAll(limit: number, skip: number): Promise<BoardWithRelations[]> {
+    return await this.prisma.board.findMany({...boardWithRelationsData, take: limit, skip});
   }
 
-  async getAllByUserId(userId: number): Promise<BoardWithRelations[]> {
+  async getAllByUserId(userId: number, limit: number = 10, skip: number = 0): Promise<BoardWithRelations[]> {
     return await this.prisma.board.findMany({
       where: {
         members: {
           some: {
             userId: userId,
+          },
+        },
+      },
+      ...boardWithRelationsData,
+      take: limit,
+      skip: skip,
+    });
+  }
+
+  async getBoardCountByUserId(userId: number): Promise<number> {
+    return this.prisma.board.count({
+      where: {
+        members: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+    });
+  }
+
+  async getBoardByTitle(
+    userId: number,
+    boardTitle: string,
+  ): Promise<BoardWithRelations | null> {
+    return this.prisma.board.findFirst({
+      where: {
+        title: {
+          contains: boardTitle,
+          mode: "insensitive",
+        },
+        OR: [{ ownerId: userId }, { members: { some: { userId } } }],
+      },
+      ...boardWithRelationsData,
+    });
+  }
+
+  async getBoardByMember(
+    userId: number,
+    memberSearch: string,
+  ): Promise<BoardWithRelations[]> {
+    return this.prisma.board.findMany({
+      where: {
+        OR: [{ ownerId: userId }, { members: { some: { userId } } }],
+        members: {
+          some: {
+            user: {
+              OR: [
+                { name: { contains: memberSearch, mode: "insensitive" } },
+                { email: { contains: memberSearch, mode: "insensitive" } },
+              ],
+            },
           },
         },
       },
