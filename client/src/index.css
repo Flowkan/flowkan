@@ -2,48 +2,87 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colores para el modo claro (ajustados a la estética rosa/azul/blanco) */
-  --color-primary: oklch(0.65 0.19 350); /* Rosa intenso, similar a pink-600 */
-  --color-primary-hover: oklch(0.55 0.20 350); /* Rosa más oscuro para hover */
+	/* Colores para el modo claro (ajustados a la estética rosa/azul/blanco) */
+	--color-primary: oklch(0.65 0.19 350); /* Rosa intenso, similar a pink-600 */
+	--color-primary-hover: oklch(0.55 0.2 350); /* Rosa más oscuro para hover */
 
-  --color-accent: oklch(0.49 0.17 261); /* Azul, similar a blue-600 */
-  --color-accent-hover: oklch(0.45 0.18 261); /* Azul más oscuro para hover */
+	--color-accent: oklch(0.49 0.17 261); /* Azul, similar a blue-600 */
+	--color-accent-hover: oklch(0.45 0.18 261); /* Azul más oscuro para hover */
 
-  --color-background-page: oklch(1 0 0); /* Blanco puro para fondos de página (bg-white) */
-  --color-background-card: oklch(1 0 0); /* Blanco puro para fondos de tarjetas/formularios */
-  --color-background-light-grey: oklch(0.97 0.005 250); /* Gris muy claro, similar a gray-50/100 para hover/fondos sutiles */
-  --color-background-dark-footer: oklch(0.25 0.005 250); /* Gris oscuro para el footer, similar a gray-800 */
+	--color-background-page: oklch(
+		1 0 0
+	); /* Blanco puro para fondos de página (bg-white) */
+	--color-background-card: oklch(
+		1 0 0
+	); /* Blanco puro para fondos de tarjetas/formularios */
+	--color-background-light-grey: oklch(
+		0.97 0.005 250
+	); /* Gris muy claro, similar a gray-50/100 para hover/fondos sutiles */
+	--color-background-dark-footer: oklch(
+		0.25 0.005 250
+	); /* Gris oscuro para el footer, similar a gray-800 */
 
-  --color-text-heading: oklch(0.15 0.005 250); /* Gris oscuro casi negro, similar a gray-900 */
-  --color-text-body: oklch(0.48 0.005 250); /* Gris medio, similar a gray-600 */
-  --color-text-placeholder: oklch(0.65 0.005 250); /* Gris para placeholders, similar a gray-500 */
-  --color-text-link: oklch(0.49 0.17 261); /* Azul para enlaces, igual que accent */
-  --color-text-on-accent: oklch(1 0 0); /* Blanco para texto sobre fondos de acento (rosa/azul) */
+	--color-text-heading: oklch(
+		0.15 0.005 250
+	); /* Gris oscuro casi negro, similar a gray-900 */
+	--color-text-body: oklch(0.48 0.005 250); /* Gris medio, similar a gray-600 */
+	--color-text-placeholder: oklch(
+		0.65 0.005 250
+	); /* Gris para placeholders, similar a gray-500 */
+	--color-text-link: oklch(
+		0.49 0.17 261
+	); /* Azul para enlaces, igual que accent */
+	--color-text-on-accent: oklch(
+		1 0 0
+	); /* Blanco para texto sobre fondos de acento (rosa/azul) */
 
-  --color-border-light: oklch(0.85 0.005 250); /* Gris claro para bordes, similar a gray-300 */
-  --color-border-dark: oklch(0.4 0.005 250); /* Gris oscuro para bordes como el separador del footer, similar a gray-700 */
+	--color-border-light: oklch(
+		0.85 0.005 250
+	); /* Gris claro para bordes, similar a gray-300 */
+	--color-border-dark: oklch(
+		0.4 0.005 250
+	); /* Gris oscuro para bordes como el separador del footer, similar a gray-700 */
 
-  --color-success: oklch(0.7 0.12 140); /* Verde para éxito (tus valores originales) */
-  --color-danger: oklch(0.65 0.17 27); /* Naranja/Rojo para peligro (tus valores originales) */
+	--color-success: oklch(
+		0.7 0.12 140
+	); /* Verde para éxito (tus valores originales) */
+	--color-danger: oklch(
+		0.65 0.17 27
+	); /* Naranja/Rojo para peligro (tus valores originales) */
 
-  --font-sans: "Inter", sans-serif;
+	--font-sans: "Inter", sans-serif;
 }
 
 body {
-  @apply font-sans;
+	@apply font-sans;
 }
 
 @keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .animate-fade-in-down {
-  animation: fadeInDown 0.15s ease-out forwards;
+	animation: fadeInDown 0.15s ease-out forwards;
+}
+
+@keyframes pulse-in-rotate {
+	0% {
+		opacity: 0;
+		transform: scale(0.5) rotate(-15deg);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1) rotate(0deg);
+	}
+}
+
+.animate-enter-avatar {
+	animation: pulse-in-rotate 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
 }

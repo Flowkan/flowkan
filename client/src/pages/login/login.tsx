@@ -33,8 +33,19 @@ export const LoginPage = () => {
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
 		const token = params.get("token");
+		const userEncoded = params.get("user");
 		if (token) {
-			dispatch(loginWithOAuth(token));
+			let user = null;
+			if (userEncoded) {
+				try {
+					const userDecoded = decodeURIComponent(userEncoded);
+					user = JSON.parse(userDecoded);
+				} catch (e) {
+					console.error("Error al parsear el objeto de usuario OAuth:", e);
+					toast.error("Error al procesar la información del usuario.");
+				}
+			}
+			dispatch(loginWithOAuth({ token, user }));
 		}
 	}, [dispatch]);
 

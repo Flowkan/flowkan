@@ -173,7 +173,7 @@ export class AuthController {
       return res.status(401).json({ message: "Usuario no autenticado" });
     }
 
-    const userId = (req.user as User).id;
+    const user = req.user as User;
 
     if (!process.env.JWT_SECRET || !process.env.FRONTEND_WEB_URL) {
       return res
@@ -181,10 +181,25 @@ export class AuthController {
         .json({ message: "Configuración del servidor incompleta" });
     }
 
-    const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const accessToken = jwt.sign(
+      { userId: user.id } satisfies JwtPayload,
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      },
+    );
 
-    res.redirect(`${process.env.FRONTEND_WEB_URL}/login?token=${token}`);
+    const safeUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      photo: user.photo || null,
+    };
+
+    const encodedUser = encodeURIComponent(JSON.stringify(safeUser));
+
+    res.redirect(
+      `${process.env.FRONTEND_WEB_URL}/login?token=${accessToken}&user=${encodedUser}`,
+    );
   };
 }
