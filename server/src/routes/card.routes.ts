@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { CardController } from "../controllers/cardController.js";
-import CardModel from "../models/CardModel.js";
-import CardService from "../services/CardService.js";
+import { CardController } from "../controllers/cardController";
+import CardModel from "../models/CardModel";
+import CardService from "../services/CardService";
 import prisma from "../config/db";
 import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
 import { validateCard } from "../validators/cardValidators";

@@ -5,6 +5,7 @@ import { addMinutes } from 'date-fns'
 export interface ValidateCredentialsParams {
   email: string;
   password: string;
+  status?: boolean;
 }
 
 export interface RegisterParams extends ValidateCredentialsParams {
@@ -62,14 +63,19 @@ class AuthModel {
     email,
     password,
     photo,
+    status = false,
   }: RegisterParams): Promise<User> {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    let hashedPassword: string = "";
+    if (password) {
+      hashedPassword = await bcrypt.hash(password, 10);
+    }
     return this.prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
         photo,
+        status,
       },
     });
   }
@@ -88,6 +94,21 @@ class AuthModel {
     return user;
   }
 
+  async findByEmail(
+    email: string,
+  ): Promise<{ id:number;name: string; photo: string | null } | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        photo: true,
+      },
+    });
+
+    return user;
+  }
+
   async updateUser(userId: number, data: { status: boolean }) {
     return this.prisma.user.update({
       where: { id: userId },
@@ -95,11 +116,6 @@ class AuthModel {
     });
   }
 
-  async findByEmail(email:string){
-    return this.prisma.user.findUnique({
-      where:{email}
-    })
-  }
 
   async createToken(userId:number,token:string){
     return this.prisma.passwordResetToken.create({

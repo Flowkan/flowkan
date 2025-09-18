@@ -74,9 +74,17 @@
 				color: var(--color-text-on-accent);
 				transition: background-color 0.5s ease;
 
+				&.yes {
+					background-color: #b3b2b2;
+				}
+
 				&:hover {
 					cursor: pointer;
 					background-color: var(--color-primary-hover);
+
+					&.yes {
+						background-color: #888787;
+					}
 				}
 			}
 		}

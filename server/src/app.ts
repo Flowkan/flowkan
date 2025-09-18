@@ -1,19 +1,19 @@
 import express, { NextFunction, Request, Response } from "express";
 import createError, { HttpError } from "http-errors";
 import cors from "cors";
-import boardRoutes from "./routes/boards.routes.js";
-import listRoutes from "./routes/list.routes.js";
-import cardRoutes from "./routes/card.routes.js";
-import authRoutes from "./routes/auth.routes.js";
+import boardRoutes from "./routes/boards.routes";
+import listRoutes from "./routes/list.routes";
+import cardRoutes from "./routes/card.routes";
+import authRoutes from "./routes/auth.routes";
 import logger from "morgan";
 import path from "node:path";
 
-import profileRoutes from "./routes/profile.routes.js";
+import profileRoutes from "./routes/profile.routes";
 
 import {
   ApiValidationError,
   ValidationError,
-} from "./validators/validationError.js";
+} from "./validators/validationError";
 
 const app = express();
 app.disable("x-powered-by");

@@ -1,4 +1,11 @@
-import { combineReducers, createStore, applyMiddleware } from "redux";
+import {
+	combineReducers,
+	createStore,
+	applyMiddleware,
+	type Dispatch,
+	type Middleware,
+	type UnknownAction,
+} from "redux";
 import { composeWithDevTools } from "@redux-devtools/extension";
 import * as thunk from "redux-thunk";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,32 +23,56 @@ const rootReducer = combineReducers(reducers);
 export type Router = ReturnType<typeof createBrowserRouter>;
 
 type ExtraArgument = {
-	api: { auth: typeof authApi; boards: typeof boardsApi;profile: typeof profileApi };
+	api: {
+		auth: typeof authApi;
+		boards: typeof boardsApi;
+		profile: typeof profileApi;
+	};
 	router: Router;
 };
 
+export type RootState = ReturnType<typeof rootReducer>;
+
+function isRejectedAction(
+	action: unknown,
+): action is UnknownAction & { payload?: { status?: number } } {
+	return (
+		typeof action === "object" &&
+		action !== null &&
+		"type" in action &&
+		typeof (action as { type: unknown }).type === "string" &&
+		(action as { type: string }).type.endsWith("/rejected")
+	);
+}
+
 // --- Middleware personalizado ---
-const failureRedirects = (router: Router) => (store) => (next) => (action) => {
-	const result = next(action);
+const failureRedirects =
+	(router: Router): Middleware<Dispatch<Actions>, RootState> =>
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	(_store) =>
+	(next) =>
+	(action: unknown) => {
+		const result = next(action);
+		if (!isRejectedAction(action)) {
+			return result;
+		}
 
-	if (!action.type.endsWith("/rejected")) {
+		const status = action.payload?.status;
+		if (status === 404) {
+			router.navigate("/not-found");
+			return undefined;
+		}
+		if (status === 401) {
+			router.navigate("/login");
+			return undefined;
+		}
+
 		return result;
-	}
-
-	if (action.payload?.status === 404) {
-		router.navigate("/not-found");
-	}
-
-	if (action.payload?.status === 401) {
-		router.navigate("/login");
-	}
-
-	return result;
-};
+	};
 
 // --- Configuración Store ---
 export default function configureStore(
-	preloadedState: Partial<ReturnType<typeof rootReducer>>,
+	preloadedState: Partial<RootState>,
 	router: Router,
 ) {
 	const store = createStore(
@@ -49,11 +80,10 @@ export default function configureStore(
 		preloadedState as never,
 		composeWithDevTools(
 			applyMiddleware(
-				thunk.withExtraArgument<
-					ReturnType<typeof rootReducer>,
-					Actions,
-					ExtraArgument
-				>({ api: { auth: authApi, boards: boardsApi,profile:profileApi }, router }),
+				thunk.withExtraArgument<RootState, Actions, ExtraArgument>({
+					api: { auth: authApi, boards: boardsApi, profile: profileApi },
+					router,
+				}),
 				failureRedirects(router),
 			),
 		),
@@ -64,7 +94,6 @@ export default function configureStore(
 // --- Types ---
 export type AppStore = ReturnType<typeof configureStore>;
 export type AppGetState = AppStore["getState"];
-export type RootState = ReturnType<AppGetState>;
 export type AppDispatch = AppStore["dispatch"];
 
 // --- Hooks tipados ---

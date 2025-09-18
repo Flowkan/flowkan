@@ -2,9 +2,17 @@ interface AvatarProps {
 	name: string;
 	photo?: string | null;
 	size?: number;
+	format?: string;
+	className?: string;
 }
 
-export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40 }) => {
+export const Avatar: React.FC<AvatarProps> = ({
+	name,
+	photo,
+	size = 40,
+	format = "t",
+	className,
+}) => {
 	const randomColor = (user: string): string => {
 		let r = 0,
 			g = 0,
@@ -33,14 +41,15 @@ export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40 }) => {
 
 	const bgColor = randomColor(name);
 	const initialsName = getInitialsName(name);
-
+	
 	if (photo) {
-		const baseUrl = import.meta.env.VITE_BASE_DEV_URL;
+		const baseUrl = import.meta.env.VITE_BASE_URL;
+		console.log(`${baseUrl}/uploads/${photo}_${format}.webp`);
 		return (
 			<img
-				src={`${baseUrl}uploads/${photo}`}
+				src={`${baseUrl}/uploads/${photo}_${format}.webp`}
 				alt={name}
-				className="h-10 w-10 rounded-full object-cover"
+				className={`${className} rounded-full object-cover`}
 				style={{
 					width: size,
 					height: size,
@@ -50,7 +59,8 @@ export const Avatar: React.FC<AvatarProps> = ({ name, photo, size = 40 }) => {
 	}
 	return (
 		<div
-			className="flex items-center justify-center rounded-full font-bold text-white select-none"
+			className={`${className} flex items-center justify-center rounded-full font-bold text-white select-none`}
+			title={name}
 			style={{
 				width: size,
 				height: size,

@@ -67,18 +67,18 @@ export function useUiResetError() {
 //
 // ─── BOARDS PROFILE ──────────────────────────────────────────────
 //
-export function useUpdatedProfile(){
+export function useUpdatedProfile() {
 	const dispatch = useAppDispatch();
-	return function ({user,profile}:{user:User,profile:ProfileType}){
-		return dispatch(updateProfile({user,profile}))
-	}
+	return function ({ user, profile }: { user: User; profile: ProfileType }) {
+		return dispatch(updateProfile({ user, profile }));
+	};
 }
 
-export function useLoadedProfile(){
+export function useLoadedProfile() {
 	const dispatch = useAppDispatch();
-	return function (){
-		return dispatch(loadedProfile())
-	}
+	return function () {
+		return dispatch(loadedProfile());
+	};
 }
 
 //
@@ -102,8 +102,8 @@ export function useBoardsError() {
 
 export function useFetchBoardsAction() {
 	const dispatch = useAppDispatch();
-	return function () {
-		return dispatch(fetchBoards());
+	return function (skip: number, limit: number) {
+		return dispatch(fetchBoards(skip, limit));
 	};
 }
 

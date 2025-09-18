@@ -58,7 +58,7 @@ async function main(): Promise<void> {
       name: "Admin",
       email: "admin@demo.com",
       password: hashedPassword,
-      status:true
+      status: true,
     },
   });
 

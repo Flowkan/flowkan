@@ -1,6 +1,6 @@
 import { Page } from "../../components/layout/page";
 import { NavLink, useNavigate } from "react-router-dom";
-import type { User } from "./types";
+import type { UserRegister } from "./types";
 import toast from "react-hot-toast";
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { CustomToast } from "../../components/CustomToast";
@@ -16,7 +16,7 @@ import { __ } from "../../utils/i18nextHelper";
 export const RegisterPage = () => {
 	const navigate = useNavigate();
 	const { t } = useTranslation();
-	const [formData, setFormData] = useState<User>({
+	const [formData, setFormData] = useState<UserRegister>({
 		name: "",
 		email: "",
 		password: "",
@@ -38,7 +38,7 @@ export const RegisterPage = () => {
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, type, value, files } = e.target;
-		setFormData((prevData) => ({
+		setFormData((prevData: UserRegister) => ({
 			...prevData,
 			[name]: type === "file" ? (files?.[0] ?? null) : value,
 		}));
@@ -101,21 +101,11 @@ export const RegisterPage = () => {
 
 		try {
 			await register(formData);
-
-			toast.custom((t) => (
-				<CustomToast
-					message={__(
-						"register.registerForm.message.success",
-						"Registro exitoso! Redirigiendo a la página de inicio de sesión.",
-					)}
-					t={t}
-					type="success"
-				/>
-			));
-
-			setTimeout(() => {
-				navigate("/login");
-			}, 2000);
+			navigate("/verify-pending", {
+				state: {
+					email: formData.email,
+				},
+			});
 		} catch (error) {
 			if (error instanceof Error) {
 				toast.custom((t) => (
@@ -137,7 +127,7 @@ export const RegisterPage = () => {
 
 	return (
 		<Page>
-			<div className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+			<div className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 sm:px-6 lg:px-8">
 				<div className="bg-background-card w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl transition-all duration-300 hover:scale-[1.01]">
 					<div>
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
@@ -169,7 +159,7 @@ export const RegisterPage = () => {
 					>
 						<div className="-space-y-px rounded-md shadow-sm">
 							<div className="mb-6 flex flex-col items-center">
-								<div className="relative">									
+								<div className="relative">
 									{previewUrl ? (
 										<img
 											src={previewUrl}

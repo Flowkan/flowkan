@@ -15,6 +15,7 @@ const byId = (base: string) => (id: string) => `/api/${VERSION}/${base}/${id}`;
 export const USER_ENDPOINTS = {
 	REGISTER: `/api/${VERSION}/auth/register`,
 	LOGIN: `/api/${VERSION}/auth/login`,
+	ME: `/api/${VERSION}/auth/me`,
 	AUTH: `/api/${VERSION}/auth/me`,
 	PROFILE: `/api/${VERSION}/auth/profile`,
 	CONFIRM: `/api/${VERSION}/auth/confirm`,

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, type ChangeEvent } from "react";
+import { useCallback, useEffect, type ChangeEvent } from "react";
 import Field from "./Field";
 import { IconNotification } from "../icons/IconNotification";
 import { IconNotNotification } from "../icons/IconNotNotification";
@@ -8,15 +8,21 @@ import type { ProfileUpdateType } from "../../pages/profile/types";
 interface SwitchProps {
 	checked: boolean;
 	name?: string;
-    label?:string;
+	label?: string;
 	onChange?: (
 		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
 		name: string,
 	) => void;
-	onSubmit?:(field: keyof ProfileUpdateType)=>void;
+	onSubmit?: (field: keyof ProfileUpdateType) => void;
 }
 
-const Switch = ({ checked, name = "",label='', onChange, onSubmit }: SwitchProps) => {
+const Switch = ({
+	checked,
+	name = "",
+	label = "",
+	onChange,
+	onSubmit,
+}: SwitchProps) => {
 	function handleChange(
 		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
 	) {
@@ -36,7 +42,7 @@ const Switch = ({ checked, name = "",label='', onChange, onSubmit }: SwitchProps
 			<button className="space-y-2 flex-1 transition-all duration-300 hover:scale-[1.01] rounded-lg shadow-primary shadow-xs hover:shadow-md" onClick={handleSubmit}>
 				<label className="flex w-full cursor-pointer items-center justify-between text-accent bg-white/40 p-4 hover:bg-white/20 has-[:checked]:bg-white/30 has-[:checked]:text-primary/80">
 					<div className="flex items-center space-x-5">
-						<div className="flex items-center">							
+						<div className="flex items-center">
 							<IconNotification className="md:text-2xl" />
 						</div>
 						<h2 className="text-xs md:text-lg">{label}</h2>

@@ -1,7 +1,7 @@
 import { register } from "./service";
 import { apiClient } from "../../api/client";
 import { USER_ENDPOINTS } from "../../utils/endpoints";
-import type { User } from "./types";
+import type { UserRegister } from "./types";
 import type { Mock } from "vitest";
 
 vi.mock("../../api/client", () => ({
@@ -11,7 +11,7 @@ vi.mock("../../api/client", () => ({
 }));
 
 describe("register", () => {
-	const baseUser: User = {
+	const baseUser: UserRegister = {
 		name: "Juan Pérez",
 		email: "juan@example.com",
 		password: "securePass123",
@@ -24,7 +24,7 @@ describe("register", () => {
 	});
 
 	it("should call apiClient.post with the correct parameters when photo is null", async () => {
-		const mockUser: User = { ...baseUser, photo: null };
+		const mockUser: UserRegister = { ...baseUser, photo: null };
 
 		await register(mockUser);
 
@@ -41,7 +41,7 @@ describe("register", () => {
 
 	it("should call apiClient.post with the correct parameters when photo is a File", async () => {
 		const file = new File(["contenido"], "foto.png", { type: "image/png" });
-		const mockUser: User = { ...baseUser, photo: file };
+		const mockUser: UserRegister = { ...baseUser, photo: file };
 
 		await register(mockUser);
 
@@ -57,7 +57,7 @@ describe("register", () => {
 	});
 
 	it("should propagate an error if apiClient.post fails", async () => {
-		const mockUser: User = { ...baseUser, photo: null };
+		const mockUser: UserRegister = { ...baseUser, photo: null };
 		const mockError = new Error("Network error");
 
 		(apiClient.post as unknown as Mock).mockRejectedValueOnce(mockError);
@@ -66,7 +66,7 @@ describe("register", () => {
 	});
 
 	it("should handle duplicate email error", async () => {
-		const mockUser: User = { ...baseUser, photo: null };
+		const mockUser: UserRegister = { ...baseUser, photo: null };
 		const prismaError = {
 			response: {
 				data: {
@@ -82,7 +82,7 @@ describe("register", () => {
 	});
 
 	it("should handle generic errors correctly", async () => {
-		const mockUser: User = { ...baseUser, photo: null };
+		const mockUser: UserRegister = { ...baseUser, photo: null };
 
 		(apiClient.post as unknown as Mock).mockRejectedValueOnce("Algo salió mal");
 

@@ -34,12 +34,12 @@ class AuthService {
     return this.authModel.findById(id);
   }
 
-  async activateUser(userId: number) {
-    return this.authModel.updateUser(userId, { status: true });
+  async findByEmail(email: string) {
+    return this.authModel.findByEmail(email);
   }
 
-  async findByEmail(email:string) {
-    return this.authModel.findByEmail(email)
+  async activateUser(userId: number) {
+    return this.authModel.updateUser(userId, { status: true });
   }
   async generatedToken(userId:number,token:string){
     return this.authModel.createToken(userId,token)

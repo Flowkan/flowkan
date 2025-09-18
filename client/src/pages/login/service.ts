@@ -23,6 +23,14 @@ export const login = async (credentials: Credentials) => {
 	return user;
 };
 
+export const me = async () => {
+	const response = await apiClient.get<{
+		result: { id: number; name: string; email: string; photo?: string };
+	}>(USER_ENDPOINTS.ME);
+
+	return response.data.result;
+};
+
 export const logout = async () => {
 	storage.remove("auth");
 	storage.remove("user");

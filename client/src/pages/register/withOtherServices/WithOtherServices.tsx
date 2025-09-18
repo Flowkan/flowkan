@@ -24,12 +24,25 @@ export const WithOtherServices = () => {
 			className: "mr-2 h-5 w-5",
 		},
 	];
+	const getOAuthUrl = (label: string) => {
+		switch (label.toLowerCase()) {
+			case "google":
+				return `${import.meta.env.VITE_BASE_URL}/api/${import.meta.env.VITE_API_VERSION}/auth/google`;
+			case "github":
+				return `${import.meta.env.VITE_BASE_URL}/api/${import.meta.env.VITE_API_VERSION}/auth/github`;
+			default:
+				return "#";
+		}
+	};
 
 	const SocialRegisterButton: React.FC<SocialRegisterButtonProps> = ({
 		services,
 	}) => (
 		<Button
 			type="button"
+			onClick={() => {
+				window.location.href = getOAuthUrl(services.label);
+			}}
 			aria-label={t(
 				"arialabels.component.WithOtherServices.service",
 				`Continuar con {{${services.label}}}`,

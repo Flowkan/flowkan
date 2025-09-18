@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import LanguageToggle from "../hooks/useLangToggle";
 import { useAppSelector } from "../../store";
 import { useTranslation } from "react-i18next";
-import { UserMenu } from "../hooks/useUserMenu";
+import { UserMenu } from "../ui/UserMenu";
 
 export const BackofficeHeader: React.FC = () => {
 	const { user } = useAppSelector((state) => state.auth);

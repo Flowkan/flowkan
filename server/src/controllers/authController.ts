@@ -3,9 +3,10 @@ import jwt from "jsonwebtoken";
 import AuthService from "../services/AuthService";
 import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
-import { Prisma } from "@prisma/client";
-import { success } from "zod";
+import { Prisma, User } from "@prisma/client";
+import passport from "passport";
 import { sendChangePasswordEmail, sendEmail } from "../lib/emailService";
+import "../config/passport";
 
 
 type UniqueConstraintError = Prisma.PrismaClientKnownRequestError & {
@@ -39,7 +40,7 @@ export class AuthController {
       }
 
       jwt.sign(
-        { user_id: user.id } satisfies JwtPayload,
+        { userId: user.id } satisfies JwtPayload,
         process.env.JWT_SECRET,
         {
           expiresIn: "1d",
@@ -75,12 +76,12 @@ export class AuthController {
         name,
         email,
         password,
-        photo: req.file ? req.file.filename : null,
+        photo: req.body.photo || null,
       };
       const newUser = await this.authService.register(userData);
       let photoUrl = null;
-      if (req.file) {
-        photoUrl = `/uploads/${req.file.filename}`;
+      if (req.body.photo) {
+        photoUrl = `/uploads/${req.body.avatar}`;
         newUser.photo = photoUrl;
       }
       const { password: _omit, ...safeUser } = newUser;
@@ -96,7 +97,7 @@ export class AuthController {
         newUser.email,
         "Confirma tu cuenta",
         `<h1>Bienvenido ${newUser.name}!</h1>
-              <p>Haz click <a href="${process.env.FRONTEND_WEB_DEV_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
+              <p>Haz click <a href="${process.env.FRONTEND_WEB_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
       );
 
       res.status(201).json({ success: true, user: safeUser });
@@ -186,7 +187,7 @@ export class AuthController {
             );
           }
           jwt.sign(
-            { user_id: user.id } satisfies JwtPayload,
+            { userId: user.id } satisfies JwtPayload,
             process.env.JWT_SECRET,
             {
               expiresIn: "15m",
@@ -205,7 +206,7 @@ export class AuthController {
         });
 
         const headerEmail={
-          to:user.email,
+          to:email,
           subject:"Cambiar contraseña"
         }
         await sendChangePasswordEmail(headerEmail,{
@@ -235,7 +236,46 @@ export class AuthController {
       await this.authService.changeTokenToUsed(tokenFromUser)
       res.json({message:'Su contraseña ha sido cambiada, inicie sesión con su nueva contraseña'})
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  };
+
+  googleAuth = passport.authenticate("google", { scope: ["profile", "email"] });
+
+  githubAuth = passport.authenticate("github", { scope: ["user:email"] });
+
+  handleOAuthCallback = (req: Request, res: Response) => {
+    if (!req.user) {
+      return res.status(401).json({ message: "Usuario no autenticado" });
+    }
+
+    const user = req.user as User;
+
+    if (!process.env.JWT_SECRET || !process.env.FRONTEND_WEB_URL) {
+      return res
+        .status(500)
+        .json({ message: "Configuración del servidor incompleta" });
+    }
+
+    const accessToken = jwt.sign(
+      { userId: user.id } satisfies JwtPayload,
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      },
+    );
+
+    const safeUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      photo: user.photo || null,
+    };
+
+    const encodedUser = encodeURIComponent(JSON.stringify(safeUser));
+
+    res.redirect(
+      `${process.env.FRONTEND_WEB_URL}/login?token=${accessToken}&user=${encodedUser}`,
+    );
+  };
 }

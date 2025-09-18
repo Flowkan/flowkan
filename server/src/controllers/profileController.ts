@@ -6,33 +6,33 @@ import prisma from "../config/db.js";
 import { keyof } from "zod";
 
 interface RequestBody {
-    name?:string;
-    username?:string;
-    dateBirth?:string;
-    location?:string;
-    allowNotifications?:string;
-    bio?:string;
+  name?: string;
+  username?: string;
+  dateBirth?: string;
+  location?: string;
+  allowNotifications?: string;
+  bio?: string;
 }
 
 interface UserType {
-    name?:string;
-    photo?:string;
+  name?: string;
+  photo?: string;
 }
-interface ProfileType { 
-    id:number;
-    userId:number;   
-    username:string|null;
-    dateBirth:Date|null;
-    location:string|null;
-    allowNotifications:boolean|null;
-    bio:string|null;
+interface ProfileType {
+  id: number;
+  userId: number;
+  username: string | null;
+  dateBirth: Date | null;
+  location: string | null;
+  allowNotifications: boolean | null;
+  bio: string | null;
 }
-interface ProfileCleanType {      
-    username:string|null;
-    dateBirth:Date|null;
-    location:string|null;
-    allowNotifications:boolean|null;
-    bio:string|null;
+interface ProfileCleanType {
+  username: string | null;
+  dateBirth: Date | null;
+  location: string | null;
+  allowNotifications: boolean | null;
+  bio: string | null;
 }
 
 export class ProfileController {
@@ -122,4 +122,4 @@ export class ProfileController {
             next(error)
         }
     }
-}
+  };

@@ -1,12 +1,12 @@
 import { Page } from "../../components/layout/page";
 import { NavLink } from "react-router-dom";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import type { Credentials } from "./types";
 import { useTranslation } from "react-i18next";
 import { useLoadedProfile, useLoginAction } from "../../store/hooks";
-import { useAppSelector } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { Form } from "../../components/ui/Form";
 import { FormFields } from "../../components/ui/FormFields";
@@ -14,12 +14,14 @@ import { Button } from "../../components/ui/Button";
 import { __ } from "../../utils/i18nextHelper";
 import { WithOtherServices } from "../register/withOtherServices/WithOtherServices";
 import { getUi } from "../../store/selectors";
+import { loginWithOAuth } from "../../store/actions";
 import ForgotPassword from "../../components/ui/modals/forgot-password";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
 	const loginAction = useLoginAction();
-	const profileLoadedAction = useLoadedProfile()
+	const profileLoadedAction = useLoadedProfile();
+	const dispatch = useAppDispatch();
 	const { error } = useAppSelector(getUi);
 	// const modalForgotPassword = useRef<HTMLDialogElement|null>(null)
 	const [showModal,setShowModal] = useState(false);
@@ -32,9 +34,24 @@ export const LoginPage = () => {
 	const { email, password } = formData;
 	const disabled = !email || !password;
 
-	// useEffect(()=>{
-		
-	// },[])
+	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
+		const token = params.get("token");
+		const userEncoded = params.get("user");
+		if (token) {
+			let user = null;
+			if (userEncoded) {
+				try {
+					const userDecoded = decodeURIComponent(userEncoded);
+					user = JSON.parse(userDecoded);
+				} catch (e) {
+					console.error("Error al parsear el objeto de usuario OAuth:", e);
+					toast.error("Error al procesar la información del usuario.");
+				}
+			}
+			dispatch(loginWithOAuth({ token, user }));
+		}
+	}, [dispatch]);
 
 	const validateEmail = (email: string): boolean => {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -80,7 +97,7 @@ export const LoginPage = () => {
 			}
 
 			await loginAction(formData);
-			await profileLoadedAction()
+			await profileLoadedAction();
 
 			// Si ambas validaciones pasan, mostrar el mensaje de éxito
 			toast.custom((t) => (
@@ -123,7 +140,7 @@ export const LoginPage = () => {
 	}
 	return (
 		<Page>
-			<div className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+			<div className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 sm:px-6 lg:px-8">
 				<div className="bg-background-card w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl transition-all duration-300 hover:scale-[1.01]">
 					<div>
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">

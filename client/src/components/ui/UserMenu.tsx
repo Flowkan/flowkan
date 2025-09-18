@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Avatar } from "../ui/Avatar";
-import { Button } from "../ui/Button";
+import { Avatar } from "./Avatar";
+import { Button } from "./Button";
 import { useLogoutAction } from "../../store/hooks";
+import { useDismiss } from "../hooks/useDismissClickAndEsc";
 
 interface UserMenuProps {
 	user?: { name: string; photo?: string | null } | null;
@@ -16,22 +16,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 }) => {
 	const { t } = useTranslation();
 	const logoutAction = useLogoutAction();
-	const [menuOpen, setMenuOpen] = useState(false);
-	const menuRef = useRef<HTMLDivElement>(null);
 
-	const toggleMenu = () => setMenuOpen((prev) => !prev);
-
-	useEffect(() => {
-		const handleClickOutsideMenu = (e: MouseEvent) => {
-			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-				setMenuOpen(false);
-			}
-		};
-		document.addEventListener("mousedown", handleClickOutsideMenu);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutsideMenu);
-		};
-	}, []);
+	const { open, setOpen, ref } = useDismiss<HTMLDivElement>();
+	const toggleMenu = () => setOpen((prev) => !prev);
 
 	if (!user) return null;
 
@@ -40,7 +27,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 	};
 
 	return (
-		<div ref={menuRef} className="relative">
+		<div ref={ref} className="relative">
 			<Button
 				className="flex items-center rounded-full focus:outline-none"
 				onClick={toggleMenu}
@@ -54,8 +41,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 				/>
 			</Button>
 
-			{menuOpen && (
-				<div className="ring-opacity-5 absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black">
+			{open && (
+				<div className="ring-opacity-5 absolute right-0 z-90 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black">
 					<NavLink
 						to="/profile"
 						className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

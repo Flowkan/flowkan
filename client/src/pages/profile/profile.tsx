@@ -57,7 +57,7 @@ const Profile = () => {
 	});
 
 	const previewImage = user.photo && typeof user.photo === 'string'
-	? `${resolveBaseURLFromEnv()}uploads/${user.photo}`	
+	? `${resolveBaseURLFromEnv()}/uploads/${user.photo}`	
 	: "";
 	// console.log(user.photo);
 	
