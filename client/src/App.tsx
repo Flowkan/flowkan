@@ -9,8 +9,7 @@ import Profile from "./pages/profile/profile.tsx";
 import LoginSkeleton from "./components/ui/LoginSkeleton";
 import { useAppSelector } from "./store";
 import { ConfirmPage } from "./pages/register/ConfirmPage.tsx";
-
-
+import { VerifyPendingPage } from "./pages/register/VerifyPendingPage.tsx";
 
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((m) => ({ default: m.LoginPage })),
@@ -64,7 +63,7 @@ function App() {
 							<Profile />
 						</AuthRoute>
 					}
-				/>				
+				/>
 				<Route
 					path="/invitacion"
 					element={
@@ -79,6 +78,14 @@ function App() {
 						<AuthRoute requireAuth={false} redirectTo="/boards">
 							<ConfirmPage />
 						</AuthRoute>
+					}
+				/>
+				<Route
+					path="/verify-pending"
+					element={
+						<Suspense fallback={<LoginSkeleton />}>
+							<VerifyPendingPage />
+						</Suspense>
 					}
 				/>
 				<Route path="not-found" element={<NotFound />} />
