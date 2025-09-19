@@ -2,13 +2,15 @@ import { NextFunction, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 
 // uso temporal
-import prisma from "../config/db";
+import prisma from "../config/db.js";
+import { keyof } from "zod";
 
 interface RequestBody {
   name?: string;
   username?: string;
   dateBirth?: string;
   location?: string;
+  photo?: string;
   allowNotifications?: string;
   bio?: string;
 }
@@ -47,27 +49,20 @@ export class ProfileController {
       const user = await this.prismaClient.user.findUnique({
         where: { id: userId },
       });
-      // console.log(user);
+
       if (user) {
         const body = req.body as RequestBody;
         const data: UserType = {};
-        const profile: Partial<ProfileCleanType> = {
-          // username:null,
-          // dateBirth:null,
-          // location:null,
-          // allowNotifications:true,
-          // bio:null
-        };
+        const profile: Partial<ProfileCleanType> = {};
         if (body.name) data.name = body.name;
-        if (req.file?.filename) data.photo = req.file.filename;
+        if (body.photo) data.photo = req.body.photo;
         if (body.username) profile.username = body.username;
         if (body.dateBirth) profile.dateBirth = new Date(body.dateBirth);
         if (body.location) profile.location = body.location;
         if (body.allowNotifications)
-          profile.allowNotifications =
-            body.allowNotifications === "false" ? false : true;
+          profile.allowNotifications = body.allowNotifications !== "true";
         if (body.bio) profile.bio = body.bio;
-        // console.log(profile);
+
         const partialUpdate = await this.prismaClient.user.update({
           where: { id: userId },
           data,
@@ -91,6 +86,7 @@ export class ProfileController {
             },
           });
         }
+
         const { password: _, ...userSafe } = partialUpdate;
         const { id: __, userId: ___, ...restProfile } = newProfile;
 
@@ -111,7 +107,15 @@ export class ProfileController {
       });
       if (profile) {
         const { id, userId, ...profileSafe } = profile;
-        res.json({ error: null, profile: { ...profileSafe } });
+        const profileClean = Object.entries({ ...profileSafe }).map(
+          ([key, value]) => {
+            if (value === null) {
+              return [key, ""];
+            }
+            return [key, value];
+          },
+        );
+        res.json({ error: null, profile: Object.fromEntries(profileClean) });
         return;
       }
       res.json({ error: "Profile vacío", profile: null });

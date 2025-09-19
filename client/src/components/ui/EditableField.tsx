@@ -61,7 +61,7 @@ const EditableField = ({
 	
 	return (
 		<div className="group relative">
-			<p className="text-sm font-semibold text-gray-500 uppercase">{label}</p>
+			<p className="text-sm font-semibold text-accent/70 tracking-wide w-fit uppercase">{label}</p>
 			<div className="relative flex">
 				{!enableEdit && !error ? (
 					<>
@@ -83,7 +83,7 @@ const EditableField = ({
 					</>
 				) : (
 					<>	
-					<div className="transition-all duration-300 hover:ring ring-accent hover:shadow-md hover:shadow-accent flex rounded-lg">					
+					<div className="flex-1 transition-all duration-300 hover:ring ring-accent hover:shadow-md hover:shadow-accent flex rounded-lg">					
 						<Field 
 						type={type}
 						name={name}

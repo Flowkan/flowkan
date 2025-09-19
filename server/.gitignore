@@ -6,3 +6,4 @@ node_modules/
 Thumbs.db
 /generated/prisma
 /public/uploads
+/src/uploads

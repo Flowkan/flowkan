@@ -13,7 +13,7 @@ type ResponseProfile = {
 
 export async function updateFieldProfile(userId: string, form: FormData) {
 	const response = await apiClient.patch<ResponseProfile>(
-		`${resolveBaseURLFromEnv()}${pathUrl}${userId}`,
+		`${resolveBaseURLFromEnv()}/${pathUrl}${userId}`,
 		form,
 	);
 	const { user } = response.data;

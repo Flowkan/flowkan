@@ -31,7 +31,7 @@ export const FormFields = ({
 	const { t } = useTranslation();
 
 	return (
-		<div className="mt-3">
+		<>
 			{label && (
 				<label
 					htmlFor={id}
@@ -41,7 +41,7 @@ export const FormFields = ({
 					{required && <span className="text-red-600"> *</span>}
 				</label>
 			)}
-			<div className="relative mt-3">
+			<div className="relative">
 				<input
 					id={id}
 					name={name}
@@ -88,6 +88,6 @@ export const FormFields = ({
 					</Button>
 				)}
 			</div>
-		</div>
+		</>
 	);
 };

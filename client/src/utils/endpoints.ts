@@ -20,6 +20,8 @@ export const USER_ENDPOINTS = {
 	PROFILE: `/api/${VERSION}/auth/profile`,
 	CONFIRM: `/api/${VERSION}/auth/confirm`,
 	BY_ID: byId("profile"),
+	RESET_PASSWORD: `/api/${VERSION}/auth/reset_password`,
+	CHANGE_PASSWORD: `/api/${VERSION}/auth/change_password`
 };
 
 export const BOARD_ENDPOINTS = {

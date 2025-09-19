@@ -3,6 +3,7 @@ declare global {
   namespace Express {
     interface Request {
       apiUserId: number;
+      tokenToChangePassword?:string;
     }
   }
 }
