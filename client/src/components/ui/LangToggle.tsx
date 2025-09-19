@@ -1,5 +1,5 @@
-import { Button } from "../ui/Button";
-import { LangSwitch } from "../ui/LangSwitch";
+import { Button } from "./Button";
+import { LangSwitch } from "../hooks/useLangSwitch";
 
 export default function LanguageToggleButton() {
 	const {
@@ -27,7 +27,9 @@ export default function LanguageToggleButton() {
 								width={32}
 							/>
 						</span>
-						<span className="font-medium">{selectedLanguage.label}</span>
+						<span className="sr-only font-medium">
+							{selectedLanguage.label}
+						</span>
 					</>
 				)}
 			</Button>

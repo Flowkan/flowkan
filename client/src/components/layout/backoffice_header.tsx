@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import LanguageToggle from "../hooks/useLangToggle";
+import LanguageToggle from "../ui/LangToggle";
 import { useAppSelector } from "../../store";
 import { useTranslation } from "react-i18next";
 import { UserMenu } from "../ui/UserMenu";

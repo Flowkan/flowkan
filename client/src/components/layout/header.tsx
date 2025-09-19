@@ -2,7 +2,7 @@ import React, { useState } from "react"; // 👈 Importar useState
 import { useAppSelector } from "../../store";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import LanguageToggle from "../hooks/useLangToggle";
+import LanguageToggle from "../ui/LangToggle";
 import { UserMenu } from "../ui/UserMenu";
 import { Icon } from "@iconify/react";
 
