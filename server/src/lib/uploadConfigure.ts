@@ -59,7 +59,6 @@ export function processImage(
       const thumbPath = path.join(uploadPath, `${baseName}_t.webp`);
 
       // original version
-      console.log(">>> Procesando imagen original...");
       let original = sharp(req.file.buffer).webp({ quality: 90 });
       if (sizes.original.width || sizes.original.height) {
         original = original.resize(sizes.original);
@@ -67,13 +66,10 @@ export function processImage(
       await original.toFile(originalPath);
 
       // thumbnail
-      console.log(">>> Procesando thumbnail...");
       await sharp(req.file.buffer)
         .resize(sizes.thumb)
         .webp({ quality: 80 })
         .toFile(thumbPath);
-
-      console.log(">>> Imagen procesada con exito!!");
 
       req.body[bodyField] = baseName;
 

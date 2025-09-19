@@ -30,7 +30,17 @@ router.post(
   ),
   controller.add,
 );
-router.put("/:id", jwtAuth.guard, controller.update);
+router.put(
+  "/:id",
+  jwtAuth.guard,
+  upload.single("image"),
+  processImage(
+    "boards",
+    { original: {}, thumb: { width: 200, height: 200 } },
+    "image",
+  ),
+  controller.update,
+);
 router.delete("/:id", jwtAuth.guard, controller.delete);
 
 router.get("/:id/share", jwtAuth.guard, controller.shareBoard);

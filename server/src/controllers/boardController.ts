@@ -99,8 +99,6 @@ export class BoardController {
 
   add = async (req: Request, res: Response) => {
     try {
-      console.log("BODY en ADD:", req.body);
-
       const userId = req.apiUserId;
       const { title }: { title: string } = req.body;
 
@@ -108,14 +106,11 @@ export class BoardController {
         ? `/uploads/boards/${req.body.image}_o.webp`
         : pickDefaultImage();
 
-      console.log("IMAGE PATH EN ADD:", image);
-
       const board = await this.boardService.add({ userId, title, image });
       res.status(201).json(board);
     } catch (err) {
-      console.error("ERROR EN ADD:", err);
       if (err instanceof Error) {
-        res.status(500).json({ error: err.message });
+        res.status(500).send("Error al crear el tablero");
       }
     }
   };
@@ -124,8 +119,18 @@ export class BoardController {
     try {
       const userId = req.apiUserId;
       const boardId = req.params.id;
-      const { title }: { title?: string } = req.body;
-      const data: Prisma.BoardUpdateInput = { title };
+      const { title, image }: { title?: string; image?: string } = req.body;
+
+      const data: Prisma.BoardUpdateInput = {};
+
+      if (title) {
+        data.title = title;
+      }
+
+      if (image) {
+        data.image = `/uploads/boards/${image}_o.webp`;
+      }
+
       const board = await this.boardService.update({ userId, boardId, data });
       res.status(200).json(board);
     } catch (err) {
