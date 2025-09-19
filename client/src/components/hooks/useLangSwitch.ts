@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import i18n from "../../lib/i18nextHandlers";
 
-export type LanguageCode = "es" | "en"
+export type LanguageCode = "es" | "en";
 
 export type Language = {
 	code: LanguageCode;
@@ -9,8 +9,6 @@ export type Language = {
 	flag: string;
 };
 export type LangSwitchReturn = {
-	open: boolean;
-	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	changeLanguage: (lang: "es" | "en") => void;
 	LANGUAGES: Language[];
 	selectedLanguage?: Language;
@@ -19,16 +17,17 @@ export type LangSwitchReturn = {
 
 export const LangSwitch = (): LangSwitchReturn => {
 	const LANGUAGES: Language[] = [
-		{ code: "es", label: "ES", flag: "/flags/ES_flag.png" },
-		{ code: "en", label: "EN", flag: "/flags/EN_flag.png" },
+		{ code: "es", label: "Español", flag: "/flags/ES_flag.png" },
+		{ code: "en", label: "Inglés", flag: "/flags/EN_flag.png" },
 	];
-	const [open, setOpen] = useState(false);
-  const [selectedLangCode, setSelectedLangCode] = useState<LanguageCode>(i18n.language.startsWith("es") ? "es" : "en");
+
+	const [selectedLangCode, setSelectedLangCode] = useState<LanguageCode>(
+		i18n.language.startsWith("es") ? "es" : "en",
+	);
 
 	const changeLanguage = (lang: LanguageCode) => {
 		i18n.changeLanguage(lang);
-    setSelectedLangCode(lang)
-		setOpen(false);
+		setSelectedLangCode(lang);
 	};
 
 	const selectedLanguage = useMemo(
@@ -36,8 +35,6 @@ export const LangSwitch = (): LangSwitchReturn => {
 		[selectedLangCode],
 	);
 	return {
-		open,
-		setOpen,
 		changeLanguage,
 		LANGUAGES,
 		selectedLanguage,

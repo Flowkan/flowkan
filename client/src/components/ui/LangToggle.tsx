@@ -1,41 +1,32 @@
 import { Button } from "./Button";
 import { LangSwitch } from "../hooks/useLangSwitch";
+import { useDismiss } from "../hooks/useDismissClickAndEsc";
 
 export default function LanguageToggleButton() {
-	const {
-		open,
-		setOpen,
-		LANGUAGES,
-		changeLanguage,
-		selectedLanguage,
-		selectedLangCode,
-	} = LangSwitch();
+	const { LANGUAGES, changeLanguage, selectedLanguage, selectedLangCode } =
+		LangSwitch();
+	const { open, setOpen, ref } = useDismiss<HTMLDivElement>();
 
 	return (
-		<div className="relative">
+		<div className="relative" ref={ref}>
 			<Button
 				onClick={() => setOpen(!open)}
 				aria-expanded={open}
 				className="hover:bg-background-light-grey text-text-body flex items-center gap-2 rounded-full px-3 py-2"
 			>
 				{selectedLanguage && (
-					<>
-						<span className="text-xl">
-							<img
-								src={selectedLanguage.flag}
-								alt={`Bandera de ${selectedLanguage.label}`}
-								width={32}
-							/>
-						</span>
-						<span className="sr-only font-medium">
-							{selectedLanguage.label}
-						</span>
-					</>
+					<img
+						src={selectedLanguage.flag}
+						alt={`Bandera de ${selectedLanguage.label}`}
+						width={32}
+						aria-label={`Bandera de ${selectedLanguage.label}`}
+						title={`Bandera de ${selectedLanguage.label}`}
+					/>
 				)}
 			</Button>
 
 			{open && (
-				<div className="absolute right-0 z-10 mt-2 w-28 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+				<div className="absolute right-0 z-10 mt-2 w-35 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
 					{LANGUAGES.map(({ code, flag, label }) => {
 						const isActive = selectedLangCode === code;
 						return (
@@ -46,10 +37,15 @@ export default function LanguageToggleButton() {
 									isActive ? "bg-gray-200 font-semibold" : ""
 								}`}
 							>
-								<span className="text-xl">
-									<img src={flag} alt={`Bandera de ${label}`} width={32} />
+								<span className="flex items-center gap-2">
+									<img
+										src={flag}
+										alt={`Bandera de ${label}`}
+										width={24}
+										className="shrink-0"
+									/>
 								</span>
-								<span>{label}</span>
+								<span className="text-sm">{label}</span>
 							</Button>
 						);
 					})}
