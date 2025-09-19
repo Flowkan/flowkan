@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Avatar } from "./Avatar";
 import { Button } from "./Button";
 import { useLogoutAction } from "../../store/hooks";
-import { useDismiss } from "../hooks/useDismissClickAndEsc";
+import { useDismiss } from "../../hooks/useDismissClickAndEsc";
 
 interface UserMenuProps {
 	user?: { name: string; photo?: string | null } | null;

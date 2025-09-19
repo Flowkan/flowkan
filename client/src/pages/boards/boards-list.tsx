@@ -9,7 +9,7 @@ import { getBoardFilterCombine, getBoards } from "../../store/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { fetchBoards } from "../../store/actions";
 import { BoardFilters } from "../../components/BoardFilters";
-import { useInfiniteScroll } from "../../components/hooks/useInfiniteScroll";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 
 /* function EmptyList() {
