@@ -4,7 +4,8 @@ import { Prisma } from "@prisma/client";
 import { BoardWithRelations } from "../models/BoardModel";
 import jwt from "jsonwebtoken";
 import AuthService from "../services/AuthService";
-import pickDefaultImage from "../lib/pickDefaultImage";
+import { isDefaultImage, pickDefaultImage } from "../lib/defaultImage";
+import { deleteImage } from "../utils/fileUtils";
 
 interface InvitationJwtPayload {
   boardId: string;
@@ -120,6 +121,7 @@ export class BoardController {
       const userId = req.apiUserId;
       const boardId = req.params.id;
       const { title, image }: { title?: string; image?: string } = req.body;
+      const currentBoard = await this.boardService.get({ userId, boardId });
 
       const data: Prisma.BoardUpdateInput = {};
 
@@ -128,11 +130,30 @@ export class BoardController {
       }
 
       if (image) {
-        data.image = `/uploads/boards/${image}_o.webp`;
+        data.image = image;
       }
 
-      const board = await this.boardService.update({ userId, boardId, data });
-      res.status(200).json(board);
+      const updatedBoard = await this.boardService.update({
+        userId,
+        boardId,
+        data,
+      });
+
+      console.log("Hola 1");
+
+      if (currentBoard?.image && !isDefaultImage(currentBoard.image)) {
+        const imageFilename = currentBoard.image.replace("_o.webp", "");
+        const originalToDelete = `/uploads/boards/${imageFilename}_o.webp`;
+        const thumbnailToDelete = `/uploads/boards/${imageFilename}_t.webp`;
+        deleteImage({
+          originalImagePath: originalToDelete,
+          thumbnailImagePath: thumbnailToDelete,
+        });
+      }
+
+      console.log("Hola 2");
+
+      res.status(200).json(updatedBoard);
     } catch (err) {
       res.status(500).send("Error al actualizar el tablero");
     }
