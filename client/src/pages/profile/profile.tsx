@@ -14,54 +14,53 @@ import Switch from "../../components/ui/Switch";
 
 type EventInput = (e: ChangeEvent<HTMLInputElement>) => void;
 
-const Profile = () => {	
-	const userData = useAppSelector(getUserLogged);	
+const Profile = () => {
+	const userData = useAppSelector(getUserLogged);
 	const profileData = useAppSelector(getProfile);
 
 	const updatedProfileAction = useUpdatedProfile();
 
 	const loadProfileAction = useLoadedProfile();
 
-	useEffect(()=>{
-		loadProfileAction()
-	},[])
+	useEffect(() => {
+		loadProfileAction();
+	}, [loadProfileAction]);
 
 	const [user, setUser] = useState<ProfileUpdateType>({
 		name: userData?.name ?? "",
 		email: userData?.email ?? "",
-		photo:userData?.photo ?? "",
-		allowNotifications:profileData?.allowNotifications ?? true
+		photo: userData?.photo ?? "",
+		allowNotifications: profileData?.allowNotifications ?? true,
 	});
 
-	useEffect(()=>{
-		if(profileData){						
-			setUser({
-				...user,
-				username:profileData.username,
-				dateBirth:profileData.dateBirth,
-				allowNotifications:profileData.allowNotifications,
-				location:profileData.location,
-				bio:profileData.bio
-			})
+	useEffect(() => {
+		if (profileData) {
+			setUser((prevUser) => ({
+				...prevUser,
+				username: profileData.username,
+				dateBirth: profileData.dateBirth,
+				allowNotifications: profileData.allowNotifications,
+				location: profileData.location,
+				bio: profileData.bio,
+			}));
 		}
-	},[profileData])
+	}, [profileData]);
 
 	const [errors, setErrors] = useState({
 		name: { error: false, message: "" },
 		photo: { error: false, message: "" },
-		username: { error: false, message: "" },		
+		username: { error: false, message: "" },
 		bio: { error: false, message: "" },
-		allowNotifications: {error:false,message:""},
+		allowNotifications: { error: false, message: "" },
 		dateBirth: { error: false, message: "" },
 		location: { error: false, message: "" },
 	});
 
-	const previewImage = user.photo && typeof user.photo === 'string'
-	? `${resolveBaseURLFromEnv()}/uploads/${user.photo}`	
-	: "";
-	// console.log(user.photo);
-	
-	
+	const previewImage =
+		user.photo && typeof user.photo === "string"
+			? `${resolveBaseURLFromEnv()}/uploads/${user.photo}_o.webp`
+			: "";
+
 	const handleSubmitEditField = useCallback(
 		async (field: keyof ProfileUpdateType) => {
 			const dataParse = ProfileUpdateSchema.safeParse(user);
@@ -70,42 +69,50 @@ const Profile = () => {
 				const errorsList = z.flattenError(dataParse.error).fieldErrors;
 				if (field in errorsList && errorsList[field]) {
 					const msgErrors = errorsList[field].join(", ");
-					setErrors({
-						...errors,
+
+					setErrors((prevErrors) => ({
+						...prevErrors,
 						[field]: { error: true, message: msgErrors },
-					});
+					}));
 					return;
 				}
 			}
-			setErrors({ ...errors, [field]: { error: false, message: "" } });
-			
-			if(userData){
-				const formData = new FormData()
-				switch (field) {					
+
+			setErrors((prevErrors) => ({
+				...prevErrors,
+				[field]: { error: false, message: "" },
+			}));
+
+			if (userData) {
+				const formData = new FormData();
+				switch (field) {
 					case "photo":
-						if(user[field] instanceof File){
-							formData.append(field,user[field])
+						if (user[field] instanceof File) {
+							formData.append(field, user[field]);
 						}
 						break;
 					case "allowNotifications":
-						if(typeof user[field] === 'boolean'){
-							formData.append(field,String(user[field]))
+						if (typeof user[field] === "boolean") {
+							formData.append(field, String(user[field]));
 						}
 						break;
 					default:
-						if(typeof user[field] === 'string'){
-							formData.append(field,user[field])						
+						if (typeof user[field] === "string") {
+							formData.append(field, user[field]);
 						}
-						break;						
+						break;
 				}
-				const { user:userUpdated,profile } = await updateFieldProfile(userData.id.toString(),formData)							
+				const { user: userUpdated, profile } = await updateFieldProfile(
+					userData.id.toString(),
+					formData,
+				);
 				updatedProfileAction({
-						user:userUpdated,
-						profile
-				})				
+					user: userUpdated,
+					profile,
+				});
 			}
 		},
-		[errors, user],
+		[updatedProfileAction, user, userData],
 	);
 
 	function handleChangeField(
@@ -122,17 +129,17 @@ const Profile = () => {
 			value = target.files?.[0] || null; // File or null
 		} else {
 			value = target.value; // string
-		}		
-		// setUser((prev) => ({ ...prev, [name]: value }));
-		setUser({ ...user,[name]:value })
+		}
+
+		setUser({ ...user, [name]: value });
 	}
 
 	return (
 		<div>
-			<div className="mx-auto my-10 flex flex-col gap-12 rounded-xl shadow-[2px_2px_10px] shadow-primary md:max-w-3xl">
-				<h2 className="relative h-[150px] md:h-[250px] -z-10">					
+			<div className="shadow-primary mx-auto my-10 flex flex-col gap-12 rounded-xl shadow-[2px_2px_10px] md:max-w-3xl">
+				<h2 className="relative -z-10 h-[150px] md:h-[250px]">
 					<Banner className="inline-block h-full w-full rounded-t-xl" />
-					<span className="md:w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-center text-3xl md:text-5xl font-bold text-gray-50">
+					<span className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-center text-3xl font-bold text-gray-50 md:w-full md:text-5xl">
 						Perfil de Usuario
 					</span>
 				</h2>
@@ -140,7 +147,7 @@ const Profile = () => {
 					<div className="flex gap-5 md:flex-col">
 						<div className="flex flex-col gap-4 px-5 md:items-center md:gap-0">
 							<UploadImage
-								name="photo"							
+								name="photo"
 								previewUrl={previewImage}
 								onChange={handleChangeField as EventInput}
 								onSubmit={handleSubmitEditField}
@@ -170,26 +177,26 @@ const Profile = () => {
 									</span>
 								</div>
 								<div className="flex">
-									<Switch 
-									label="Permitir envío de notificaciones"
-									name="allowNotifications"
-									onChange={handleChangeField}
-									checked={user.allowNotifications} 
-									onSubmit={handleSubmitEditField}
+									<Switch
+										label="Permitir envío de notificaciones"
+										name="allowNotifications"
+										onChange={handleChangeField}
+										checked={user.allowNotifications}
+										onSubmit={handleSubmitEditField}
 									/>
-								</div>								
+								</div>
 							</div>
 							<div className="mt-auto flex flex-col gap-0 md:gap-3">
 								<div>
 									<EditableField
-									label="username"
-									name="username"
-									error={errors.username.error}
-									value={user.username ? user.username : ""}
-									className="flex-1 rounded-l-lg border px-3"
-									onChange={handleChangeField}
-									classNameValue="text-lg font-medium text-gray-500 font-semibold"
-									onEdit={handleSubmitEditField}
+										label="username"
+										name="username"
+										error={errors.username.error}
+										value={user.username ? user.username : ""}
+										className="flex-1 rounded-l-lg border px-3"
+										onChange={handleChangeField}
+										classNameValue="text-lg font-medium text-gray-500 font-semibold"
+										onEdit={handleSubmitEditField}
 									/>
 									<span className="text-xs text-red-500">
 										{errors.username.message}
@@ -211,7 +218,7 @@ const Profile = () => {
 								</div>
 								<div>
 									<EditableField
-										label="Fec. Nacimiento"										
+										label="Fec. Nacimiento"
 										type="date"
 										name="dateBirth"
 										error={errors.dateBirth.error}
@@ -245,7 +252,7 @@ const Profile = () => {
 						</div>
 					</div>
 					<div className="pt-2 md:pt-6">
-						<div className="border-t border-accent/30 pt-2 md:pt-6">
+						<div className="border-accent/30 border-t pt-2 md:pt-6">
 							<EditableField
 								label="Biografía"
 								as="textarea"
