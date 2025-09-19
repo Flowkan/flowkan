@@ -2,7 +2,7 @@ import { Form } from "react-router-dom";
 import { FormFields } from "./ui/FormFields";
 import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
-import { useDismiss } from "./hooks/useDismissClickAndEsc";
+import { useDismiss } from "../hooks/useDismissClickAndEsc";
 
 interface FilterProps {
 	searchBoard: string;

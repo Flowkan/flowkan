@@ -1,6 +1,6 @@
 import { Button } from "./Button";
-import { LangSwitch } from "../hooks/useLangSwitch";
-import { useDismiss } from "../hooks/useDismissClickAndEsc";
+import { LangSwitch } from "../../hooks/useLangSwitch";
+import { useDismiss } from "../../hooks/useDismissClickAndEsc";
 
 export default function LanguageToggleButton() {
 	const { LANGUAGES, changeLanguage, selectedLanguage, selectedLangCode } =
