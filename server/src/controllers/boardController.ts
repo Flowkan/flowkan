@@ -103,9 +103,7 @@ export class BoardController {
       const userId = req.apiUserId;
       const { title }: { title: string } = req.body;
 
-      const image = req.body.image
-        ? `/uploads/boards/${req.body.image}_o.webp`
-        : pickDefaultImage();
+      const image = req.body.image ? req.body.image : pickDefaultImage();
 
       const board = await this.boardService.add({ userId, title, image });
       res.status(201).json(board);
@@ -139,8 +137,6 @@ export class BoardController {
         data,
       });
 
-      console.log("Hola 1");
-
       if (currentBoard?.image && !isDefaultImage(currentBoard.image)) {
         const imageFilename = currentBoard.image.replace("_o.webp", "");
         const originalToDelete = `/uploads/boards/${imageFilename}_o.webp`;
@@ -150,8 +146,6 @@ export class BoardController {
           thumbnailImagePath: thumbnailToDelete,
         });
       }
-
-      console.log("Hola 2");
 
       res.status(200).json(updatedBoard);
     } catch (err) {
@@ -163,7 +157,22 @@ export class BoardController {
     try {
       const userId = req.apiUserId;
       const boardId = req.params.id;
+      const currentBoard = await this.boardService.get({ userId, boardId });
+
       await this.boardService.delete({ userId, boardId });
+
+      if (currentBoard?.image && !isDefaultImage(currentBoard.image)) {
+        /* const imageFilename = currentBoard.image.replace("_o.webp", "");
+        const originalToDelete = `/uploads/boards/${imageFilename}_o.webp`;
+        const thumbnailToDelete = `/uploads/boards/${imageFilename}_t.webp`; */
+        const originalToDelete = `/uploads/boards/${currentBoard.image}_o.webp`;
+        const thumbnailToDelete = `/uploads/boards/${currentBoard.image}_t.webp`;
+        deleteImage({
+          originalImagePath: originalToDelete,
+          thumbnailImagePath: thumbnailToDelete,
+        });
+      }
+
       res.status(204).json({});
     } catch (err) {
       console.log("errsaddsfdsdsafor", err);
