@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Page } from "../components/layout/page";
 import React from "react";
+import { Button } from "../components/ui/Button";
 
 export const HomePage: React.FC = () => {
 	const { t } = useTranslation();
@@ -10,21 +11,26 @@ export const HomePage: React.FC = () => {
 				<section className="from-accent to-primary-dark text-text-on-accent relative overflow-hidden bg-gradient-to-br px-6 py-20 md:px-12">
 					<div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between lg:flex-row">
 						<div className="mb-10 text-center lg:mb-0 lg:w-1/2 lg:text-left">
-							<h1 className="mb-4 text-4xl leading-tight font-extrabold md:text-5xl">
+							<h1 className="mb-4 text-3xl leading-tight font-extrabold sm:text-4xl md:text-5xl lg:text-6xl">
 								{t(
 									"home.banner",
 									"Simplifica tus tareas, maximiza tu productividad",
 								)}
-								.
 							</h1>
-							<p className="mb-6 text-xl font-light md:text-2xl">
+
+							<p className="mb-6 text-base font-light sm:text-lg md:text-xl lg:text-2xl">
 								{t("home.description", "Tarjetas de Tareas, Listas, Tableros")}
 								<br />
 								{t("home.funtionality", "Arrastrar y soltar")}
 							</p>
-							<button className="bg-primary text-text-on-accent hover:bg-primary-dark transform rounded-lg px-8 py-4 text-lg font-semibold shadow-lg transition duration-300 hover:scale-105">
+
+							<Button
+								title="Saber más"
+								aria-label="Saber más sobre la aplicación"
+								className="bg-primary text-text-on-accent hover:bg-primary-dark transform rounded-lg px-6 py-3 text-base font-semibold shadow-lg transition duration-300 hover:scale-105 sm:px-8 sm:py-4 sm:text-lg"
+							>
 								{t("home.more", "Saber Más")}
-							</button>
+							</Button>
 						</div>
 
 						<div className="flex justify-center lg:w-1/2 lg:justify-end">
@@ -275,7 +281,7 @@ export const HomePage: React.FC = () => {
 									href="#"
 									className="text-primary font-semibold hover:underline"
 								>
-									{t("home.moreInformation","Más información")} &rarr;
+									{t("home.moreInformation", "Más información")} &rarr;
 								</a>
 							</div>
 						</div>
