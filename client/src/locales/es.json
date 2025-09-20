@@ -89,8 +89,17 @@
 		"form": {
 			"header": "Crear tablero",
 			"title": "Título del tablero",
+			"img": "Fondo",
 			"button": "CREAR"
 		}
+	},
+	"editboard": {
+		"form": {
+			"header": "Editar tablero",
+			"newtitle": "Nuevo título",
+			"newimg": "Nuevo fondo"
+		},
+		"edit": "EDITAR"
 	},
 	"home": {
 		"banner": "Simplifica tus tareas, maximiza tu productividad",

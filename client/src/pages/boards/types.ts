@@ -2,6 +2,12 @@ import type { User } from "../login/types";
 
 export interface BoardsData {
 	title: string;
+	image: File;
+}
+
+export interface EditBoardsData {
+	title?: string;
+	image?: File;
 }
 
 export type CardAssignee = {
@@ -32,6 +38,7 @@ export type Board = {
 	title: string;
 	lists: Column[];
 	members: BoardMember[];
+	image: string;
 };
 
 export type BoardMember = {

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { Board } from "./types";
+import type { Board, EditBoardsData } from "./types";
 import TrashButton from "../../components/ui/trash-button";
 import { useState } from "react";
 import EditButton from "../../components/ui/edit-button";
@@ -41,9 +41,12 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 		setShowEditForm(true);
 	};
 
-	const handleEditForm = async (newData: string) => {
+	const handleEditForm = async ({ title, image }: EditBoardsData) => {
 		if (board) {
-			dispatch(editBoard(board.id, { title: newData }));
+			const formData = new FormData();
+			if (title) formData.append("title", title);
+			if (image) formData.append("image", image);
+			dispatch(editBoard(board.id, formData));
 		}
 	};
 

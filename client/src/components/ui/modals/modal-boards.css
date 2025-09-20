@@ -44,6 +44,14 @@
 			gap: 30px;
 			margin-top: 10px;
 
+			.file-container {
+				.upload-img-container {
+					input[type="file"] {
+						cursor: pointer;
+					}
+				}
+			}
+
 			.form-btn {
 				padding: 5px 10px;
 				border-radius: 5px;

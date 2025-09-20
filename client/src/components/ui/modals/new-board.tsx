@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Form } from "../Form";
 import { FormFields } from "../FormFields";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import CloseButton from "../close-button";
 import "./modal-boards.css";
 import { Button } from "../Button";
@@ -17,6 +17,7 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 	const { t } = useTranslation();
 	const [titleInput, setTitleInput] = useState("");
 	const dispatch = useDispatch<AppDispatch>();
+	const fileRef = useRef<HTMLInputElement>(null);
 
 	const isDisabled = !titleInput;
 
@@ -27,12 +28,15 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		const data = {
-			title: titleInput,
-		};
+		const boardData = new FormData();
+		boardData.append("title", titleInput);
+		const file = fileRef.current?.files?.[0];
+		if (file) {
+			boardData.append("image", file);
+		}
 
 		try {
-			await dispatch(addBoard(data));
+			await dispatch(addBoard(boardData));
 			onClose(); // Cierra el modal solo si la creación fue exitosa
 		} catch (error) {
 			console.error("Error al crear el tablero", error);
@@ -59,6 +63,17 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 							onChange={handleTitleChange}
 						/>
 					</div>
+					<div className="file-container">
+						<FormFields
+							labelClassName="upload-img-label"
+							label={t("newboard.form.img", "Fondo")}
+							inputClassName="upload-img-container"
+							id="bg-img"
+							name="bg-img"
+							type="file"
+							ref={fileRef}
+						/>
+					</div>
 					<Button type="submit" className="form-btn" disabled={isDisabled}>
 						{t("newboard.form.button", "CREAR")}
 					</Button>
@@ -67,6 +82,5 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 		</div>
 	);
 };
-
 
 export default NewBoard;

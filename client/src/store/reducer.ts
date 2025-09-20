@@ -33,12 +33,12 @@ const defaultState: State = {
 		error: null,
 		user: storedUser ? JSON.parse(storedUser) : null,
 	},
-	profile:{
-		username:'',
-		dateBirth:'',
-		location:'',
-		allowNotifications:true,
-		bio:''
+	profile: {
+		username: "",
+		dateBirth: "",
+		location: "",
+		allowNotifications: true,
+		bio: "",
 	},
 	boards: { boards: [], currentBoard: null, loading: false, error: null },
 	ui: { pending: false, error: null },
@@ -75,15 +75,15 @@ export function auth(
 				error: action.payload.message,
 				isAuthenticated: true,
 				user: state.user,
-			};	
+			};
 		case "user/update/pending":
 		case "user/update/rejected":
 			return state;
 		case "user/update/fulfilled":
 			return {
 				...state,
-				user:action.payload
-			}
+				user: action.payload,
+			};
 		default:
 			return state;
 	}
@@ -92,7 +92,10 @@ export function auth(
 //
 // ─── PROFILE REDUCER ──────────────────────────────────────────────
 //
-export function profile(state=defaultState.profile,action:Actions):State['profile']{
+export function profile(
+	state = defaultState.profile,
+	action: Actions,
+): State["profile"] {
 	switch (action.type) {
 		case "profile/update/pending":
 		case "profile/update/rejected":
@@ -101,12 +104,11 @@ export function profile(state=defaultState.profile,action:Actions):State['profil
 			return state;
 		case "profile/update/fulfilled":
 		case "profile/loaded/fulfilled":
-			return { ...action.payload }	
+			return { ...action.payload };
 		default:
 			return state;
 	}
 }
-
 
 //
 // ─── BOARDS REDUCER ──────────────────────────────────────────────
@@ -143,7 +145,11 @@ export function boards(
 				boards: state.boards.map((board) => {
 					if (board.id !== action.payload.boardId) return board;
 
-					return { ...board, title: action.payload.data.title };
+					return {
+						...board,
+						title: action.payload.data.title,
+						image: action.payload.data.image,
+					};
 				}),
 			};
 

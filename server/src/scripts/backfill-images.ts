@@ -2,7 +2,7 @@
 
 import prisma from "../config/db";
 import dotenv from "dotenv";
-import pickDefaultImage from "../lib/defaultImage";
+import { pickDefaultImage } from "../lib/defaultImage";
 
 dotenv.config();
 

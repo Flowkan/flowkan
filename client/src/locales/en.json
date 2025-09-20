@@ -89,16 +89,17 @@
 		"form": {
 			"header": "Create Board",
 			"title": "Board Title",
+			"img": "Background",
 			"button": "CREATE"
 		}
 	},
 	"editboard": {
 		"form": {
 			"header": "Edit board",
-			"newtitle": "New title"
+			"newtitle": "New title",
+			"newimg": "New background"
 		},
-		"edit": "EDIT",
-		"cancel": "CANCEL"
+		"edit": "EDIT"
 	},
 	"home": {
 		"banner": "Simplify your tasks, maximize your productivity",

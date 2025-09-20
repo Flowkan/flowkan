@@ -1,11 +1,10 @@
-const backend = process.env.BACKEND_URL;
 const defaults = [
-  "/uploads/defaults/1.png",
-  "/uploads/defaults/2.png",
-  "/uploads/defaults/3.png",
-  "/uploads/defaults/4.png",
-  "/uploads/defaults/5.png",
-  "/uploads/defaults/6.png",
+  "/uploads/defaults/1.webp",
+  "/uploads/defaults/2.webp",
+  "/uploads/defaults/3.webp",
+  "/uploads/defaults/4.webp",
+  "/uploads/defaults/5.webp",
+  "/uploads/defaults/6.webp",
 ];
 
 export function pickDefaultImage(): string {
