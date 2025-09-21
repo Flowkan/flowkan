@@ -9,13 +9,7 @@ const defaultState: BoardsState = {
 		error: null,
 		user: storedUser ? JSON.parse(storedUser) : null,
 	},
-	profile: {
-		username: "",
-		dateBirth: "",
-		location: "",
-		allowNotifications: true,
-		bio: "",
-	},
+	profile: null,
 	boards: { boards: [], currentBoard: null, loading: false, error: null },
 	ui: { pending: false, error: null },
 };

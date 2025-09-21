@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import prisma from "./config/db";
 import bcrypt from "bcrypt";
 import readline, { Interface } from "readline";
+import { slugify } from "./utils/utils";
 
 const rl: Interface = readline.createInterface({
   input: process.stdin,
@@ -65,6 +66,7 @@ async function main(): Promise<void> {
   const board = await prisma.board.create({
     data: {
       title: "Board de ejemplo",
+      slug: slugify("Board de ejemplo"),
       ownerId: user.id,
       members: {
         create: [{ userId: user.id, role: "admin" }],

@@ -40,7 +40,7 @@ const ShareBoard = ({ board, handleHideMessage }: ShareBoardProps) => {
 			const response = await createInvitationLink(board.id);
 			const token = response.token;
 			const FE_BASE_URL = window.location.origin;
-			let fullInvitationUrl = `${FE_BASE_URL}/invitacion?token=${token}&username=${response.inviterName}&title=${response.boardTitle}&boardId=${response.boardId}`;
+			let fullInvitationUrl = `${FE_BASE_URL}/invitacion?token=${token}&username=${response.inviterName}&title=${response.boardTitle}&boardId=${response.boardId}&boardSlug=${response.slug}`;
 			if (response.inviterPhoto) {
 				fullInvitationUrl += `&photo=${response.inviterPhoto}`;
 			}

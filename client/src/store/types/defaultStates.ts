@@ -15,7 +15,7 @@ export type AuthState = {
 };
 
 export type ProfileState = {
-	profile: ProfileType;
+	profile: ProfileType | null;
 	boards: {
 		boards: Board[];
 		currentBoard: Board | null;
@@ -34,7 +34,7 @@ export type BoardsState = {
 		isAuthenticated: boolean;
 		error: string | null;
 	};
-	profile: ProfileType;
+	profile: ProfileType | null;
 	boards: {
 		boards: Board[];
 		currentBoard: Board | null;

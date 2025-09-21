@@ -10,6 +10,9 @@ class AuthService {
   constructor(authModel: AuthModel) {
     this.authModel = authModel;
   }
+  async changePassword(userId:number,password:string){
+    return this.authModel.changePassword(userId,password)
+  }
 
   async validateCredentials(
     data: ValidateCredentialsParams,
@@ -38,6 +41,21 @@ class AuthService {
   async activateUser(userId: number) {
     return this.authModel.updateUser(userId, { status: true });
   }
+  async generatedToken(userId:number,token:string){
+    return this.authModel.createToken(userId,token)
+  }
+  async existToken(token:string){
+    return this.authModel.isTokenCreated(token)
+  }
+  async changeTokenToUsed(token:string) {
+    return this.authModel.changeTokenToUsed(token)
+  }
+
+  async hasTokenRecently(userId:number){
+    return this.authModel.hasTokenRecently(userId)
+  }
+
+
 }
 
 export default AuthService;

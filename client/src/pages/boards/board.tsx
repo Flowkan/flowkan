@@ -19,6 +19,9 @@ import {
 	useDeleteColumnAction,
 	useDeleteTaskction,
 	useUpdateColumnAction,
+	useBoards,
+	useFetchBoardsAction,
+	useBoardsLoading,
 } from "../../store/boards/hooks";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 
@@ -50,13 +53,16 @@ const move = <T,>(
 
 const Board = () => {
 	const fetchBoardAction = useFetchBoardByIdAction();
+	const fetchBoardsAction = useFetchBoardsAction();
 	const addTaskAction = useAddTaskAction();
 	const updateTaskAction = useUpdateTaskAction();
 	const deleteTaskAction = useDeleteTaskction();
 	const addColumnAction = useAddColumnAction();
 	const updateColumnAction = useUpdateColumnAction();
 	const removeColumnAction = useDeleteColumnAction();
-	const { boardId } = useParams<{ boardId: string }>();
+	const { slug } = useParams<{ slug: string }>();
+	const allBoards = useBoards();
+	const boardsLoading = useBoardsLoading();
 	const navigate = useNavigate();
 	const boardData = useCurrentBoard();
 	const error = useBoardsError();
@@ -65,12 +71,37 @@ const Board = () => {
 	const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [newColumnName, setNewColumnName] = useState("");
+	const [resolvedBoardId, setResolvedBoardId] = useState<string | undefined>(
+		undefined,
+	);
 
 	useEffect(() => {
-		if (boardId) {
-			fetchBoardAction(boardId);
+		if (!slug) return;
+
+		if (allBoards.length > 0) {
+			const foundBoard = allBoards.find((b) => b.slug === slug);
+
+			if (foundBoard) {
+				const newId = foundBoard.id.toString();
+				if (newId !== resolvedBoardId) {
+					setResolvedBoardId(newId);
+					fetchBoardAction(newId);
+				}
+			} else if (!foundBoard) {
+				console.error("Board no encontrado para el slug:", slug);
+			}
+		} else if (!boardsLoading) {
+			fetchBoardsAction(0, 100);
 		}
-	}, [boardId, fetchBoardAction]);
+	}, [
+		slug,
+		allBoards,
+		fetchBoardsAction,
+		fetchBoardAction,
+		navigate,
+		boardsLoading,
+		resolvedBoardId,
+	]);
 
 	useEffect(() => {
 		if (error === "Error al cargar tablero") {
@@ -215,7 +246,7 @@ const Board = () => {
 				isVisible: true,
 				position: boardData.lists.length,
 			};
-			addColumnAction(boardData.id!, newColumn);
+			addColumnAction(boardData.id, newColumn);
 			setNewColumnName("");
 			setIsMenuOpen(false);
 		}
@@ -305,7 +336,7 @@ const Board = () => {
 			{selectedTask && selectedColumnId && (
 				<TaskDetailModal
 					task={selectedTask}
-					boardId={boardId}
+					boardId={resolvedBoardId}
 					columnId={selectedColumnId}
 					onClose={closeTaskDetail}
 					onEditTask={(updatedFields) =>

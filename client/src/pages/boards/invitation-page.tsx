@@ -17,9 +17,11 @@ const InvitationPage = () => {
 	useEffect(() => {
 		const token = searchParams.get("token");
 		const boardId = searchParams.get("boardId");
-		if (token && boardId) {
+		const boardSlug = searchParams.get("boardSlug");
+		if (token && boardId && boardSlug) {
 			localStorage.setItem("invitationToken", token);
 			localStorage.setItem("invitationBoardId", boardId);
+			localStorage.setItem("invitationBoardSlug", boardSlug);
 		} else {
 			navigate("/", { replace: true });
 		}

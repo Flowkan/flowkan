@@ -19,13 +19,17 @@ interface UploadImageProps {
 }
 
 const UploadImage = ({ previewUrl, onChange, icon,name,onSubmit,error=false }: UploadImageProps) => {
+	// console.log(previewUrl);
+	
 	const fileRef = useRef<HTMLInputElement>(null);
-	const [newImage, setNewImage] = useState(previewUrl ?? "");
+	const [newImage, setNewImage] = useState(previewUrl || "");
+	const [onEdit,setOnEdit] = useState(false);
 	function handleChange(e: ChangeEvent<HTMLInputElement>) {
-		const file = fileRef.current?.files?.[0];
+		const file = fileRef.current?.files?.[0];		
 		if (file) {
 			setNewImage(URL.createObjectURL(file));
 			onChange(e,name);
+			
 		}
 	}
 	function handleCancel(){
@@ -34,19 +38,25 @@ const UploadImage = ({ previewUrl, onChange, icon,name,onSubmit,error=false }: U
 			target:{value: "", name, files: null, type:"file"},
 			currentTarget:{value: "", name, files: null,type:"file"},			
 		} as ChangeEvent<HTMLInputElement>;
-		onChange(e,name)
-		// console.log(e);
-		
+		onChange(e,name)		
 	}
 	function handleSubmit(){
 		if(onSubmit){
 			onSubmit(name as keyof ProfileUpdateType)
-			// setNewImage(previewUrl as string)			
+			// setNewImage(previewUrl as string)	
+			setOnEdit(false);		
 		}
 	}	
 	useEffect(()=>{
-		setNewImage(previewUrl ?? "")
+		if(previewUrl){
+			setNewImage(previewUrl)
+		}
 	},[previewUrl])
+
+	function handleSelectImage(){
+		fileRef.current?.click()
+		setOnEdit(true)
+	}
 	
 	return (
 		<>
@@ -60,21 +70,21 @@ const UploadImage = ({ previewUrl, onChange, icon,name,onSubmit,error=false }: U
 							${error ? 'border-2 border-red-400' : ''}`}
 					/>
 				) : (
-					<div
-						onClick={() => fileRef.current?.click()}
+					<button
+						onClick={handleSelectImage}
 						className={`flex size-40 cursor-pointer items-center justify-center rounded-full border border-gray-50 bg-primary/30 transition hover:bg-primary-hover/30 hover:border-primary
 							shadow-primary shadow-[5px_1px_10px] md:shadow-[5px_5px_15px]
 							${error ? 'border-4 border-red-400' : ''}`}
 						aria-label="Subir imagen"
 					>
 						<IconCamera className="size-20 text-white transition-colors duration-300 ease-in group-hover:text-primary" />
-					</div>
+					</button>
 				)}
 
 				{newImage && (
 					<Button
 						type="button"
-						onClick={() => fileRef.current?.click()}
+						onClick={handleSelectImage}
 						className="bg-primary hover:bg-primary-dark absolute right-2 bottom-0 flex size-10 items-center justify-center rounded-full p-2 text-white shadow transition"
 						aria-label="Editar imagen"
 					>
@@ -92,7 +102,7 @@ const UploadImage = ({ previewUrl, onChange, icon,name,onSubmit,error=false }: U
 				onChange={handleChange}
 			/>
 			<div className="flex justify-center gap-2">
-				{newImage !== previewUrl && (
+				{onEdit && (
 					<>
 						<Button
 							type="button"

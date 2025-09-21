@@ -34,7 +34,7 @@ export function profileReducer(
 		case "profile/update/rejected":
 		case "profile/loaded/pending":
 		case "profile/loaded/rejected":
-			return state;
+			return null;
 		case "profile/update/fulfilled":
 		case "profile/loaded/fulfilled":
 			return { ...action.payload };
