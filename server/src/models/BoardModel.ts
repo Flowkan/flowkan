@@ -151,6 +151,21 @@ class BoardModel {
     });
   }
 
+  async findMatchingSlugs(baseSlug: string): Promise<string[]> {
+    const boards = await this.prisma.board.findMany({
+      where: {
+        slug: {
+          startsWith: baseSlug,
+        },
+      },
+      select: {
+        slug: true,
+      },
+    });
+
+    return boards.map((b) => b.slug);
+  }
+
   async update({
     userId,
     boardId,

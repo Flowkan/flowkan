@@ -46,7 +46,37 @@ class BoardService {
     title: string;
     slug: string;
   }): Promise<Board> {
-    return this.boardModel.add(data);
+    const uniqueSlug = await this.findUniqueSlug(data.slug);
+    return this.boardModel.add({
+      ...data,
+      slug: uniqueSlug,
+    });
+  }
+
+  private async findUniqueSlug(baseSlug: string): Promise<string> {
+    const existingSlugs = await this.boardModel.findMatchingSlugs(baseSlug);
+
+    if (!existingSlugs.includes(baseSlug)) {
+      return baseSlug;
+    }
+
+    let maxNumber = 0;
+
+    existingSlugs.forEach((s: string) => {
+      const regex = new RegExp(`^${baseSlug}-(\\d+)$`);
+
+      const match = regex.exec(s);
+
+      if (match) {
+        const number = parseInt(match[1], 10);
+        if (number > maxNumber) {
+          maxNumber = number;
+        }
+      }
+    });
+
+    const newNumber = maxNumber + 1;
+    return `${baseSlug}-${newNumber}`;
   }
 
   async update(data: {
