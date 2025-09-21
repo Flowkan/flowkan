@@ -21,7 +21,7 @@ export const USER_ENDPOINTS = {
 	CONFIRM: `/api/${VERSION}/auth/confirm`,
 	BY_ID: byId("profile"),
 	RESET_PASSWORD: `/api/${VERSION}/auth/reset_password`,
-	CHANGE_PASSWORD: `/api/${VERSION}/auth/change_password`
+	CHANGE_PASSWORD: `/api/${VERSION}/auth/change_password`,
 };
 
 export const BOARD_ENDPOINTS = {
@@ -44,8 +44,4 @@ export const getAccountEndpoint = (typeAccount: TypeAccount): string | null => {
 		throw new Error("Not valid account.");
 	}
 	return `${USER_ENDPOINTS.PROFILE}?account=${typeAccount}`;
-};
-
-export const slugTitle = (board: string) => {
-	return board.toLowerCase().trim().replace(/\s+/g, "-");
 };

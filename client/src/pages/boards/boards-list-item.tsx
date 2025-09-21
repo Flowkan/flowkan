@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { deleteBoard, editBoard } from "../../store/actions";
 import { useAppDispatch } from "../../store";
 import EditBoard from "../../components/ui/modals/edit-board";
-import { slugTitle } from "../../utils/endpoints";
 
 interface BoardsItemProps {
 	board: Board;
@@ -78,9 +77,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
 			)}
 			<li className="board-item">
-				
-				<Link to={`/boards/${board.id}?name=${slugTitle(board.title)}`} className="board-link">
-					{board.title}
+				<Link to={`/boards/${board.slug}`} className="board-link">
 					<div className="board-title">{board.title}</div>
 					<div className="edit-trash-share-wrap">
 						<div className="edit-icon container">

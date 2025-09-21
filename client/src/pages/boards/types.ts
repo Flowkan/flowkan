@@ -29,6 +29,7 @@ export type Column = {
 
 export type Board = {
 	id: string;
+	slug: string;
 	title: string;
 	lists: Column[];
 	members: BoardMember[];

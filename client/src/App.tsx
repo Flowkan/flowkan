@@ -55,7 +55,7 @@ function App() {
 				<Route
 					path="change-password"
 					element={
-						<AuthRoute requireAuth={false} redirectTo="/login">							
+						<AuthRoute requireAuth={false} redirectTo="/login">
 							<ChangePassword />
 						</AuthRoute>
 					}
@@ -125,7 +125,7 @@ function App() {
 					}
 				/>
 				<Route
-					path=":boardId"
+					path=":slug"
 					element={
 						<Suspense fallback={<LoginSkeleton />}>
 							<Board />

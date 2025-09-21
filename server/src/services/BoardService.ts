@@ -2,7 +2,7 @@ import { Board, Prisma, User } from "@prisma/client";
 import BoardModel, { BoardWithRelations } from "../models/BoardModel";
 
 class BoardService {
-  private boardModel: BoardModel;
+  private readonly boardModel: BoardModel;
 
   constructor(boardModel: BoardModel) {
     this.boardModel = boardModel;
@@ -36,13 +36,47 @@ class BoardService {
 
   async get(data: {
     userId: number;
-    boardId: string;
+    boardId: number;
   }): Promise<BoardWithRelations | null> {
     return this.boardModel.get(data);
   }
 
-  async add(data: { userId: number; title: string }): Promise<Board> {
-    return this.boardModel.add(data);
+  async add(data: {
+    userId: number;
+    title: string;
+    slug: string;
+  }): Promise<Board> {
+    const uniqueSlug = await this.findUniqueSlug(data.slug);
+    return this.boardModel.add({
+      ...data,
+      slug: uniqueSlug,
+    });
+  }
+
+  private async findUniqueSlug(baseSlug: string): Promise<string> {
+    const existingSlugs = await this.boardModel.findMatchingSlugs(baseSlug);
+
+    if (!existingSlugs.includes(baseSlug)) {
+      return baseSlug;
+    }
+
+    let maxNumber = 0;
+
+    existingSlugs.forEach((s: string) => {
+      const regex = new RegExp(`^${baseSlug}-(\\d+)$`);
+
+      const match = regex.exec(s);
+
+      if (match) {
+        const number = parseInt(match[1], 10);
+        if (number > maxNumber) {
+          maxNumber = number;
+        }
+      }
+    });
+
+    const newNumber = maxNumber + 1;
+    return `${baseSlug}-${newNumber}`;
   }
 
   async update(data: {
