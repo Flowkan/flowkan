@@ -1,218 +1,18 @@
-import type { AppThunk } from ".";
-import type { Credentials, User } from "../pages/login/types";
-import type { Board, BoardsData, Column, Task } from "../pages/boards/types";
-import type { ProfileType } from "../pages/profile/types";
-import { setAuthorizationHeader } from "../api/client";
-
-//
-// ─── AUTH ──────────────────────────────────────────────
-//
-type AuthLoginPending = { type: "auth/login/pending" };
-type AuthLoginFulfilled = { type: "auth/login/fulfilled"; payload: User };
-type AuthLoginRejected = { type: "auth/login/rejected"; payload: Error };
-type AuthLogoutPending = { type: "auth/logout/pending" };
-type AuthLogoutFulfilled = { type: "auth/logout/fulfilled" };
-type AuthLogoutRejected = { type: "auth/logout/rejected"; payload: Error };
-
-export const authLoginPending = (): AuthLoginPending => ({
-	type: "auth/login/pending",
-});
-export const authLoginFulfilled = (user: User): AuthLoginFulfilled => ({
-	type: "auth/login/fulfilled",
-	payload: user,
-});
-export const authLoginRejected = (error: Error): AuthLoginRejected => ({
-	type: "auth/login/rejected",
-	payload: error,
-});
-export const authLogoutPending = (): AuthLogoutPending => ({
-	type: "auth/logout/pending",
-});
-export const authLogoutFulfilled = (): AuthLogoutFulfilled => ({
-	type: "auth/logout/fulfilled",
-});
-export const authLogoutRejected = (error: Error): AuthLogoutRejected => ({
-	type: "auth/logout/rejected",
-	payload: error,
-});
-
-export function login(credentials: Credentials): AppThunk<Promise<void>> {
-	return async (dispatch, _getState, { api, router }) => {
-		dispatch(authLoginPending());
-		try {
-			const user = await api.auth.login(credentials);
-			dispatch(authLoginFulfilled(user));
-			const to = router.state.location.state?.from ?? "/boards";
-			router.navigate(to, { replace: true });
-		} catch (error) {
-			if (error instanceof Error) {
-				dispatch(authLoginRejected(error));
-			}
-			throw error;
-		}
-	};
-}
-
-interface OAuthLoginPayload {
-	token: string;
-	user: User;
-}
-
-export function loginWithOAuth(
-	payload: OAuthLoginPayload,
-): AppThunk<Promise<void>> {
-	return async (dispatch, _getState, { api, router }) => {
-		const { token, user: userObj } = payload;
-		dispatch(authLoginPending());
-		try {
-			localStorage.setItem("auth", token);
-			setAuthorizationHeader(token);
-			localStorage.setItem("user", JSON.stringify(userObj));
-
-			const user = await api.auth.me();
-
-			dispatch(authLoginFulfilled(user));
-			const to = router.state.location.state?.from ?? "/boards";
-			router.navigate(to, { replace: true });
-		} catch (error) {
-			if (error instanceof Error) {
-				dispatch(authLoginRejected(error));
-			}
-			throw error;
-		}
-	};
-}
-
-export function logout(): AppThunk<Promise<void>> {
-	return async (dispatch, _getState, { api, router }) => {
-		dispatch(authLogoutPending());
-		try {
-			await api.auth.logout();
-			dispatch(authLogoutFulfilled());
-			router.navigate("/login", { replace: true });
-		} catch (error) {
-			if (error instanceof Error) {
-				dispatch(authLogoutRejected(error));
-			}
-			throw error;
-		}
-	};
-}
-
-//
-// ─── PROFILE ──────────────────────────────────────────────
-//
-
-type UserUpdatePending = { type: "user/update/pending" };
-type UserUpdateFulfilled = { type: "user/update/fulfilled"; payload: User };
-type UserUpdateRejected = { type: "user/update/rejected"; payload: Error };
-
-export const userUpdatePending = (): UserUpdatePending => ({
-	type: "user/update/pending",
-});
-export const userUpdateFulFilled = (user: User): UserUpdateFulfilled => ({
-	type: "user/update/fulfilled",
-	payload: user,
-});
-export const userUpdateRejected = (error: Error): UserUpdateRejected => ({
-	type: "user/update/rejected",
-	payload: error,
-});
-
-type ProfileUpdatePending = { type: "profile/update/pending" };
-type ProfileUpdateFulfilled = {
-	type: "profile/update/fulfilled";
-	payload: ProfileType;
-};
-type ProfileUpdateRejected = {
-	type: "profile/update/rejected";
-	payload: Error;
-};
-
-export const profileUpdatePending = (): ProfileUpdatePending => ({
-	type: "profile/update/pending",
-});
-export const profileUpdateFulFilled = (
-	profile: ProfileType,
-): ProfileUpdateFulfilled => ({
-	type: "profile/update/fulfilled",
-	payload: profile,
-});
-export const profileUpdateRejected = (error: Error): ProfileUpdateRejected => ({
-	type: "profile/update/rejected",
-	payload: error,
-});
-
-type ProfileLoadedPending = { type: "profile/loaded/pending" };
-type ProfileLoadedFulfilled = {
-	type: "profile/loaded/fulfilled";
-	payload: ProfileType;
-};
-type ProfileLoadedRejected = {
-	type: "profile/loaded/rejected";
-	payload: Error;
-};
-
-export const profileLoadedPending = (): ProfileLoadedPending => ({
-	type: "profile/loaded/pending",
-});
-export const profileLoadedFulFilled = (
-	profile: ProfileType,
-): ProfileLoadedFulfilled => ({
-	type: "profile/loaded/fulfilled",
-	payload: profile,
-});
-export const profileLoadedRejected = (error: Error): ProfileLoadedRejected => ({
-	type: "profile/loaded/rejected",
-	payload: error,
-});
-
-export function loadedProfile(): AppThunk<Promise<void>> {
-	return async (dispatch, _getStore, { api }) => {
-		dispatch(profileLoadedPending());
-		try {
-			const { error, profile } = await api.profile.getProfileData();
-			if (error) {
-				throw new Error(error);
-			}
-			if (profile) {
-				console.log(profile);
-
-				dispatch(profileLoadedFulFilled(profile));
-			}
-		} catch (error) {
-			if (error instanceof Error) {
-				dispatch(profileLoadedRejected(error));
-			}
-		}
-	};
-}
-
-export function updateProfile({
-	user,
-	profile,
-}: {
-	user: User;
-	profile: ProfileType;
-}): AppThunk<Promise<void>> {
-	return async (dispatch) => {
-		dispatch(userUpdatePending());
-		dispatch(profileUpdatePending());
-		try {
-			dispatch(userUpdateFulFilled(user));
-			dispatch(profileUpdateFulFilled(profile));
-			// console.log(getState().auth.user);
-		} catch (error) {
-			if (error instanceof Error) {
-				dispatch(userUpdateRejected(error));
-			}
-		}
-	};
-}
+import type { AppThunk } from "..";
+import type { User } from "../../pages/login/types";
+import type { Board, BoardsData, Column, Task } from "../../pages/boards/types";
+import type { AuthActions, AuthActionsRejected } from "../auth/actions";
+import type {
+	ProfileActions,
+	ProfileActionsRejected,
+	UserActions,
+	UserActionsRejected,
+} from "../profile/actions";
 
 //
 // ─── BOARDS ──────────────────────────────────────────────
 //
+
 type FetchBoardsPending = { type: "boards/fetchBoards/pending" };
 type FetchBoardsFulfilled = {
 	type: "boards/fetchBoards/fulfilled";
@@ -610,21 +410,9 @@ export const resetError = (): UiResetError => ({ type: "ui/reset-error" });
 // ─── EXPORT TYPES ──────────────────────────────────────────────
 //
 export type Actions =
-	| AuthLoginPending
-	| AuthLoginFulfilled
-	| AuthLoginRejected
-	| AuthLogoutPending
-	| AuthLogoutFulfilled
-	| AuthLogoutRejected
-	| UserUpdatePending //User
-	| UserUpdateFulfilled //User
-	| UserUpdateRejected //User
-	| ProfileUpdatePending //Profile
-	| ProfileUpdateFulfilled //Profile
-	| ProfileUpdateRejected //Profile
-	| ProfileLoadedFulfilled //Profile Loaded
-	| ProfileLoadedPending //Profile Loaded
-	| ProfileLoadedRejected //Profile Loaded
+	| AuthActions
+	| UserActions
+	| ProfileActions
 	| FetchBoardsPending
 	| FetchBoardsFulfilled
 	| FetchBoardsRejected
@@ -651,11 +439,9 @@ export type Actions =
 	| UiResetError;
 
 export type ActionsRejected =
-	| AuthLoginRejected
-	| AuthLogoutRejected
-	| UserUpdateRejected // User
-	| ProfileUpdateRejected // Profile
-	| ProfileLoadedRejected // Profile
+	| AuthActionsRejected
+	| UserActionsRejected
+	| ProfileActionsRejected
 	| FetchBoardsRejected
 	| FetchBoardRejected
 	| EditColumnRejected

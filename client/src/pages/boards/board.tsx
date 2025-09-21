@@ -19,7 +19,7 @@ import {
 	useDeleteColumnAction,
 	useDeleteTaskction,
 	useUpdateColumnAction,
-} from "../../store/hooks";
+} from "../../store/boards/hooks";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 
 const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {

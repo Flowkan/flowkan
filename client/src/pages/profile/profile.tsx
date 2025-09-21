@@ -6,22 +6,22 @@ import { ProfileUpdateSchema, type ProfileUpdateType } from "./types";
 import { useAppSelector } from "../../store";
 import z from "zod";
 import Banner from "../../components/icons/Banner";
-import { getProfile, getUserLogged } from "../../store/selectors";
+import { getProfile, getUserLogged } from "../../store/profile/selectors";
 import { resolveBaseURLFromEnv } from "../../utils/resolveBaseUrlEnv";
 import { updateFieldProfile } from "./service";
-import { useUpdatedProfile } from "../../store/hooks";
+import { useUpdatedProfile } from "../../store/profile/hooks";
 import Switch from "../../components/ui/Switch";
 
 type EventInput = (e: ChangeEvent<HTMLInputElement>) => void;
 
-const Profile = () => {	
-	const userData = useAppSelector(getUserLogged);	
+const Profile = () => {
+	const userData = useAppSelector(getUserLogged);
 	const profileData = useAppSelector(getProfile);
 
 	const updatedProfileAction = useUpdatedProfile();
 
 	// const [editableFields,setEditableFields] = useState<ProfileCardType|null>(null)
-	
+
 	// useEffect(()=>{
 	// 	if(userData){
 	// 		setEditableFields({
@@ -36,29 +36,30 @@ const Profile = () => {
 	// 		})
 	// 	}
 	// },[userData])
-	
+
 	const [user, setUser] = useState<ProfileUpdateType>({
 		name: userData?.name ?? "",
 		email: userData?.email ?? "",
-		photo:userData?.photo ?? "",
-		...profileData
+		photo: userData?.photo ?? "",
+		...profileData,
 		// dateBirth: "",
 		// allowNotifications:true
 	});
 	const [errors, setErrors] = useState({
 		name: { error: false, message: "" },
 		photo: { error: false, message: "" },
-		username: { error: false, message: "" },		
+		username: { error: false, message: "" },
 		bio: { error: false, message: "" },
-		allowNotifications: {error:false,message:""},
+		allowNotifications: { error: false, message: "" },
 		dateBirth: { error: false, message: "" },
 		location: { error: false, message: "" },
 	});
 
-	const previewImage = user.photo && typeof user.photo === 'string'
-	? `${resolveBaseURLFromEnv()}${user.photo}`	
-	: "";
-	
+	const previewImage =
+		user.photo && typeof user.photo === "string"
+			? `${resolveBaseURLFromEnv()}${user.photo}`
+			: "";
+
 	const handleSubmitEditField = useCallback(
 		async (field: keyof ProfileUpdateType) => {
 			const dataParse = ProfileUpdateSchema.safeParse(user);
@@ -75,49 +76,52 @@ const Profile = () => {
 				}
 			}
 			setErrors({ ...errors, [field]: { error: false, message: "" } });
-			
-			if(userData){
-				const formData = new FormData()
-				switch (field) {					
+
+			if (userData) {
+				const formData = new FormData();
+				switch (field) {
 					case "photo":
-						if(user[field] instanceof File){
-							formData.append(field,user[field])
+						if (user[field] instanceof File) {
+							formData.append(field, user[field]);
 						}
 						break;
 					case "allowNotifications":
-						if(typeof user[field] === 'boolean'){
-							formData.append(field,String(user[field]))
+						if (typeof user[field] === "boolean") {
+							formData.append(field, String(user[field]));
 						}
 						break;
 					default:
-						if(typeof user[field] === 'string'){
-							formData.append(field,user[field])						
+						if (typeof user[field] === "string") {
+							formData.append(field, user[field]);
 						}
-						break;						
+						break;
 				}
-				const { user:userUpdated,profile } = await updateFieldProfile(userData.id.toString(),formData)
+				const { user: userUpdated, profile } = await updateFieldProfile(
+					userData.id.toString(),
+					formData,
+				);
 				updatedProfileAction({
-						user:userUpdated,
-						profile
-				})
+					user: userUpdated,
+					profile,
+				});
 				// if(field === 'photo'){
 				// 	formData.append(field,user[field] as File)
 				// 	const { user:userUpdated,profile } = await updateFieldProfile(userData.id.toString(),formData)
-				// 	// setFieldsEdited(prev=>({...prev,photo:userUpdated.photo ?? ''}))								
+				// 	// setFieldsEdited(prev=>({...prev,photo:userUpdated.photo ?? ''}))
 				// 	updatedProfileAction({
 				// 		user:userUpdated,
 				// 		profile
-				// 	})					
+				// 	})
 				// }
 				// if(field === 'name'){
 				// 	formData.append(field,user[field])
-				// 	const { user:userUpdated,profile } = await updateFieldProfile(userData.id.toString(),formData)					
+				// 	const { user:userUpdated,profile } = await updateFieldProfile(userData.id.toString(),formData)
 				// 	// setFieldsEdited(prev=>({...prev,name:userUpdated.name}))
 				// 	updatedProfileAction({
 				// 		user:userUpdated,
 				// 		profile
-				// 	})	
-				// 	// console.log(userData);					
+				// 	})
+				// 	// console.log(userData);
 				// }
 			}
 		},
@@ -147,10 +151,10 @@ const Profile = () => {
 
 	return (
 		<div>
-			<div className="mx-auto my-10 flex flex-col gap-12 rounded-xl shadow-[2px_2px_10px] shadow-primary md:max-w-3xl">
-				<h2 className="relative h-[150px] md:h-[250px]">					
+			<div className="shadow-primary mx-auto my-10 flex flex-col gap-12 rounded-xl shadow-[2px_2px_10px] md:max-w-3xl">
+				<h2 className="relative h-[150px] md:h-[250px]">
 					<Banner className="inline-block h-full w-full rounded-t-xl" />
-					<span className="md:w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-center text-3xl md:text-5xl font-bold text-gray-50">
+					<span className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-center text-3xl font-bold text-gray-50 md:w-full md:text-5xl">
 						Perfil de Usuario
 					</span>
 				</h2>
@@ -159,7 +163,7 @@ const Profile = () => {
 						<div className="flex flex-col gap-4 px-5 md:items-center md:gap-0">
 							<UploadImage
 								name="photo"
-								// previewUrl={fieldsEdited.photo}								
+								// previewUrl={fieldsEdited.photo}
 								previewUrl={previewImage}
 								onChange={handleChangeField as EventInput}
 								onSubmit={handleSubmitEditField}
@@ -189,12 +193,12 @@ const Profile = () => {
 									</span>
 								</div>
 								<div>
-									<Switch 
-									label="Permitir envío de notificaciones"
-									name="allowNotifications"
-									onChange={handleChangeField}
-									checked={user.allowNotifications} 
-									onSubmit={handleSubmitEditField}
+									<Switch
+										label="Permitir envío de notificaciones"
+										name="allowNotifications"
+										onChange={handleChangeField}
+										checked={user.allowNotifications}
+										onSubmit={handleSubmitEditField}
 									/>
 								</div>
 								<EditableField
