@@ -19,11 +19,12 @@ export function BackofficeLayout() {
 						title: "",
 						lists: [],
 						members: [],
+						image: "",
 					}}
 				/>
 			)}
 
-			<main className="flex-1 p-4">
+			<main className="flex-1">
 				<Outlet />
 			</main>
 		</div>

@@ -81,23 +81,34 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 			)}
 			<li className="board-item">
 				<Link to={`/boards/${board.id}`} className="board-link">
-					<div className="board-title">{board.title}</div>
-					<div className="edit-trash-share-wrap">
-						<div className="edit-icon container">
-							<EditButton showEditForm={handleShowEditForm} />
+					<div className="img-container">
+						<img
+							className="board-img"
+							src={`${board.image}_t.webp`}
+							alt="board-img"
+						/>
+					</div>
+					<div className="title-actions-container">
+						<div className="title-container">
+							<div className="board-title">{board.title}</div>
 						</div>
-						<div className="trash-icon container">
-							<TrashButton showConfirm={handleShowConfirm} />
-						</div>
+						<div className="edit-trash-share-wrap">
+							<div className="edit-icon container">
+								<EditButton showEditForm={handleShowEditForm} />
+							</div>
+							<div className="trash-icon container">
+								<TrashButton showConfirm={handleShowConfirm} />
+							</div>
 
-						<div className="share-icon container">
-							<Button
-								onClick={handleShowShareForm}
-								className="share-btn"
-								variant="secondary"
-							>
-								<img src={ShareIcon} alt="Share board" />
-							</Button>
+							<div className="share-icon container">
+								<Button
+									onClick={handleShowShareForm}
+									className="share-btn"
+									variant="secondary"
+								>
+									<img src={ShareIcon} alt="Share board" />
+								</Button>
+							</div>
 						</div>
 					</div>
 				</Link>

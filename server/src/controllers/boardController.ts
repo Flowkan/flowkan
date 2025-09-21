@@ -7,6 +7,10 @@ import AuthService from "../services/AuthService";
 import { isDefaultImage, pickDefaultImage } from "../lib/defaultImage";
 import { deleteImage } from "../utils/fileUtils";
 
+import dotenv from "dotenv";
+
+dotenv.config();
+
 interface InvitationJwtPayload {
   boardId: string;
   inviterId: number;
@@ -103,7 +107,9 @@ export class BoardController {
       const userId = req.apiUserId;
       const { title }: { title: string } = req.body;
 
-      const image = req.body.image ? req.body.image : pickDefaultImage();
+      const image: string = req.body.image
+        ? `${process.env.BACKEND_URL}/uploads/boards/${req.body.image}`
+        : pickDefaultImage();
 
       const board = await this.boardService.add({ userId, title, image });
       res.status(201).json(board);
@@ -128,7 +134,7 @@ export class BoardController {
       }
 
       if (image) {
-        data.image = image;
+        data.image = `${process.env.BACKEND_URL}/uploads/boards/${image}`;
       }
 
       const updatedBoard = await this.boardService.update({
@@ -138,9 +144,8 @@ export class BoardController {
       });
 
       if (currentBoard?.image && !isDefaultImage(currentBoard.image)) {
-        const imageFilename = currentBoard.image.replace("_o.webp", "");
-        const originalToDelete = `/uploads/boards/${imageFilename}_o.webp`;
-        const thumbnailToDelete = `/uploads/boards/${imageFilename}_t.webp`;
+        const originalToDelete = `/uploads/boards/${currentBoard.image}_o.webp`;
+        const thumbnailToDelete = `/uploads/boards/${currentBoard.image}_t.webp`;
         deleteImage({
           originalImagePath: originalToDelete,
           thumbnailImagePath: thumbnailToDelete,

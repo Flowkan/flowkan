@@ -1,10 +1,15 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const backend = process.env.BACKEND_URL;
 const defaults = [
-  "/uploads/defaults/1.webp",
-  "/uploads/defaults/2.webp",
-  "/uploads/defaults/3.webp",
-  "/uploads/defaults/4.webp",
-  "/uploads/defaults/5.webp",
-  "/uploads/defaults/6.webp",
+  `${backend}/uploads/defaults/1`,
+  `${backend}/uploads/defaults/2`,
+  `${backend}/uploads/defaults/3`,
+  `${backend}/uploads/defaults/4`,
+  `${backend}/uploads/defaults/5`,
+  `${backend}/uploads/defaults/6`,
 ];
 
 export function pickDefaultImage(): string {
