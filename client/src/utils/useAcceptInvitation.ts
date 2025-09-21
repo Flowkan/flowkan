@@ -10,6 +10,7 @@ export const useAcceptInvitation = () => {
 	useEffect(() => {
 		const token = localStorage.getItem("invitationToken");
 		const boardId = localStorage.getItem("invitationBoardId");
+		const boardSlug = localStorage.getItem("invitationBoardSlug");
 		const invitationProcessed = localStorage.getItem("invitationProcessed");
 
 		if (isAuthenticated && token && boardId && !invitationProcessed) {
@@ -19,11 +20,13 @@ export const useAcceptInvitation = () => {
 				.then(() => {
 					localStorage.removeItem("invitationToken");
 					localStorage.removeItem("invitationBoardId");
-					navigate(`/boards/${boardId}`, { replace: true });
+					localStorage.removeItem("invitationBoardSlug");
+					navigate(`/boards/${boardSlug}`, { replace: true });
 				})
 				.catch(() => {
 					localStorage.removeItem("invitationToken");
 					localStorage.removeItem("invitationBoardId");
+					localStorage.removeItem("invitationBoardSlug");
 					navigate("/boards", { replace: true });
 				});
 		}

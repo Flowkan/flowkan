@@ -77,7 +77,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
 			)}
 			<li className="board-item">
-				<Link to={`/boards/${board.id}`} className="board-link">
+				<Link to={`/boards/${board.slug}`} className="board-link">
 					<div className="board-title">{board.title}</div>
 					<div className="edit-trash-share-wrap">
 						<div className="edit-icon container">

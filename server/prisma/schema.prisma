@@ -31,6 +31,7 @@ model User {
 model Board {
   id        Int           @id @default(autoincrement())
   title     String
+  slug      String @default("")
   owner     User          @relation("BoardOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId   Int
   members   BoardMember[]

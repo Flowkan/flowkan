@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { BoardWithRelations } from "../models/BoardModel";
 import jwt from "jsonwebtoken";
 import AuthService from "../services/AuthService";
+import { slugify } from "../utils/utils";
 
 interface InvitationJwtPayload {
   boardId: string;
@@ -60,7 +61,7 @@ export class BoardController {
   get = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const boardId = req.params.id;
+      const boardId = Number(req.params.id);
       const board = await this.boardService.get({ userId, boardId });
       res.json(board);
     } catch (err) {
@@ -100,7 +101,8 @@ export class BoardController {
     try {
       const userId = req.apiUserId;
       const { title }: { title: string } = req.body;
-      const board = await this.boardService.add({ userId, title });
+      const slug = slugify(title);
+      const board = await this.boardService.add({ userId, title, slug });
       res.status(201).json(board);
     } catch (err) {
       res.status(500).send("Error al crear tablero :(");
@@ -140,7 +142,7 @@ export class BoardController {
 
     try {
       const userId = req.apiUserId;
-      const boardId = req.params.id;
+      const boardId = Number(req.params.id);
       const board = await this.boardService.get({ userId, boardId });
       const inviter = await this.authService.findById(userId);
       const payload = {
@@ -157,6 +159,7 @@ export class BoardController {
         boardTitle: board?.title,
         inviterPhoto: inviter?.photo,
         boardId,
+        slug: board?.slug,
       });
     } catch (err) {
       console.error("Error generating invitation link:", err);
