@@ -45,3 +45,7 @@ export const getAccountEndpoint = (typeAccount: TypeAccount): string | null => {
 	}
 	return `${USER_ENDPOINTS.PROFILE}?account=${typeAccount}`;
 };
+
+export const slugTitle = (board: string) => {
+	return board.toLowerCase().trim().replace(/\s+/g, "-");
+};
