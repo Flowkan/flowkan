@@ -14,6 +14,8 @@ import { VerifyPendingPage } from "./pages/register/VerifyPendingPage.tsx";
 import { PricingPage } from "./pages/PricingPage.tsx";
 import { FeaturesPage } from "./pages/FeaturesPage.tsx";
 import { SolutionsPage } from "./pages/SolutionsPage.tsx";
+import BoardItemSocket from "./pages/boards/board-socket/board-item-socket.tsx";
+import SocketProvider from "./hooks/socket/socket-provider.tsx";
 
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((m) => ({ default: m.LoginPage })),
@@ -128,7 +130,11 @@ function App() {
 					path=":boardId"
 					element={
 						<Suspense fallback={<LoginSkeleton />}>
-							<Board />
+							<SocketProvider>
+								<BoardItemSocket>
+									<Board />
+								</BoardItemSocket>
+							</SocketProvider>
 						</Suspense>
 					}
 				/>

@@ -3,6 +3,8 @@ import { Droppable } from "@hello-pangea/dnd";
 import type { Column as ColumnType, Task } from "../pages/boards/types";
 import TaskCard from "./TaskCard";
 import DropdownMenu from "./DropdownMenu";
+import { useBoardItemSocket } from "../pages/boards/board-socket/context";
+// import { useBoardItemSocket } from "../pages/boards/board-socket/context";
 
 interface Props {
 	column: ColumnType;
@@ -150,6 +152,7 @@ const Column = ({
 		};
 	}, [isAddingTask, newTaskContent, handleAddTask, handleCancelAddTask]);
 
+	const { remoteDrag } = useBoardItemSocket();
 	return (
 		<div className="bg-background-column flex h-full max-h-[calc(100vh-160px)] w-80 flex-shrink-0 flex-col rounded-lg p-4 shadow-xl">
 			<div className="mb-4 flex items-center justify-between">
@@ -290,28 +293,47 @@ const Column = ({
 			</div>
 
 			<Droppable droppableId={String(column.id)} type="task">
-				{(provided, snapshot) => (
-					<div
-						ref={provided.innerRef}
-						{...provided.droppableProps}
-						className={`min-h-[50px] flex-grow rounded-md p-2 transition-colors duration-200 ${
-							snapshot.isDraggingOver ? "bg-background-hover-column" : ""
-						} custom-scrollbar overflow-y-auto`}
-					>
-						{(column.cards ?? []).map((item: Task, index: number) => (
-							<TaskCard
-								key={item.id}
-								task={item}
-								index={index}
-								columnId={String(column.id)}
-								onEditTask={(updatedFields) => onEditTask(updatedFields)}
-								onDeleteTask={onDeleteTask}
-								onOpenTaskDetail={onOpenTaskDetail}
-							/>
-						))}
-						{provided.placeholder}
-					</div>
-				)}
+				{(provided, snapshot) => {
+					const remotePlaceholderIndex =
+						remoteDrag?.destination?.droppableId === String(column.id)
+							? remoteDrag.destination.index
+							: null;
+					return (
+						<div
+							ref={provided.innerRef}
+							{...provided.droppableProps}
+							className={`min-h-[50px] flex-grow rounded-md p-2 transition-colors duration-200 ${
+								snapshot.isDraggingOver ? "bg-background-hover-column" : ""
+							} custom-scrollbar overflow-y-auto`}
+						>
+							{(column.cards ?? []).map((item: Task, index: number) => {
+								const showPlaceholder = remotePlaceholderIndex === index;
+								return (
+									<>
+										{showPlaceholder && (
+											<div className="mt-2 h-12 w-full rounded-md border-2 border-dashed border-blue-400" />
+										)}
+										<TaskCard
+											key={item.id}
+											task={item}
+											index={index}
+											columnId={String(column.id)}
+											onEditTask={(updatedFields) => onEditTask(updatedFields)}
+											onDeleteTask={onDeleteTask}
+											onOpenTaskDetail={onOpenTaskDetail}
+										/>
+									</>
+								);
+							})}
+							{/* Placeholder al final si corresponde */}
+							{remotePlaceholderIndex !== null &&
+								remotePlaceholderIndex === (column.cards?.length ?? 0) && (
+									<div className="mt-2 h-12 w-full rounded-md border-2 border-dashed border-blue-400" />
+								)}
+							{provided.placeholder}
+						</div>
+					);
+				}}
 			</Droppable>
 
 			<div className="mt-4 flex flex-col gap-2">

@@ -1,6 +1,7 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { Avatar } from "./ui/Avatar";
 import type { Task } from "../pages/boards/types";
+// import { useBoardItemSocket } from "../pages/boards/board-socket/context";
 
 interface Props {
 	task: Task;
@@ -15,13 +16,16 @@ const TaskCard = ({ task, index, columnId, onOpenTaskDetail }: Props) => {
 	const handleClick = () => {
 		onOpenTaskDetail(task, columnId);
 	};
-
+	// const { itemDrag } = useBoardItemSocket()
+	
+	
 	if (task.id === undefined) return null;
 
 	return (
 		<Draggable draggableId={task.id.toString()} index={index}>
-			{(provided, snapshot) => (
-				<div
+			{(provided, snapshot) => {				
+				return (
+					<div
 					ref={provided.innerRef}
 					{...provided.draggableProps}
 					{...provided.dragHandleProps}
@@ -30,7 +34,7 @@ const TaskCard = ({ task, index, columnId, onOpenTaskDetail }: Props) => {
 						snapshot.isDragging
 							? "bg-accent-lightest ring-accent-light shadow-lg ring-2"
 							: "bg-background-card border-background-card hover:border-accent-light hover:shadow-lg"
-					}`}
+						}`}
 					style={{ ...provided.draggableProps.style }}
 				>
 					<span className="text-text-heading mb-2 flex-grow pr-2 font-medium break-words">
@@ -49,8 +53,9 @@ const TaskCard = ({ task, index, columnId, onOpenTaskDetail }: Props) => {
 							))}
 						</div>
 					)}
-				</div>
-			)}
+				</div>									
+				)
+			}}
 		</Draggable>
 	);
 };

@@ -21,6 +21,7 @@ import {
 	useUpdateColumnAction,
 } from "../../store/hooks";
 import { BackofficePage } from "../../components/layout/backoffice_page";
+import { useBoardItemSocket } from "./board-socket/context";
 
 const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
 	const result = Array.from(list);
@@ -83,7 +84,8 @@ const Board = () => {
 			if (!boardData) return;
 			const { type, source, destination } = result;
 			if (!destination) return;
-
+			//Notificar fin drag
+			handleDragEnd(result);
 			// ARRASRTRE DE COLUMNAS
 			if (type === "column") {
 				const newLists = reorder(
@@ -229,14 +231,26 @@ const Board = () => {
 		[boardData, removeColumnAction],
 	);
 
+	const { handleDragStart, handleDragUpdate, handleDragEnd, remoteDrag } =
+		useBoardItemSocket();
+
 	if (error) return <div>Error al cargar el tablero: {error}</div>;
 
 	return (
 		<BackofficePage>
-			<DragDropContext onDragEnd={onDragEnd}>
+			<DragDropContext
+				onDragStart={handleDragStart}
+				onDragUpdate={handleDragUpdate}
+				onDragEnd={onDragEnd}
+			>
 				<Droppable droppableId="board" type="column" direction="horizontal">
-					{(provided) => (
-						<div
+					{(provided) => {
+						const remotePlaceholderIndex =
+						remoteDrag?.destination?.droppableId === "board"
+							? remoteDrag.destination.index
+							: null;						
+						return (
+							<div
 							ref={provided.innerRef}
 							{...provided.droppableProps}
 							className="custom-scrollbar flex h-[calc(100vh-8rem)] gap-6 overflow-x-auto px-4 py-8 sm:px-8"
@@ -264,6 +278,11 @@ const Board = () => {
 									isNewColumnInEditMode={false}
 								/>
 							))}
+
+							{remotePlaceholderIndex !== null &&
+							remotePlaceholderIndex === (boardData?.lists.length ?? 0) && (
+								<div className="h-[300px] w-80 rounded-md border-2 border-dashed border-blue-400 mr-6" />
+							)}
 							{provided.placeholder}
 
 							{/* Add new column */}
@@ -298,8 +317,26 @@ const Board = () => {
 								)}
 							</div>
 						</div>
-					)}
+						)
+					}}
 				</Droppable>
+				{/* 👇 Ghost remoto flotando */}
+				{remoteDrag?.coords && (
+					<div
+						style={{
+							position: "fixed",
+							top: remoteDrag.coords.yNorm * window.innerHeight,
+							left: remoteDrag.coords.xNorm * window.innerWidth,
+							pointerEvents: "none",
+							transform: "translate(-50%, -50%)",
+							background: "rgba(0, 150, 255, 0.6)",
+							padding: "8px 12px",
+							borderRadius: "6px",
+						}}
+					>
+						{remoteDrag.draggableId}
+					</div>
+				)}
 			</DragDropContext>
 
 			{selectedTask && selectedColumnId && (

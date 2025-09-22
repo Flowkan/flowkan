@@ -4,7 +4,7 @@ import storage from "../../utils/storage";
 import type { User } from "../login/types";
 import type { ProfileType, ResponseProfileData } from "./types";
 
-const pathUrl = "api/v1/profile/";
+const pathUrl = "/api/v1/profile/";
 
 type ResponseProfile = {
 	user: User;
@@ -13,7 +13,7 @@ type ResponseProfile = {
 
 export async function updateFieldProfile(userId: string, form: FormData) {
 	const response = await apiClient.patch<ResponseProfile>(
-		`${resolveBaseURLFromEnv()}/${pathUrl}${userId}`,
+		`${resolveBaseURLFromEnv()}${pathUrl}${userId}`,
 		form,
 	);
 	const { user } = response.data;
