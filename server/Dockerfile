@@ -8,6 +8,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 # Instala las dependencias primero para aprovechar el caché de capas de Docker
+# RUN npm install
 RUN npm install
 
 COPY . .

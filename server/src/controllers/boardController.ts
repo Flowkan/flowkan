@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { BoardWithRelations } from "../models/BoardModel";
 import jwt from "jsonwebtoken";
 import AuthService from "../services/AuthService";
+import { slugify } from "../utils/utils";
 import { isDefaultImage, pickDefaultImage } from "../lib/defaultImage";
 import { deleteImage } from "../utils/fileUtils";
 
@@ -66,7 +67,7 @@ export class BoardController {
   get = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const boardId = req.params.id;
+      const boardId = Number(req.params.id);
       const board = await this.boardService.get({ userId, boardId });
       res.json(board);
     } catch (err) {
@@ -106,12 +107,13 @@ export class BoardController {
     try {
       const userId = req.apiUserId;
       const { title }: { title: string } = req.body;
+      const slug = slugify(title);
 
       const image: string = req.body.image
         ? `${process.env.BACKEND_URL}/uploads/boards/${req.body.image}`
         : pickDefaultImage();
 
-      const board = await this.boardService.add({ userId, title, image });
+      const board = await this.boardService.add({ userId, title, image, slug });
       res.status(201).json(board);
     } catch (err) {
       if (err instanceof Error) {
@@ -193,7 +195,7 @@ export class BoardController {
 
     try {
       const userId = req.apiUserId;
-      const boardId = req.params.id;
+      const boardId = Number(req.params.id);
       const board = await this.boardService.get({ userId, boardId });
       const inviter = await this.authService.findById(userId);
       const payload = {
@@ -210,6 +212,7 @@ export class BoardController {
         boardTitle: board?.title,
         inviterPhoto: inviter?.photo,
         boardId,
+        slug: board?.slug,
       });
     } catch (err) {
       console.error("Error generating invitation link:", err);

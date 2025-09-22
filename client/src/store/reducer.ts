@@ -13,7 +13,7 @@ export type State = {
 		isAuthenticated: boolean;
 		error: string | null;
 	};
-	profile: ProfileType;
+	profile: ProfileType | null;
 	boards: {
 		boards: Board[];
 		currentBoard: Board | null;
@@ -33,13 +33,7 @@ const defaultState: State = {
 		error: null,
 		user: storedUser ? JSON.parse(storedUser) : null,
 	},
-	profile: {
-		username: "",
-		dateBirth: "",
-		location: "",
-		allowNotifications: true,
-		bio: "",
-	},
+	profile:null,
 	boards: { boards: [], currentBoard: null, loading: false, error: null },
 	ui: { pending: false, error: null },
 };
@@ -76,12 +70,15 @@ export function auth(
 				isAuthenticated: true,
 				user: state.user,
 			};
+			};
 		case "user/update/pending":
 		case "user/update/rejected":
 			return state;
 		case "user/update/fulfilled":
 			return {
 				...state,
+				user: action.payload,
+			};
 				user: action.payload,
 			};
 		default:
@@ -96,15 +93,20 @@ export function profile(
 	state = defaultState.profile,
 	action: Actions,
 ): State["profile"] {
+export function profile(
+	state = defaultState.profile,
+	action: Actions,
+): State["profile"] {
 	switch (action.type) {
 		case "profile/update/pending":
 		case "profile/update/rejected":
 		case "profile/loaded/pending":
 		case "profile/loaded/rejected":
-			return state;
+			return null;
 		case "profile/update/fulfilled":
 		case "profile/loaded/fulfilled":
-			return { ...action.payload };
+			// console.log(action.payload);									
+			return {...action.payload}	
 		default:
 			return state;
 	}
@@ -131,7 +133,7 @@ export function boards(
 			return { ...state, loading: false, error: action.payload.message };
 
 		case "boards/addBoard/fulfilled":
-			return { ...state, boards: [...state.boards, action.payload] };
+			return { ...state, boards: [action.payload, ...state.boards] };
 
 		case "boards/deleteBoards":
 			return {
@@ -196,7 +198,7 @@ export function boards(
 							...state.currentBoard,
 							lists: state.currentBoard.lists.map((col: Column) =>
 								col.id?.toString() === action.payload.columnId.toString()
-									? { ...col, cards: [...col.cards, action.payload.task] }
+									? { ...col, cards: [action.payload.task, ...col.cards] }
 									: col,
 							),
 						},

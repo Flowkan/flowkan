@@ -3,6 +3,7 @@ interface AvatarProps {
 	photo?: string | null;
 	size?: number;
 	format?: string;
+	className?: string;
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
@@ -10,6 +11,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 	photo,
 	size = 40,
 	format = "t",
+	className,
 }) => {
 	const randomColor = (user: string): string => {
 		let r = 0,
@@ -39,14 +41,15 @@ export const Avatar: React.FC<AvatarProps> = ({
 
 	const bgColor = randomColor(name);
 	const initialsName = getInitialsName(name);
-
+	
 	if (photo) {
-		const baseUrl = import.meta.env.VITE_BASE_DEV_URL;
+		const baseUrl = import.meta.env.VITE_BASE_URL;
+		console.log(`${baseUrl}/uploads/${photo}_${format}.webp`);
 		return (
 			<img
-				src={`${baseUrl}uploads/${photo}_${format}.webp`}
+				src={`${baseUrl}/uploads/${photo}_${format}.webp`}
 				alt={name}
-				className="h-10 w-10 rounded-full object-cover"
+				className={`${className} rounded-full object-cover`}
 				style={{
 					width: size,
 					height: size,
@@ -56,7 +59,8 @@ export const Avatar: React.FC<AvatarProps> = ({
 	}
 	return (
 		<div
-			className="flex items-center justify-center rounded-full font-bold text-white select-none"
+			className={`${className} flex items-center justify-center rounded-full font-bold text-white select-none`}
+			title={name}
 			style={{
 				width: size,
 				height: size,

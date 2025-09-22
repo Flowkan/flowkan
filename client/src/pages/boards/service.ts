@@ -44,7 +44,8 @@ export const deleteBoard = async (boardId: string): Promise<void> => {
 };
 
 export const getBoard = async (boardId: string): Promise<Board> => {
-	const response = await apiClient.get<Board>(BOARD_ENDPOINTS.BY_ID(boardId));
+	const idSlug = boardId.split("-")[0]
+	const response = await apiClient.get<Board>(BOARD_ENDPOINTS.BY_ID(idSlug));
 	return response.data;
 };
 

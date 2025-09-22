@@ -115,7 +115,7 @@ class BoardModel {
     boardId,
   }: {
     userId: number;
-    boardId: string;
+    boardId: number;
   }): Promise<BoardWithRelations | null> {
     return await this.prisma.board.findFirst({
       where: {
@@ -134,14 +134,17 @@ class BoardModel {
     title,
     userId,
     image,
+    slug,
   }: {
     title: string;
     userId: number;
     image?: string;
+    slug: string;
   }): Promise<Board> {
     return await this.prisma.board.create({
       data: {
         title: title,
+        slug,
         ownerId: userId,
         members: {
           create: [{ userId: userId, role: "admin" }],
@@ -149,6 +152,21 @@ class BoardModel {
         image,
       },
     });
+  }
+
+  async findMatchingSlugs(baseSlug: string): Promise<string[]> {
+    const boards = await this.prisma.board.findMany({
+      where: {
+        slug: {
+          startsWith: baseSlug,
+        },
+      },
+      select: {
+        slug: true,
+      },
+    });
+
+    return boards.map((b) => b.slug);
   }
 
   async update({
@@ -226,7 +244,7 @@ class BoardModel {
     userId,
     boardId,
   }: {
-    userId: number;
+    userId?: number;
     boardId: string;
   }): Promise<User[]> {
     const members = await this.prisma.boardMember.findMany({

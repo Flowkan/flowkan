@@ -4,7 +4,12 @@ import AuthModel from "../models/AuthModel";
 import AuthService from "../services/AuthService";
 import { AuthController } from "../controllers/authController";
 import { validateUserFields } from "../validators/authValidator";
-import { loginSchema, registerSchema } from "../validators/authSchema";
+import {
+  changePasswordSchema,
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
+} from "../validators/authSchema";
 import { upload, processImage } from "../lib/uploadConfigure";
 import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
 import passport from "passport";
@@ -31,6 +36,17 @@ router.post(
 
 router.get("/me", jwtAuth.guard, controller.me);
 router.post("/confirm", controller.confirmEmail);
+router.post(
+  "/reset_password",
+  validateUserFields(resetPasswordSchema),
+  controller.resetPassword,
+);
+router.post(
+  "/change_password",
+  jwtAuth.verifyTokenEnabled,
+  validateUserFields(changePasswordSchema),
+  controller.changePassword,
+);
 
 router.get("/google", controller.googleAuth);
 

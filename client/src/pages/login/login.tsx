@@ -15,6 +15,7 @@ import { __ } from "../../utils/i18nextHelper";
 import { WithOtherServices } from "../register/withOtherServices/WithOtherServices";
 import { getUi } from "../../store/selectors";
 import { loginWithOAuth } from "../../store/actions";
+import ForgotPassword from "../../components/ui/modals/forgot-password";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
@@ -22,6 +23,9 @@ export const LoginPage = () => {
 	const profileLoadedAction = useLoadedProfile();
 	const dispatch = useAppDispatch();
 	const { error } = useAppSelector(getUi);
+	// const modalForgotPassword = useRef<HTMLDialogElement|null>(null)
+	const [showModal,setShowModal] = useState(false);
+
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
@@ -33,8 +37,19 @@ export const LoginPage = () => {
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
 		const token = params.get("token");
+		const userEncoded = params.get("user");
 		if (token) {
-			dispatch(loginWithOAuth(token));
+			let user = null;
+			if (userEncoded) {
+				try {
+					const userDecoded = decodeURIComponent(userEncoded);
+					user = JSON.parse(userDecoded);
+				} catch (e) {
+					console.error("Error al parsear el objeto de usuario OAuth:", e);
+					toast.error("Error al procesar la información del usuario.");
+				}
+			}
+			dispatch(loginWithOAuth({ token, user }));
 		}
 	}, [dispatch]);
 
@@ -117,9 +132,15 @@ export const LoginPage = () => {
 		}
 	};
 
+	function handleShowModal(){
+		setShowModal(true)
+	}
+	function handleCloseModal(){
+		setShowModal(false)
+	}
 	return (
 		<Page>
-			<div className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+			<div className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 sm:px-6 lg:px-8">
 				<div className="bg-background-card w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl transition-all duration-300 hover:scale-[1.01]">
 					<div>
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
@@ -190,15 +211,16 @@ export const LoginPage = () => {
 
 						<div className="flex items-center justify-between">
 							<div className="text-sm">
-								<a
-									href="#"
-									className="text-text-link hover:text-accent-hover font-medium"
+								<button
+									onClick={handleShowModal}
+									type="button"
+									className="text-text-link hover:cursor-pointer hover:text-accent-hover font-medium"
 								>
 									{t(
 										"login.loginForm.forgetPassword",
 										"¿Olvidaste tu contraseña?",
 									)}
-								</a>
+								</button>								
 							</div>
 						</div>
 						<div>
@@ -224,6 +246,10 @@ export const LoginPage = () => {
 							{error && <p className="text-red-500">{error.message}</p>}
 						</div>
 					</Form>
+					<ForgotPassword 
+					show={showModal} 
+					onClose={handleCloseModal} 
+					/>
 					<WithOtherServices />
 				</div>
 			</div>

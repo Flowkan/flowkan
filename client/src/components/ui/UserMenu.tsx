@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Avatar } from "./Avatar";
 import { Button } from "./Button";
 import { useLogoutAction } from "../../store/hooks";
-import { useDismiss } from "../hooks/useDismissClickAndEsc";
+import { useDismiss } from "../../hooks/useDismissClickAndEsc";
 
 interface UserMenuProps {
 	user?: { name: string; photo?: string | null } | null;
@@ -42,7 +42,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			</Button>
 
 			{open && (
-				<div className="ring-opacity-5 absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black">
+				<div className="ring-opacity-5 absolute right-0 z-90 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black">
 					<NavLink
 						to="/profile"
 						className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

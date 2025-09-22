@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
 import { Prisma, User } from "@prisma/client";
 import passport from "passport";
-import { sendEmail } from "../lib/emailService";
+import { sendChangePasswordEmail, sendEmail } from "../lib/emailService";
 import "../config/passport";
 
 type UniqueConstraintError = Prisma.PrismaClientKnownRequestError & {
@@ -163,6 +163,99 @@ export class AuthController {
       next(error);
     }
   };
+  resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email } = req.body;
+      const user = await this.authService.findByEmail(email);
+      if (user) {
+        if (!process.env.JWT_SECRET || !process.env.FRONTEND_WEB_URL) {
+          throw new Error(
+            "No se puede cambiar su contraseña. Contacte con flowkan",
+          );
+        }
+
+        const hasToken = await this.authService.hasTokenRecently(user.id);
+        if (hasToken) {
+          return next(
+            createHttpError(
+              409,
+              "Revise su bandeja de email, tiene un token activo",
+            ),
+          );
+        }
+
+        const token = await new Promise<string>((resolve, reject) => {
+          if (!process.env.JWT_SECRET) {
+            throw new Error(
+              "No se puede cambiar su contraseña. Contacte con flowkan",
+            );
+          }
+          jwt.sign(
+            { userId: user.id } satisfies JwtPayload,
+            process.env.JWT_SECRET,
+            {
+              expiresIn: "15m",
+            },
+            (err, tokenJWT) => {
+              if (err) {
+                reject(err);
+                // return next(err);
+              }
+              if (!tokenJWT) {
+                return next(
+                  createHttpError(
+                    500,
+                    "No se puede cambiar su contraseña. Contacte con flowkan",
+                  ),
+                );
+              }
+              resolve(tokenJWT);
+            },
+          );
+        });
+
+        const headerEmail = {
+          to: email,
+          subject: "Cambiar contraseña",
+        };
+        await sendChangePasswordEmail(headerEmail, {
+          url_frontend: process.env.FRONTEND_WEB_URL,
+          token,
+        });
+
+        await this.authService.generatedToken(user.id, token);
+
+        res.json({
+          message:
+            "Se ha enviado un link a su correo para cambiar su cotraseña",
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  changePassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.apiUserId;
+      const tokenFromUser = req.tokenToChangePassword;
+      const { password } = req.body;
+      const change = await this.authService.changePassword(userId, password);
+      if (!change || !tokenFromUser) {
+        throw createHttpError(
+          500,
+          "No se pudo cambiar su contraseña, contactese con Flowkan",
+        );
+      }
+      await this.authService.changeTokenToUsed(tokenFromUser);
+      res.json({
+        message:
+          "Su contraseña ha sido cambiada, inicie sesión con su nueva contraseña",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
   googleAuth = passport.authenticate("google", { scope: ["profile", "email"] });
 
@@ -173,7 +266,7 @@ export class AuthController {
       return res.status(401).json({ message: "Usuario no autenticado" });
     }
 
-    const userId = (req.user as User).id;
+    const user = req.user as User;
 
     if (!process.env.JWT_SECRET || !process.env.FRONTEND_WEB_URL) {
       return res
@@ -181,10 +274,25 @@ export class AuthController {
         .json({ message: "Configuración del servidor incompleta" });
     }
 
-    const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const accessToken = jwt.sign(
+      { userId: user.id } satisfies JwtPayload,
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      },
+    );
 
-    res.redirect(`${process.env.FRONTEND_WEB_URL}/login?token=${token}`);
+    const safeUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      photo: user.photo || null,
+    };
+
+    const encodedUser = encodeURIComponent(JSON.stringify(safeUser));
+
+    res.redirect(
+      `${process.env.FRONTEND_WEB_URL}/login?token=${accessToken}&user=${encodedUser}`,
+    );
   };
 }

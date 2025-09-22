@@ -188,7 +188,7 @@
 	"register": {
 		"registerForm": {
 			"message": {
-				"success": "Registro exitoso! Redirigiendo a la página de inicio de sesión.",
+				"success": "Registro exitoso! Te hemos enviado un email para validar tu cuenta.",
 				"error": "Ha ocurrido un error inesperado durante el registro."
 			},
 			"title": "Crea tu Cuenta",
