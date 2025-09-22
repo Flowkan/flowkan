@@ -21,7 +21,7 @@ import {
 	useBoards,
 	useFetchBoardsAction,
 	useBoardsLoading,
-} from "../../store/hooks";
+} from "../../store/boards/hooks";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { editTask } from "../../store/actions";

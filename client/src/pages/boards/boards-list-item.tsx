@@ -9,7 +9,7 @@ import ShareIcon from "../../components/icons/share-icon.svg";
 import { Button } from "../../components/ui/Button";
 import "./boards-list-item.css";
 import { useTranslation } from "react-i18next";
-import { deleteBoard, editBoard } from "../../store/actions";
+import { deleteBoard, editBoard } from "../../store/boards/actions";
 import { useAppDispatch } from "../../store";
 import EditBoard from "../../components/ui/modals/edit-board";
 
