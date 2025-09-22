@@ -246,95 +246,93 @@ const Board = () => {
 				<Droppable droppableId="board" type="column" direction="horizontal">
 					{(provided) => {
 						const remotePlaceholderIndex =
-						remoteDrag?.destination?.droppableId === "board"
-							? remoteDrag.destination.index
-							: null;						
+							remoteDrag?.destination?.droppableId === "board"
+								? remoteDrag.destination.index
+								: null;
 						return (
 							<div
-							ref={provided.innerRef}
-							{...provided.droppableProps}
-							className="custom-scrollbar flex h-[calc(100vh-8rem)] gap-6 overflow-x-auto px-4 py-8 sm:px-8"
-						>
-							{boardData?.lists.map((column) => (
-								<Column
-									key={column.id}
-									column={column}
-									onAddTask={(task) => handleAddTask(Number(column.id), task)}
-									onEditTask={(updatedFields) =>
-										selectedColumnId && selectedTask
-											? handleEditTask(
-													selectedColumnId,
-													selectedTask.id!.toString(),
-													updatedFields,
-												)
-											: undefined
-									}
-									onDeleteTask={(taskId) =>
-										handleDeleteTask(taskId, column.id!)
-									}
-									onEditColumnTitle={handleEditColumnTitle}
-									onDeleteColumn={() => handleDeleteColumnClick(column.id!)}
-									onOpenTaskDetail={(task) => openTaskDetail(task, column.id!)}
-									isNewColumnInEditMode={false}
-								/>
-							))}
+								ref={provided.innerRef}
+								{...provided.droppableProps}
+								className="custom-scrollbar flex h-[calc(100vh-8rem)] gap-6 overflow-x-auto px-4 py-8 sm:px-8"
+							>
+								{boardData?.lists.map((column) => (
+									<Column
+										key={column.id}
+										column={column}
+										onAddTask={(task) => handleAddTask(Number(column.id), task)}
+										onEditTask={(updatedFields) =>
+											selectedColumnId && selectedTask
+												? handleEditTask(
+														selectedColumnId,
+														selectedTask.id!.toString(),
+														updatedFields,
+													)
+												: undefined
+										}
+										onDeleteTask={(taskId) =>
+											handleDeleteTask(taskId, column.id!)
+										}
+										onEditColumnTitle={handleEditColumnTitle}
+										onDeleteColumn={() => handleDeleteColumnClick(column.id!)}
+										onOpenTaskDetail={(task) =>
+											openTaskDetail(task, column.id!)
+										}
+										isNewColumnInEditMode={false}
+									/>
+								))}
+								{/* Placeholder ghost */}
+								{remotePlaceholderIndex !== null &&
+									remotePlaceholderIndex === (boardData?.lists.length ?? 0) && (
+										<div className="mr-6 h-[300px] w-80 rounded-md border-2 border-dashed border-primary-hover" />
+									)}
+								{provided.placeholder}
 
-							{remotePlaceholderIndex !== null &&
-							remotePlaceholderIndex === (boardData?.lists.length ?? 0) && (
-								<div className="h-[300px] w-80 rounded-md border-2 border-dashed border-blue-400 mr-6" />
-							)}
-							{provided.placeholder}
-
-							{/* Add new column */}
-							<div className="items-left relative flex h-full w-80 flex-shrink-0 flex-col">
-								<button
-									onClick={handleAddColumnToggle}
-									className="bg-background-column-light text-text-placeholder hover:bg-background-hover-column border-border-medium hover:border-accent flex h-14 w-14 items-center justify-center rounded-lg border-2 border-dashed text-2xl font-semibold shadow-md transition-colors duration-200"
-								>
-									+
-								</button>
-								{isMenuOpen && (
-									<div className="bg-background-dark-footer absolute top-16 z-50 mt-2 w-full rounded-lg border border-gray-200 p-4 shadow-lg">
-										<h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
-											Gestionar Columnas
-										</h3>
-										<div className="mb-4">
-											<input
-												type="text"
-												placeholder="Nombre de la nueva columna"
-												value={newColumnName}
-												onChange={(e) => setNewColumnName(e.target.value)}
-												className="w-full rounded border bg-gray-100 p-2 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
-											/>
-											<button
-												onClick={handleCreateColumn}
-												className="mt-2 w-full rounded bg-blue-500 p-2 text-white transition-colors duration-200 hover:bg-blue-600"
-											>
-												Crear Columna
-											</button>
+								{/* Add new column */}
+								<div className="items-left relative flex h-full w-80 flex-shrink-0 flex-col">
+									<button
+										onClick={handleAddColumnToggle}
+										className="bg-background-column-light text-text-placeholder hover:bg-background-hover-column border-border-medium hover:border-accent flex h-14 w-14 items-center justify-center rounded-lg border-2 border-dashed text-2xl font-semibold shadow-md transition-colors duration-200"
+									>
+										+
+									</button>
+									{isMenuOpen && (
+										<div className="bg-background-dark-footer absolute top-16 z-50 mt-2 w-full rounded-lg border border-gray-200 p-4 shadow-lg">
+											<h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
+												Gestionar Columnas
+											</h3>
+											<div className="mb-4">
+												<input
+													type="text"
+													placeholder="Nombre de la nueva columna"
+													value={newColumnName}
+													onChange={(e) => setNewColumnName(e.target.value)}
+													className="w-full rounded border bg-gray-100 p-2 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
+												/>
+												<button
+													onClick={handleCreateColumn}
+													className="mt-2 w-full rounded bg-blue-500 p-2 text-white transition-colors duration-200 hover:bg-blue-600"
+												>
+													Crear Columna
+												</button>
+											</div>
 										</div>
-									</div>
-								)}
+									)}
+								</div>
 							</div>
-						</div>
-						)
+						);
 					}}
 				</Droppable>
-				{/* 👇 Ghost remoto flotando */}
+				{/* Ghost remoto flotando */}
 				{remoteDrag?.coords && (
 					<div
 						style={{
-							position: "fixed",
 							top: remoteDrag.coords.yNorm * window.innerHeight,
 							left: remoteDrag.coords.xNorm * window.innerWidth,
-							pointerEvents: "none",
-							transform: "translate(-50%, -50%)",
-							background: "rgba(0, 150, 255, 0.6)",
-							padding: "8px 12px",
-							borderRadius: "6px",
 						}}
+						className="pointer-events-none fixed translate-x-[-50%] translate-y-[-50%] rounded-md bg-primary px-3 py-2"
 					>
-						{remoteDrag.draggableId}
+						<p className="-left-2 -top-2 absolute text-xs bg-accent rounded-2xl px-2 text-white">{remoteDrag.name}</p>
+						<p className="text-white">{remoteDrag.taskName}</p>
 					</div>
 				)}
 			</DragDropContext>

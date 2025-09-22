@@ -311,7 +311,7 @@ const Column = ({
 								return (
 									<>
 										{showPlaceholder && (
-											<div className="mt-2 h-12 w-full rounded-md border-2 border-dashed border-blue-400" />
+											<div className="mt-2 h-12 w-full rounded-md border-2 border-dashed border-primary-hover" />
 										)}
 										<TaskCard
 											key={item.id}
@@ -328,7 +328,7 @@ const Column = ({
 							{/* Placeholder al final si corresponde */}
 							{remotePlaceholderIndex !== null &&
 								remotePlaceholderIndex === (column.cards?.length ?? 0) && (
-									<div className="mt-2 h-12 w-full rounded-md border-2 border-dashed border-blue-400" />
+									<div className="mt-2 h-12 w-full rounded-md border-2 border-dashed border-primary-hover" />
 								)}
 							{provided.placeholder}
 						</div>

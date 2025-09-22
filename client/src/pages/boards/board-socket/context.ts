@@ -4,6 +4,8 @@ import { createContext, useContext } from "react";
 export const BoardItemSocketContext = createContext<{
     remoteDrag:{
     userId: string;
+    name:string;
+    taskName:string;
     draggableId: string;
     coords?: { xNorm: number; yNorm: number };
     destination?: { droppableId: string; index: number };

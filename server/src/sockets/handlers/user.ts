@@ -42,7 +42,7 @@ export default class UserHandler {
   }
 
   private async handleUserConnected(socket: SocketUser) {
-    const { user: userData, boardId } = socket.handshake.auth; //socket.data.user
+    const { user: userData, boardId } = socket.handshake.auth; 
     // console.log(socket.handshake.auth);
     if (!userData || !boardId) {
       console.warn("Datos de autenticación incompletos");

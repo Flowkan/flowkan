@@ -1,8 +1,10 @@
 // import type { DragStart } from "@hello-pangea/dnd";
 
-import type { Board } from "../../pages/boards/types";
+import type { Board, Task } from "../../pages/boards/types";
 
-// Define los eventos que el servidor enviará al cliente
+type TaskClean = Omit<Task,"assignees">
+
+// Eventos que el servidor enviará al cliente
 export interface ServerToClientEvents {
 	"user:connected": (usersOnline: BoardUser) => void;
 	"user:disconnected": (usersOnline: BoardUser) => void;
@@ -11,17 +13,19 @@ export interface ServerToClientEvents {
 	"error:occurred": (error: SocketError) => void;
 
 	// --- Board events ---
-	"board:dragstart": (payload: {
-		start: unknown;
-		board: Board;
-		userId: string;
-	}) => void;
+	// "board:dragstart": (payload: {
+	// 	start: unknown;
+	// 	board: Board;
+	// 	userId: string;
+	// }) => void;
 	"board:dragstarted": (payload: {
 		start: unknown;
 		board: BoardWithRelations;
 		userId: string;
-    x:number;
-    y:number;
+		name:string;
+		task:TaskClean;
+		x:number;
+		y:number;
 	}) => void;
   "board:dragshowcoords":(payload:{
     // update:unknown,
@@ -31,6 +35,11 @@ export interface ServerToClientEvents {
   "board:dragupdated":(payload:{
     update:unknown,    
   })=>void;
+  "board:dragend":(payload:{
+    result:unknown,    
+  })=>void;
+  //Errors
+  "board:dragfailed":(payload:{draggableId:string})=>void;
 }
 
 export interface ClientToServerEvents {
@@ -42,6 +51,7 @@ export interface ClientToServerEvents {
 	"board:dragstart": (payload: {
 		start: unknown;
 		board: Board;
+		task:TaskClean;
 		x: number;
 		y: number;
 	}) => void;
@@ -55,5 +65,8 @@ export interface ClientToServerEvents {
   })=>void;
   "board:dragupdated":(payload:{
     update:unknown,    
+  })=>void;
+  "board:dragend":(payload:{
+    result:unknown,    
   })=>void;
 }

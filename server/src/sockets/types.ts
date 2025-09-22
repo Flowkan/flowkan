@@ -13,6 +13,22 @@ export interface SocketError {
   message: string; // Descripción legible del error
 }
 
+export interface Task {
+  id?: number | undefined;
+  title: string;
+  listId: number;
+  description?: string | undefined;
+  position: number;
+}
+
+export interface DragStart{
+   draggableId: string,
+   type: string,
+   source: { droppableId: string, index: number },
+   mode: string;
+}
+
+// Eventos que el servidor enviará al cliente
 export interface ServerToClientEvents {
   "user:connected": (usersOnline: BoardUser) => void;
   "user:disconnected": (usersOnline: BoardUser) => void;
@@ -21,20 +37,32 @@ export interface ServerToClientEvents {
   "error:occurred": (error: SocketError) => void;
 
   // --- Board events ---
-  "board:dragstart": (payload:{start:unknown,board:BoardWithRelations,userId:string})=>void;
+  // "board:dragstart": (payload:{
+  //   start:unknown,
+  //   board:BoardWithRelations,
+  //   task:Task,
+  //   userId:string
+  // })=>void;
   "board:dragstarted": (payload:{
     start:unknown,
     board:BoardWithRelations,
     userId:string,
-    x:number,y:number})=>void;
-  "board:dragshowcoords":(payload:{
-    // update:unknown,
+    name:string,
+    task:Task,
+    x:number,y:number
+  })=>void;
+  "board:dragshowcoords":(payload:{    
     x:number,
     y:number
   })=>void;
   "board:dragupdated":(payload:{
     update:unknown,    
   })=>void;
+   "board:dragend":(payload:{
+    result:unknown,    
+  })=>void;
+  //Errors
+  "board:dragfailed":(payload:{draggableId:string})=>void;
 }
 
 export interface ClientToServerEvents {
@@ -46,11 +74,11 @@ export interface ClientToServerEvents {
   "board:dragstart": (payload:{
     start:unknown,
     board:BoardWithRelations,
+    task:Task,
     x:number,
     y:number
   })=>void;
-  "board:dragsendcoords":(payload:{
-    // update:unknown,
+  "board:dragsendcoords":(payload:{    
     x:number,
     y:number
   })=>void;
@@ -60,6 +88,11 @@ export interface ClientToServerEvents {
   "board:dragupdated":(payload:{
     update:unknown,    
   })=>void;
+  "board:dragend":(payload:{
+    result:unknown,    
+  })=>void;  
+  //Errors
+  "board:dragfailed":(payload:{draggableId:string})=>void;
 }
 
 type UserData = {
