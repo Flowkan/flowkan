@@ -93,7 +93,7 @@
 		max-width: 750px;
 		margin: 0 auto;
 
-		/* .boards-list-container {
+		.boards-list-container {
 			.boards-wrapper {
 				.boards-list-content {
 					.boards-list {
@@ -101,6 +101,6 @@
 					}
 				}
 			}
-		} */
+		}
 	}
 }

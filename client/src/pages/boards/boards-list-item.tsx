@@ -67,7 +67,10 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 				<ConfirmDelete
 					handleDeleteBoard={handleDeleteBoard}
 					handleHideMessage={handleHideMessage}
-					message={t("boardsitem.confirm")}
+					message={t(
+						"boardsitem.confirm",
+						"¿Seguro que quieres borrar este tablero?",
+					)}
 				/>
 			)}
 			{showEditForm && (
@@ -80,7 +83,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
 			)}
 			<li className="board-item">
-				<Link to={`/boards/${board.id}`} className="board-link">
+				<Link to={`/boards/${board.slug}`} className="board-link">
 					<div className="img-container">
 						<img
 							className="board-img"

@@ -332,7 +332,6 @@ const Board = () => {
 					)}
 				</Droppable>
 			</DragDropContext>
-
 			{selectedTask && selectedColumnId && (
 				<TaskDetailModal
 					task={selectedTask}
