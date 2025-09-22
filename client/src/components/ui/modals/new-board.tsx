@@ -6,7 +6,7 @@ import CloseButton from "../close-button";
 import "./modal-boards.css";
 import { Button } from "../Button";
 import { useDispatch } from "react-redux";
-import { addBoard } from "../../../store/actions";
+import { addBoard } from "../../../store/boards/actions";
 import type { AppDispatch } from "../../../store";
 
 interface NewBoardProps {
@@ -67,6 +67,5 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 		</div>
 	);
 };
-
 
 export default NewBoard;

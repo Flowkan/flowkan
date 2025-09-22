@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import type { Credentials } from "./types";
 import { useTranslation } from "react-i18next";
-import { useLoadedProfile, useLoginAction } from "../../store/hooks";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { Form } from "../../components/ui/Form";
@@ -13,8 +12,10 @@ import { FormFields } from "../../components/ui/FormFields";
 import { Button } from "../../components/ui/Button";
 import { __ } from "../../utils/i18nextHelper";
 import { WithOtherServices } from "../register/withOtherServices/WithOtherServices";
-import { getUi } from "../../store/selectors";
-import { loginWithOAuth } from "../../store/actions";
+import { useLoginAction } from "../../store/auth/hooks";
+import { useLoadedProfile } from "../../store/profile/hooks";
+import { getUi } from "../../store/boards/selectors";
+import { loginWithOAuth } from "../../store/auth/actions";
 import ForgotPassword from "../../components/ui/modals/forgot-password";
 
 export const LoginPage = () => {
