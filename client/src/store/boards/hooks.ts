@@ -1,11 +1,7 @@
 import { useCallback } from "react";
-import { useAppDispatch, useAppSelector } from ".";
-import type { Column, Task } from "../pages/boards/types";
-import type { Credentials, User } from "../pages/login/types";
+import { useAppDispatch, useAppSelector } from "..";
+import type { Column, Task } from "../../pages/boards/types";
 import {
-	login,
-	logout,
-	resetError,
 	fetchBoards,
 	fetchBoard,
 	addBoard,
@@ -17,12 +13,8 @@ import {
 	editColumn,
 	addAssignee,
 	removeAssignee,
-	updateProfile,
-	loadedProfile,
 } from "./actions";
 import {
-	isAuthenticated,
-	getAuthError,
 	getBoards,
 	getCurrentBoard,
 	getBoardsLoading,
@@ -30,56 +22,6 @@ import {
 	getUiPending,
 	getUiError,
 } from "./selectors";
-import type { ProfileType } from "../pages/profile/types";
-
-//
-// ─── AUTH HOOKS ──────────────────────────────────────────────
-//
-export function useAuth() {
-	return useAppSelector(isAuthenticated);
-}
-
-export function useAuthError() {
-	return useAppSelector(getAuthError);
-}
-
-export function useLoginAction() {
-	const dispatch = useAppDispatch();
-	return function (credentials: Credentials) {
-		return dispatch(login(credentials));
-	};
-}
-
-export function useLogoutAction() {
-	const dispatch = useAppDispatch();
-	return function () {
-		return dispatch(logout());
-	};
-}
-
-export function useUiResetError() {
-	const dispatch = useAppDispatch();
-	return function () {
-		return dispatch(resetError());
-	};
-}
-
-//
-// ─── BOARDS PROFILE ──────────────────────────────────────────────
-//
-export function useUpdatedProfile() {
-	const dispatch = useAppDispatch();
-	return function ({ user, profile }: { user: User; profile: ProfileType }) {
-		return dispatch(updateProfile({ user, profile }));
-	};
-}
-
-export function useLoadedProfile() {
-	const dispatch = useAppDispatch();
-	return function () {
-		return dispatch(loadedProfile());
-	};
-}
 
 //
 // ─── BOARDS HOOKS ──────────────────────────────────────────────

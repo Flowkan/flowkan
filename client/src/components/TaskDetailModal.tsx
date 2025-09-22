@@ -3,7 +3,10 @@ import type { Task } from "../pages/boards/types";
 import type { User } from "../pages/login/types";
 import { getBoardUsers } from "../pages/boards/service";
 import { Avatar } from "./ui/Avatar";
-import { useAddAssigneeAction, useRemoveAssigneeAction } from "../store/hooks";
+import {
+	useAddAssigneeAction,
+	useRemoveAssigneeAction,
+} from "../store/boards/hooks";
 import { Editor } from "@tinymce/tinymce-react";
 
 interface TaskDetailModalProps {

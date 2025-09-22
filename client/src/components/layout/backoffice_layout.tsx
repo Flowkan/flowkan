@@ -1,7 +1,7 @@
 import { Outlet, useParams, useLocation } from "react-router-dom";
 import { BoardToolbar } from "./BoardToolbar";
 import { BackofficeHeader } from "./backoffice_header";
-import { useBoards } from "../../store/hooks";
+import { useBoards } from "../../store/boards/hooks";
 
 export function BackofficeLayout() {
 	const { slug } = useParams<{ slug: string }>();

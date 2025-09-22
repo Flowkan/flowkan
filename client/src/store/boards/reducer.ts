@@ -1,53 +1,9 @@
 import type { Actions, ActionsRejected } from "./actions";
-import type { Board, Column } from "../pages/boards/types";
-import type { User } from "../pages/login/types";
-import type { ProfileType } from "../pages/profile/types";
-
-//
-// ─── STATE GLOBAL ──────────────────────────────────────────────
-//
-
-export type State = {
-	auth: {
-		user: User | null;
-		isAuthenticated: boolean;
-		error: string | null;
-	};
-	profile: ProfileType | null;
-	boards: {
-		boards: Board[];
-		currentBoard: Board | null;
-		loading: boolean;
-		error: string | null;
-	};
-	ui: {
-		pending: boolean;
-		error: Error | null;
-	};
-};
-
-const defaultState: ProfileState = {
-	profile: {
-		username: "",
-		dateBirth: "",
-		location: "",
-		allowNotifications: true,
-		bio: "",
-	},
-	boards: {
-		boards: [],
-		currentBoard: null,
-		loading: false,
-		error: null,
-	},
-	ui: {
-		pending: false,
-		error: null,
-	},
-};
+import type { Board, Column } from "../../pages/boards/types";
+import type { BoardsState } from "../types/defaultStates";
 
 const storedUser = localStorage.getItem("user");
-const defaultState: State = {
+const defaultState: BoardsState = {
 	auth: {
 		isAuthenticated: false,
 		error: null,
@@ -59,78 +15,13 @@ const defaultState: State = {
 };
 
 //
-// ─── AUTH REDUCER ──────────────────────────────────────────────
-//
-export function auth(
-	state = defaultState.auth,
-	action: Actions,
-): State["auth"] {
-	switch (action.type) {
-		case "auth/login/pending":
-			return { ...state, error: null, isAuthenticated: false, user: null };
-		case "auth/login/fulfilled":
-			return { ...state, isAuthenticated: true, user: action.payload };
-		case "auth/login/rejected":
-			return {
-				...state,
-				error: action.payload.message,
-				isAuthenticated: false,
-				user: null,
-			};
-		case "auth/logout/pending":
-			return { ...state, error: null, isAuthenticated: true, user: state.user };
-
-		case "auth/logout/fulfilled":
-			return { ...state, isAuthenticated: false, user: null };
-
-		case "auth/logout/rejected":
-			return {
-				...state,
-				error: action.payload.message,
-				isAuthenticated: true,
-				user: state.user,
-			};
-
-		case "user/update/rejected":
-			return state;
-		case "user/update/fulfilled":
-			return {
-				...state,
-				user: action.payload,
-			};
-		default:
-			return state;
-	}
-}
-
-//
-// ─── PROFILE REDUCER ──────────────────────────────────────────────
-//
-export function profileReducer(
-	state: ProfileState["profile"] = defaultState.profile,
-	action: ProfileActions,
-): ProfileState["profile"] {
-	switch (action.type) {
-		case "profile/update/pending":
-		case "profile/update/rejected":
-		case "profile/loaded/pending":
-		case "profile/loaded/rejected":
-			return null;
-		case "profile/update/fulfilled":
-		case "profile/loaded/fulfilled":
-			return { ...action.payload };
-		default:
-			return state;
-	}
-}
-
-//
 // ─── BOARDS REDUCER ──────────────────────────────────────────────
 //
-export function boards(
+
+export function boardsReducer(
 	state = defaultState.boards,
 	action: Actions,
-): State["boards"] {
+): BoardsState["boards"] {
 	switch (action.type) {
 		case "boards/fetchBoard/pending":
 			return { ...state, loading: true, error: null };
@@ -150,13 +41,15 @@ export function boards(
 		case "boards/deleteBoards":
 			return {
 				...state,
-				boards: state.boards.filter((board) => board.id !== action.payload),
+				boards: state.boards.filter(
+					(board: Board) => board.id !== action.payload,
+				),
 			};
 
 		case "boards/editBoard/fulfilled":
 			return {
 				...state,
-				boards: state.boards.map((board) => {
+				boards: state.boards.map((board: Board) => {
 					if (board.id !== action.payload.boardId) return board;
 
 					return {
@@ -183,7 +76,7 @@ export function boards(
 				...state,
 				currentBoard: {
 					...state.currentBoard,
-					lists: state.currentBoard.lists.map((col) =>
+					lists: state.currentBoard.lists.map((col: Column) =>
 						col.id === action.payload.column.id
 							? { ...col, title: action.payload.column.title }
 							: col,
@@ -197,7 +90,7 @@ export function boards(
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.filter(
-						(col) => col.id?.toString() !== action.payload.columnId,
+						(col: Column) => col.id?.toString() !== action.payload.columnId,
 					),
 				},
 			};
@@ -225,7 +118,7 @@ export function boards(
 				...state,
 				currentBoard: {
 					...state.currentBoard,
-					lists: state.currentBoard.lists.map((col) => {
+					lists: state.currentBoard.lists.map((col: Column) => {
 						if (col.id?.toString() === task.listId.toString()) {
 							const withoutTask = col.cards.filter((t) => t.id !== task.id);
 							const withTask = [...withoutTask, task];
@@ -253,7 +146,7 @@ export function boards(
 				...state,
 				currentBoard: {
 					...state.currentBoard,
-					lists: state.currentBoard.lists.map((col) =>
+					lists: state.currentBoard.lists.map((col: Column) =>
 						col.id === action.payload.columnId
 							? {
 									...col,
@@ -272,7 +165,7 @@ export function boards(
 				...state,
 				currentBoard: {
 					...state.currentBoard,
-					lists: state.currentBoard.lists.map((col) => ({
+					lists: state.currentBoard.lists.map((col: Column) => ({
 						...col,
 						cards: col.cards.map((task) =>
 							task.id === action.payload.cardId
@@ -299,7 +192,7 @@ export function boards(
 				...state,
 				currentBoard: {
 					...state.currentBoard,
-					lists: state.currentBoard.lists.map((col) => ({
+					lists: state.currentBoard.lists.map((col: Column) => ({
 						...col,
 						cards: col.cards.map((task) =>
 							task.id === action.payload.cardId
@@ -329,7 +222,10 @@ function isRejectedAction(action: Actions): action is ActionsRejected {
 	return action.type.endsWith("/rejected");
 }
 
-export function ui(state = defaultState.ui, action: Actions): State["ui"] {
+export function ui(
+	state = defaultState.ui,
+	action: Actions,
+): BoardsState["ui"] {
 	if (action.type.endsWith("/pending")) {
 		return { pending: true, error: null };
 	}

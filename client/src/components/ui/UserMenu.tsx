@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Avatar } from "./Avatar";
 import { Button } from "./Button";
-import { useLogoutAction } from "../../store/hooks";
+import { useLogoutAction } from "../../store/auth/hooks";
 import { useDismiss } from "../../hooks/useDismissClickAndEsc";
 
 interface UserMenuProps {
