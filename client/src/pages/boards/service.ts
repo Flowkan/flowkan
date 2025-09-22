@@ -7,7 +7,10 @@ import {
 import type { User } from "../login/types";
 import type { Board, BoardsData, Column, Task } from "./types";
 
-export const getBoards = async (limit: number, skip: number): Promise<Board[]> => {
+export const getBoards = async (
+	limit: number,
+	skip: number,
+): Promise<Board[]> => {
 	const response = await apiClient.get<Board[]>(BOARD_ENDPOINTS.BOARDS, {
 		params: { limit, skip },
 	});
@@ -40,7 +43,7 @@ export const deleteBoard = async (boardId: string): Promise<void> => {
 };
 
 export const getBoard = async (boardId: string): Promise<Board> => {
-	const idSlug = boardId.split("-")[0]
+	const idSlug = boardId.split("-")[0];
 	const response = await apiClient.get<Board>(BOARD_ENDPOINTS.BY_ID(idSlug));
 	return response.data;
 };
@@ -84,7 +87,7 @@ export const createTask = async (
 
 export const updateTask = async (
 	taskId: string,
-	data: Partial<Task>,
+	data: Partial<Task> | FormData,
 ): Promise<Task> => {
 	const response = await apiClient.put<Task>(CARD_ENDPOINT.BY_ID(taskId), data);
 	return response.data;

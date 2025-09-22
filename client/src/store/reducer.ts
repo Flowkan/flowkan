@@ -33,7 +33,7 @@ const defaultState: State = {
 		error: null,
 		user: storedUser ? JSON.parse(storedUser) : null,
 	},
-	profile:null,
+	profile: null,
 	boards: { boards: [], currentBoard: null, loading: false, error: null },
 	ui: { pending: false, error: null },
 };
@@ -98,8 +98,8 @@ export function profile(
 			return null;
 		case "profile/update/fulfilled":
 		case "profile/loaded/fulfilled":
-			// console.log(action.payload);									
-			return {...action.payload}	
+			// console.log(action.payload);
+			return { ...action.payload };
 		default:
 			return state;
 	}
@@ -196,23 +196,20 @@ export function boards(
 		case "boards/editTask/fulfilled": {
 			if (!state.currentBoard) return state;
 
-			const { task } = action.payload;
+			const { columnId, task } = action.payload;
 
 			return {
 				...state,
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.map((col) => {
-						if (col.id?.toString() === task.listId.toString()) {
+						if (col.id?.toString() === columnId.toString()) {
 							const withoutTask = col.cards.filter((t) => t.id !== task.id);
 							const withTask = [...withoutTask, task];
 
 							withTask.sort((a, b) => a.position - b.position);
 
-							return {
-								...col,
-								cards: withTask,
-							};
+							return { ...col, cards: withTask };
 						}
 
 						return {

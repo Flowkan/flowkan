@@ -10,6 +10,13 @@ export type CardAssignee = {
 	user: User;
 };
 
+export type Media = {
+	id: number;
+	url: string;
+	fileName: string;
+	fileType: "document" | "audio";
+};
+
 export type Task = {
 	id?: number;
 	title: string;
@@ -17,7 +24,12 @@ export type Task = {
 	description?: string;
 	position: number;
 	assignees: CardAssignee[];
+	media?: Media[];
 };
+
+export interface TaskWithMedia extends Task {
+	media?: Media[];
+}
 
 export type Column = {
 	id?: string;

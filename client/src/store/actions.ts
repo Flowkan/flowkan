@@ -167,21 +167,21 @@ export const profileLoadedRejected = (error: Error): ProfileLoadedRejected => ({
 	payload: error,
 });
 
-export function loadedProfile():AppThunk<Promise<void>>{
-	return async(dispatch,getState,{api})=>{
-		const state = getState()
-		if(state.profile){
-			return
+export function loadedProfile(): AppThunk<Promise<void>> {
+	return async (dispatch, getState, { api }) => {
+		const state = getState();
+		if (state.profile) {
+			return;
 		}
-		dispatch(profileLoadedPending())
+		dispatch(profileLoadedPending());
 		try {
 			const { error, profile } = await api.profile.getProfileData();
 			if (error) {
 				throw new Error(error);
 			}
-			if(profile){
-				// console.log(profile);											
-				dispatch(profileLoadedFulFilled(profile))
+			if (profile) {
+				// console.log(profile);
+				dispatch(profileLoadedFulFilled(profile));
 			}
 		} catch (error) {
 			if (error instanceof Error) {
@@ -559,7 +559,7 @@ export function addTask(
 export function editTask(
 	columnId: number,
 	taskId: string,
-	data: Partial<Task>,
+	data: Partial<Task> | FormData,
 ): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
 		try {

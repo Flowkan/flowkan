@@ -1,9 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import CardService from "../services/CardService";
 import createHttpError from "http-errors";
+import fs from "fs";
+import path from "path";
+
+const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 
 export class CardController {
-  private cardService: CardService;
+  private readonly cardService: CardService;
   constructor(cardService: CardService) {
     this.cardService = cardService;
   }
@@ -54,18 +58,82 @@ export class CardController {
   };
 
   updateCard = async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.apiUserId;
+    const cardId = Number(req.params.id);
+
+    const files = req.files as Express.Multer.File[] | undefined;
+
+    const data = req.body;
+
+    const removeMediaId = data.removeMediaId
+      ? Number(data.removeMediaId)
+      : undefined;
+
+    if (removeMediaId !== undefined) {
+      delete data.removeMediaId;
+    }
+
+    const uploadedFileNames: string[] = [];
+
     try {
-      const userId = req.apiUserId;
-      const cardId = Number(req.params.id);
-      const data = req.body;
-      const card = await this.cardService.updateCard(userId, cardId, data);
-      res.json(card);
+      if (files && files.length > 0) {
+        const mediaFilesData: {
+          url: string;
+          fileName: string;
+          fileType: "document" | "audio";
+        }[] = files.map((file) => {
+          const fileUrl = `/uploads/${file.filename}`;
+          uploadedFileNames.push(file.filename);
+
+          const fileType = file.mimetype.startsWith("audio/")
+            ? "audio"
+            : "document";
+
+          return {
+            url: fileUrl,
+            fileName: file.originalname,
+            fileType: fileType,
+          };
+        });
+
+        await this.cardService.addMediaToCard(cardId, mediaFilesData);
+      }
+
+      if (removeMediaId !== undefined) {
+        await this.cardService.removeMediaFromCard(
+          userId,
+          cardId,
+          removeMediaId,
+        );
+      }
+
+      const updatedCard = await this.cardService.updateCard(
+        userId,
+        cardId,
+        data,
+      );
+
+      res.json(updatedCard);
     } catch (err) {
       if (err instanceof Error && err.message.includes("permiso")) {
         return next(
           createHttpError(403, err.message || "Error al actualizar la tarjeta"),
         );
       }
+
+      if (uploadedFileNames.length > 0) {
+        uploadedFileNames.forEach((filename) => {
+          try {
+            fs.unlinkSync(path.join(UPLOAD_DIR, filename));
+          } catch (e) {
+            console.error(
+              `Error al eliminar el archivo subido: ${filename}`,
+              e,
+            );
+          }
+        });
+      }
+
       next(err);
     }
   };
