@@ -3,7 +3,7 @@ import ShareBoard from "../ui/modals/share-board";
 import type { Board } from "../../pages/boards/types";
 import { useBoardSocket } from "../../hooks/useBoardSocket";
 import { Avatar } from "../ui/Avatar";
-import { getUserLogged } from "../../store/selectors";
+import { getUserLogged } from "../../store/profile/selectors";
 import { useAppSelector } from "../../store";
 
 interface BoardToolbarProps {

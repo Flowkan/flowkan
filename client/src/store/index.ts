@@ -13,12 +13,19 @@ import { useDispatch, useSelector } from "react-redux";
 import * as authApi from "../pages/login/service";
 import * as profileApi from "../pages/profile/service";
 import * as boardsApi from "../pages/boards/service";
-import * as reducers from "./reducer";
-import type { Actions } from "./actions";
+import type { Actions } from "./boards/actions";
 import type { createBrowserRouter } from "react-router";
+import { authReducer } from "./auth/reducer";
+import { profileReducer } from "./profile/reducer";
+import { boardsReducer, ui } from "./boards/reducer";
 
 // --- Root Reducer ---
-const rootReducer = combineReducers(reducers);
+const rootReducer = combineReducers({
+	auth: authReducer,
+	profile: profileReducer,
+	boards: boardsReducer,
+	ui: ui
+});
 
 export type Router = ReturnType<typeof createBrowserRouter>;
 

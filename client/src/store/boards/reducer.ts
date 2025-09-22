@@ -1,117 +1,27 @@
 import type { Actions, ActionsRejected } from "./actions";
-import type { Board, Column } from "../pages/boards/types";
-import type { User } from "../pages/login/types";
-import type { ProfileType } from "../pages/profile/types";
-
-//
-// ─── STATE GLOBAL ──────────────────────────────────────────────
-//
-
-export type State = {
-	auth: {
-		user: User | null;
-		isAuthenticated: boolean;
-		error: string | null;
-	};
-	profile: ProfileType | null;
-	boards: {
-		boards: Board[];
-		currentBoard: Board | null;
-		loading: boolean;
-		error: string | null;
-	};
-	ui: {
-		pending: boolean;
-		error: Error | null;
-	};
-};
+import type { Column } from "../../pages/boards/types";
+import type { BoardsState } from "../types/defaultStates";
 
 const storedUser = localStorage.getItem("user");
-const defaultState: State = {
+const defaultState: BoardsState = {
 	auth: {
 		isAuthenticated: false,
 		error: null,
 		user: storedUser ? JSON.parse(storedUser) : null,
 	},
-	profile:null,
+	profile: null,
 	boards: { boards: [], currentBoard: null, loading: false, error: null },
 	ui: { pending: false, error: null },
 };
 
 //
-// ─── AUTH REDUCER ──────────────────────────────────────────────
-//
-export function auth(
-	state = defaultState.auth,
-	action: Actions,
-): State["auth"] {
-	switch (action.type) {
-		case "auth/login/pending":
-			return { ...state, error: null, isAuthenticated: false, user: null };
-		case "auth/login/fulfilled":
-			return { ...state, isAuthenticated: true, user: action.payload };
-		case "auth/login/rejected":
-			return {
-				...state,
-				error: action.payload.message,
-				isAuthenticated: false,
-				user: null,
-			};
-		case "auth/logout/pending":
-			return { ...state, error: null, isAuthenticated: true, user: state.user };
-
-		case "auth/logout/fulfilled":
-			return { ...state, isAuthenticated: false, user: null };
-
-		case "auth/logout/rejected":
-			return {
-				...state,
-				error: action.payload.message,
-				isAuthenticated: true,
-				user: state.user,
-			};
-		case "user/update/pending":
-		case "user/update/rejected":
-			return state;
-		case "user/update/fulfilled":
-			return {
-				...state,
-				user: action.payload,
-			};
-		default:
-			return state;
-	}
-}
-
-//
-// ─── PROFILE REDUCER ──────────────────────────────────────────────
-//
-export function profile(
-	state = defaultState.profile,
-	action: Actions,
-): State["profile"] {
-	switch (action.type) {
-		case "profile/update/pending":
-		case "profile/update/rejected":
-		case "profile/loaded/pending":
-		case "profile/loaded/rejected":
-			return null;
-		case "profile/update/fulfilled":
-		case "profile/loaded/fulfilled":
-			// console.log(action.payload);									
-			return {...action.payload}	
-		default:
-			return state;
-	}
-}
-
-//
 // ─── BOARDS REDUCER ──────────────────────────────────────────────
 //
-export function boards(
+
+export function boardsReducer(
 	state = defaultState.boards,
 	action: Actions,
-): State["boards"] {
+): BoardsState["boards"] {
 	switch (action.type) {
 		case "boards/fetchBoard/pending":
 			return { ...state, loading: true, error: null };
@@ -306,7 +216,10 @@ function isRejectedAction(action: Actions): action is ActionsRejected {
 	return action.type.endsWith("/rejected");
 }
 
-export function ui(state = defaultState.ui, action: Actions): State["ui"] {
+export function ui(
+	state = defaultState.ui,
+	action: Actions,
+): BoardsState["ui"] {
 	if (action.type.endsWith("/pending")) {
 		return { pending: true, error: null };
 	}
