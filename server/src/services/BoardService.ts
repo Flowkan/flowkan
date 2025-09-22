@@ -43,7 +43,6 @@ class BoardService {
 
   async add(data: {
     userId: number;
-
     title: string;
     slug: string;
     image?: string;
@@ -83,13 +82,13 @@ class BoardService {
 
   async update(data: {
     userId: number;
-    boardId: string;
+    boardId: number;
     data: Prisma.BoardUpdateInput;
   }): Promise<Board> {
     return this.boardModel.update(data);
   }
 
-  async delete(data: { userId: number; boardId: string }): Promise<void> {
+  async delete(data: { userId: number; boardId: number }): Promise<void> {
     return this.boardModel.delete(data);
   }
 

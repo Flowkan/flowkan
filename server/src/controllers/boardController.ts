@@ -125,7 +125,7 @@ export class BoardController {
   update = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const boardId = req.params.id;
+      const boardId = parseInt(req.params.id);
       const { title, image }: { title?: string; image?: string } = req.body;
       const currentBoard = await this.boardService.get({ userId, boardId });
 
@@ -163,7 +163,7 @@ export class BoardController {
   delete = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const boardId = req.params.id;
+      const boardId = parseInt(req.params.id);
       const currentBoard = await this.boardService.get({ userId, boardId });
 
       await this.boardService.delete({ userId, boardId });

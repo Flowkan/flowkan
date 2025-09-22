@@ -13,7 +13,8 @@
     "db": "npm run db:migrate && npm run db:init",
     "db:reset": "docker exec -it flowkan-server npx prisma migrate reset && npx prisma generate && npm run db:init",
     "db:prod": "docker exec -it flowkan-server npx prisma migrate deploy",
-    "test": "jest"
+    "test": "jest",
+    "backfill": "docker-compose exec app npx ts-node src/scripts/backfill-images.ts"
   },
   "keywords": [],
   "author": "",
