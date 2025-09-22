@@ -1,4 +1,13 @@
-import { Board, Prisma, PrismaClient, User } from "@prisma/client";
+import { Board, Prisma, PrismaClient } from "@prisma/client";
+import { SafeUser } from "./AuthModel";
+
+const safeUserSelect = {
+  id: true,
+  name: true,
+  email: true,
+  photo: true,
+  status: true,
+};
 
 const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
   include: {
@@ -10,16 +19,26 @@ const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
           include: {
             assignees: {
               include: {
-                user: true,
+                user: {
+                  select: safeUserSelect,
+                },
               },
             },
           },
         },
       },
     },
-    members: { include: { user: true } },
+    members: {
+      include: {
+        user: {
+          select: safeUserSelect,
+        },
+      },
+    },
     labels: true,
-    owner: true,
+    owner: {
+      select: safeUserSelect,
+    },
   },
 });
 export type BoardWithRelations = Prisma.BoardGetPayload<
@@ -243,13 +262,15 @@ class BoardModel {
   }: {
     userId?: number;
     boardId: string;
-  }): Promise<User[]> {
+  }): Promise<SafeUser[]> {
     const members = await this.prisma.boardMember.findMany({
       where: {
         boardId: Number(boardId),
       },
       include: {
-        user: true,
+        user: {
+          select: safeUserSelect,
+        },
       },
     });
 
