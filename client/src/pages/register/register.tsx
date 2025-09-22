@@ -314,7 +314,7 @@ export const RegisterPage = () => {
 									<SpinnerLoadingText
 										text={t(
 											"register.registerForm.registerButton.spinner.loading",
-											"Registrando...",
+											"Registrando",
 										)}
 									/>
 								) : (
