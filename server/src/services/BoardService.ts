@@ -1,6 +1,6 @@
 import { Board, Prisma } from "@prisma/client";
-import BoardModel, { BoardWithRelations } from "../models/BoardModel";
-import { SafeUser } from "../models/AuthModel";
+import BoardModel, { BoardWithRelations, SafeUser } from "../models/BoardModel";
+
 
 class BoardService {
   private readonly boardModel: BoardModel;

@@ -1,13 +1,13 @@
-import { Board, Prisma, PrismaClient } from "@prisma/client";
-import { SafeUser } from "./AuthModel";
+import { Board, Prisma, PrismaClient, User } from "@prisma/client";
 
-const safeUserSelect = {
+export const safeUserSelect = {
   id: true,
   name: true,
   email: true,
   photo: true,
   status: true,
-};
+} satisfies Prisma.UserSelect;
+export type SafeUser = Prisma.UserGetPayload<{ select: typeof safeUserSelect }>;
 
 const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
   include: {
