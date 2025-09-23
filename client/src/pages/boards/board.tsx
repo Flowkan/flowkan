@@ -24,7 +24,7 @@ import {
 } from "../../store/boards/hooks";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { editTask } from "../../store/actions";
+import { editTask } from "../../store/boards/actions";
 
 const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
 	const result = Array.from(list);

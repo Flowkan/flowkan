@@ -10,19 +10,8 @@ import {
 import { Editor } from "@tinymce/tinymce-react";
 import { Icon } from "@iconify/react";
 
-type Media = {
-	id: number;
-	url: string;
-	fileName: string;
-	fileType: "document" | "audio";
-};
-
-interface TaskWithMedia extends Task {
-	media?: Media[];
-}
-
 interface TaskDetailModalProps {
-	task: TaskWithMedia;
+	task: Task;
 	columnId: string;
 	boardId?: string;
 	onClose: () => void;
