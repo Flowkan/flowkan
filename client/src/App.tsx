@@ -177,11 +177,12 @@ function App() {
 							fallback={
 								<div className="flex min-h-screen items-center justify-center">
 									<SkeletonCustom
-										rows={6}
-										columns={1}
-										rowHeight="h-12"
-										gap="gap-4"
-										className="w-full min-w-xl p-10 shadow-2xl"
+										rows={4}
+										columns={3}
+										rowHeight="h-36"
+										columnWidth="w-full"
+										gap="gap-6"
+										className="grid w-full max-w-xl grid-cols-1 p-6 sm:grid-cols-2 md:grid-cols-3"
 										spinnerText="Lista de Tableros"
 									/>
 								</div>
@@ -202,7 +203,7 @@ function App() {
 										columns={4}
 										rowHeight="h-200"
 										gap="gap-4"
-										className="min-w-6xl w-full p-10 shadow-2xl"
+										className="w-full min-w-6xl p-10 shadow-2xl"
 										spinnerText="Cargando Tablero"
 									/>
 								</div>
