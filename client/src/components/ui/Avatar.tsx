@@ -41,13 +41,12 @@ export const Avatar: React.FC<AvatarProps> = ({
 
 	const bgColor = randomColor(name);
 	const initialsName = getInitialsName(name);
-	
+
 	if (photo) {
 		const baseUrl = import.meta.env.VITE_BASE_URL;
-		console.log(`${baseUrl}/uploads/${photo}_${format}.webp`);
 		return (
 			<img
-				src={`${baseUrl}/uploads/${photo}_${format}.webp`}
+				src={`${baseUrl}/uploads/users/${photo}_${format}.webp`}
 				alt={name}
 				className={`${className} rounded-full object-cover`}
 				style={{
