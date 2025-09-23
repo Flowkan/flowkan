@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import {
 	DragDropContext,
 	Droppable,
@@ -8,12 +8,11 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import Column from "../../components/Column";
 import TaskDetailModal from "../../components/TaskDetailModal";
-import type { Task, Column as ColumnType } from "./types";
+import type { Column as ColumnType } from "./types";
 import {
 	useFetchBoardByIdAction,
 	useAddTaskAction,
 	useUpdateTaskAction,
-	useCurrentBoard,
 	useBoardsError,
 	useAddColumnAction,
 	useDeleteColumnAction,
@@ -24,6 +23,8 @@ import {
 	useBoardsLoading,
 } from "../../store/boards/hooks";
 import { BackofficePage } from "../../components/layout/backoffice_page";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { editTask } from "../../store/boards/actions";
 
 const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
 	const result = Array.from(list);
@@ -64,16 +65,24 @@ const Board = () => {
 	const allBoards = useBoards();
 	const boardsLoading = useBoardsLoading();
 	const navigate = useNavigate();
-	const boardData = useCurrentBoard();
 	const error = useBoardsError();
+	const dispatch = useAppDispatch();
 
-	const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 	const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
+	const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [newColumnName, setNewColumnName] = useState("");
 	const [resolvedBoardId, setResolvedBoardId] = useState<string | undefined>(
 		undefined,
 	);
+	const boardData = useAppSelector((state) => state.boards.currentBoard);
+
+	const selectedTask = useMemo(() => {
+		if (!boardData || !selectedTaskId) return null;
+		return boardData.lists
+			.flatMap((col) => col.cards)
+			.find((t) => t.id?.toString() === selectedTaskId);
+	}, [boardData, selectedTaskId]);
 
 	useEffect(() => {
 		if (!slug) return;
@@ -201,7 +210,7 @@ const Board = () => {
 		(
 			columnId: string,
 			taskId: string,
-			updatedFields: { title?: string; description?: string },
+			updatedFields: { title?: string; description?: string } | FormData,
 		) => {
 			updateTaskAction(Number(columnId), taskId, updatedFields);
 		},
@@ -216,13 +225,13 @@ const Board = () => {
 		[boardData, deleteTaskAction],
 	);
 
-	const openTaskDetail = useCallback((task: Task, columnId: string) => {
-		setSelectedTask(task);
+	const openTaskDetail = useCallback((taskId: string, columnId: string) => {
+		setSelectedTaskId(taskId);
 		setSelectedColumnId(columnId);
 	}, []);
 
 	const closeTaskDetail = useCallback(() => {
-		setSelectedTask(null);
+		setSelectedTaskId(null);
 		setSelectedColumnId(null);
 	}, []);
 
@@ -291,7 +300,11 @@ const Board = () => {
 									}
 									onEditColumnTitle={handleEditColumnTitle}
 									onDeleteColumn={() => handleDeleteColumnClick(column.id!)}
-									onOpenTaskDetail={(task) => openTaskDetail(task, column.id!)}
+									onOpenTaskDetail={(task) =>
+										task.id !== undefined
+											? openTaskDetail(task.id.toString(), column.id!)
+											: undefined
+									}
 									isNewColumnInEditMode={false}
 								/>
 							))}
@@ -338,11 +351,13 @@ const Board = () => {
 					boardId={resolvedBoardId}
 					columnId={selectedColumnId}
 					onClose={closeTaskDetail}
-					onEditTask={(updatedFields) =>
-						handleEditTask(
-							selectedColumnId,
-							selectedTask.id!.toString(),
-							updatedFields,
+					onEditTask={(data) =>
+						dispatch(
+							editTask(
+								Number(selectedColumnId),
+								selectedTask.id!.toString(),
+								data,
+							),
 						)
 					}
 					onDeleteTask={() =>

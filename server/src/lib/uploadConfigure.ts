@@ -80,30 +80,24 @@ export function processImage(
   };
 }
 
-/* export async function processAvatar(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  try {
-    if (!req.file) return next();
+export const mediaStorage = multer.diskStorage({
+  destination: (req, _file, cb) => {
+    const taskId = req.params.id || "unknown";
+    const subfolderPath = path.join(rootUploadPath, "boards", taskId);
+    if (!fs.existsSync(subfolderPath)) {
+      fs.mkdirSync(subfolderPath, { recursive: true });
+    }
+    cb(null, subfolderPath);
+  },
+  filename: (req, file, cb) => {
+    const taskId = req.params.id || "unknown";
+    const ext = path.extname(file.originalname);
+    const fileName = `${taskId}_${Date.now()}${ext || ".dat"}`;
+    cb(null, fileName);
+  },
+});
 
-    const baseName = `${Date.now()}`;
-
-    const originalPath = path.join(uploadPath, `${baseName}_o.webp`);
-    const thumbPath = path.join(uploadPath, `${baseName}_t.webp`);
-
-    await sharp(req.file.buffer).webp({ quality: 90 }).toFile(originalPath);
-
-    await sharp(req.file.buffer)
-      .resize(100, 100)
-      .webp({ quality: 80 })
-      .toFile(thumbPath);
-
-    req.body.photo = baseName;
-
-    next();
-  } catch (err) {
-    next(err);
-  }
-} */
+export const uploadMedia = multer({
+  storage: mediaStorage,
+  limits: { fileSize: 20 * 1024 * 1024 }, // Límite de 20MB
+});

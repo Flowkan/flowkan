@@ -15,7 +15,7 @@ const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
       orderBy: { position: "asc" },
       include: {
         cards: {
-          orderBy: { position: "desc" },
+          orderBy: { position: "asc" },
           include: {
             assignees: {
               include: {
@@ -24,6 +24,7 @@ const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
                 },
               },
             },
+            media: true,
           },
         },
       },

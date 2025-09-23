@@ -356,7 +356,7 @@ export function addTask(
 export function editTask(
 	columnId: number,
 	taskId: string,
-	data: Partial<Task>,
+	data: Partial<Task> | FormData,
 ): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
 		try {

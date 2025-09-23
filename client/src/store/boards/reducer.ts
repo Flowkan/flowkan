@@ -112,23 +112,20 @@ export function boardsReducer(
 		case "boards/editTask/fulfilled": {
 			if (!state.currentBoard) return state;
 
-			const { task } = action.payload;
+			const { columnId, task } = action.payload;
 
 			return {
 				...state,
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.map((col: Column) => {
-						if (col.id?.toString() === task.listId.toString()) {
+						if (col.id?.toString() === columnId.toString()) {
 							const withoutTask = col.cards.filter((t) => t.id !== task.id);
 							const withTask = [...withoutTask, task];
 
 							withTask.sort((a, b) => a.position - b.position);
 
-							return {
-								...col,
-								cards: withTask,
-							};
+							return { ...col, cards: withTask };
 						}
 
 						return {

@@ -96,7 +96,11 @@ export function useAddTaskAction() {
 
 export function useUpdateTaskAction() {
 	const dispatch = useAppDispatch();
-	return function (columnId: number, taskId: string, task: Partial<Task>) {
+	return function (
+		columnId: number,
+		taskId: string,
+		task: Partial<Task> | FormData,
+	) {
 		return dispatch(editTask(columnId, taskId, task));
 	};
 }

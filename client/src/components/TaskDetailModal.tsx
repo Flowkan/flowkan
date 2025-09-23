@@ -8,13 +8,16 @@ import {
 	useRemoveAssigneeAction,
 } from "../store/boards/hooks";
 import { Editor } from "@tinymce/tinymce-react";
+import { Icon } from "@iconify/react";
 
 interface TaskDetailModalProps {
 	task: Task;
 	columnId: string;
 	boardId?: string;
 	onClose: () => void;
-	onEditTask: (updatedFields: { title?: string; description?: string }) => void;
+	onEditTask: (
+		updatedFields: { title?: string; description?: string } | FormData,
+	) => void;
 	onDeleteTask: (columnId: string, taskId: string) => void;
 }
 
@@ -42,9 +45,14 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		task.assignees?.map((a) => a.user) || [],
 	);
 
+	const [recording, setRecording] = useState(false);
+	const [showAddMenu, setShowAddMenu] = useState(false);
+	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+
 	const modalRef = useRef<HTMLDivElement>(null);
 	const contentInputRef = useRef<HTMLInputElement>(null);
 	const usersRef = useRef<HTMLDivElement>(null);
+	const addMenuRef = useRef<HTMLDivElement>(null);
 	const editorRef = useRef(null);
 
 	useEffect(() => {
@@ -63,6 +71,81 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		}
 	};
 
+	const handleUploadAttachments = (filesToUpload: (File | Blob)[]) => {
+		if (!task.id || filesToUpload.length === 0) return;
+
+		const formData = new FormData();
+
+		filesToUpload.forEach((fileOrBlob, index) => {
+			const fileName =
+				fileOrBlob instanceof File
+					? fileOrBlob.name
+					: `nota_voz_${Date.now()}_${index}.webm`;
+
+			formData.append("attachments", fileOrBlob, fileName);
+		});
+
+		onEditTask(formData);
+		setShowAddMenu(false);
+	};
+
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0) {
+			const newFiles = Array.from(e.target.files);
+			handleUploadAttachments(newFiles);
+			e.target.value = "";
+		}
+	};
+
+	const handleStartRecording = async () => {
+		try {
+			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			const mediaRecorder = new MediaRecorder(stream);
+			mediaRecorderRef.current = mediaRecorder;
+			const chunks: Blob[] = [];
+
+			mediaRecorder.ondataavailable = (event) => {
+				if (event.data.size > 0) chunks.push(event.data);
+			};
+
+			mediaRecorder.onstop = () => {
+				const audioBlob = new Blob(chunks, { type: "audio/webm" });
+				handleUploadAttachments([audioBlob]);
+				stream.getTracks().forEach((track) => track.stop());
+			};
+
+			mediaRecorder.start();
+			setRecording(true);
+		} catch (error) {
+			console.error("Error al acceder al micrófono:", error);
+			alert(
+				"No se pudo iniciar la grabación. Asegúrate de que el micrófono esté disponible.",
+			);
+			setRecording(false);
+		}
+	};
+
+	const handleStopRecording = () => {
+		if (
+			mediaRecorderRef.current &&
+			mediaRecorderRef.current.state !== "inactive"
+		) {
+			mediaRecorderRef.current.stop();
+		}
+		setRecording(false);
+	};
+
+	const handleRemoveAttachment = (mediaId: number) => {
+		if (!task.id) return;
+
+		if (window.confirm("¿Estás seguro de que quieres eliminar este adjunto?")) {
+			onEditTask({ removeMediaId: mediaId } as unknown as {
+				title?: string;
+				description?: string;
+			});
+		}
+	};
+
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			const target = event.target as Node;
@@ -76,7 +159,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		};
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [onClose, editedContent, editedDescription]);
+	}, [onClose]);
 
 	useEffect(() => {
 		if (!showUsers) return;
@@ -92,6 +175,21 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		return () =>
 			document.removeEventListener("mousedown", handleClickOutsideUsers);
 	}, [showUsers]);
+
+	useEffect(() => {
+		if (!showAddMenu) return;
+		const handleClickOutsideAdd = (event: MouseEvent) => {
+			if (
+				addMenuRef.current &&
+				!addMenuRef.current.contains(event.target as Node)
+			) {
+				setShowAddMenu(false);
+			}
+		};
+		document.addEventListener("mousedown", handleClickOutsideAdd);
+		return () =>
+			document.removeEventListener("mousedown", handleClickOutsideAdd);
+	}, [showAddMenu]);
 
 	const handleDelete = () => {
 		if (window.confirm("¿Estás seguro de que quieres eliminar esta tarea?")) {
@@ -147,11 +245,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black p-4">
 			<div
 				ref={modalRef}
-				// CLASES MODIFICADAS PARA RESPONSIVIDAD:
-				// - Añadido 'flex-col' por defecto (móvil).
-				// - Añadido 'md:flex-row' para el diseño de dos columnas en escritorio.
-				// - Eliminado 'gap-6'.
-				// - Añadido 'overflow-y-auto' para permitir el scroll vertical del modal.
 				className="bg-background-card relative flex max-h-5/6 w-full max-w-5xl flex-col overflow-y-auto rounded-lg p-6 shadow-2xl md:flex-row"
 			>
 				<button
@@ -161,14 +254,15 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 					className="text-text-placeholder hover:text-text-body absolute top-3 right-3 z-10 text-4xl leading-none"
 					title="Cerrar y guardar"
 				>
-					&times;
+					<Icon icon="ic:round-close" className="text-3xl" />
 				</button>
 
-				{/* COLUMNA PRINCIPAL (Contenido) */}
-				{/* Añadimos 'md:mr-6' para el espacio lateral en desktop */}
 				<div className="relative flex flex-grow flex-col md:mr-6">
 					<div className="mb-4 flex items-center gap-2">
-						<span className="text-text-placeholder text-2xl">📋</span>
+						<Icon
+							icon="mdi:card-bulleted-settings-outline"
+							className="text-text-placeholder text-2xl"
+						/>
 						<input
 							ref={contentInputRef}
 							type="text"
@@ -184,30 +278,76 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							Añadir a la tarjeta
 						</h4>
 						<div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+							<div className="relative" ref={addMenuRef}>
+								<button
+									onClick={() => setShowAddMenu((prev) => !prev)}
+									className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
+								>
+									<Icon icon="mdi:plus" className="text-lg" /> Añadir
+								</button>
+
+								{showAddMenu && (
+									<div className="border-border-medium bg-background-light-grey absolute top-full left-0 z-50 mt-2 w-56 rounded-md border shadow-lg">
+										<button
+											onClick={() => {
+												document.getElementById("fileInput")?.click();
+												setShowAddMenu(false);
+											}}
+											className="hover:bg-background-hover-column w-full px-3 py-2 text-left text-sm"
+										>
+											<Icon
+												icon="mdi:attachment"
+												className="mr-1 inline-block text-lg"
+											/>{" "}
+											Adjuntar documento
+										</button>
+										<button
+											onClick={() => {
+												if (!recording) handleStartRecording();
+												setShowAddMenu(false);
+											}}
+											className="hover:bg-background-hover-column w-full px-3 py-2 text-left text-sm"
+										>
+											<Icon
+												icon="mdi:microphone"
+												className="mr-1 inline-block text-lg"
+											/>{" "}
+											Grabar nota de voz
+										</button>
+									</div>
+								)}
+								<input
+									id="fileInput"
+									type="file"
+									multiple
+									className="hidden"
+									onChange={handleFileChange}
+								/>
+							</div>
+
 							<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
-								<span className="text-lg">+</span> Añadir
+								<Icon icon="mdi:tag-outline" className="text-lg" /> Etiquetas
 							</button>
 							<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
-								<span className="text-lg">🏷️</span> Etiquetas
+								<Icon icon="mdi:calendar-month-outline" className="text-lg" />{" "}
+								Fechas
 							</button>
 							<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
-								<span className="text-lg">🗓️</span> Fechas
-							</button>
-							<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
-								<span className="text-lg">✔️</span> Checklist
+								<Icon icon="mdi:checkbox-outline" className="text-lg" />{" "}
+								Checklist
 							</button>
 							<button
 								onClick={handleToggleUsers}
 								className="bg-background-light-grey text-text-body hover:bg-background-hover-column relative flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
 							>
-								<span className="text-lg">👥</span> Miembros
+								<Icon icon="mdi:account-group-outline" className="text-lg" />{" "}
+								Miembros
 							</button>
 						</div>
 
 						{showUsers && (
 							<div
 								ref={usersRef}
-								// MODIFICACIÓN: En móvil (w-full y centrado), en desktop (md:w-64 y a la derecha)
 								className="border-border-medium bg-background-light-grey absolute top-full left-1/2 z-50 mt-2 max-h-60 w-[calc(100%-1rem)] -translate-x-1/2 overflow-y-auto rounded-md border p-2 shadow-lg md:right-0 md:left-auto md:w-64 md:translate-x-0"
 							>
 								<input
@@ -237,7 +377,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 										>
 											<Avatar name={user.name} photo={user.photo} />
 											<span className="text-sm">{user.name}</span>
-											{isAssigned && <span className="ml-auto text-xs">✓</span>}
+											{isAssigned && (
+												<Icon icon="mdi:check" className="ml-auto text-xs" />
+											)}
 										</div>
 									);
 								})}
@@ -266,7 +408,10 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 					<div className="mb-6 flex flex-col">
 						<h4 className="text-text-heading mb-2 flex items-center gap-2 font-semibold">
-							<span className="text-text-placeholder text-lg">📝</span>{" "}
+							<Icon
+								icon="mdi:note-edit-outline"
+								className="text-text-placeholder text-lg"
+							/>{" "}
 							Descripción
 						</h4>
 						<Editor
@@ -308,29 +453,101 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							onBlur={handleSaveDescription}
 						/>
 					</div>
+
+					{task.media && task.media.length > 0 && (
+						<div className="mb-6">
+							<h4 className="text-text-heading mb-2 text-sm font-semibold">
+								Adjuntos
+							</h4>
+							<div className="space-y-2">
+								{task.media.map((mediaItem) => {
+									return (
+										<div
+											key={mediaItem.id}
+											className="border-border-medium bg-background-light-grey flex items-center justify-between rounded-md border px-3 py-2 text-sm shadow-sm"
+										>
+											<div className="flex items-center gap-2">
+												{mediaItem.fileType === "audio" ? (
+													<>
+														<Icon icon="mdi:microphone" className="text-lg" />
+														<audio
+															controls
+															src={`${import.meta.env.VITE_BASE_URL}${mediaItem.url}`}
+															className="h-8"
+														/>
+													</>
+												) : (
+													<>
+														<Icon
+															icon="mdi:file-document-outline"
+															className="text-lg"
+														/>
+														<div key={mediaItem.id}>
+															<a
+																href={`${import.meta.env.VITE_BASE_URL}${mediaItem.url}`}
+																target="_blank"
+																rel="noopener noreferrer"
+																title={`Ver ${mediaItem.fileName}`}
+															>
+																{mediaItem.fileName}
+															</a>
+														</div>
+													</>
+												)}
+											</div>
+											<button
+												onClick={() => handleRemoveAttachment(mediaItem.id)}
+												className="text-text-placeholder hover:text-red-500"
+												title="Eliminar archivo"
+											>
+												<Icon
+													icon="mdi:close-circle-outline"
+													className="text-lg"
+												/>
+											</button>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					)}
+
+					{recording && (
+						<div className="fixed bottom-4 left-1/2 z-50 flex w-[90%] max-w-md -translate-x-1/2 items-center justify-between rounded-lg bg-red-600 px-4 py-3 text-white shadow-lg">
+							<span className="flex items-center gap-2">
+								<Icon icon="mdi:record-circle" className="animate-pulse" />{" "}
+								Grabando...
+							</span>
+							<button
+								onClick={handleStopRecording}
+								className="rounded bg-white px-3 py-1 text-sm font-semibold text-red-600 hover:bg-gray-200"
+							>
+								Detener
+							</button>
+						</div>
+					)}
 				</div>
 
-				{/* COLUMNA DE OPCIONES (Lateral) */}
-				{/* CLASES MODIFICADAS: 'w-full' para móvil, 'md:w-64' para desktop. 'pt-6' para separación en móvil */}
 				<div className="w-full flex-shrink-0 pt-6 md:w-64 md:pt-10">
 					<h4 className="text-text-placeholder mb-3 text-sm font-semibold">
 						Opciones
 					</h4>
 					<div className="space-y-2">
 						<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
-							<span className="text-lg">➡️</span> Mover
+							<Icon icon="mdi:arrow-right-box" className="text-lg" /> Mover
 						</button>
 						<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
-							<span className="text-lg">📄</span> Copiar
+							<Icon icon="mdi:content-copy" className="text-lg" /> Copiar
 						</button>
 						<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
-							<span className="text-lg">🗄️</span> Archivar
+							<Icon icon="mdi:archive-arrow-down-outline" className="text-lg" />{" "}
+							Archivar
 						</button>
 						<button
 							onClick={handleDelete}
 							className="bg-background-light-grey text-text-body hover:bg-danger-dark hover:text-background-card flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200 hover:bg-red-400"
 						>
-							<span className="text-lg">🗑️</span> Eliminar
+							<Icon icon="mdi:trash-can-outline" className="text-lg" /> Eliminar
 						</button>
 					</div>
 				</div>
