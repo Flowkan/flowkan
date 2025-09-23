@@ -1,6 +1,6 @@
 import type { AppThunk } from "..";
 import type { User } from "../../pages/login/types";
-import type { Board, BoardsData, Column, Task } from "../../pages/boards/types";
+import type { Board, Column, Task } from "../../pages/boards/types";
 import type { AuthActions, AuthActionsRejected } from "../auth/actions";
 import type {
 	ProfileActions,
@@ -52,7 +52,7 @@ type DeleteBoardFulfilled = {
 
 type EditBoardFulfilled = {
 	type: "boards/editBoard/fulfilled";
-	payload: { boardId: string; data: BoardsData };
+	payload: { boardId: string; data: Board };
 };
 
 type EditBoardRejected = {
@@ -140,7 +140,7 @@ export const addBoardFulfilled = (board: Board): AddBoardFulfilled => ({
 
 export const editBoardFulfilled = (
 	boardId: string,
-	data: BoardsData,
+	data: Board,
 ): EditBoardFulfilled => ({
 	type: "boards/editBoard/fulfilled",
 	payload: { boardId, data },
@@ -277,7 +277,7 @@ export function getBoardUsers(id: string): AppThunk<Promise<void>> {
 	};
 }
 
-export function addBoard(data: BoardsData): AppThunk<Promise<void>> {
+export function addBoard(data: FormData): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
 		const board = await api.boards.createBoard(data);
 		dispatch(addBoardFulfilled(board));
@@ -293,12 +293,12 @@ export function deleteBoard(boardId: string): AppThunk<Promise<void>> {
 
 export function editBoard(
 	boardId: string,
-	data: BoardsData,
+	data: FormData,
 ): AppThunk<Promise<void>> {
 	return async function (dispatch, _getState, { api }) {
 		try {
-			await api.boards.updateBoard(boardId, data);
-			dispatch(editBoardFulfilled(boardId, data));
+			const updatedBoard = await api.boards.updateBoard(boardId, data);
+			dispatch(editBoardFulfilled(boardId, updatedBoard));
 		} catch (error) {
 			if (error instanceof Error) {
 				dispatch(editBoardRejected(error));

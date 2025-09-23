@@ -1,5 +1,6 @@
-import { Board, Prisma, User } from "@prisma/client";
-import BoardModel, { BoardWithRelations } from "../models/BoardModel";
+import { Board, Prisma } from "@prisma/client";
+import BoardModel, { BoardWithRelations, SafeUser } from "../models/BoardModel";
+
 
 class BoardService {
   private readonly boardModel: BoardModel;
@@ -45,6 +46,7 @@ class BoardService {
     userId: number;
     title: string;
     slug: string;
+    image?: string;
   }): Promise<Board> {
     const uniqueSlug = await this.findUniqueSlug(data.slug);
     return this.boardModel.add({
@@ -81,13 +83,13 @@ class BoardService {
 
   async update(data: {
     userId: number;
-    boardId: string;
+    boardId: number;
     data: Prisma.BoardUpdateInput;
   }): Promise<Board> {
     return this.boardModel.update(data);
   }
 
-  async delete(data: { userId: number; boardId: string }): Promise<void> {
+  async delete(data: { userId: number; boardId: number }): Promise<void> {
     return this.boardModel.delete(data);
   }
 
@@ -101,7 +103,7 @@ class BoardService {
   async getBoardUsers(data: {
     userId?: number;
     boardId: string;
-  }): Promise<User[]> {
+  }): Promise<SafeUser[]> {
     return this.boardModel.getBoardUsers(data);
   }
 }

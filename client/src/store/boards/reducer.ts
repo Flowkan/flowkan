@@ -1,5 +1,5 @@
 import type { Actions, ActionsRejected } from "./actions";
-import type { Column } from "../../pages/boards/types";
+import type { Board, Column } from "../../pages/boards/types";
 import type { BoardsState } from "../types/defaultStates";
 
 const storedUser = localStorage.getItem("user");
@@ -41,16 +41,22 @@ export function boardsReducer(
 		case "boards/deleteBoards":
 			return {
 				...state,
-				boards: state.boards.filter((board) => board.id !== action.payload),
+				boards: state.boards.filter(
+					(board: Board) => board.id !== action.payload,
+				),
 			};
 
 		case "boards/editBoard/fulfilled":
 			return {
 				...state,
-				boards: state.boards.map((board) => {
+				boards: state.boards.map((board: Board) => {
 					if (board.id !== action.payload.boardId) return board;
 
-					return { ...board, title: action.payload.data.title };
+					return {
+						...board,
+						title: action.payload.data.title,
+						image: action.payload.data.image,
+					};
 				}),
 			};
 
@@ -70,7 +76,7 @@ export function boardsReducer(
 				...state,
 				currentBoard: {
 					...state.currentBoard,
-					lists: state.currentBoard.lists.map((col) =>
+					lists: state.currentBoard.lists.map((col: Column) =>
 						col.id === action.payload.column.id
 							? { ...col, title: action.payload.column.title }
 							: col,
@@ -84,7 +90,7 @@ export function boardsReducer(
 				currentBoard: {
 					...state.currentBoard,
 					lists: state.currentBoard.lists.filter(
-						(col) => col.id?.toString() !== action.payload.columnId,
+						(col: Column) => col.id?.toString() !== action.payload.columnId,
 					),
 				},
 			};
@@ -112,7 +118,7 @@ export function boardsReducer(
 				...state,
 				currentBoard: {
 					...state.currentBoard,
-					lists: state.currentBoard.lists.map((col) => {
+					lists: state.currentBoard.lists.map((col: Column) => {
 						if (col.id?.toString() === columnId.toString()) {
 							const withoutTask = col.cards.filter((t) => t.id !== task.id);
 							const withTask = [...withoutTask, task];
@@ -137,7 +143,7 @@ export function boardsReducer(
 				...state,
 				currentBoard: {
 					...state.currentBoard,
-					lists: state.currentBoard.lists.map((col) =>
+					lists: state.currentBoard.lists.map((col: Column) =>
 						col.id === action.payload.columnId
 							? {
 									...col,
@@ -156,7 +162,7 @@ export function boardsReducer(
 				...state,
 				currentBoard: {
 					...state.currentBoard,
-					lists: state.currentBoard.lists.map((col) => ({
+					lists: state.currentBoard.lists.map((col: Column) => ({
 						...col,
 						cards: col.cards.map((task) =>
 							task.id === action.payload.cardId
@@ -183,7 +189,7 @@ export function boardsReducer(
 				...state,
 				currentBoard: {
 					...state.currentBoard,
-					lists: state.currentBoard.lists.map((col) => ({
+					lists: state.currentBoard.lists.map((col: Column) => ({
 						...col,
 						cards: col.cards.map((task) =>
 							task.id === action.payload.cardId

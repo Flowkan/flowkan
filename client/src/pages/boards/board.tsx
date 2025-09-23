@@ -272,7 +272,7 @@ const Board = () => {
 	if (error) return <div>Error al cargar el tablero: {error}</div>;
 
 	return (
-		<BackofficePage>
+		<BackofficePage title={boardData?.title} backgroundImg={boardData?.image}>
 			<DragDropContext onDragEnd={onDragEnd}>
 				<Droppable droppableId="board" type="column" direction="horizontal">
 					{(provided) => (
@@ -314,7 +314,7 @@ const Board = () => {
 							<div className="items-left relative flex h-full w-80 flex-shrink-0 flex-col">
 								<button
 									onClick={handleAddColumnToggle}
-									className="bg-background-column-light text-text-placeholder hover:bg-background-hover-column border-border-medium hover:border-accent flex h-14 w-14 items-center justify-center rounded-lg border-2 border-dashed text-2xl font-semibold shadow-md transition-colors duration-200"
+									className="text-text-placeholder hover:bg-background-hover-column border-border-medium hover:border-accent flex h-14 w-14 items-center justify-center rounded-lg border-2 border-dashed bg-white text-2xl font-semibold shadow-md transition-colors duration-200"
 								>
 									+
 								</button>
@@ -345,7 +345,6 @@ const Board = () => {
 					)}
 				</Droppable>
 			</DragDropContext>
-
 			{selectedTask && selectedColumnId && (
 				<TaskDetailModal
 					task={selectedTask}

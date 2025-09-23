@@ -5,6 +5,11 @@ import { BoardWithRelations } from "../models/BoardModel";
 import jwt from "jsonwebtoken";
 import AuthService from "../services/AuthService";
 import { slugify } from "../utils/utils";
+import { deleteImage } from "../utils/fileUtils";
+
+import dotenv from "dotenv";
+
+dotenv.config();
 
 interface InvitationJwtPayload {
   boardId: string;
@@ -102,21 +107,53 @@ export class BoardController {
       const userId = req.apiUserId;
       const { title }: { title: string } = req.body;
       const slug = slugify(title);
-      const board = await this.boardService.add({ userId, title, slug });
+
+      const image: string | undefined = req.body.image
+        ? `/uploads/boards/${req.body.image}`
+        : undefined;
+
+      const board = await this.boardService.add({ userId, title, image, slug });
       res.status(201).json(board);
     } catch (err) {
-      res.status(500).send("Error al crear tablero :(");
+      if (err instanceof Error) {
+        res.status(500).send("Error al crear el tablero");
+      }
     }
   };
 
   update = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const boardId = req.params.id;
-      const { title }: { title?: string } = req.body;
-      const data: Prisma.BoardUpdateInput = { title };
-      const board = await this.boardService.update({ userId, boardId, data });
-      res.status(200).json(board);
+      const boardId = parseInt(req.params.id);
+      const { title, image }: { title?: string; image?: string } = req.body;
+      const currentBoard = await this.boardService.get({ userId, boardId });
+
+      const data: Prisma.BoardUpdateInput = {};
+
+      if (title) {
+        data.title = title;
+      }
+
+      if (image) {
+        data.image = `/uploads/boards/${image}`;
+      }
+
+      const updatedBoard = await this.boardService.update({
+        userId,
+        boardId,
+        data,
+      });
+
+      if (currentBoard?.image) {
+        const originalToDelete = `/uploads/boards/${currentBoard.image}_o.webp`;
+        const thumbnailToDelete = `/uploads/boards/${currentBoard.image}_t.webp`;
+        deleteImage({
+          originalImagePath: originalToDelete,
+          thumbnailImagePath: thumbnailToDelete,
+        });
+      }
+
+      res.status(200).json(updatedBoard);
     } catch (err) {
       res.status(500).send("Error al actualizar el tablero");
     }
@@ -125,8 +162,20 @@ export class BoardController {
   delete = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const boardId = req.params.id;
+      const boardId = parseInt(req.params.id);
+      const currentBoard = await this.boardService.get({ userId, boardId });
+
       await this.boardService.delete({ userId, boardId });
+
+      if (currentBoard?.image) {
+        const originalToDelete = `/uploads/boards/${currentBoard.image}_o.webp`;
+        const thumbnailToDelete = `/uploads/boards/${currentBoard.image}_t.webp`;
+        deleteImage({
+          originalImagePath: originalToDelete,
+          thumbnailImagePath: thumbnailToDelete,
+        });
+      }
+
       res.status(204).json({});
     } catch (err) {
       console.log("errsaddsfdsdsafor", err);

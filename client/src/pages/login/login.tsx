@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import type { Credentials } from "./types";
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { useAppDispatch } from "../../store";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { Form } from "../../components/ui/Form";
 import { FormFields } from "../../components/ui/FormFields";
@@ -14,7 +14,6 @@ import { __ } from "../../utils/i18nextHelper";
 import { WithOtherServices } from "../register/withOtherServices/WithOtherServices";
 import { useLoginAction } from "../../store/auth/hooks";
 import { useLoadedProfile } from "../../store/profile/hooks";
-import { getUi } from "../../store/boards/selectors";
 import { loginWithOAuth } from "../../store/auth/actions";
 import ForgotPassword from "../../components/ui/modals/forgot-password";
 
@@ -23,7 +22,6 @@ export const LoginPage = () => {
 	const loginAction = useLoginAction();
 	const profileLoadedAction = useLoadedProfile();
 	const dispatch = useAppDispatch();
-	const { error } = useAppSelector(getUi);
 	// const modalForgotPassword = useRef<HTMLDialogElement|null>(null)
 	const [showModal,setShowModal] = useState(false);
 
@@ -147,12 +145,6 @@ export const LoginPage = () => {
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
 							{t("login.loginForm.title", "Iniciar Sesión")}
 						</h1>
-						{error && (
-							<div
-								className="rounded border border-red-200 bg-red-50 px-3 py-2 text-center text-sm text-red-600"
-								role="alert"
-							></div>
-						)}
 						<p className="text-text-body mt-2 text-center text-sm">
 							{t("login.loginForm.question", "¿No tienes una cuenta?")}
 							<NavLink
@@ -244,7 +236,6 @@ export const LoginPage = () => {
 									)
 								)}{" "}
 							</Button>
-							{error && <p className="text-red-500">{error.message}</p>}
 						</div>
 					</Form>
 					<ForgotPassword 

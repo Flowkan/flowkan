@@ -10,7 +10,7 @@ import {
   registerSchema,
   resetPasswordSchema,
 } from "../validators/authSchema";
-import { uploadAvatar, processAvatar } from "../lib/uploadConfigure";
+import { upload, processImage } from "../lib/uploadConfigure";
 import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
 import passport from "passport";
 
@@ -24,8 +24,12 @@ router.post("/login", validateUserFields(loginSchema), controller.login);
 
 router.post(
   "/register",
-  uploadAvatar.single("photo"),
-  processAvatar,
+  upload.single("photo"),
+  processImage(
+    "users",
+    { original: {}, thumb: { width: 100, height: 100 } },
+    "photo",
+  ),
   validateUserFields(registerSchema),
   controller.register,
 );

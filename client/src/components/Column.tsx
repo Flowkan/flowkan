@@ -151,7 +151,7 @@ const Column = ({
 	}, [isAddingTask, newTaskContent, handleAddTask, handleCancelAddTask]);
 
 	return (
-		<div className="bg-background-column flex h-full max-h-[calc(100vh-160px)] w-80 flex-shrink-0 flex-col rounded-lg p-4 shadow-xl">
+		<div className="flex h-full max-h-[calc(100vh-160px)] w-80 flex-shrink-0 flex-col rounded-lg bg-white/95 p-4 shadow-xl">
 			<div className="mb-4 flex items-center justify-between">
 				<h3
 					onClick={handleTitleClick}

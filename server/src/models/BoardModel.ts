@@ -1,5 +1,14 @@
 import { Board, Prisma, PrismaClient, User } from "@prisma/client";
 
+export const safeUserSelect = {
+  id: true,
+  name: true,
+  email: true,
+  photo: true,
+  status: true,
+} satisfies Prisma.UserSelect;
+export type SafeUser = Prisma.UserGetPayload<{ select: typeof safeUserSelect }>;
+
 const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
   include: {
     lists: {
@@ -10,7 +19,9 @@ const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
           include: {
             assignees: {
               include: {
-                user: true,
+                user: {
+                  select: safeUserSelect,
+                },
               },
             },
             media: true,
@@ -18,9 +29,17 @@ const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
         },
       },
     },
-    members: { include: { user: true } },
+    members: {
+      include: {
+        user: {
+          select: safeUserSelect,
+        },
+      },
+    },
     labels: true,
-    owner: true,
+    owner: {
+      select: safeUserSelect,
+    },
   },
 });
 export type BoardWithRelations = Prisma.BoardGetPayload<
@@ -134,10 +153,12 @@ class BoardModel {
   async add({
     title,
     userId,
+    image,
     slug,
   }: {
     title: string;
     userId: number;
+    image?: string;
     slug: string;
   }): Promise<Board> {
     return await this.prisma.board.create({
@@ -148,6 +169,7 @@ class BoardModel {
         members: {
           create: [{ userId: userId, role: "admin" }],
         },
+        image,
       },
     });
   }
@@ -173,7 +195,7 @@ class BoardModel {
     data,
   }: {
     userId: number;
-    boardId: string;
+    boardId: number;
     data: Prisma.BoardUpdateInput;
   }): Promise<Board> {
     const board = await this.prisma.board.findUnique({
@@ -202,7 +224,7 @@ class BoardModel {
     boardId,
   }: {
     userId: number;
-    boardId: string;
+    boardId: number;
   }): Promise<void> {
     const board = await this.prisma.board.findUnique({
       where: { id: Number(boardId) },
@@ -244,13 +266,15 @@ class BoardModel {
   }: {
     userId?: number;
     boardId: string;
-  }): Promise<User[]> {
+  }): Promise<SafeUser[]> {
     const members = await this.prisma.boardMember.findMany({
       where: {
         boardId: Number(boardId),
       },
       include: {
-        user: true,
+        user: {
+          select: safeUserSelect,
+        },
       },
     });
 
