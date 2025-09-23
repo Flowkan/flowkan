@@ -1,7 +1,7 @@
 .page-container {
 	display: flex;
 	flex-direction: column;
-	padding: 20px;
+	padding: 50px 20px 20px 20px;
 	margin: 0 auto;
 	gap: 30px;
 
@@ -32,29 +32,34 @@
 			max-width: 800px;
 			margin: 0 auto;
 			gap: 10px;
+
+			.boards-toolbar {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				width: 100%;
+				margin-bottom: 20px;
+				gap: 1rem;
+				position: relative;
+			}
+
+			.boards-list-content {
+				display: grid;
+				width: 100%;
+
+				.boards-list {
+					list-style: none;
+					padding: 0;
+					margin: 0;
+					width: 100%;
+					display: grid;
+					grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+					justify-content: center;
+					gap: 2rem;
+				}
+			}
 		}
 	}
-}
-
-.boards-list-content {
-	width: 100%;
-}
-
-.boards-list {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	width: 100%;
-}
-
-.boards-toolbar {
-	display: flex;
-	justify-content: space-between;
-	align-items: flex-start;
-	width: 100%;
-	margin-bottom: 20px;
-	gap: 1rem;
-	position: relative;
 }
 
 /* Filtro desplegable hacia arriba */
@@ -68,10 +73,9 @@
 	background: rgba(255, 255, 255, 0.95);
 	border: 1px solid #ddd;
 	padding: 10px;
-	box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+	box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
 	border-radius: 6px;
 }
-
 
 .boards-toolbar.open-filters {
 	margin-bottom: 20px;
@@ -88,5 +92,15 @@
 	.page-container {
 		max-width: 750px;
 		margin: 0 auto;
+
+		.boards-list-container {
+			.boards-wrapper {
+				.boards-list-content {
+					.boards-list {
+						grid-template-columns: 1fr 1fr 1fr;
+					}
+				}
+			}
+		}
 	}
 }

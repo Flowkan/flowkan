@@ -5,9 +5,12 @@ import {
 	LIST_ENDPOINT,
 } from "../../utils/endpoints";
 import type { User } from "../login/types";
-import type { Board, BoardsData, Column, Task } from "./types";
+import type { Board, Column, Task } from "./types";
 
-export const getBoards = async (limit: number, skip: number): Promise<Board[]> => {
+export const getBoards = async (
+	limit: number,
+	skip: number,
+): Promise<Board[]> => {
 	const response = await apiClient.get<Board[]>(BOARD_ENDPOINTS.BOARDS, {
 		params: { limit, skip },
 	});
@@ -15,22 +18,23 @@ export const getBoards = async (limit: number, skip: number): Promise<Board[]> =
 	return response.data;
 };
 
-export const createBoard = async (boardData: BoardsData): Promise<Board> => {
+export const createBoard = async (boardData: FormData): Promise<Board> => {
 	const response = await apiClient.post<Board>(
 		BOARD_ENDPOINTS.BOARDS,
 		boardData,
-		{ headers: { "Content-Type": "application/json" } },
+		{ headers: { "Content-Type": "multipart/form-data" } },
 	);
 	return response.data;
 };
 
 export const updateBoard = async (
 	boardId: string,
-	boardData: BoardsData,
+	boardData: FormData,
 ): Promise<Board> => {
 	const response = await apiClient.put<Board>(
 		`${BOARD_ENDPOINTS.BOARDS}/${boardId}`,
 		boardData,
+		{ headers: { "Content-Type": "multipart/form-data" } },
 	);
 	return response.data;
 };

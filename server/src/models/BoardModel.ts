@@ -152,10 +152,12 @@ class BoardModel {
   async add({
     title,
     userId,
+    image,
     slug,
   }: {
     title: string;
     userId: number;
+    image?: string;
     slug: string;
   }): Promise<Board> {
     return await this.prisma.board.create({
@@ -166,6 +168,7 @@ class BoardModel {
         members: {
           create: [{ userId: userId, role: "admin" }],
         },
+        image,
       },
     });
   }
@@ -191,7 +194,7 @@ class BoardModel {
     data,
   }: {
     userId: number;
-    boardId: string;
+    boardId: number;
     data: Prisma.BoardUpdateInput;
   }): Promise<Board> {
     const board = await this.prisma.board.findUnique({
@@ -220,7 +223,7 @@ class BoardModel {
     boardId,
   }: {
     userId: number;
-    boardId: string;
+    boardId: number;
   }): Promise<void> {
     const board = await this.prisma.board.findUnique({
       where: { id: Number(boardId) },

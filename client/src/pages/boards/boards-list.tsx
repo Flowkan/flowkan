@@ -89,7 +89,7 @@ const BoardsList = () => {
 							</div>
 							<div className="boards-list-content">
 								<ul className="boards-list">
-									{showBoards.map((board) => (
+									{[...showBoards].reverse().map((board) => (
 										<BoardsItem key={board.id} board={board} />
 									))}
 								</ul>

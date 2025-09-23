@@ -1,3 +1,5 @@
+import { randomColor } from "../../lib/randomColor";
+
 interface AvatarProps {
 	name: string;
 	photo?: string | null;
@@ -13,22 +15,6 @@ export const Avatar: React.FC<AvatarProps> = ({
 	format = "t",
 	className,
 }) => {
-	const randomColor = (user: string): string => {
-		let r = 0,
-			g = 0,
-			b = 0;
-		let i = 0;
-
-		for (const char of user) {
-			const code = char.charCodeAt(0);
-			r = (r + code * (i + 1)) % 256;
-			g = (g + code * (i + 2)) % 256;
-			b = (b + code * (i + 3)) % 256;
-			i += 1;
-		}
-		return `rgb(${r}, ${g}, ${b})`;
-	};
-
 	const getInitialsName = (name: string) => {
 		const fullname = name.trim().split(/\s+/);
 		if (fullname.length === 0) return "";
@@ -41,13 +27,12 @@ export const Avatar: React.FC<AvatarProps> = ({
 
 	const bgColor = randomColor(name);
 	const initialsName = getInitialsName(name);
-	
+
 	if (photo) {
 		const baseUrl = import.meta.env.VITE_BASE_URL;
-		console.log(`${baseUrl}/uploads/${photo}_${format}.webp`);
 		return (
 			<img
-				src={`${baseUrl}/uploads/${photo}_${format}.webp`}
+				src={`${baseUrl}/uploads/users/${photo}_${format}.webp`}
 				alt={name}
 				className={`${className} rounded-full object-cover`}
 				style={{
