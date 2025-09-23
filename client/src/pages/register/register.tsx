@@ -13,7 +13,7 @@ import { WithOtherServices } from "./withOtherServices/WithOtherServices";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { __ } from "../../utils/i18nextHelper";
 
-export const RegisterPage = () => {
+const RegisterPage = () => {
 	const navigate = useNavigate();
 	const { t } = useTranslation();
 	const [formData, setFormData] = useState<UserRegister>({
@@ -332,3 +332,5 @@ export const RegisterPage = () => {
 		</Page>
 	);
 };
+
+export default RegisterPage;
