@@ -3,7 +3,6 @@ services:
     container_name: flowkan-server
     build: .
     ports:
-      - "5555:5555"
       - "3000:3000"
     env_file:
       - .env
