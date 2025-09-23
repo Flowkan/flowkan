@@ -20,13 +20,13 @@ export default class BoardHandler {
         console.log(start);        
         if(!socket.data.room)return
         const { draggableId } = start as DragStart
-        if(!draggableId)return
-        if(this.locks.has(draggableId)){
-            socket.to(socket.data.room).emit('board:dragfailed',{
-                draggableId
-            })
-            return
-        }
+        // if(!draggableId)return
+        // if(this.locks.has(draggableId)){
+        //     socket.to(socket.data.room).emit('board:dragfailed',{
+        //         draggableId
+        //     })
+        //     return
+        // }
         const userId = socket.data.user?.id
         if(!userId)return
         this.locks.set(draggableId,String(userId))

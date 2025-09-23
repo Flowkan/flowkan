@@ -82,11 +82,24 @@ const Board = () => {
 	const onDragEnd = useCallback(
 		(result: DropResult) => {
 			if (!boardData) return;
-			const { type, source, destination } = result;
+			handleDragEnd(result);
+			// const { type, source, destination } = result;
+			const { type } = result;
+			let destination:unknown;
+			let source:unknown;
+			if(remoteDrag?.destination && remoteDrag.source){
+				destination = remoteDrag.destination
+				source = remoteDrag.source
+			}else{
+				destination = result.destination
+				source = result.source
+			}
 			if (!destination) return;
 			//Notificar fin drag
-			handleDragEnd(result);
+			// console.log(result);
+			
 			// ARRASRTRE DE COLUMNAS
+			// const resultMoveRemote = remoteDrag && remoteDrag.destination
 			if (type === "column") {
 				const newLists = reorder(
 					boardData.lists,
@@ -231,8 +244,9 @@ const Board = () => {
 		[boardData, removeColumnAction],
 	);
 
-	const { handleDragStart, handleDragUpdate, handleDragEnd, remoteDrag } =
+	const { handleDragStart, handleDragUpdate, handleDragEnd,remoteDrag } =
 		useBoardItemSocket();
+	
 
 	if (error) return <div>Error al cargar el tablero: {error}</div>;
 
@@ -244,18 +258,15 @@ const Board = () => {
 				onDragEnd={onDragEnd}
 			>
 				<Droppable droppableId="board" type="column" direction="horizontal">
-					{(provided) => {
-						const remotePlaceholderIndex =
-							remoteDrag?.destination?.droppableId === "board"
-								? remoteDrag.destination.index
-								: null;
+					{(provided) => {																
 						return (
 							<div
-								ref={provided.innerRef}
+								ref={provided.innerRef}								
 								{...provided.droppableProps}
 								className="custom-scrollbar flex h-[calc(100vh-8rem)] gap-6 overflow-x-auto px-4 py-8 sm:px-8"
 							>
 								{boardData?.lists.map((column) => (
+									
 									<Column
 										key={column.id}
 										column={column}
@@ -279,12 +290,8 @@ const Board = () => {
 										}
 										isNewColumnInEditMode={false}
 									/>
-								))}
-								{/* Placeholder ghost */}
-								{remotePlaceholderIndex !== null &&
-									remotePlaceholderIndex === (boardData?.lists.length ?? 0) && (
-										<div className="mr-6 h-[300px] w-80 rounded-md border-2 border-dashed border-primary-hover" />
-									)}
+								))}								
+								
 								{provided.placeholder}
 
 								{/* Add new column */}
@@ -321,20 +328,7 @@ const Board = () => {
 							</div>
 						);
 					}}
-				</Droppable>
-				{/* Ghost remoto flotando */}
-				{remoteDrag?.coords && (
-					<div
-						style={{
-							top: remoteDrag.coords.yNorm * window.innerHeight,
-							left: remoteDrag.coords.xNorm * window.innerWidth,
-						}}
-						className="pointer-events-none fixed translate-x-[-50%] translate-y-[-50%] rounded-md bg-primary px-3 py-2"
-					>
-						<p className="-left-2 -top-2 absolute text-xs bg-accent rounded-2xl px-2 text-white">{remoteDrag.name}</p>
-						<p className="text-white">{remoteDrag.taskName}</p>
-					</div>
-				)}
+				</Droppable>				
 			</DragDropContext>
 
 			{selectedTask && selectedColumnId && (
