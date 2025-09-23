@@ -90,9 +90,8 @@ export const mediaStorage = multer.diskStorage({
     cb(null, subfolderPath);
   },
   filename: (req, file, cb) => {
-    const taskId = req.params.id || "unknown";
     const ext = path.extname(file.originalname);
-    const fileName = `${taskId}_${Date.now()}${ext || ".dat"}`;
+    const fileName = `${Date.now()}${ext || ".dat"}`;
     cb(null, fileName);
   },
 });

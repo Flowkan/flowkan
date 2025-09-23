@@ -82,7 +82,7 @@ export class CardController {
           fileName: string;
           fileType: "document" | "audio";
         }[] = files.map((file) => {
-          const fileUrl = `/uploads/${file.filename}`;
+          const fileUrl = `/uploads/boards/${cardId}/${file.filename}`;
           uploadedFileNames.push(file.filename);
 
           const fileType = file.mimetype.startsWith("audio/")
