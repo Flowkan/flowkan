@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { deleteBoard, editBoard } from "../../store/boards/actions";
 import { useAppDispatch } from "../../store";
 import EditBoard from "../../components/ui/modals/edit-board";
+import { randomColor } from "../../lib/randomColor";
 
 interface BoardsItemProps {
 	board: Board;
@@ -84,13 +85,20 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 			)}
 			<li className="board-item">
 				<Link to={`/boards/${board.slug}`} className="board-link">
-					<div className="img-container">
-						<img
-							className="board-img"
-							src={`${board.image}_t.webp`}
-							alt="board-img"
-						/>
-					</div>
+					{board.image ? (
+						<div className="img-container">
+							<img
+								className="board-img"
+								src={`${import.meta.env.VITE_BASE_URL}${board.image}_t.webp`}
+								alt="board-img"
+							/>
+						</div>
+					) : (
+						<div
+							className="img-container board-img"
+							style={{ background: randomColor(board.title, true) }}
+						></div>
+					)}
 					<div className="title-actions-container">
 						<div className="title-container">
 							<div className="board-title">{board.title}</div>
@@ -102,7 +110,6 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 							<div className="trash-icon container">
 								<TrashButton showConfirm={handleShowConfirm} />
 							</div>
-
 							<div className="share-icon container">
 								<Button
 									onClick={handleShowShareForm}

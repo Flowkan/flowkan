@@ -263,7 +263,7 @@ const Board = () => {
 	if (error) return <div>Error al cargar el tablero: {error}</div>;
 
 	return (
-		<BackofficePage backgroundImg={boardData?.image}>
+		<BackofficePage title={boardData?.title} backgroundImg={boardData?.image}>
 			<DragDropContext onDragEnd={onDragEnd}>
 				<Droppable droppableId="board" type="column" direction="horizontal">
 					{(provided) => (

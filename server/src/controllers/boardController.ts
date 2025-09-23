@@ -5,7 +5,6 @@ import { BoardWithRelations } from "../models/BoardModel";
 import jwt from "jsonwebtoken";
 import AuthService from "../services/AuthService";
 import { slugify } from "../utils/utils";
-import { isDefaultImage, pickDefaultImage } from "../lib/defaultImage";
 import { deleteImage } from "../utils/fileUtils";
 
 import dotenv from "dotenv";
@@ -109,9 +108,9 @@ export class BoardController {
       const { title }: { title: string } = req.body;
       const slug = slugify(title);
 
-      const image: string = req.body.image
-        ? `${process.env.BACKEND_URL}/uploads/boards/${req.body.image}`
-        : pickDefaultImage();
+      const image: string | undefined = req.body.image
+        ? `/uploads/boards/${req.body.image}`
+        : undefined;
 
       const board = await this.boardService.add({ userId, title, image, slug });
       res.status(201).json(board);
@@ -136,7 +135,7 @@ export class BoardController {
       }
 
       if (image) {
-        data.image = `${process.env.BACKEND_URL}/uploads/boards/${image}`;
+        data.image = `/uploads/boards/${image}`;
       }
 
       const updatedBoard = await this.boardService.update({
@@ -145,7 +144,7 @@ export class BoardController {
         data,
       });
 
-      if (currentBoard?.image && !isDefaultImage(currentBoard.image)) {
+      if (currentBoard?.image) {
         const originalToDelete = `/uploads/boards/${currentBoard.image}_o.webp`;
         const thumbnailToDelete = `/uploads/boards/${currentBoard.image}_t.webp`;
         deleteImage({
@@ -168,10 +167,7 @@ export class BoardController {
 
       await this.boardService.delete({ userId, boardId });
 
-      if (currentBoard?.image && !isDefaultImage(currentBoard.image)) {
-        /* const imageFilename = currentBoard.image.replace("_o.webp", "");
-        const originalToDelete = `/uploads/boards/${imageFilename}_o.webp`;
-        const thumbnailToDelete = `/uploads/boards/${imageFilename}_t.webp`; */
+      if (currentBoard?.image) {
         const originalToDelete = `/uploads/boards/${currentBoard.image}_o.webp`;
         const thumbnailToDelete = `/uploads/boards/${currentBoard.image}_t.webp`;
         deleteImage({

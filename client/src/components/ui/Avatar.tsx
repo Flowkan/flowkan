@@ -1,3 +1,5 @@
+import { randomColor } from "../../lib/randomColor";
+
 interface AvatarProps {
 	name: string;
 	photo?: string | null;
@@ -13,22 +15,6 @@ export const Avatar: React.FC<AvatarProps> = ({
 	format = "t",
 	className,
 }) => {
-	const randomColor = (user: string): string => {
-		let r = 0,
-			g = 0,
-			b = 0;
-		let i = 0;
-
-		for (const char of user) {
-			const code = char.charCodeAt(0);
-			r = (r + code * (i + 1)) % 256;
-			g = (g + code * (i + 2)) % 256;
-			b = (b + code * (i + 3)) % 256;
-			i += 1;
-		}
-		return `rgb(${r}, ${g}, ${b})`;
-	};
-
 	const getInitialsName = (name: string) => {
 		const fullname = name.trim().split(/\s+/);
 		if (fullname.length === 0) return "";
