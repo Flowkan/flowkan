@@ -99,7 +99,7 @@ const BoardsList = () => {
 										<SpinnerLoadingText
 											text={t(
 												"boardslist.pagination.loading",
-												"Cargando más...",
+												"Cargando más",
 											)}
 										/>
 									</div>

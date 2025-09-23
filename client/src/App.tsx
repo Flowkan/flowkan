@@ -1,26 +1,26 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy, type ReactNode } from "react";
 import { Layout } from "./components/layout/layout";
-import { BackofficeLayout } from "./components/layout/backoffice_layout.tsx";
+import { BackofficeLayout } from "./components/layout/backoffice_layout";
 import { HomePage } from "./pages/home";
 import { NotFound } from "./pages/not-found";
-import { RegisterPage } from "./pages/register/register";
-import Profile from "./pages/profile/profile.tsx";
-import LoginSkeleton from "./components/ui/LoginSkeleton";
+import Profile from "./pages/profile/profile";
 import { useAppSelector } from "./store";
-import { ConfirmPage } from "./pages/register/ConfirmPage.tsx";
-import ChangePassword from "./pages/login/change_password.tsx";
-import { VerifyPendingPage } from "./pages/register/VerifyPendingPage.tsx";
-import { PricingPage } from "./pages/PricingPage.tsx";
-import { FeaturesPage } from "./pages/FeaturesPage.tsx";
-import { SolutionsPage } from "./pages/SolutionsPage.tsx";
+import { ConfirmPage } from "./pages/register/ConfirmPage";
+import ChangePassword from "./pages/login/change_password";
+import { VerifyPendingPage } from "./pages/register/VerifyPendingPage";
+import { PricingPage } from "./pages/PricingPage";
+import { FeaturesPage } from "./pages/FeaturesPage";
+import { SolutionsPage } from "./pages/SolutionsPage";
+import { SkeletonCustom } from "./components/ui/skeleton/skeleton";
 
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((m) => ({ default: m.LoginPage })),
 );
 const BoardsList = lazy(() => import("./pages/boards/boards-list"));
 const Board = lazy(() => import("./pages/boards/board"));
-const InvitationPage = lazy(() => import("./pages/boards/invitation-page.tsx"));
+const InvitationPage = lazy(() => import("./pages/boards/invitation-page"));
+const RegisterPage = lazy(() => import("./pages/register/register"));
 
 interface AuthRouteProps {
 	children: ReactNode;
@@ -46,7 +46,20 @@ function App() {
 					path="login"
 					element={
 						<AuthRoute requireAuth={false} redirectTo="/boards">
-							<Suspense fallback={<LoginSkeleton />}>
+							<Suspense
+								fallback={
+									<div className="flex min-h-screen items-center justify-center">
+										<SkeletonCustom
+											rows={4}
+											columns={1}
+											rowHeight="h-12"
+											gap="gap-4"
+											className="w-full max-w-md rounded-xl p-10 shadow-2xl"
+											spinnerText="Cargando Login"
+										/>
+									</div>
+								}
+							>
 								<LoginPage />
 							</Suspense>
 						</AuthRoute>
@@ -64,7 +77,22 @@ function App() {
 					path="register"
 					element={
 						<AuthRoute requireAuth={false} redirectTo="/boards">
-							<RegisterPage />
+							<Suspense
+								fallback={
+									<div className="flex min-h-screen items-center justify-center">
+										<SkeletonCustom
+											rows={5}
+											columns={1}
+											rowHeight="h-12"
+											gap="gap-4"
+											className="w-full max-w-md rounded-xl p-10 shadow-2xl"
+											spinnerText="Cargando Registro"
+										/>
+									</div>
+								}
+							>
+								<RegisterPage />
+							</Suspense>
 						</AuthRoute>
 					}
 				/>
@@ -79,7 +107,20 @@ function App() {
 				<Route
 					path="/invitacion"
 					element={
-						<Suspense fallback={<LoginSkeleton />}>
+						<Suspense
+							fallback={
+								<div className="flex min-h-screen items-center justify-center">
+									<SkeletonCustom
+										rows={2}
+										columns={1}
+										rowHeight="h-12"
+										gap="gap-4"
+										className="w-full max-w-md"
+										spinnerText="Generando enlace"
+									/>
+								</div>
+							}
+						>
 							<InvitationPage />
 						</Suspense>
 					}
@@ -95,7 +136,20 @@ function App() {
 				<Route
 					path="/verify-pending"
 					element={
-						<Suspense fallback={<LoginSkeleton />}>
+						<Suspense
+							fallback={
+								<div className="flex min-h-screen items-center justify-center">
+									<SkeletonCustom
+										rows={4}
+										columns={1}
+										rowHeight="h-12"
+										gap="gap-4"
+										className="w-full max-w-md"
+										spinnerText="Verificación pendiente"
+									/>
+								</div>
+							}
+						>
 							<VerifyPendingPage />
 						</Suspense>
 					}
@@ -119,7 +173,20 @@ function App() {
 				<Route
 					index
 					element={
-						<Suspense fallback={<LoginSkeleton />}>
+						<Suspense
+							fallback={
+								<div className="flex min-h-screen items-center justify-center">
+									<SkeletonCustom
+										rows={6}
+										columns={1}
+										rowHeight="h-12"
+										gap="gap-4"
+										className="w-full min-w-xl p-10 shadow-2xl"
+										spinnerText="Lista de Tableros"
+									/>
+								</div>
+							}
+						>
 							<BoardsList />
 						</Suspense>
 					}
@@ -127,7 +194,20 @@ function App() {
 				<Route
 					path=":slug"
 					element={
-						<Suspense fallback={<LoginSkeleton />}>
+						<Suspense
+							fallback={
+								<div className="flex min-h-screen items-center justify-center">
+									<SkeletonCustom
+										rows={1}
+										columns={4}
+										rowHeight="h-200"
+										gap="gap-4"
+										className="min-w-6xl w-full p-10 shadow-2xl"
+										spinnerText="Cargando Tablero"
+									/>
+								</div>
+							}
+						>
 							<Board />
 						</Suspense>
 					}

@@ -226,7 +226,7 @@ export const LoginPage = () => {
 									<SpinnerLoadingText
 										text={t(
 											"login.loginForm.loginButton.spinner.loading",
-											"Cargando...",
+											"Cargando",
 										)}
 									/>
 								) : (
