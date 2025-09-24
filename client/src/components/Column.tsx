@@ -151,7 +151,7 @@ const Column = ({
 	}, [isAddingTask, newTaskContent, handleAddTask, handleCancelAddTask]);
 
 	return (
-		<div className="flex w-80 flex-shrink-0 flex-grow flex-col rounded-lg bg-white/95 p-4 shadow-xl">
+		<div className="flex w-80 min-h-32 max-w-md flex-shrink-0 flex-grow flex-col rounded-lg bg-white/45 p-4 shadow-xl">
 			<div className="mb-4 flex items-center justify-between">
 				<h3
 					onClick={handleTitleClick}
@@ -317,7 +317,7 @@ const Column = ({
 					<button
 						ref={addTaskButtonRef}
 						onClick={handleStartAddingTask}
-						className="bg-background-input text-text-placeholder hover:bg-background-hover-card flex w-full items-center justify-center rounded-md py-2 font-semibold transition-colors duration-200"
+						className="bg-background-input text-black/95 hover:bg-background-hover-card flex w-full items-center justify-center rounded-md py-2 font-semibold transition-colors duration-200"
 					>
 						+ Añadir tarjeta
 					</button>
