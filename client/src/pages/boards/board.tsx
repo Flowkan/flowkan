@@ -29,6 +29,7 @@ import { Button } from "../../components/ui/Button";
 import { FormFields } from "../../components/ui/FormFields";
 import { Icon } from "@iconify/react";
 import { t } from "i18next";
+import { ChatWindow } from "../../components/ui/ChatWindow";
 
 const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
 	const result = Array.from(list);
@@ -80,6 +81,7 @@ const Board = () => {
 		undefined,
 	);
 	const boardData = useAppSelector((state) => state.boards.currentBoard);
+	const userData = useAppSelector((state) => state.auth.user);
 
 	const selectedTask = useMemo(() => {
 		if (!boardData || !selectedTaskId) return null;
@@ -320,7 +322,6 @@ const Board = () => {
 									onClick={handleAddColumnToggle}
 									className="text-text-placeholder hover:bg-background-hover-column border-border-medium bg-gray/20 hover:border-accent bg-border-light bg-gray/80 flex h-10 w-10 items-center justify-center rounded-lg border-2 text-2xl font-semibold shadow-md transition-colors duration-200"
 								>
-									{/* Icon Plus */}
 									<div className="shadow-md transition-all duration-200 ease-in-out hover:scale-[1.45] hover:rotate-90 hover:shadow-xl hover:shadow-indigo-300/30 active:scale-123">
 										<Icon icon="oui:plus" width="1.2em" height="1.2em" />
 									</div>
@@ -376,6 +377,10 @@ const Board = () => {
 						handleDeleteTask(selectedTask.id!.toString(), selectedColumnId)
 					}
 				/>
+			)}
+
+			{resolvedBoardId && userData?.id && (
+				<ChatWindow boardId={resolvedBoardId} currentUserId={userData.id} />
 			)}
 		</BackofficePage>
 	);
