@@ -94,10 +94,12 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 							/>
 						</div>
 					) : (
-						<div
-							className="img-container board-img"
-							style={{ background: randomColor(board.title, true) }}
-						></div>
+						<div className="img-container">
+							<div
+								className="board-img"
+								style={{ background: randomColor(board.title, true) }}
+							></div>
+						</div>
 					)}
 					<div className="title-actions-container">
 						<div className="title-container">
