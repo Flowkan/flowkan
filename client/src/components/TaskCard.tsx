@@ -26,14 +26,14 @@ const TaskCard = ({ task, index, columnId, onOpenTaskDetail }: Props) => {
 					{...provided.draggableProps}
 					{...provided.dragHandleProps}
 					onClick={handleClick}
-					className={`text-text-body relative z-10 mb-3 flex cursor-pointer flex-col rounded-md border-2 p-4 shadow-md transition-all duration-200 ease-in-out ${
+					className={`text-text-body relative z-10 mb-3 flex cursor-pointer flex-col rounded-md border-2 p-3 shadow-md transition-all duration-200 ease-in-out hover:-translate-y-2 hover:scale-[1.02] hover:rotate-0 hover:shadow-xl hover:shadow-indigo-300/30 active:scale-95 ${
 						snapshot.isDragging
 							? "bg-accent-lightest ring-accent-light shadow-lg ring-2"
-							: "hover:border-accent-light border-gray-100 bg-white hover:shadow-lg"
+							: "hover:border-accent-light border-gray-100 bg-white/20 hover:shadow-lg"
 					}`}
 					style={{ ...provided.draggableProps.style }}
 				>
-					<span className="text-text-heading mb-2 flex-grow pr-2 font-medium break-words">
+					<span className="text-text-heading flex-grow p-1 font-medium break-words">
 						{task.title}
 					</span>
 

@@ -30,7 +30,7 @@ export const BackofficePage = ({
 	}
 	return (
 		<div
-			className={`w-full ${className ?? ""}`}
+			className={`w-full min-h-screen ${className ?? ""}`}
 			style={{
 				background: backgroundImg
 					? `linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.3), rgba(0,0,0,0)), url(${import.meta.env.VITE_BASE_URL}${backgroundImg}_o.webp)`
