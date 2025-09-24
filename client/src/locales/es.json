@@ -69,7 +69,7 @@
 		}
 	},
 	"boardsitem": {
-		"confirm": ""
+		"confirm": "¿Seguro que quieres borrar este tablero?"
 	},
 	"emptylist": {
 		"p1": "Todavía no tienes ningún tablero.",
@@ -89,8 +89,17 @@
 		"form": {
 			"header": "Crear tablero",
 			"title": "Título del tablero",
+			"img": "Fondo",
 			"button": "CREAR"
 		}
+	},
+	"editboard": {
+		"form": {
+			"header": "Editar tablero",
+			"newtitle": "Nuevo título",
+			"newimg": "Nuevo fondo"
+		},
+		"edit": "EDITAR"
 	},
 	"home": {
 		"banner": "Simplifica tus tareas, maximiza tu productividad",
@@ -211,5 +220,28 @@
 		"withOtherService": {
 			"otherTypeRegister": "O continúa con"
 		}
+	},
+	"board": {
+		"add_to_task": "Añadir a la tarjeta",
+		"add": "Añadir",
+		"attach_document": "Adjuntar documento",
+		"attach_voice": "Grabar nota de voz",
+		"labels": "Etiquetas",
+		"members": "Miembros",
+		"dates": "Fechas",
+		"checklist": "Checklist",
+		"load_users": "Cargando usuarios...",
+		"description": "Descripción",
+		"attatchments": "Adjuntos",
+		"recording": "Grabando...",
+		"stop": "Detener",
+		"options": "Opciones",
+		"move": "Mover",
+		"copy": "Copiar",
+		"archive": "Archivar",
+		"delete": "Eliminar",
+		"add_column": "Añadir Columna",
+		"column_name": "Nombre de la columna",
+		"create_column": "Crear columna"
 	}
 }

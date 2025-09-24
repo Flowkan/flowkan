@@ -1,5 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { SafeUser } from "./BoardModel";
 import { addMinutes } from 'date-fns'
 
 export interface ValidateCredentialsParams {
@@ -12,8 +13,6 @@ export interface RegisterParams extends ValidateCredentialsParams {
   name: string;
   photo?: string | null;
 }
-
-export type SafeUser = Omit<User, "password">;
 
 class AuthModel {
   private prisma: PrismaClient;

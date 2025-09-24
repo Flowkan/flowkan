@@ -31,11 +31,13 @@ model User {
 model Board {
   id        Int           @id @default(autoincrement())
   title     String
+  slug      String @default("")
   owner     User          @relation("BoardOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId   Int
   members   BoardMember[]
   lists     List[]
   labels    Label[]
+  image     String?
 }
 
 model BoardMember {
@@ -65,7 +67,8 @@ model Card {
   position    Int
   labels      CardLabel[]
   comments    Comment[]
-  assignees   CardAssignee[]  
+  assignees   CardAssignee[]
+  media       Media[]   
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 }
@@ -125,4 +128,15 @@ model PasswordResetToken {
   expiresAt DateTime
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model Media {
+    id          Int      @id @default(autoincrement())
+    url         String
+    fileName    String
+    fileType    String 
+    card        Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+    cardId      Int
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
 }

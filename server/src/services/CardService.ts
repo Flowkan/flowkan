@@ -1,8 +1,12 @@
 import { Card, Prisma } from "@prisma/client";
 import CardModel, { CardCreateParams } from "../models/CardModel";
+import * as fs from "fs";
+import * as path from "path";
+
+const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 
 export default class CardService {
-  private cardModel: CardModel;
+  private readonly cardModel: CardModel;
   constructor(cardModel: CardModel) {
     this.cardModel = cardModel;
   }
@@ -30,6 +34,54 @@ export default class CardService {
     }
 
     return this.cardModel.update(cardId, data);
+  }
+
+  async addMediaToCard(
+    cardId: number,
+    mediaList: {
+      url: string;
+      fileName: string;
+      fileType: "document" | "audio";
+    }[],
+  ) {
+    const dataToCreate = mediaList.map((media) => ({
+      ...media,
+      cardId: cardId,
+    }));
+
+    return this.cardModel.createCardMedia(dataToCreate);
+  }
+
+  async removeMediaFromCard(userId: number, cardId: number, mediaId: number) {
+    const isMember = await this.cardModel.isUserBoardMember(userId, cardId);
+    if (!isMember) {
+      throw new Error(
+        "No tienes permiso para eliminar adjuntos de esta tarjeta",
+      );
+    }
+
+    const mediaItem = await this.cardModel.getMediaById(mediaId);
+
+    if (!mediaItem || mediaItem.cardId !== cardId) {
+      return;
+    }
+
+    await this.cardModel.deleteMedia(mediaId);
+
+    const filename = mediaItem.url.split("/").pop();
+    if (filename) {
+      const filePath = path.join(UPLOAD_DIR, filename);
+      try {
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      } catch (e) {
+        console.error(
+          `Advertencia: No se pudo eliminar el archivo físico: ${filePath}`,
+          e,
+        );
+      }
+    }
   }
 
   async deleteCard(userId: number, cardId: number) {

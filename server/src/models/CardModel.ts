@@ -26,6 +26,9 @@ export default class CardModel {
 
     return this.prisma.card.findMany({
       where: { listId },
+      include: {
+        media: true,
+      },
     });
   }
 
@@ -36,6 +39,7 @@ export default class CardModel {
         list: {
           select: { boardId: true },
         },
+        media: true,
       },
     });
 
@@ -68,7 +72,26 @@ export default class CardModel {
             user: true,
           },
         },
+        media: true,
       },
+    });
+  }
+
+  async createCardMedia(mediaData: Prisma.MediaCreateManyInput[]) {
+    return this.prisma.media.createMany({
+      data: mediaData,
+    });
+  }
+
+  async getMediaById(mediaId: number) {
+    return this.prisma.media.findUnique({
+      where: { id: mediaId },
+    });
+  }
+
+  async deleteMedia(mediaId: number) {
+    return this.prisma.media.delete({
+      where: { id: mediaId },
     });
   }
 

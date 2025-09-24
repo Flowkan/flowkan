@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import {
 	DragDropContext,
 	Droppable,
@@ -7,27 +7,36 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import Column from "../../components/Column";
 import TaskDetailModal from "../../components/TaskDetailModal";
-import type { Task, Column as ColumnType, Board } from "./types";
-import {
+import type { Column as ColumnType, Board } from "./types";
+import {	
+	useBoards,
+	useFetchBoardsAction,
+	useBoardsLoading,
 	useFetchBoardByIdAction,
 	useAddTaskAction,
 	useUpdateTaskAction,
-	useCurrentBoard,
 	useBoardsError,
 	useAddColumnAction,
 	useDeleteColumnAction,
 	useDeleteTaskction,
 	useUpdateColumnAction,
 	useUpdateBoardRemote,
-} from "../../store/hooks";
-import { BackofficePage } from "../../components/layout/backoffice_page";
+} from "../../store/boards/hooks";
 import { useBoardItemSocket } from "./board-socket/context";
 import { useSocket } from "../../hooks/socket/context";
-import { applyDragResult } from "../../utils/tools";
+import { applyDragResult } from "../../utils/tools";	
+import { BackofficePage } from "../../components/layout/backoffice_page";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { editTask } from "../../store/boards/actions";
+// import { Button } from "../../components/ui/Button";
+// import { FormFields } from "../../components/ui/FormFields";
+// import { Icon } from "@iconify/react";
+// import { t } from "i18next";
 
 
 const Board = () => {
 	const fetchBoardAction = useFetchBoardByIdAction();
+	const fetchBoardsAction = useFetchBoardsAction();
 	const addTaskAction = useAddTaskAction();
 	const updateTaskAction = useUpdateTaskAction();
 	const deleteTaskAction = useDeleteTaskction();
@@ -35,21 +44,58 @@ const Board = () => {
 	const updateColumnAction = useUpdateColumnAction();
 	const removeColumnAction = useDeleteColumnAction();
 	const updateBoardRemoteMode = useUpdateBoardRemote();
-	const { boardId } = useParams<{ boardId: string }>();
+	// const { boardId } = useParams<{ boardId: string }>();
+	const { slug } = useParams<{ slug: string }>();
+	const allBoards = useBoards();
+	const boardsLoading = useBoardsLoading();
 	const navigate = useNavigate();
-	const boardData = useCurrentBoard();
 	const error = useBoardsError();
-	const socket = useSocket()
-	const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+	const socket = useSocket()	
+	const dispatch = useAppDispatch();
+
 	const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
+	const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [newColumnName, setNewColumnName] = useState("");
+	const [resolvedBoardId, setResolvedBoardId] = useState<string | undefined>(
+		undefined,
+	);
+	const boardData = useAppSelector((state) => state.boards.currentBoard);
+
+	const selectedTask = useMemo(() => {
+		if (!boardData || !selectedTaskId) return null;
+		return boardData.lists
+			.flatMap((col) => col.cards)
+			.find((t) => t.id?.toString() === selectedTaskId);
+	}, [boardData, selectedTaskId]);
 
 	useEffect(() => {
-		if (boardId) {
-			fetchBoardAction(boardId);
+		if (!slug) return;
+
+		if (allBoards.length > 0) {
+			const foundBoard = allBoards.find((b) => b.slug === slug);
+
+			if (foundBoard) {
+				const newId = foundBoard.id.toString();
+				if (newId !== resolvedBoardId) {
+					setResolvedBoardId(newId);
+					fetchBoardAction(newId);
+				}
+			} else if (!foundBoard) {
+				console.error("Board no encontrado para el slug:", slug);
+			}
+		} else if (!boardsLoading) {
+			fetchBoardsAction(0, 100);
 		}
-	}, [boardId, fetchBoardAction]);
+	}, [
+		slug,
+		allBoards,
+		fetchBoardsAction,
+		fetchBoardAction,
+		navigate,
+		boardsLoading,
+		resolvedBoardId,
+	]);
 
 	useEffect(() => {
 		if (error === "Error al cargar tablero") {
@@ -159,7 +205,7 @@ const Board = () => {
 		(
 			columnId: string,
 			taskId: string,
-			updatedFields: { title?: string; description?: string },
+			updatedFields: { title?: string; description?: string } | FormData,
 		) => {
 			updateTaskAction(Number(columnId), taskId, updatedFields);
 		},
@@ -174,13 +220,13 @@ const Board = () => {
 		[boardData, deleteTaskAction],
 	);
 
-	const openTaskDetail = useCallback((task: Task, columnId: string) => {
-		setSelectedTask(task);
+	const openTaskDetail = useCallback((taskId: string, columnId: string) => {
+		setSelectedTaskId(taskId);
 		setSelectedColumnId(columnId);
 	}, []);
 
 	const closeTaskDetail = useCallback(() => {
-		setSelectedTask(null);
+		setSelectedTaskId(null);
 		setSelectedColumnId(null);
 	}, []);
 
@@ -204,7 +250,7 @@ const Board = () => {
 				isVisible: true,
 				position: boardData.lists.length,
 			};
-			addColumnAction(boardData.id!, newColumn);
+			addColumnAction(boardData.id, newColumn);
 			setNewColumnName("");
 			setIsMenuOpen(false);
 		}
@@ -258,7 +304,9 @@ const Board = () => {
 										onEditColumnTitle={handleEditColumnTitle}
 										onDeleteColumn={() => handleDeleteColumnClick(column.id!)}
 										onOpenTaskDetail={(task) =>
-											openTaskDetail(task, column.id!)
+											task.id !== undefined
+											? openTaskDetail(task.id.toString(), column.id!)
+											: undefined
 										}
 										isNewColumnInEditMode={false}
 									/>
@@ -302,18 +350,19 @@ const Board = () => {
 					}}
 				</Droppable>
 			</DragDropContext>
-
 			{selectedTask && selectedColumnId && (
 				<TaskDetailModal
 					task={selectedTask}
-					boardId={boardId}
+					boardId={resolvedBoardId}
 					columnId={selectedColumnId}
 					onClose={closeTaskDetail}
-					onEditTask={(updatedFields) =>
-						handleEditTask(
-							selectedColumnId,
-							selectedTask.id!.toString(),
-							updatedFields,
+					onEditTask={(data) =>
+						dispatch(
+							editTask(
+								Number(selectedColumnId),
+								selectedTask.id!.toString(),
+								data,
+							),
 						)
 					}
 					onDeleteTask={() =>

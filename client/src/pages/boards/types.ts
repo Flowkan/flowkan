@@ -2,12 +2,25 @@ import type { User } from "../login/types";
 
 export interface BoardsData {
 	title: string;
+	image: File;
+}
+
+export interface EditBoardsData {
+	title?: string;
+	image?: File;
 }
 
 export type CardAssignee = {
 	cardId: number;
 	userId: number;
 	user: User;
+};
+
+export type Media = {
+	id: number;
+	url: string;
+	fileName: string;
+	fileType: "document" | "audio";
 };
 
 export type Task = {
@@ -17,7 +30,12 @@ export type Task = {
 	description?: string;
 	position: number;
 	assignees: CardAssignee[];
+	media?: Media[];
 };
+
+export interface TaskWithMedia extends Task {
+	media?: Media[];
+}
 
 export type Column = {
 	id?: string;
@@ -29,9 +47,11 @@ export type Column = {
 
 export type Board = {
 	id: string;
+	slug: string;
 	title: string;
 	lists: Column[];
 	members: BoardMember[];
+	image: string;
 };
 
 export type BoardMember = {

@@ -4,7 +4,7 @@ import type { DragStart, DragUpdate, DropResult } from "@hello-pangea/dnd";
 import { useParams } from "react-router-dom";
 import { useSocket } from "../../../hooks/socket/context";
 import { useAppSelector } from "../../../store";
-import { getCurrentBoard } from "../../../store/selectors";
+import { getCurrentBoard } from "../../../store/boards/selectors";
 import { usePointerItemDrag } from "./useLastPointerItemDrag";
 import type { ServerToClientEvents } from "../../../hooks/socket/socket";
 

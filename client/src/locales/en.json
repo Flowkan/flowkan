@@ -89,16 +89,17 @@
 		"form": {
 			"header": "Create Board",
 			"title": "Board Title",
+			"img": "Background",
 			"button": "CREATE"
 		}
 	},
 	"editboard": {
 		"form": {
 			"header": "Edit board",
-			"newtitle": "New title"
+			"newtitle": "New title",
+			"newimg": "New background"
 		},
-		"edit": "EDIT",
-		"cancel": "CANCEL"
+		"edit": "EDIT"
 	},
 	"home": {
 		"banner": "Simplify your tasks, maximize your productivity",
@@ -219,5 +220,28 @@
 		"withOtherService": {
 			"otherTypeRegister": "Or continue with"
 		}
+	},
+	"board": {
+		"add_to_task": "Add to card",
+		"add": "Add",
+		"attach_document": "Attach document",
+		"attach_voice": "Record voice note",
+		"labels": "Labels",
+		"members": "Members",
+		"dates": "Dates",
+		"checklist": "Checklist",
+		"load_users": "Loading users...",
+		"description": "Description",
+		"attatchments": "Attachments",
+		"recording": "Recording...",
+		"stop": "Stop",
+		"options": "Options",
+		"move": "Move",
+		"copy": "Copy",
+		"archive": "Archive",
+		"delete": "Delete",
+		"add_column": "Add Column",
+		"column_name": "Column Name",
+		"create_column": "Create Column"
 	}
 }

@@ -10,7 +10,8 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	label?: string;
 	required?: boolean;
 	labelClassName?: string;
-	ref?: React.RefObject<HTMLInputElement | null>
+	inputClassName?: string;
+	ref?: React.RefObject<HTMLInputElement | null>;
 }
 
 export const FormFields = ({
@@ -20,6 +21,7 @@ export const FormFields = ({
 	label,
 	required,
 	labelClassName,
+	inputClassName,
 	value,
 	onChange,
 	ref,
@@ -41,7 +43,7 @@ export const FormFields = ({
 					{required && <span className="text-red-600"> *</span>}
 				</label>
 			)}
-			<div className="relative">
+			<div className={clsx("relative mt-3", inputClassName)}>
 				<input
 					id={id}
 					name={name}

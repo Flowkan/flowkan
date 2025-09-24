@@ -1,12 +1,24 @@
 import { Outlet, useParams, useLocation } from "react-router-dom";
 import { BoardToolbar } from "./BoardToolbar";
 import { BackofficeHeader } from "./backoffice_header";
+import { useBoards } from "../../store/boards/hooks";
 
 export function BackofficeLayout() {
-	const { boardId } = useParams();
+	const { slug } = useParams<{ slug: string }>();
 	const location = useLocation();
 
-	const isBoardPage = location.pathname.startsWith("/boards/") && boardId;
+	const allBoards = useBoards();
+	let boardId;
+	if (allBoards.length > 0) {
+		const foundBoard = allBoards.find((b) => b.slug === slug);
+
+		if (foundBoard) {
+			boardId = foundBoard.id.toString();
+		}
+	}
+
+	const isBoardPage =
+		location.pathname.startsWith("/boards/") && boardId !== undefined;
 
 	return (
 		<div className="flex min-h-screen flex-col">
@@ -15,15 +27,17 @@ export function BackofficeLayout() {
 			{isBoardPage && (
 				<BoardToolbar
 					board={{
-						id: boardId,
+						id: boardId ?? "",
 						title: "",
+						slug: "",
 						lists: [],
 						members: [],
+						image: "",
 					}}
 				/>
 			)}
 
-			<main className="flex-1 p-4">
+			<main className="flex-1">
 				<Outlet />
 			</main>
 		</div>

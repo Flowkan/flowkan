@@ -5,9 +5,9 @@ import "./boards-list.css";
 import { useTranslation } from "react-i18next";
 import NewBoard from "../../components/ui/modals/new-board";
 import { useAppSelector, useAppDispatch } from "../../store";
-import { getBoardFilterCombine, getBoards } from "../../store/selectors";
+import { getBoardFilterCombine, getBoards } from "../../store/boards/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
-import { fetchBoards } from "../../store/actions";
+import { fetchBoards } from "../../store/boards/actions";
 import { BoardFilters } from "../../components/BoardFilters";
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
@@ -89,28 +89,28 @@ const BoardsList = () => {
 							</div>
 							<div className="boards-list-content">
 								<ul className="boards-list">
-									{showBoards.map((board) => (
+									{[...showBoards].reverse().map((board) => (
 										<BoardsItem key={board.id} board={board} />
 									))}
 								</ul>
 								{/* <div className="mt-6 flex justify-center text-gray-500"> */}
-									{hasMore ? (
-										<div ref={loaderRef}>
-											<SpinnerLoadingText
-												text={t(
-													"boardslist.pagination.loading",
-													"Cargando más...",
-												)}
-											/>
-										</div>
-									) : (
-										<p className="text-sm text-gray-400 sr-only">
-											{t(
-												"boardslist.pagination.endLoading",
-												"No hay más resultados.",
+								{hasMore ? (
+									<div ref={loaderRef}>
+										<SpinnerLoadingText
+											text={t(
+												"boardslist.pagination.loading",
+												"Cargando más",
 											)}
-										</p>
-									)}
+										/>
+									</div>
+								) : (
+									<p className="sr-only text-sm text-gray-400">
+										{t(
+											"boardslist.pagination.endLoading",
+											"No hay más resultados.",
+										)}
+									</p>
+								)}
 								{/* </div> */}
 							</div>
 						</div>

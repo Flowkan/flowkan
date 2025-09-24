@@ -7,3 +7,4 @@ Thumbs.db
 /generated/prisma
 /public/uploads
 /src/uploads
+dist/

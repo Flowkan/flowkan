@@ -1,29 +1,45 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Form } from "../Form";
 import { FormFields } from "../FormFields";
 import "./modal-boards.css";
 import CloseButton from "../close-button";
 import { Button } from "../Button";
+import type { EditBoardsData } from "../../../pages/boards/types";
 
 interface EditFormProps {
-	handleEditForm: (newData: string) => void;
+	handleEditForm: (newData: EditBoardsData) => void;
 	handleHideMessage: () => void;
 }
 
 const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 	const [titleInput, setTitleInput] = useState("");
+	const fileRef = useRef<HTMLInputElement>(null);
+	const [fileChanged, setFileChanged] = useState(false);
 	const { t } = useTranslation();
 
-	const isDisabled = !titleInput;
+	const isDisabled = !titleInput && !fileChanged;
 
 	const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setTitleInput(event.target.value);
 	};
 
+	const handleFileChange = () => {
+		setFileChanged(true);
+	};
+
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		handleEditForm(titleInput);
+
+		const newData: EditBoardsData = {};
+		if (titleInput) {
+			newData.title = titleInput;
+		}
+		if (fileRef.current?.files?.[0]) {
+			newData.image = fileRef.current?.files?.[0];
+		}
+
+		handleEditForm(newData);
 		handleHideMessage();
 	};
 
@@ -46,10 +62,21 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 							name="boardtitle"
 							label={t("editboard.form.newtitle", "Nuevo título")}
 							type="text"
-							required
 							labelClassName="form-label"
 							value={titleInput}
 							onChange={handleTitleChange}
+						/>
+					</div>
+					<div className="file-container">
+						<FormFields
+							labelClassName="upload-img-label"
+							label={t("editboard.form.newimg", "Nuevo fondo")}
+							inputClassName="upload-img-container"
+							id="bg-img"
+							name="bg-img"
+							type="file"
+							ref={fileRef}
+							onChange={handleFileChange}
 						/>
 					</div>
 					<Button type="submit" className="form-btn" disabled={isDisabled}>

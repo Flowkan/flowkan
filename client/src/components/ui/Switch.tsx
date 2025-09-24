@@ -3,7 +3,6 @@ import Field from "./Field";
 import { IconNotification } from "../icons/IconNotification";
 import { IconNotNotification } from "../icons/IconNotNotification";
 import type { ProfileUpdateType } from "../../pages/profile/types";
-// import type { ProfileUpdatedType, ProfileUpdateType } from '../../pages/profile/types';
 
 interface SwitchProps {
 	checked: boolean;

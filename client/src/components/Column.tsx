@@ -160,11 +160,10 @@ const Column = ({
 	if (columnRef.current) {
 		widthGhost.current = columnRef.current.clientWidth;
 	}
-
-	// console.log(remoteDrag?.coords);
+	
 
 	return (
-		<div className="bg-background-column flex h-full max-h-[calc(100vh-160px)] w-80 flex-shrink-0 flex-col rounded-lg p-4 shadow-xl">
+		<div className="flex w-80 min-h-32 max-w-md flex-shrink-0 flex-grow flex-col rounded-lg bg-white/45 p-4 shadow-xl">
 			<div className="mb-4 flex items-center justify-between">
 				<h3
 					onClick={handleTitleClick}
@@ -313,106 +312,15 @@ const Column = ({
 					onEditTask={onEditTask}
 					onOpenTaskDetail={onOpenTaskDetail}					
 					/>
-				)
-				// {
-				// 	const setRefs = (el: HTMLDivElement | null) => {
-				// 		provided.innerRef(el);
-				// 		columnRef.current = el;
-				// 	};
-
-				// 	const isRemoteDraggingHere =
-				// 		remoteDrag?.destination?.droppableId === String(column.id);
-
-				// 	const items: (string | Task)[] = [...column.cards];
-
-				// 	if (
-				// 		isRemoteDraggingHere &&
-				// 		remoteDrag.destination &&
-				// 		remoteDrag.destination?.index >= 0 &&
-				// 		remoteDrag.destination?.index <= items.length
-				// 	) {
-				// 		items.splice(remoteDrag.destination.index, 0, "REMOTE_PLACEHOLDER");
-				// 	}
-
-				// 	return (
-				// 		<div
-				// 			// ref={provided.innerRef}
-				// 			ref={setRefs}
-				// 			{...provided.droppableProps}
-				// 			className={`min-h-[50px] flex-grow rounded-md p-2 transition-colors duration-200 ${
-				// 				snapshot.isDraggingOver ? "bg-background-hover-column" : ""
-				// 			} custom-scrollbar overflow-y-auto`}
-				// 		>
-				// 			{/* {(column.cards ?? []).map((item: Task, index: number) => { */}
-				// 			{items.map((item: Task | string, index: number) => {
-				// 				// const isPlaceholder = remotePlaceholderIndex === index
-
-				// 				return (
-				// 					<>
-				// 						{/* {isPlaceholder && provided.placeholder} */}
-				// 						{/* <div className={`pointer-events-none h-0 transition-all duration-300 ${isPlaceholder ? 'min-h-[100px]':''}`}>
-				// 						</div> */}
-				// 						{typeof item === "string" ? (
-				// 							<div
-				// 								key="remote-placeholder"
-				// 								style={{
-				// 									height: "150px", // puedes emitir esto por socket
-				// 									backgroundColor: "blue",
-				// 								}}
-				// 							/>
-				// 						) : (
-				// 							<TaskCard
-				// 								key={item.id}
-				// 								task={item}
-				// 								index={index}
-				// 								columnId={String(column.id)}
-				// 								onEditTask={(updatedFields) => onEditTask(updatedFields)}
-				// 								onDeleteTask={onDeleteTask}
-				// 								onOpenTaskDetail={onOpenTaskDetail}
-				// 							/>
-				// 						)}										
-				// 					</>
-				// 				);
-				// 			})}
-				// 			{/* Ghost remoto flotando */}
-				// 			{remoteDrag?.coords && (
-				// 				<div
-				// 					style={{
-				// 						top: remoteDrag.coords.yNorm, //* window.innerHeight,
-				// 						left: remoteDrag.coords.xNorm, //* window.innerWidth - (remoteDrag.coords.xNorm - widthGhost),
-				// 						width: `${widthGhost.current > 0 ? widthGhost.current - 16 : 0}px`,
-				// 						maxWidth: `${widthGhost.current > 0 ? widthGhost.current - 16 : 0}px`,
-				// 					}}
-				// 					className="text-text-body bg-accent-lightest ring-accent-light pointer-events-none fixed mb-3 flex cursor-pointer flex-col rounded-md border-2 bg-amber-50 p-4 shadow-lg ring-2 transition-all duration-200 ease-in-out"
-				// 				>
-				// 					<span className="bg-accent absolute -top-2 -left-2 rounded-2xl px-2 text-xs text-white">
-				// 						{remoteDrag.name}
-				// 					</span>
-				// 					<span className="text-text-heading mb-2 flex-grow pr-2 font-medium break-words">
-				// 						{remoteDrag.taskName}
-				// 					</span>
-				// 				</div>
-				// 			)}
-				// 			{/* Placeholder al final si corresponde */}
-				// 			{/* {remotePlaceholderIndex !== null &&
-				// 				remotePlaceholderIndex === (column.cards?.length ?? 0) && (									
-				// 							provided.placeholder
-				// 					// <div className={`pointer-events-none h-[100px] transition-all duration-300`}>
-				// 					// </div>
-				// 			)} */}
-
-				// 			{provided.placeholder}
-				// 		</div>
-				// 	);
-				}
+				)}
 			</Droppable>
 
-			<div className="mt-4 flex flex-col gap-2">
+			<div className="mt-2">
 				{!isAddingTask ? (
 					<button
 						ref={addTaskButtonRef}
 						onClick={handleStartAddingTask}
-						className="bg-background-input text-text-placeholder hover:bg-background-hover-card flex items-center justify-center rounded-md py-2 font-semibold transition-colors duration-200"
+						className="bg-background-input text-black/95 hover:bg-background-hover-card flex w-full items-center justify-center rounded-md py-2 font-semibold transition-colors duration-200"
 					>
 						+ Añadir tarjeta
 					</button>
@@ -427,7 +335,7 @@ const Column = ({
 							onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
 							className="border-border-medium focus:ring-primary focus:border-primary bg-background-input text-text-body placeholder-text-placeholder w-full rounded-md border p-3 focus:ring-2 focus:outline-none"
 						/>
-						<div className="flex gap-2">
+						<div className="mt-2 flex gap-2">
 							<button
 								onClick={handleAddTask}
 								className="bg-primary text-text-on-accent hover:bg-accent-dark hover:bg-primary-hover flex-grow rounded-md py-2 font-semibold transition-colors duration-200"

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
 import { ProfileController } from "../controllers/profileController";
-import { upload, processAvatar } from "../lib/uploadConfigure";
+import { upload, processImage } from "../lib/uploadConfigure";
 
 const router = Router();
 const controller = new ProfileController();
@@ -11,7 +11,11 @@ router.patch(
   "/:userId",
   jwtAuth.guard,
   upload.single("photo"),
-  processAvatar,
+  processImage(
+    "users",
+    { original: {}, thumb: { width: 100, height: 100 } },
+    "photo",
+  ),
   controller.partial,
 );
 

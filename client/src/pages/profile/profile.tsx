@@ -6,10 +6,10 @@ import { ProfileUpdateSchema, type ProfileUpdateType } from "./types";
 import { useAppSelector } from "../../store";
 import z from "zod";
 import Banner from "../../components/icons/Banner";
-import { getProfile, getUserLogged } from "../../store/selectors";
+import { getProfile, getUserLogged } from "../../store/profile/selectors";
 import { resolveBaseURLFromEnv } from "../../utils/resolveBaseUrlEnv";
 import { updateFieldProfile } from "./service";
-import { useLoadedProfile, useUpdatedProfile } from "../../store/hooks";
+import { useLoadedProfile, useUpdatedProfile } from "../../store/profile/hooks";
 import Switch from "../../components/ui/Switch";
 
 type EventInput = (e: ChangeEvent<HTMLInputElement>) => void;
