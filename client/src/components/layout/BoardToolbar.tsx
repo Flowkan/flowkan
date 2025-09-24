@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import ShareBoard from "../ui/modals/share-board";
 import type { Board } from "../../pages/boards/types";
-// import { useBoardSocket } from "../../hooks/useBoardSocket";
 import { Avatar } from "../ui/Avatar";
-// import { getUserLogged } from "../../store/selectors";
-// import { useAppSelector } from "../../store";
 import { useSocket } from "../../hooks/socket/context";
 import type { User } from "../../pages/login/types";
+import type { ServerToClientEvents } from "../../hooks/socket/socket";
+
+type UsersListPayload = Parameters<ServerToClientEvents["users:list"]>[0];
 
 interface BoardToolbarProps {
 	readonly board: Board;
@@ -14,21 +14,27 @@ interface BoardToolbarProps {
 
 export function BoardToolbar({ board }: BoardToolbarProps) {
 	const [showShareForm, setShowShareForm] = useState(false);
-	// const userData = useAppSelector(getUserLogged);
-	// const currentUserId = userData?.id;
-	// const users = useBoardSocket(board.id?.toString(), currentUserId);
-	const [users,setUsers] = useState<User[]>([])
-	const socket = useSocket()
-	useEffect(()=>{	
-		socket.emit('join:room',board.id)
-		socket.on('user:joined',(payload)=>{
-			console.log('Usuario en la sala',payload);
-		})
-		socket.emit('request:users')
-		socket.on('users:list',(payload)=>{
-			setUsers([...payload])
-		})
-	},[socket])
+	const [users, setUsers] = useState<User[]>([]);
+	const socket = useSocket();
+	useEffect(() => {		
+		// const handleUserJoined = (payload) => {
+		// 	console.log("Usuario se unió a la sala:", payload);
+		// };
+		const handleUsersList = (payload:UsersListPayload) => {
+			setUsers([...payload]);
+		};
+		
+		// socket.on("user:joined", handleUserJoined);
+		socket.on("users:list", handleUsersList);
+		
+		socket.emit("join:room", board.id);
+		socket.emit("request:users");
+		
+		return () => {
+			// socket.off("user:joined", handleUserJoined);
+			socket.off("users:list", handleUsersList);
+		};
+	}, [socket, board.id]);
 
 	const handleShowShareForm = (event: React.MouseEvent) => {
 		event.preventDefault();

@@ -3,6 +3,7 @@ import type { Credentials, User } from "../pages/login/types";
 import type { Board, BoardsData, Column, Task } from "../pages/boards/types";
 import type { ProfileType } from "../pages/profile/types";
 import { setAuthorizationHeader } from "../api/client";
+import type { DropResult } from "@hello-pangea/dnd";
 
 //
 // ─── AUTH ──────────────────────────────────────────────
@@ -216,6 +217,15 @@ export function updateProfile({
 //
 // ─── BOARDS ──────────────────────────────────────────────
 //
+type UpdateRemoteBoard = { 
+	type: 'boards/update/remote',
+	payload:DropResult
+}
+export const updateRemoteBoard = (result:DropResult):UpdateRemoteBoard => ({
+	type:'boards/update/remote',
+	payload:result
+})
+
 type FetchBoardsPending = { type: "boards/fetchBoards/pending" };
 type FetchBoardsFulfilled = {
 	type: "boards/fetchBoards/fulfilled";
@@ -510,6 +520,8 @@ export function editBoard(
 	};
 }
 
+
+
 export function addColumn(
 	boardId: string,
 	data: Column,
@@ -628,6 +640,7 @@ export type Actions =
 	| ProfileLoadedFulfilled //Profile Loaded
 	| ProfileLoadedPending //Profile Loaded
 	| ProfileLoadedRejected //Profile Loaded
+	| UpdateRemoteBoard //remote
 	| FetchBoardsPending
 	| FetchBoardsFulfilled
 	| FetchBoardsRejected

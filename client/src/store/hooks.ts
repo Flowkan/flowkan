@@ -19,6 +19,7 @@ import {
 	removeAssignee,
 	updateProfile,
 	loadedProfile,
+	updateRemoteBoard,
 } from "./actions";
 import {
 	isAuthenticated,
@@ -31,6 +32,7 @@ import {
 	getUiError,
 } from "./selectors";
 import type { ProfileType } from "../pages/profile/types";
+import type { DropResult } from "@hello-pangea/dnd";
 
 //
 // ─── AUTH HOOKS ──────────────────────────────────────────────
@@ -115,6 +117,13 @@ export function useFetchBoardByIdAction() {
 		},
 		[dispatch],
 	);
+}
+
+export function useUpdateBoardRemote(){
+	const dispatch = useAppDispatch();
+	return function (result:DropResult){
+		return dispatch(updateRemoteBoard(result))
+	}
 }
 
 export function useAddBoardAction() {

@@ -1,24 +1,11 @@
-import { Server, Socket } from "socket.io";
 import {
   BoardUser,
-  ClientToServerEvents,
-  ServerToClientEvents,
-  ServerUser,
-  SocketData,
+  ServerUser,  
   SocketUser,
 } from "../types";
 import BoardService from "../../services/BoardService";
 import BoardModel from "../../models/BoardModel";
 import prisma from "../../config/db";
-// import AuthService from "../../services/AuthService";
-// import AuthModel from "../../models/AuthModel";
-// import prisma from "../../config/db";
-
-// type SocketUser = Socket<ClientToServerEvents,ServerToClientEvents,Record<string,never>,SocketData> & {
-//     handshake:{
-//         auth:string;
-//     }
-// }
 
 export default class UserHandler {
   private connectedUsers: Map<string, BoardUser> = new Map();
@@ -42,8 +29,8 @@ export default class UserHandler {
   }
 
   private async handleUserConnected(socket: SocketUser) {
-    const { user: userData, boardId } = socket.handshake.auth; 
-    // console.log(socket.handshake.auth);
+    const { boardId } = socket.handshake.auth; 
+    const userData = socket.data.user    
     if (!userData || !boardId) {
       console.warn("Datos de autenticación incompletos");
       return;
@@ -61,14 +48,21 @@ export default class UserHandler {
       this.handleJoinRoom(socket, boardId);
       this.io.to(boardId).emit("user:connected", userData);
 
-      socket.data.user = userData;
+      // socket.data.user = userData;
+    }else{
+      console.warn(`Acceso denegado ${userData.id}, no es miembro del tablero ${boardId}`);      
+      socket.emit("error:occurred", { 
+        message: "No eres miembro de este tablero.",
+        code:"ACCESS_DENIED"
+      });
+      return;
     }
   }
   private handleUserUpdate(socket: SocketUser, user: BoardUser) {
     if (user) {
       this.connectedUsers.set(socket.id, user);
 
-      socket.data.user = user;
+      // socket.data.user = user;
 
       socket.broadcast.emit("user:connected", {
         ...user,

@@ -82,10 +82,12 @@ class AuthModel {
 
   async findById(
     id: number,
-  ): Promise<{ name: string; photo: string | null } | null> {
+  ): Promise<{ id:number,email:string,name: string; photo: string | null } | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: {
+        id:true,
+        email:true,
         name: true,
         photo: true,
       },

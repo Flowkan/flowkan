@@ -1,8 +1,15 @@
 // import type { DragStart } from "@hello-pangea/dnd";
 
-import type { Board, Task } from "../../pages/boards/types";
+import type { DragStart, DragUpdate, DropResult } from "@hello-pangea/dnd";
+import type { Task } from "../../pages/boards/types";
 
 type TaskClean = Omit<Task,"assignees">
+
+
+export interface SocketError {
+  code: string; 
+  message: string; 
+}
 
 // Eventos que el servidor enviará al cliente
 export interface ServerToClientEvents {
@@ -11,15 +18,9 @@ export interface ServerToClientEvents {
 	"user:joined": (data: { user: BoardUser; roomId: string }) => void;
 	"users:list": (users: BoardUser[]) => void;
 	"error:occurred": (error: SocketError) => void;
-
-	// --- Board events ---
-	// "board:dragstart": (payload: {
-	// 	start: unknown;
-	// 	board: Board;
-	// 	userId: string;
-	// }) => void;
+	
 	"board:dragstarted": (payload: {
-		start: unknown;
+		start: DragStart;
 		board: BoardWithRelations;
 		userId: string;
 		name:string;
@@ -33,10 +34,10 @@ export interface ServerToClientEvents {
     y:number
   })=>void;
   "board:dragupdated":(payload:{
-    update:unknown,    
+    update:DragUpdate,    
   })=>void;
   "board:dragend":(payload:{
-    result:unknown,    
+    result:DropResult,    
   })=>void;
   //Errors
   "board:dragfailed":(payload:{draggableId:string})=>void;
@@ -46,11 +47,11 @@ export interface ClientToServerEvents {
 	"user:update": (user: BoardUser) => void;
 	"join:room": (roomId: string) => void;
 	"request:users": () => void;
+  "error:occurred": (error: SocketError) => void;
 
 	// --- Board events ---
 	"board:dragstart": (payload: {
-		start: unknown;
-		board: Board;
+		start: DragStart;
 		task:TaskClean;
 		x: number;
 		y: number;
@@ -61,12 +62,13 @@ export interface ClientToServerEvents {
     y:number
   })=>void;
   "board:dragupdate":(payload:{
-    update:unknown,    
+    update:DragUpdate,    
   })=>void;
   "board:dragupdated":(payload:{
-    update:unknown,    
+    update:DragUpdate,    
   })=>void;
+
   "board:dragend":(payload:{
-    result:unknown,    
+    result:DropResult,    
   })=>void;
 }

@@ -2,13 +2,12 @@ import { useState, useCallback, useEffect } from "react";
 import {
 	DragDropContext,
 	Droppable,
-	type DropResult,
-	type DraggableLocation,
+	type DropResult,	
 } from "@hello-pangea/dnd";
 import { useParams, useNavigate } from "react-router-dom";
 import Column from "../../components/Column";
 import TaskDetailModal from "../../components/TaskDetailModal";
-import type { Task, Column as ColumnType } from "./types";
+import type { Task, Column as ColumnType, Board } from "./types";
 import {
 	useFetchBoardByIdAction,
 	useAddTaskAction,
@@ -19,35 +18,13 @@ import {
 	useDeleteColumnAction,
 	useDeleteTaskction,
 	useUpdateColumnAction,
+	useUpdateBoardRemote,
 } from "../../store/hooks";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { useBoardItemSocket } from "./board-socket/context";
+import { useSocket } from "../../hooks/socket/context";
+import { applyDragResult } from "../../utils/tools";
 
-const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
-	const result = Array.from(list);
-	const [removed] = result.splice(startIndex, 1);
-	result.splice(endIndex, 0, removed);
-	return result;
-};
-
-const move = <T,>(
-	source: T[],
-	destination: T[],
-	droppableSource: DraggableLocation,
-	droppableDestination: DraggableLocation,
-): { [key: string]: T[] } => {
-	const sourceClone = Array.from(source);
-	const destClone = Array.from(destination);
-	const [removed] = sourceClone.splice(droppableSource.index, 1);
-
-	destClone.splice(droppableDestination.index, 0, removed);
-
-	const result: { [key: string]: T[] } = {};
-	result[droppableSource.droppableId] = sourceClone;
-	result[droppableDestination.droppableId] = destClone;
-
-	return result;
-};
 
 const Board = () => {
 	const fetchBoardAction = useFetchBoardByIdAction();
@@ -57,11 +34,12 @@ const Board = () => {
 	const addColumnAction = useAddColumnAction();
 	const updateColumnAction = useUpdateColumnAction();
 	const removeColumnAction = useDeleteColumnAction();
+	const updateBoardRemoteMode = useUpdateBoardRemote();
 	const { boardId } = useParams<{ boardId: string }>();
 	const navigate = useNavigate();
 	const boardData = useCurrentBoard();
 	const error = useBoardsError();
-
+	const socket = useSocket()
 	const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 	const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -79,88 +57,84 @@ const Board = () => {
 		}
 	}, [error, navigate]);
 
+	useEffect(() => {
+		if (!socket) return;
+
+		// Se ejecuta cuando otro usuario termina de hacer drag
+		const handleRemoteDragEnd = ({ result }:{result:DropResult}) => {
+			//Actualiza redux para actualizar la UI
+			updateBoardRemoteMode(result)
+		};
+
+		socket.on("board:dragend", handleRemoteDragEnd);
+
+		return () => {
+			socket.off("board:dragend", handleRemoteDragEnd);
+		};
+	}, []);
+
 	const onDragEnd = useCallback(
 		(result: DropResult) => {
-			if (!boardData) return;
-			handleDragEnd(result);
-			// const { type, source, destination } = result;
-			const { type } = result;
-			let destination:unknown;
-			let source:unknown;
-			if(remoteDrag?.destination && remoteDrag.source){
-				destination = remoteDrag.destination
-				source = remoteDrag.source
-			}else{
-				destination = result.destination
-				source = result.source
-			}
-			if (!destination) return;
-			//Notificar fin drag
-			// console.log(result);
+			const { destination, source, type } = result;
 			
+			handleDragEnd(result);
+			if (!destination) {
+				handleDragEnd(result);
+				return;
+			}
+			if (
+				destination.droppableId === source.droppableId &&
+				destination.index === source.index
+			) {
+				return;
+			}
+			updateBoardRemoteMode(result);
+			
+			// setBoardData(newBoardData); // Actualiza la UI local inmediatamente
+			if (!boardData) return;
+			const newBoardData = applyDragResult(boardData, result);
+
 			// ARRASRTRE DE COLUMNAS
-			// const resultMoveRemote = remoteDrag && remoteDrag.destination
 			if (type === "column") {
-				const newLists = reorder(
-					boardData.lists,
-					source.index,
-					destination.index,
-				);
-
-				newLists.forEach((col, index) => {
-					updateColumnAction(Number(col.id), { position: index });
-				});
+				newBoardData.lists.forEach((list, index) => {
+					updateColumnAction(Number(list.id), { position: index });
+				});				
 			} else {
-				// ARRASRTRE DE TARJETAS
-				const sInd = source.droppableId;
-				const dInd = destination.droppableId;
+				// Drag Para tarjeta
+				const destListId = destination.droppableId;
+				const sourceListId = source.droppableId;
 
-				const sourceCol = boardData.lists.find(
-					(c) => c.id?.toString() === sInd,
+				const destCol = newBoardData.lists.find(
+					(c) => c.id?.toString() === destListId,
 				);
-				const destCol = boardData.lists.find((c) => c.id?.toString() === dInd);
-				if (!sourceCol || !destCol) return;
 
-				let newSourceCards;
-				let newDestCards;
-
-				if (sInd === dInd) {
-					newSourceCards = reorder(
-						sourceCol.cards,
-						source.index,
-						destination.index,
-					);
-					newDestCards = newSourceCards;
-				} else {
-					const result = move(
-						sourceCol.cards,
-						destCol.cards,
-						source,
-						destination,
-					);
-					newSourceCards = result[sInd];
-					newDestCards = result[dInd];
-				}
-
-				// Persistencia en API: actualizar posición de cada tarjeta
-				newDestCards.forEach((t, index) => {
-					updateTaskAction(Number(dInd), t.id!.toString(), {
-						listId: Number(dInd),
-						position: index,
-					});
-				});
-
-				if (sInd !== dInd) {
-					newSourceCards.forEach((t, index) => {
-						updateTaskAction(Number(sInd), t.id!.toString(), {
-							listId: Number(sInd),
+				// Actualiza las tarjetas en la columna de destino
+				if (destCol) {
+					destCol.cards.forEach((task, index) => {
+						updateTaskAction(Number(destListId), task.id!.toString(), {
+							listId: Number(destListId), // Asegura que el listId sea el correcto
 							position: index,
 						});
 					});
 				}
+
+				// Si se movió entre columnas, actualiza también las de la columna de origen
+				if (sourceListId !== destListId) {
+					const sourceCol = newBoardData.lists.find(
+						(c) => c.id?.toString() === sourceListId,
+					);
+					//Si se movió en la misma columna
+					if (sourceCol) {
+						sourceCol.cards.forEach((task, index) => {
+							updateTaskAction(Number(sourceListId), task.id!.toString(), {
+								position: index,
+							});
+						});
+					}
+				}				
 			}
 		},
-		[boardData, updateTaskAction, updateColumnAction],
+		[boardData, updateColumnAction, updateTaskAction],
 	);
 
 	const handleAddTask = useCallback(
@@ -244,9 +218,8 @@ const Board = () => {
 		[boardData, removeColumnAction],
 	);
 
-	const { handleDragStart, handleDragUpdate, handleDragEnd,remoteDrag } =
+	const { handleDragStart, handleDragUpdate, handleDragEnd } =
 		useBoardItemSocket();
-	
 
 	if (error) return <div>Error al cargar el tablero: {error}</div>;
 
@@ -258,15 +231,14 @@ const Board = () => {
 				onDragEnd={onDragEnd}
 			>
 				<Droppable droppableId="board" type="column" direction="horizontal">
-					{(provided) => {																
+					{(provided) => {
 						return (
 							<div
-								ref={provided.innerRef}								
+								ref={provided.innerRef}
 								{...provided.droppableProps}
 								className="custom-scrollbar flex h-[calc(100vh-8rem)] gap-6 overflow-x-auto px-4 py-8 sm:px-8"
 							>
 								{boardData?.lists.map((column) => (
-									
 									<Column
 										key={column.id}
 										column={column}
@@ -290,8 +262,8 @@ const Board = () => {
 										}
 										isNewColumnInEditMode={false}
 									/>
-								))}								
-								
+								))}
+
 								{provided.placeholder}
 
 								{/* Add new column */}
@@ -328,7 +300,7 @@ const Board = () => {
 							</div>
 						);
 					}}
-				</Droppable>				
+				</Droppable>
 			</DragDropContext>
 
 			{selectedTask && selectedColumnId && (

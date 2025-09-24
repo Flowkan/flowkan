@@ -9,8 +9,8 @@ export interface BoardUser {
   photo?: string | null;
 }
 export interface SocketError {
-  code: string; // Código del error, ej. 'INVALID_MESSAGE'
-  message: string; // Descripción legible del error
+  code: string; 
+  message: string; 
 }
 
 export interface Task {
@@ -37,15 +37,8 @@ export interface ServerToClientEvents {
   "error:occurred": (error: SocketError) => void;
 
   // --- Board events ---
-  // "board:dragstart": (payload:{
-  //   start:unknown,
-  //   board:BoardWithRelations,
-  //   task:Task,
-  //   userId:string
-  // })=>void;
   "board:dragstarted": (payload:{
     start:unknown,
-    board:BoardWithRelations,
     userId:string,
     name:string,
     task:Task,
@@ -69,11 +62,11 @@ export interface ClientToServerEvents {
   "user:update": (user: BoardUser) => void;
   "join:room": (roomId: string) => void;
   "request:users": () => void; 
+  "error:occurred": (error: SocketError) => void;
 
   // --- Board events ---
   "board:dragstart": (payload:{
     start:unknown,
-    board:BoardWithRelations,
     task:Task,
     x:number,
     y:number
@@ -106,11 +99,11 @@ type BoardData = {
 
 export type SocketData = UserData & BoardData
 
-interface AuthPayload {
+export interface AuthPayload {
   // userId: string;
-  user: BoardUser;
+  // user: BoardUser;
   boardId: string;
-  // Puedes agregar más campos si lo necesitas
+  token:string  
 }
 
 export type SocketUser = Socket<
@@ -120,7 +113,7 @@ export type SocketUser = Socket<
   SocketData
 > & {
   handshake: Socket["handshake"] & {
-    auth: AuthPayload;
+    auth: AuthPayload;    
   };
 };
 
