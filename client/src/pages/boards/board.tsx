@@ -25,6 +25,10 @@ import {
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { editTask } from "../../store/boards/actions";
+import { Button } from "../../components/ui/Button";
+import { FormFields } from "../../components/ui/FormFields";
+import { Icon } from "@iconify/react";
+import { t } from "i18next";
 
 const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
 	const result = Array.from(list);
@@ -279,7 +283,7 @@ const Board = () => {
 						<div
 							ref={provided.innerRef}
 							{...provided.droppableProps}
-							className="custom-scrollbar flex h-[calc(100vh-8rem)] gap-6 overflow-x-auto px-4 py-8 sm:px-8"
+							className="custom-scrollbar flex gap-4 px-4 py-8 sm:px-8"
 						>
 							{boardData?.lists.map((column) => (
 								<Column
@@ -312,31 +316,39 @@ const Board = () => {
 
 							{/* Add new column */}
 							<div className="items-left relative flex h-full w-80 flex-shrink-0 flex-col">
-								<button
+								<Button
 									onClick={handleAddColumnToggle}
-									className="text-text-placeholder hover:bg-background-hover-column border-border-medium hover:border-accent flex h-14 w-14 items-center justify-center rounded-lg border-2 border-dashed bg-white text-2xl font-semibold shadow-md transition-colors duration-200"
+									className="text-text-placeholder hover:bg-background-hover-column border-border-medium bg-gray/20 hover:border-accent bg-border-light bg-gray/80 flex h-10 w-10 items-center justify-center rounded-lg border-2 text-2xl font-semibold shadow-md transition-colors duration-200"
 								>
-									+
-								</button>
+									{/* Icon Plus */}
+									<div className="shadow-md transition-all duration-200 ease-in-out hover:scale-[1.45] hover:rotate-90 hover:shadow-xl hover:shadow-indigo-300/30 active:scale-123">
+										<Icon icon="oui:plus" width="1.2em" height="1.2em" />
+									</div>
+								</Button>
 								{isMenuOpen && (
 									<div className="bg-background-dark-footer absolute top-16 z-50 mt-2 w-full rounded-lg border border-gray-200 p-4 shadow-lg">
 										<h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
-											Gestionar Columnas
+											{t("board.add_column", "Añadir Columna")}
 										</h3>
 										<div className="mb-4">
-											<input
+											<FormFields
 												type="text"
-												placeholder="Nombre de la nueva columna"
+												placeholder={t(
+													"board.column_name",
+													"Nombre de la columna",
+												)}
 												value={newColumnName}
 												onChange={(e) => setNewColumnName(e.target.value)}
 												className="w-full rounded border bg-gray-100 p-2 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
+												id={"newColumn"}
+												name={"newColumn"}
 											/>
-											<button
+											<Button
 												onClick={handleCreateColumn}
 												className="mt-2 w-full rounded bg-blue-500 p-2 text-white transition-colors duration-200 hover:bg-blue-600"
 											>
-												Crear Columna
-											</button>
+												{t("board.create_column", "Crear columna")}
+											</Button>
 										</div>
 									</div>
 								)}

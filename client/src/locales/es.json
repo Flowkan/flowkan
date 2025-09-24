@@ -220,5 +220,28 @@
 		"withOtherService": {
 			"otherTypeRegister": "O continúa con"
 		}
+	},
+	"board": {
+		"add_to_task": "Añadir a la tarjeta",
+		"add": "Añadir",
+		"attach_document": "Adjuntar documento",
+		"attach_voice": "Grabar nota de voz",
+		"labels": "Etiquetas",
+		"members": "Miembros",
+		"dates": "Fechas",
+		"checklist": "Checklist",
+		"load_users": "Cargando usuarios...",
+		"description": "Descripción",
+		"attatchments": "Adjuntos",
+		"recording": "Grabando...",
+		"stop": "Detener",
+		"options": "Opciones",
+		"move": "Mover",
+		"copy": "Copiar",
+		"archive": "Archivar",
+		"delete": "Eliminar",
+		"add_column": "Añadir Columna",
+		"column_name": "Nombre de la columna",
+		"create_column": "Crear columna"
 	}
 }

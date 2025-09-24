@@ -9,6 +9,8 @@ import {
 } from "../store/boards/hooks";
 import { Editor } from "@tinymce/tinymce-react";
 import { Icon } from "@iconify/react";
+import { Button } from "./ui/Button";
+import { useTranslation } from "react-i18next";
 
 interface TaskDetailModalProps {
 	task: Task;
@@ -54,6 +56,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const usersRef = useRef<HTMLDivElement>(null);
 	const addMenuRef = useRef<HTMLDivElement>(null);
 	const editorRef = useRef(null);
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		if (contentInputRef.current) contentInputRef.current.focus();
@@ -247,7 +250,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 				ref={modalRef}
 				className="bg-background-card relative flex max-h-5/6 w-full max-w-5xl flex-col overflow-y-auto rounded-lg p-6 shadow-2xl md:flex-row"
 			>
-				<button
+				<Button
 					onClick={() => {
 						onClose();
 					}}
@@ -255,7 +258,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 					title="Cerrar y guardar"
 				>
 					<Icon icon="ic:round-close" className="text-3xl" />
-				</button>
+				</Button>
 
 				<div className="relative flex flex-grow flex-col md:mr-6">
 					<div className="mb-4 flex items-center gap-2">
@@ -275,20 +278,21 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 					<div className="relative mb-6">
 						<h4 className="text-text-placeholder mb-2 text-sm font-semibold">
-							Añadir a la tarjeta
+							{t("board.add_to_task", "Añadir a la tarjeta")}
 						</h4>
 						<div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
 							<div className="relative" ref={addMenuRef}>
-								<button
+								<Button
 									onClick={() => setShowAddMenu((prev) => !prev)}
 									className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
 								>
-									<Icon icon="mdi:plus" className="text-lg" /> Añadir
-								</button>
+									<Icon icon="mdi:plus" className="text-lg" />
+									{t("board.add", "Añadir")}
+								</Button>
 
 								{showAddMenu && (
 									<div className="border-border-medium bg-background-light-grey absolute top-full left-0 z-50 mt-2 w-56 rounded-md border shadow-lg">
-										<button
+										<Button
 											onClick={() => {
 												document.getElementById("fileInput")?.click();
 												setShowAddMenu(false);
@@ -298,10 +302,10 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 											<Icon
 												icon="mdi:attachment"
 												className="mr-1 inline-block text-lg"
-											/>{" "}
-											Adjuntar documento
-										</button>
-										<button
+											/>
+											{t("board.attach_document", "Adjuntar documento")}
+										</Button>
+										<Button
 											onClick={() => {
 												if (!recording) handleStartRecording();
 												setShowAddMenu(false);
@@ -311,9 +315,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 											<Icon
 												icon="mdi:microphone"
 												className="mr-1 inline-block text-lg"
-											/>{" "}
-											Grabar nota de voz
-										</button>
+											/>
+											{t("board.attach_voice", "Grabar nota de voz")}
+										</Button>
 									</div>
 								)}
 								<input
@@ -325,30 +329,31 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								/>
 							</div>
 
-							<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
-								<Icon icon="mdi:tag-outline" className="text-lg" /> Etiquetas
-							</button>
-							<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
+							<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
+								<Icon icon="mdi:tag-outline" className="text-lg" />{" "}
+								{t("board.labels", "Etiquetas")}
+							</Button>
+							<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
 								<Icon icon="mdi:calendar-month-outline" className="text-lg" />{" "}
-								Fechas
-							</button>
-							<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
+								{t("board.dates", "Fechas")}
+							</Button>
+							<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
 								<Icon icon="mdi:checkbox-outline" className="text-lg" />{" "}
-								Checklist
-							</button>
-							<button
+								{t("board.checklist", "Checklist")}
+							</Button>
+							<Button
 								onClick={handleToggleUsers}
 								className="bg-background-light-grey text-text-body hover:bg-background-hover-column relative flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
 							>
 								<Icon icon="mdi:account-group-outline" className="text-lg" />{" "}
-								Miembros
-							</button>
+								{t("board.members", "Miembros")}
+							</Button>
 						</div>
 
 						{showUsers && (
 							<div
 								ref={usersRef}
-								className="border-border-medium bg-background-light-grey absolute top-full left-1/2 z-50 mt-2 max-h-60 w-[calc(100%-1rem)] -translate-x-1/2 overflow-y-auto rounded-md border p-2 shadow-lg md:right-0 md:left-auto md:w-64 md:translate-x-0"
+								className="border-border-medium bg-background-light-grey absolute top-full left-1/2 z-50 mt-2 max-h-60 w-[calc(100%-1rem)] -translate-x-1/2 overflow-y-auto rounded-md border p-2 shadow-lg md:right-0 md:w-64"
 							>
 								<input
 									type="text"
@@ -358,7 +363,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									className="mb-2 w-full rounded-md border p-1 text-sm outline-none"
 								/>
 								{loadingUsers && (
-									<p className="text-center text-sm">Cargando usuarios...</p>
+									<p className="text-center text-sm">
+										{t("board.load_users", "Cargando usuarios...")}
+									</p>
 								)}
 								{usersError && (
 									<p className="text-sm text-red-500">{usersError.message}</p>
@@ -390,7 +397,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 					{assignedUsers.length > 0 && (
 						<div className="mb-6">
 							<h4 className="text-text-heading mb-2 text-sm font-semibold">
-								Miembros
+								{t("board.members", "Miembros")}
 							</h4>
 							<div className="flex flex-wrap gap-2">
 								{assignedUsers.map((user) => (
@@ -411,8 +418,8 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							<Icon
 								icon="mdi:note-edit-outline"
 								className="text-text-placeholder text-lg"
-							/>{" "}
-							Descripción
+							/>
+							{t("board.description", "Descripción")}
 						</h4>
 						<Editor
 							apiKey={import.meta.env.VITE_TINY_MCE}
@@ -457,7 +464,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 					{task.media && task.media.length > 0 && (
 						<div className="mb-6">
 							<h4 className="text-text-heading mb-2 text-sm font-semibold">
-								Adjuntos
+								{t("board.attatchments", "Adjuntos")}
 							</h4>
 							<div className="space-y-2">
 								{task.media.map((mediaItem) => {
@@ -516,39 +523,42 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						<div className="fixed bottom-4 left-1/2 z-50 flex w-[90%] max-w-md -translate-x-1/2 items-center justify-between rounded-lg bg-red-600 px-4 py-3 text-white shadow-lg">
 							<span className="flex items-center gap-2">
 								<Icon icon="mdi:record-circle" className="animate-pulse" />{" "}
-								Grabando...
+								{t("board.recording", "Grabando...")}
 							</span>
-							<button
+							<Button
 								onClick={handleStopRecording}
 								className="rounded bg-white px-3 py-1 text-sm font-semibold text-red-600 hover:bg-gray-200"
 							>
-								Detener
-							</button>
+								{t("board.stop", "Detemer")}
+							</Button>
 						</div>
 					)}
 				</div>
 
 				<div className="w-full flex-shrink-0 pt-6 md:w-64 md:pt-10">
 					<h4 className="text-text-placeholder mb-3 text-sm font-semibold">
-						Opciones
+						{t("board.options", "Opciones")}
 					</h4>
 					<div className="space-y-2">
-						<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
-							<Icon icon="mdi:arrow-right-box" className="text-lg" /> Mover
-						</button>
-						<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
-							<Icon icon="mdi:content-copy" className="text-lg" /> Copiar
-						</button>
-						<button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
+						<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
+							<Icon icon="mdi:arrow-right-box" className="text-lg" />
+							{t("board.move", "Mover")}
+						</Button>
+						<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
+							<Icon icon="mdi:content-copy" className="text-lg" />
+							{t("board.copy", "Copiar")}
+						</Button>
+						<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
 							<Icon icon="mdi:archive-arrow-down-outline" className="text-lg" />{" "}
-							Archivar
-						</button>
-						<button
+							{t("board.archive", "Archivar")}
+						</Button>
+						<Button
+							className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200"
 							onClick={handleDelete}
-							className="bg-background-light-grey text-text-body hover:bg-danger-dark hover:text-background-card flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200 hover:bg-red-400"
 						>
-							<Icon icon="mdi:trash-can-outline" className="text-lg" /> Eliminar
-						</button>
+							<Icon icon="mdi:trash-can-outline" className="text-lg" />
+							{t("board.delete", "Eliminar")}
+						</Button>
 					</div>
 				</div>
 			</div>

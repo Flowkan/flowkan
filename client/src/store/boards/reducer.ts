@@ -103,7 +103,10 @@ export function boardsReducer(
 							...state.currentBoard,
 							lists: state.currentBoard.lists.map((col: Column) =>
 								col.id?.toString() === action.payload.columnId.toString()
-									? { ...col, cards: [action.payload.task, ...col.cards] }
+									? {
+											...col,
+											cards: [action.payload.task, ...(col.cards || [])],
+										}
 									: col,
 							),
 						},

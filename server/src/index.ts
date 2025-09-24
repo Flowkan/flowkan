@@ -9,6 +9,7 @@ const PORT: string | number = process.env.PORT || 3000;
 const server = http.createServer(app);
 
 const io = new Server(server, {
+  path: "/api/socket.io",
   cors: {
     origin: process.env.FRONTEND_WEB_URL,
     methods: ["GET", "POST"],

@@ -220,5 +220,28 @@
 		"withOtherService": {
 			"otherTypeRegister": "Or continue with"
 		}
+	},
+	"board": {
+		"add_to_task": "Add to card",
+		"add": "Add",
+		"attach_document": "Attach document",
+		"attach_voice": "Record voice note",
+		"labels": "Labels",
+		"members": "Members",
+		"dates": "Dates",
+		"checklist": "Checklist",
+		"load_users": "Loading users...",
+		"description": "Description",
+		"attatchments": "Attachments",
+		"recording": "Recording...",
+		"stop": "Stop",
+		"options": "Options",
+		"move": "Move",
+		"copy": "Copy",
+		"archive": "Archive",
+		"delete": "Delete",
+		"add_column": "Add Column",
+		"column_name": "Column Name",
+		"create_column": "Create Column"
 	}
 }
