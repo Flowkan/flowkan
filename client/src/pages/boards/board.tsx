@@ -28,6 +28,7 @@ import { editTask } from "../../store/boards/actions";
 import { Button } from "../../components/ui/Button";
 import { FormFields } from "../../components/ui/FormFields";
 import { Icon } from "@iconify/react";
+import { t } from "i18next";
 
 const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
 	const result = Array.from(list);
@@ -327,12 +328,15 @@ const Board = () => {
 								{isMenuOpen && (
 									<div className="bg-background-dark-footer absolute top-16 z-50 mt-2 w-full rounded-lg border border-gray-200 p-4 shadow-lg">
 										<h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
-											Gestionar Columnas
+											{t("board.add_column", "Añadir Columna")}
 										</h3>
 										<div className="mb-4">
 											<FormFields
 												type="text"
-												placeholder="Nombre de la nueva columna"
+												placeholder={t(
+													"board.column_name",
+													"Nombre de la columna",
+												)}
 												value={newColumnName}
 												onChange={(e) => setNewColumnName(e.target.value)}
 												className="w-full rounded border bg-gray-100 p-2 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
@@ -343,7 +347,7 @@ const Board = () => {
 												onClick={handleCreateColumn}
 												className="mt-2 w-full rounded bg-blue-500 p-2 text-white transition-colors duration-200 hover:bg-blue-600"
 											>
-												Crear Columna
+												{t("board.create_column", "Crear columna")}
 											</Button>
 										</div>
 									</div>
