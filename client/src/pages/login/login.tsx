@@ -23,7 +23,7 @@ export const LoginPage = () => {
 	const profileLoadedAction = useLoadedProfile();
 	const dispatch = useAppDispatch();
 	// const modalForgotPassword = useRef<HTMLDialogElement|null>(null)
-	const [showModal,setShowModal] = useState(false);
+	const [showModal, setShowModal] = useState(false);
 
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
@@ -97,18 +97,6 @@ export const LoginPage = () => {
 
 			await loginAction(formData);
 			await profileLoadedAction();
-
-			// Si ambas validaciones pasan, mostrar el mensaje de éxito
-			toast.custom((t) => (
-				<CustomToast
-					message={__(
-						"login.toast.message.success",
-						"Formulario enviado con éxito!",
-					)}
-					t={t}
-					type="success"
-				/>
-			));
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				setFormData((prevData) => ({
@@ -131,11 +119,11 @@ export const LoginPage = () => {
 		}
 	};
 
-	function handleShowModal(){
-		setShowModal(true)
+	function handleShowModal() {
+		setShowModal(true);
 	}
-	function handleCloseModal(){
-		setShowModal(false)
+	function handleCloseModal() {
+		setShowModal(false);
 	}
 	return (
 		<Page>
@@ -207,13 +195,13 @@ export const LoginPage = () => {
 								<button
 									onClick={handleShowModal}
 									type="button"
-									className="text-text-link hover:cursor-pointer hover:text-accent-hover font-medium"
+									className="text-text-link hover:text-accent-hover font-medium hover:cursor-pointer"
 								>
 									{t(
 										"login.loginForm.forgetPassword",
 										"¿Olvidaste tu contraseña?",
 									)}
-								</button>								
+								</button>
 							</div>
 						</div>
 						<div>
@@ -238,10 +226,7 @@ export const LoginPage = () => {
 							</Button>
 						</div>
 					</Form>
-					<ForgotPassword 
-					show={showModal} 
-					onClose={handleCloseModal} 
-					/>
+					<ForgotPassword show={showModal} onClose={handleCloseModal} />
 					<WithOtherServices />
 				</div>
 			</div>
