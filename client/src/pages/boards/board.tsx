@@ -29,7 +29,6 @@ import { Button } from "../../components/ui/Button";
 import { FormFields } from "../../components/ui/FormFields";
 import { Icon } from "@iconify/react";
 import { t } from "i18next";
-import { ChatWindow } from "../../components/ui/ChatWindow";
 
 const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
 	const result = Array.from(list);
@@ -81,7 +80,6 @@ const Board = () => {
 		undefined,
 	);
 	const boardData = useAppSelector((state) => state.boards.currentBoard);
-	const userData = useAppSelector((state) => state.auth.user);
 
 	const selectedTask = useMemo(() => {
 		if (!boardData || !selectedTaskId) return null;
@@ -377,10 +375,6 @@ const Board = () => {
 						handleDeleteTask(selectedTask.id!.toString(), selectedColumnId)
 					}
 				/>
-			)}
-
-			{resolvedBoardId && userData?.id && (
-				<ChatWindow boardId={resolvedBoardId} currentUserId={userData.id} />
 			)}
 		</BackofficePage>
 	);
