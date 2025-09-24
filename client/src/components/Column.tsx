@@ -151,7 +151,7 @@ const Column = ({
 	}, [isAddingTask, newTaskContent, handleAddTask, handleCancelAddTask]);
 
 	return (
-		<div className="flex h-full max-h-[calc(100vh-160px)] w-80 flex-shrink-0 flex-col rounded-lg bg-white/95 p-4 shadow-xl">
+		<div className="flex w-80 flex-shrink-0 flex-grow flex-col rounded-lg bg-white/95 p-4 shadow-xl">
 			<div className="mb-4 flex items-center justify-between">
 				<h3
 					onClick={handleTitleClick}
@@ -294,9 +294,7 @@ const Column = ({
 					<div
 						ref={provided.innerRef}
 						{...provided.droppableProps}
-						className={`min-h-[50px] flex-grow rounded-md p-2 transition-colors duration-200 ${
-							snapshot.isDraggingOver ? "bg-background-hover-column" : ""
-						} custom-scrollbar overflow-y-auto`}
+						className={`flex-grow rounded-md p-2 transition-colors duration-200 ${snapshot.isDraggingOver ? "bg-background-hover-column" : ""}`}
 					>
 						{(column.cards ?? []).map((item: Task, index: number) => (
 							<TaskCard
@@ -314,12 +312,12 @@ const Column = ({
 				)}
 			</Droppable>
 
-			<div className="mt-4 flex flex-col gap-2">
+			<div className="mt-2">
 				{!isAddingTask ? (
 					<button
 						ref={addTaskButtonRef}
 						onClick={handleStartAddingTask}
-						className="bg-background-input text-text-placeholder hover:bg-background-hover-card flex items-center justify-center rounded-md py-2 font-semibold transition-colors duration-200"
+						className="bg-background-input text-text-placeholder hover:bg-background-hover-card flex w-full items-center justify-center rounded-md py-2 font-semibold transition-colors duration-200"
 					>
 						+ Añadir tarjeta
 					</button>
@@ -334,7 +332,7 @@ const Column = ({
 							onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
 							className="border-border-medium focus:ring-primary focus:border-primary bg-background-input text-text-body placeholder-text-placeholder w-full rounded-md border p-3 focus:ring-2 focus:outline-none"
 						/>
-						<div className="flex gap-2">
+						<div className="mt-2 flex gap-2">
 							<button
 								onClick={handleAddTask}
 								className="bg-primary text-text-on-accent hover:bg-accent-dark hover:bg-primary-hover flex-grow rounded-md py-2 font-semibold transition-colors duration-200"

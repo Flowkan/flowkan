@@ -279,7 +279,7 @@ const Board = () => {
 						<div
 							ref={provided.innerRef}
 							{...provided.droppableProps}
-							className="custom-scrollbar flex h-[calc(100vh-8rem)] gap-6 overflow-x-auto px-4 py-8 sm:px-8"
+							className="custom-scrollbar flex gap-6 overflow-x-auto px-4 py-8 sm:px-8"
 						>
 							{boardData?.lists.map((column) => (
 								<Column
