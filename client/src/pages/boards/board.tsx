@@ -283,7 +283,7 @@ const Board = () => {
 						<div
 							ref={provided.innerRef}
 							{...provided.droppableProps}
-							className="custom-scrollbar flex gap-4 px-4 py-8 sm:px-8"
+							className="custom-scrollbar flex min-h-screen flex-col gap-4 px-4 py-4 sm:flex-row sm:overflow-x-auto sm:px-8 sm:py-8"
 						>
 							{boardData?.lists.map((column) => (
 								<Column
@@ -315,18 +315,17 @@ const Board = () => {
 							{provided.placeholder}
 
 							{/* Add new column */}
-							<div className="items-left relative flex h-full w-80 flex-shrink-0 flex-col">
+							<div className="relative flex w-full flex-row items-baseline justify-start sm:w-80">
 								<Button
 									onClick={handleAddColumnToggle}
 									className="text-text-placeholder hover:bg-background-hover-column border-border-medium bg-gray/20 hover:border-accent bg-border-light bg-gray/80 flex h-10 w-10 items-center justify-center rounded-lg border-2 text-2xl font-semibold shadow-md transition-colors duration-200"
 								>
-									{/* Icon Plus */}
 									<div className="shadow-md transition-all duration-200 ease-in-out hover:scale-[1.45] hover:rotate-90 hover:shadow-xl hover:shadow-indigo-300/30 active:scale-123">
 										<Icon icon="oui:plus" width="1.2em" height="1.2em" />
 									</div>
 								</Button>
 								{isMenuOpen && (
-									<div className="bg-background-dark-footer absolute top-16 z-50 mt-2 w-full rounded-lg border border-gray-200 p-4 shadow-lg">
+									<div className="bg-background-dark-footer fixed top-24 right-4 z-50 w-72 rounded-lg border border-gray-200 p-4 shadow-lg">
 										<h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
 											{t("board.add_column", "Añadir Columna")}
 										</h3>

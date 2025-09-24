@@ -40,7 +40,7 @@ export const BackofficePage = ({
 				backgroundRepeat: "no-repeat",
 			}}
 		>
-			{title && <h1 className="mb-4 text-2xl font-bold">{title}</h1>}
+			{title && <h1 className="mb-2 text-2xl font-bold pt-2 text-center">{title}</h1>}
 			{children}
 		</div>
 	);
