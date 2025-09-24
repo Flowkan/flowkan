@@ -5,9 +5,9 @@ import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import CloseButton from "../close-button";
 import "./modal-boards.css";
 import { Button } from "../Button";
-import { useDispatch } from "react-redux";
 import { addBoard } from "../../../store/boards/actions";
-import type { AppDispatch } from "../../../store";
+import { useAppDispatch } from "../../../store";
+import { SpinnerLoadingText } from "../Spinner";
 
 interface NewBoardProps {
 	onClose: () => void;
@@ -16,10 +16,11 @@ interface NewBoardProps {
 const NewBoard = ({ onClose }: NewBoardProps) => {
 	const { t } = useTranslation();
 	const [titleInput, setTitleInput] = useState("");
-	const dispatch = useDispatch<AppDispatch>();
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const dispatch = useAppDispatch();
 	const fileRef = useRef<HTMLInputElement>(null);
 
-	const isDisabled = !titleInput;
+	const isDisabled = !titleInput && isSubmitting;
 
 	const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setTitleInput(event.target.value);
@@ -31,6 +32,10 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 		const boardData = new FormData();
 		boardData.append("title", titleInput);
 		const file = fileRef.current?.files?.[0];
+
+		if (isSubmitting) return;
+		setIsSubmitting(true);
+
 		if (file) {
 			boardData.append("image", file);
 		}
@@ -40,6 +45,8 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 			onClose(); // Cierra el modal solo si la creación fue exitosa
 		} catch (error) {
 			console.error("Error al crear el tablero", error);
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
@@ -53,6 +60,7 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 				<Form className="modal-form" method="POST" onSubmit={handleSubmit}>
 					<div className="form-element">
 						<FormFields
+							autoFocus
 							id="boardtitle"
 							name="boardtitle"
 							label={t("newboard.form.title", "Título del tablero")}
@@ -74,8 +82,12 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 							ref={fileRef}
 						/>
 					</div>
-					<Button type="submit" className="form-btn" disabled={isDisabled}>
-						{t("newboard.form.button", "CREAR")}
+					<Button type="submit" className="form-btn" disabled={isDisabled || isSubmitting}>
+						{isSubmitting ? (
+							<SpinnerLoadingText text="Creando" className="text-white"/>
+						) : (
+							t("newboard.form.button", "CREAR")
+						)}
 					</Button>
 				</Form>
 			</article>
