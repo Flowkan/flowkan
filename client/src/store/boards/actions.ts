@@ -43,7 +43,16 @@ type GetBoardUsersRejected = {
 	payload: Error;
 };
 
+type AddBoardPending = {
+	type: "boards/addBoard/pending";
+};
+
 type AddBoardFulfilled = { type: "boards/addBoard/fulfilled"; payload: Board };
+
+type AddBoardRejected = {
+	type: "boards/addBoard/rejected";
+	payload: Error;
+};
 
 type DeleteBoardFulfilled = {
 	type: "boards/deleteBoards";
@@ -133,9 +142,18 @@ export const getBoardUsersRejected = (error: Error): GetBoardUsersRejected => ({
 	payload: error,
 });
 
+export const addBoardPending = (): AddBoardPending => ({
+	type: "boards/addBoard/pending",
+});
+
 export const addBoardFulfilled = (board: Board): AddBoardFulfilled => ({
 	type: "boards/addBoard/fulfilled",
 	payload: board,
+});
+
+export const addBoardRejected = (error: Error): AddBoardRejected => ({
+	type: "boards/addBoard/rejected",
+	payload: error,
 });
 
 export const editBoardFulfilled = (
@@ -277,10 +295,20 @@ export function getBoardUsers(id: string): AppThunk<Promise<void>> {
 	};
 }
 
-export function addBoard(data: FormData): AppThunk<Promise<void>> {
+export function addBoard(data: FormData): AppThunk<Promise<Board>> {
 	return async (dispatch, _getState, { api }) => {
-		const board = await api.boards.createBoard(data);
-		dispatch(addBoardFulfilled(board));
+		try {
+			dispatch(addBoardPending());
+
+			const createdBoard = await api.boards.createBoard(data);
+			dispatch(addBoardFulfilled(createdBoard));
+			return createdBoard;
+		} catch (error) {
+			if (error instanceof Error) {
+				dispatch(addBoardRejected(error));
+			}
+			throw error;
+		}
 	};
 }
 
@@ -419,7 +447,9 @@ export type Actions =
 	| FetchBoardPending
 	| FetchBoardFulfilled
 	| FetchBoardRejected
+	| AddBoardPending
 	| AddBoardFulfilled
+	| AddBoardRejected
 	| DeleteBoardFulfilled
 	| EditBoardFulfilled
 	| EditBoardRejected
