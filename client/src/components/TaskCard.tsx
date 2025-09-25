@@ -33,22 +33,24 @@ const TaskCard = ({ task, index, columnId, onOpenTaskDetail }: Props) => {
 					}`}
 					style={{ ...provided.draggableProps.style }}
 				>
-					<span className="text-text-heading flex-grow p-1 font-medium break-words">
-						{task.title}
-					</span>
+					<div className="flex w-full items-center justify-between">
+						<span className="text-text-heading flex-grow p-1 font-medium break-words">
+							{task.title}
+						</span>
 
-					{(task.assignees ?? []).length > 0 && (
-						<div className="flex gap-1">
-							{task.assignees.map((assignee) => (
-								<Avatar
-									key={assignee.userId}
-									name={assignee.user.name}
-									photo={assignee.user.photo}
-									size={24}
-								/>
-							))}
-						</div>
-					)}
+						{(task.assignees ?? []).length > 0 && (
+							<div className="flex gap-1">
+								{task.assignees.map((assignee) => (
+									<Avatar
+										key={assignee.userId}
+										name={assignee.user.name}
+										photo={assignee.user.photo}
+										size={24}
+									/>
+								))}
+							</div>
+						)}
+					</div>
 				</div>
 			)}
 		</Draggable>
