@@ -1,10 +1,11 @@
-import React, { useState } from "react"; // 👈 Importar useState
+import React, { useState } from "react";
 import { useAppSelector } from "../../store";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageToggle from "../ui/LangToggle";
 import { UserMenu } from "../ui/UserMenu";
 import { Icon } from "@iconify/react";
+import IconLogo from "../icons/IconLogo";
 
 export const Header: React.FC = () => {
 	const { t } = useTranslation();
@@ -16,21 +17,7 @@ export const Header: React.FC = () => {
 			<div className="flex items-center space-x-8">
 				<NavLink to="/">
 					<div className="flex items-center">
-						<svg
-							className="text-accent mr-2 h-6 w-6"
-							fill="currentColor"
-							viewBox="0 0 20 20"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								fillRule="evenodd"
-								d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-12a1 1 0 10-2 0v4a1 1 0 102 0V6zm4 0a1 1 010-2 0v4a1 1 0102 0V6z"
-								clipRule="evenodd"
-							></path>
-						</svg>
-						<span className="text-text-heading text-2xl font-bold">
-							{t("header.title", "Flowkan")}
-						</span>
+						<IconLogo width={250} height={80} />
 					</div>
 				</NavLink>
 
