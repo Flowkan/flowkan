@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
 					<div className="flex items-center">
 						<IconLogo
 							width={250}
-							height={80}
+							height={40}
 							className="h-auto w-32 md:w-[250px]"
 						/>
 					</div>

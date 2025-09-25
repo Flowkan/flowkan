@@ -13,7 +13,7 @@ export const BackofficeHeader: React.FC = () => {
 				<div className="flex items-center space-x-2">
 					<IconLogo
 						width={250}
-						height={80}
+						height={40}
 						textColor="white"
 						className="h-auto w-32 md:w-[250px]"
 					/>
