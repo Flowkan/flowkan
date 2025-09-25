@@ -181,7 +181,8 @@ export class CardController {
   removeAssignee = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.apiUserId;
-      const { cardId, assigneeId } = req.body;
+      const cardId = Number(req.params.cardId);
+      const assigneeId = Number(req.params.assigneeId);
 
       await this.cardService.removeAssignee(userId, cardId, assigneeId);
       res.status(204).send();
