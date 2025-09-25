@@ -150,4 +150,16 @@ export default class CardModel {
       },
     });
   }
+
+  async addLabelToCard(cardId: number, labelId: number) {
+    return this.prisma.cardLabel.create({
+      data: { cardId, labelId },
+    });
+  }
+
+  async removeLabelFromCard(cardId: number, labelId: number) {
+    return this.prisma.cardLabel.delete({
+      where: { cardId_labelId: { cardId, labelId } },
+    });
+  }
 }

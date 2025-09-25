@@ -1,6 +1,6 @@
 import type { AppThunk } from "..";
 import type { User } from "../../pages/login/types";
-import type { Board, Column, Task } from "../../pages/boards/types";
+import type { Board, Column, Label, Task } from "../../pages/boards/types";
 import type { AuthActions, AuthActionsRejected } from "../auth/actions";
 import type {
 	ProfileActions,
@@ -91,6 +91,16 @@ type EditTaskRejected = { type: "boards/editTask/rejected"; payload: Error };
 type DeleteTaskFulfilled = {
 	type: "boards/deleteTask/fulfilled";
 	payload: { columnId: string; taskId: string };
+};
+
+type AddLabelFulfilled = {
+	type: "tasks/addLabel/fulfilled";
+	payload: { taskId: string; label: Label };
+};
+
+type RemoveLabelFulfilled = {
+	type: "tasks/removeLabel/fulfilled";
+	payload: { taskId: string; labelId: string };
 };
 
 export const fetchBoardsPending = (): FetchBoardsPending => ({
@@ -229,6 +239,24 @@ export const removeAssigneeFulfilled = (
 ): RemoveAssigneeFulfilled => ({
 	type: "cards/removeAssignee/fulfilled",
 	payload: { cardId, userId },
+});
+
+// --- LABELS
+
+export const addLabelFulfilled = (
+	taskId: string,
+	label: Label,
+): AddLabelFulfilled => ({
+	type: "tasks/addLabel/fulfilled",
+	payload: { taskId, label },
+});
+
+export const removeLabelFulfilled = (
+	taskId: string,
+	labelId: string,
+): RemoveLabelFulfilled => ({
+	type: "tasks/removeLabel/fulfilled",
+	payload: { taskId, labelId },
 });
 
 // ─── Thunks ─────────────────────────────
@@ -400,6 +428,30 @@ export function removeAssignee(
 	};
 }
 
+export function addLabel(
+	taskId: string,
+	labelId: string,
+): AppThunk<Promise<void>> {
+	return async (dispatch, _getState, { api }) => {
+		const task = await api.boards.addLabelToCard(
+			Number(taskId),
+			Number(labelId),
+		);
+		const label = task.labels.find((l) => l.id === Number(labelId))!;
+		dispatch(addLabelFulfilled(taskId, label));
+	};
+}
+
+export function removeLabel(
+	taskId: string,
+	labelId: string,
+): AppThunk<Promise<void>> {
+	return async (dispatch, _getState, { api }) => {
+		await api.boards.removeLabelFromCard(Number(taskId), Number(labelId));
+		dispatch(removeLabelFulfilled(taskId, labelId));
+	};
+}
+
 //
 // ─── UI ──────────────────────────────────────────────
 //
@@ -436,6 +488,8 @@ export type Actions =
 	| GetBoardUsersRejected
 	| AddAssigneeFulfilled
 	| RemoveAssigneeFulfilled
+	| AddLabelFulfilled
+	| RemoveLabelFulfilled
 	| UiResetError;
 
 export type ActionsRejected =

@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import type { Task } from "../pages/boards/types";
+import type { Label, Task } from "../pages/boards/types";
 import type { User } from "../pages/login/types";
-import { getBoardUsers } from "../pages/boards/service";
+import { createLabel, getBoardUsers } from "../pages/boards/service";
 import { Avatar } from "./ui/Avatar";
 import {
 	useAddAssigneeAction,
+	useAddLabelAction,
 	useRemoveAssigneeAction,
+	useRemoveLabelAction,
 } from "../store/boards/hooks";
 import { Editor } from "@tinymce/tinymce-react";
 import { Icon } from "@iconify/react";
 import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
+import { getContrastColor } from "../lib/colorUtils";
 
 interface TaskDetailModalProps {
 	task: Task;
@@ -57,6 +60,45 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const addMenuRef = useRef<HTMLDivElement>(null);
 	const editorRef = useRef(null);
 	const { t } = useTranslation();
+	const [showLabels, setShowLabels] = useState(false);
+	const [labels, setLabels] = useState<Label[]>([]);
+	const addLabelAction = useAddLabelAction();
+	const removeLabelAction = useRemoveLabelAction();
+
+	const NewLabelForm: React.FC<{
+		boardId: string;
+		onCreated: (label: Label) => void;
+	}> = ({ boardId, onCreated }) => {
+		const [name, setName] = useState("");
+		const [color, setColor] = useState("#cccccc");
+
+		const handleCreate = async () => {
+			const newLabel = await createLabel(boardId, { name, color });
+			onCreated(newLabel);
+			setName("");
+		};
+
+		return (
+			<div className="flex gap-2">
+				<input
+					type="color"
+					value={color}
+					onChange={(e) => setColor(e.target.value)}
+					className="h-10 w-10 rounded border p-0"
+				/>
+				<input
+					type="text"
+					value={name}
+					placeholder="Nombre"
+					onChange={(e) => setName(e.target.value)}
+					className="flex-grow rounded border px-2"
+				/>
+				<Button onClick={handleCreate}>
+					<Icon icon="mdi:plus" />
+				</Button>
+			</div>
+		);
+	};
 
 	useEffect(() => {
 		if (contentInputRef.current) contentInputRef.current.focus();
@@ -329,7 +371,10 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								/>
 							</div>
 
-							<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
+							<Button
+								className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
+								onClick={() => setShowLabels(true)}
+							>
 								<Icon icon="mdi:tag-outline" className="text-lg" />{" "}
 								{t("board.labels", "Etiquetas")}
 							</Button>
@@ -390,6 +435,80 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 										</div>
 									);
 								})}
+							</div>
+						)}
+
+						{showLabels && (
+							<div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+								<div className="w-80 rounded-lg bg-white p-4 shadow-lg">
+									<h3 className="mb-2 font-semibold">
+										{t("board.labels", "Etiquetas")}
+									</h3>
+
+									<div className="mb-4 space-y-2">
+										{labels.map((label) => {
+											const isAssigned = task.labels?.some(
+												(l) => l.id === label.id,
+											);
+											return (
+												<button
+													type="button"
+													key={label.id}
+													onClick={() => {
+														if (isAssigned && task.id && label.id) {
+															removeLabelAction(
+																task.id?.toString(),
+																label.id.toString(),
+															);
+														} else if (task.id && label.id) {
+															addLabelAction(
+																task.id.toString(),
+																label.id.toString(),
+															);
+														}
+													}}
+													className={`relative flex items-center justify-center rounded-md p-2 transition-colors duration-200 focus:outline-none ${
+														isAssigned
+															? "ring-2 ring-black"
+															: "hover:opacity-80"
+													}`}
+													style={{
+														backgroundColor: label.color,
+														cursor: "pointer",
+													}}
+													aria-pressed={isAssigned}
+												>
+													<span
+														className="font-medium"
+														style={{ color: getContrastColor(label.color) }}
+													>
+														{label.name}
+													</span>
+
+													{isAssigned && (
+														<Icon
+															icon="mdi:check"
+															className={`absolute top-1/2 right-2 -translate-y-1/2 text-xl`}
+															style={{ color: getContrastColor(label.color) }}
+														/>
+													)}
+												</button>
+											);
+										})}
+									</div>
+
+									<NewLabelForm
+										boardId={boardId!}
+										onCreated={(l) => setLabels((prev) => [...prev, l])}
+									/>
+
+									<Button
+										onClick={() => setShowLabels(false)}
+										className="mt-4 w-full"
+									>
+										{t("board.close", "Cerrar")}
+									</Button>
+								</div>
 							</div>
 						)}
 					</div>

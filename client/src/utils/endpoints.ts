@@ -45,3 +45,12 @@ export const getAccountEndpoint = (typeAccount: TypeAccount): string | null => {
 	}
 	return `${USER_ENDPOINTS.PROFILE}?account=${typeAccount}`;
 };
+
+export const LABEL_ENDPOINTS = {
+	BY_BOARD: (boardId: string | number) =>
+		`/api/${VERSION}/boards/${boardId}/labels`,
+	BY_CARD: (cardId: string | number, labelId?: string | number) =>
+		labelId
+			? `/api/${VERSION}/cards/${cardId}/labels/${labelId}`
+			: `/api/${VERSION}/cards/${cardId}/labels`,
+};

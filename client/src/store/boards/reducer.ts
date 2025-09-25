@@ -209,6 +209,51 @@ export function boardsReducer(
 				},
 			};
 
+		case "tasks/addLabel/fulfilled":
+			if (!state.currentBoard) return state;
+			return {
+				...state,
+				currentBoard: {
+					...state.currentBoard,
+					lists: state.currentBoard.lists.map((col) => ({
+						...col,
+						cards: col.cards.map((task) =>
+							task.id?.toString() === action.payload.taskId
+								? {
+										...task,
+										labels: [...(task.labels || []), action.payload.label],
+									}
+								: task,
+						),
+					})),
+				},
+			};
+
+		case "tasks/removeLabel/fulfilled":
+			if (!state.currentBoard) return state;
+			return {
+				...state,
+				currentBoard: {
+					...state.currentBoard,
+					lists: state.currentBoard.lists.map((col) => ({
+						...col,
+						cards: col.cards.map((task) =>
+							task.id?.toString() === action.payload.taskId
+								? {
+										...task,
+										labels:
+											task.labels?.filter(
+												(l) =>
+													l.id?.toString() !==
+													action.payload.labelId.toString(),
+											) || [],
+									}
+								: task,
+						),
+					})),
+				},
+			};
+
 		default:
 			return state;
 	}

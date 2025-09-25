@@ -31,6 +31,7 @@ export type Task = {
 	position: number;
 	assignees: CardAssignee[];
 	media?: Media[];
+	labels: Label[];
 };
 
 export interface TaskWithMedia extends Task {
@@ -59,3 +60,10 @@ export type BoardMember = {
 	role: string;
 	user: User;
 };
+
+export interface Label {
+	id: number;
+	name: string;
+	color: string;
+	boardId: number;
+}

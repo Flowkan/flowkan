@@ -280,6 +280,18 @@ class BoardModel {
 
     return members.map((m) => m.user);
   }
+
+  async getLabels(boardId: number) {
+    return this.prisma.label.findMany({
+      where: { boardId },
+    });
+  }
+
+  async createLabel(boardId: number, name: string, color: string) {
+    return this.prisma.label.create({
+      data: { boardId, name, color },
+    });
+  }
 }
 
 export default BoardModel;

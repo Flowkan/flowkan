@@ -13,6 +13,8 @@ import {
 	editColumn,
 	addAssignee,
 	removeAssignee,
+	addLabel,
+	removeLabel,
 } from "./actions";
 import {
 	getBoards,
@@ -125,6 +127,19 @@ export function useRemoveAssigneeAction() {
 	return function (cardId: number, userId: number) {
 		return dispatch(removeAssignee(cardId, userId));
 	};
+}
+
+// --- LABELS -----
+export function useAddLabelAction() {
+	const dispatch = useAppDispatch();
+	return (taskId: string, labelId: string) =>
+		dispatch(addLabel(taskId, labelId));
+}
+
+export function useRemoveLabelAction() {
+	const dispatch = useAppDispatch();
+	return (taskId: string, labelId: string) =>
+		dispatch(removeLabel(taskId, labelId));
 }
 
 //

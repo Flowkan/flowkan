@@ -2,8 +2,12 @@ import { Server, Socket } from "socket.io";
 import BoardService from "../services/BoardService";
 import BoardModel from "../models/BoardModel";
 import prisma from "../config/db";
+import CardModel from "../models/CardModel";
 
-const boardService = new BoardService(new BoardModel(prisma));
+const boardService = new BoardService(
+  new BoardModel(prisma),
+  new CardModel(prisma),
+);
 
 const onlineUsers: Record<string, { socketId: string; userId: number }[]> = {};
 
