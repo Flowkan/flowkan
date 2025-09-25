@@ -44,8 +44,13 @@ export const Header: React.FC = () => {
 						{t("header.navbar.prices", "Precios")}
 					</a>
 					{isAuthenticated && user && (
-						<NavLink to={"/boards"}>
-							{t("header.navbar.backoffice", "Backoffice")}
+						<NavLink
+							to={"/boards"}
+							className={
+								"text-primary hover:text-primary-hover rounded-lg px-4 text-center font-semibold"
+							}
+						>
+							{t("boardslist.title", "Mis tableros")}
 						</NavLink>
 					)}
 				</nav>
@@ -131,10 +136,10 @@ export const Header: React.FC = () => {
 					{isAuthenticated && user && (
 						<NavLink
 							to={"/boards"}
-							className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
+							className="text-primary block rounded-md px-3 py-2 font-medium transition-colors"
 							onClick={() => setIsOpen(false)}
 						>
-							{t("header.navbar.backoffice", "Backoffice")}
+							{t("boardslist.title", "Mis tableros")}
 						</NavLink>
 					)}
 
