@@ -34,20 +34,18 @@ export default class UserHandler {
     if (!userData || !boardId) {
       console.warn("Datos de autenticación incompletos");
       return;
-    }
+    }        
     const usersInBoard = await this.boardService.getBoardUsers({
       userId: userData.id,
       boardId,
-    });
-
-    const isMember = usersInBoard.some((u) => u.id === userData.id);
-
+    });    
+    
+    const isMember = usersInBoard.some((u) => u.id === userData.id);        
     if (isMember) {
       this.connectedUsers.set(socket.id, userData);
 
       this.handleJoinRoom(socket, boardId);
       this.io.to(boardId).emit("user:connected", userData);
-
       // socket.data.user = userData;
     }else{
       console.warn(`Acceso denegado ${userData.id}, no es miembro del tablero ${boardId}`);      
@@ -71,10 +69,11 @@ export default class UserHandler {
   }
 
   private handleRequestUsers(socket: SocketUser) {
+    // console.log(this.connectedUsers);    
     socket.emit("users:list", this.getConnectedUsers());
   }
 
-  private handleJoinRoom(socket: SocketUser, roomId: string) {
+  private handleJoinRoom(socket: SocketUser, roomId: string) {        
     if (socket.data.room) {
       socket.leave(socket.data.room);
     }
@@ -82,6 +81,8 @@ export default class UserHandler {
     socket.join(roomId);
     socket.data.room = roomId;
 
+    // console.log(socket.rooms);
+    
     if (socket.data.user) {
       socket.to(roomId).emit("user:joined", {
         // this.io.to(roomId).emit('user:joined',{
@@ -102,10 +103,12 @@ export default class UserHandler {
     }
     //Eliminar de usuarios conectados
     this.connectedUsers.delete(socket.id);
+
   }
 
   //Obtener usuarios en linea
   getConnectedUsers() {
+    // console.log(this.connectedUsers);    
     return Array.from(this.connectedUsers.values());
   }
 }

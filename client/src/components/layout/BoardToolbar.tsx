@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ShareBoard from "../ui/modals/share-board";
-import type { Board } from "../../pages/boards/types";
 import { Avatar } from "../ui/Avatar";
 import { useSocket } from "../../hooks/socket/context";
 import type { User } from "../../pages/login/types";
@@ -9,32 +8,34 @@ import type { ServerToClientEvents } from "../../hooks/socket/socket";
 type UsersListPayload = Parameters<ServerToClientEvents["users:list"]>[0];
 
 interface BoardToolbarProps {
-	readonly board: Board;
+	readonly boardId: string;
 }
 
-export function BoardToolbar({ board }: BoardToolbarProps) {
+export function BoardToolbar({ boardId }: BoardToolbarProps) {
 	const [showShareForm, setShowShareForm] = useState(false);
 	const [users, setUsers] = useState<User[]>([]);
 	const socket = useSocket();
+	useEffect(()=>{
+		if(boardId){
+			// console.log(boardId);			
+			socket.emit("join:room", boardId);
+			socket.emit("request:users");
+		}	
+	},[socket,boardId])
 	useEffect(() => {		
 		// const handleUserJoined = (payload) => {
 		// 	console.log("Usuario se unió a la sala:", payload);
 		// };
 		const handleUsersList = (payload:UsersListPayload) => {
 			setUsers([...payload]);
-		};
-		
+		};		
 		// socket.on("user:joined", handleUserJoined);
-		socket.on("users:list", handleUsersList);
-		
-		socket.emit("join:room", board.id);
-		socket.emit("request:users");
-		
+		socket.on("users:list", handleUsersList);					
 		return () => {
 			// socket.off("user:joined", handleUserJoined);
 			socket.off("users:list", handleUsersList);
 		};
-	}, [socket, board.id]);
+	}, [socket, boardId]);
 
 	const handleShowShareForm = (event: React.MouseEvent) => {
 		event.preventDefault();
@@ -74,7 +75,7 @@ export function BoardToolbar({ board }: BoardToolbarProps) {
 			</div>
 
 			{showShareForm && (
-				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
+				<ShareBoard boardId={boardId} handleHideMessage={handleCloseShareForm} />
 			)}
 		</>
 	);

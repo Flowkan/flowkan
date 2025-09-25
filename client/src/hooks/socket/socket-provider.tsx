@@ -1,22 +1,24 @@
 import { useEffect, type ReactNode } from "react";
 import { SocketContext } from "./context";
 import { socket } from "../../socket";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import storage from "../../utils/storage";
 import { AUTH_ERRORS } from "../../utils/socket_errors";
+import { useAppSelector } from "../../store";
+import { getCurrentBoard } from "../../store/boards/selectors";
 
 
 interface SocketProviderProps {
 	children: ReactNode;
 }
 
-const SocketProvider = ({ children }: SocketProviderProps) => {
-	// const user = useAppSelector(getUserLogged)
-	 const { boardId } = useParams(); 	
+const SocketProvider = ({ children }: SocketProviderProps) => {	
+	 const board = useAppSelector(getCurrentBoard)
 	 const token = storage.get("auth") || ''
-	 const navigate = useNavigate();
+	 const navigate = useNavigate();	
+	 const boardId = board?.id
 	useEffect(() => {	
-		if(boardId){
+		if(boardId && token){
 			socket.auth = { 
 				//Mientras el socket se use solo en /board/:boardId
 				token,

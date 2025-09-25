@@ -7,4 +7,9 @@ export const socket:Socket<ServerToClientEvents,ClientToServerEvents> = io(URL, 
 	path: "/api/socket.io",
 	withCredentials: true,
 	transports: ["websocket"],
+	autoConnect:false
 });
+
+// export const socket:Socket<ServerToClientEvents,ClientToServerEvents> = io(URL, {
+// 	autoConnect: false,	
+// });

@@ -19,8 +19,8 @@ export interface JwtPayload {
 }
 
 export default function registerSockets(io: Server) {  
-  io.use(async (socket, next) => {
-    try {
+  io.use(async (socket, next) => {    
+    try {      
       const token = socket.handshake.auth.token;
       if (!token) {
         return next(
@@ -59,9 +59,9 @@ export default function registerSockets(io: Server) {
     }
   });
   
-  io.on("connection", (socket) => {
-    const userHandler = new UserHandler(io as ServerUser);
-    const boardHandler = new BoardHandler(io as ServerBoard);
+  const userHandler = new UserHandler(io as ServerUser);
+  const boardHandler = new BoardHandler(io as ServerBoard);
+  io.on("connection", (socket) => {    
     userHandler.initialize(socket as SocketUser);
     boardHandler.initialize(socket as SocketBoard);
     

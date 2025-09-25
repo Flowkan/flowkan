@@ -105,7 +105,7 @@ class BoardService {
     boardId: string;
   }): Promise<SafeUser[]> {
     return this.boardModel.getBoardUsers(data);
-  }
+  }  
 }
 
 export default BoardService;

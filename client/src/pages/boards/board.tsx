@@ -136,7 +136,7 @@ const Board = () => {
 			}
 			updateBoardRemoteMode(result);
 			
-			// setBoardData(newBoardData); // Actualiza la UI local inmediatamente
+			// Actualiza la UI local inmediatamente
 			if (!boardData) return;
 			const newBoardData = applyDragResult(boardData, result);
 

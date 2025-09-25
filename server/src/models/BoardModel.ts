@@ -279,7 +279,7 @@ class BoardModel {
     });
 
     return members.map((m) => m.user);
-  }
+  }  
 }
 
 export default BoardModel;

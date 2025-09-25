@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { BoardItemSocketContext } from "./context";
 import type { DragStart, DragUpdate, DropResult } from "@hello-pangea/dnd";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { useSocket } from "../../../hooks/socket/context";
 import { useAppSelector } from "../../../store";
 import { getCurrentBoard } from "../../../store/boards/selectors";
@@ -22,7 +22,7 @@ interface BoardItemSocketProps {
 
 const BoardItemSocket = ({ children }: BoardItemSocketProps) => {
 	// const { boardId } = useParams<{ boardId: string }>();
-	const { slug:boardId } = useParams<{ slug: string }>();
+	// const { slug:boardId } = useParams<{ slug: string }>();
 	const socket = useSocket();
 	const board = useAppSelector(getCurrentBoard);
 
@@ -52,8 +52,7 @@ const BoardItemSocket = ({ children }: BoardItemSocketProps) => {
 
 			
 			
-		if (boardId && board) {
-			
+		if (board) {
 			const {
 				draggableId,
 				source: { droppableId },
@@ -66,7 +65,7 @@ const BoardItemSocket = ({ children }: BoardItemSocketProps) => {
 				(card) => Number(card.id) === Number(draggableId),
 			);
 			if (!task) return;
-			console.log(boardId,board);
+			// console.log(boardId,board);
 			socket.emit("board:dragstart", { start,task, x, y });
 			setIsDragging(true);
 		}

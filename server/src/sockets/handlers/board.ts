@@ -1,5 +1,4 @@
 import { DragStart, ServerBoard, SocketBoard, Task } from "../types";
-import { BoardWithRelations } from "../../models/BoardModel";
 
 export default class BoardHandler {
   private locks = new Map<string, string>();
@@ -29,8 +28,7 @@ export default class BoardHandler {
     },
   ) {
     const { start, task, x, y } = payload;
-    console.log(start);
-    
+     
     if (!socket.data.room) return;
     const { draggableId } = start as DragStart;
     const userId = socket.data.user?.id;
