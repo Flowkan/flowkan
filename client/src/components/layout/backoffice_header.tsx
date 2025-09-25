@@ -11,7 +11,12 @@ export const BackofficeHeader: React.FC = () => {
 		<header className="flex w-full items-center justify-between bg-gray-800 px-6 py-4 text-white shadow-md">
 			<NavLink to="/">
 				<div className="flex items-center space-x-2">
-					<IconLogo width={250} height={80} textColor="white" />
+					<IconLogo
+						width={250}
+						height={80}
+						textColor="white"
+						className="h-auto w-32 md:w-[250px]"
+					/>
 				</div>
 			</NavLink>
 
