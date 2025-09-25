@@ -1,36 +1,35 @@
-import React, { useState } from "react"; // 👈 Importar useState
+import React, { useState } from "react";
 import { useAppSelector } from "../../store";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageToggle from "../ui/LangToggle";
 import { UserMenu } from "../ui/UserMenu";
 import { Icon } from "@iconify/react";
+import IconLogo from "../icons/IconLogo";
+import { Button } from "../ui/Button";
+import { useLogoutAction } from "../../store/auth/hooks";
 
 export const Header: React.FC = () => {
 	const { t } = useTranslation();
 	const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 	const [isOpen, setIsOpen] = useState(false);
+	const logoutAction = useLogoutAction();
+
+	const handleLogout = () => {
+		logoutAction();
+		setIsOpen(false);
+	};
 
 	return (
 		<header className="bg-background-card relative flex items-center justify-between px-6 py-4 shadow-sm md:px-12">
 			<div className="flex items-center space-x-8">
-				<NavLink to="/">
+				<NavLink to="/" onClick={() => setIsOpen(false)}>
 					<div className="flex items-center">
-						<svg
-							className="text-accent mr-2 h-6 w-6"
-							fill="currentColor"
-							viewBox="0 0 20 20"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								fillRule="evenodd"
-								d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-12a1 1 0 10-2 0v4a1 1 0 102 0V6zm4 0a1 1 010-2 0v4a1 1 0102 0V6z"
-								clipRule="evenodd"
-							></path>
-						</svg>
-						<span className="text-text-heading text-2xl font-bold">
-							{t("header.title", "Flowkan")}
-						</span>
+						<IconLogo
+							width={250}
+							height={40}
+							className="h-auto w-32 md:w-[250px]"
+						/>
 					</div>
 				</NavLink>
 
@@ -45,8 +44,13 @@ export const Header: React.FC = () => {
 						{t("header.navbar.prices", "Precios")}
 					</a>
 					{isAuthenticated && user && (
-						<NavLink to={"/boards"}>
-							{t("header.navbar.backoffice", "Backoffice")}
+						<NavLink
+							to={"/boards"}
+							className={
+								"text-primary hover:text-primary-hover rounded-lg px-4 text-center font-semibold"
+							}
+						>
+							{t("boardslist.title", "Mis tableros")}
 						</NavLink>
 					)}
 				</nav>
@@ -80,34 +84,50 @@ export const Header: React.FC = () => {
 					onClick={() => setIsOpen(!isOpen)}
 					aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
 				>
-					<Icon
-						icon={isOpen ? "lucide:x" : "lucide:menu"}
-						className="h-6 w-6"
-					/>
+					<Icon icon="lucide:menu" className="h-6 w-6" />
 				</button>
 			</div>
 
 			<div
-				className={`bg-background-card absolute top-full left-0 z-50 w-full transform shadow-lg transition-all duration-300 ease-in-out md:hidden ${isOpen ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-full opacity-0"}`}
+				className={`fixed inset-0 z-40 bg-black/50 transition-opacity md:hidden ${isOpen ? "opacity-100" : "pointer-events-none opacity-0"} `}
+				onClick={() => setIsOpen(false)}
+				aria-hidden={!isOpen}
+			/>
+
+			<div
+				className={`bg-background-card fixed top-0 right-0 z-50 h-full w-64 max-w-xs transform shadow-xl transition-transform duration-300 ease-in-out md:hidden ${isOpen ? "translate-x-0" : "translate-x-full"} `}
 			>
 				<div className="flex flex-col space-y-4 p-4">
+					<div className="flex items-center justify-between border-b pb-4">
+						<NavLink to="/" onClick={() => setIsOpen(false)}>
+							<IconLogo width={120} height={40} className="h-auto w-24" />
+						</NavLink>
+						<button
+							className="text-text-heading p-2"
+							onClick={() => setIsOpen(false)}
+							aria-label="Cerrar menú"
+						>
+							<Icon icon="lucide:x" className="h-6 w-6" />
+						</button>
+					</div>
+
 					<NavLink
 						to="/features"
-						className="text-text-body hover:text-accent font-medium"
+						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
 						onClick={() => setIsOpen(false)}
 					>
 						{t("header.navbar.features", "Características")}
 					</NavLink>
 					<NavLink
 						to="/solutions"
-						className="text-text-body hover:text-accent font-medium"
+						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
 						onClick={() => setIsOpen(false)}
 					>
 						{t("header.navbar.solutions", "Soluciones")}
 					</NavLink>
 					<NavLink
 						to="/prices"
-						className="text-text-body hover:text-accent font-medium"
+						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
 						onClick={() => setIsOpen(false)}
 					>
 						{t("header.navbar.prices", "Precios")}
@@ -116,10 +136,10 @@ export const Header: React.FC = () => {
 					{isAuthenticated && user && (
 						<NavLink
 							to={"/boards"}
-							className="text-text-body hover:text-accent font-medium"
+							className="text-primary block rounded-md px-3 py-2 font-medium transition-colors"
 							onClick={() => setIsOpen(false)}
 						>
-							{t("header.navbar.backoffice", "Backoffice")}
+							{t("boardslist.title", "Mis tableros")}
 						</NavLink>
 					)}
 
@@ -144,9 +164,15 @@ export const Header: React.FC = () => {
 
 					{isAuthenticated && user && (
 						<div className="border-t border-gray-100 pt-4">
-							<span className="text-text-body font-medium">
+							<span className="text-text-body block px-3 py-2 font-medium">
 								{t("header.welcome", "Bienvenido")}, {user.name}
 							</span>
+							<Button
+								onClick={handleLogout}
+								className="bg-primary text-text-on-accent hover:bg-error-dark mt-4 w-full rounded-lg px-4 py-2 text-center font-semibold"
+							>
+								{t("header.menu.logout", "Cerrar sesión")}
+							</Button>
 						</div>
 					)}
 				</div>

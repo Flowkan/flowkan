@@ -32,6 +32,10 @@ router.put(
 router.delete("/:id", jwtAuth.guard, controller.deleteCard);
 
 router.post("/addAssignee", jwtAuth.guard, controller.addAssignee);
-router.delete("/removeAssignee", jwtAuth.guard, controller.removeAssignee);
+router.delete(
+  "/removeAssignee/:cardId/:assigneeId",
+  jwtAuth.guard,
+  controller.removeAssignee,
+);
 
 export default router;

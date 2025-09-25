@@ -7,6 +7,11 @@ export default function LanguageToggleButton() {
 		LangSwitch();
 	const { open, setOpen, ref } = useDismiss<HTMLDivElement>();
 
+	const handleChangeLanguage = (code: "es" | "en") => {
+		changeLanguage(code);
+		setOpen(false);
+	};
+
 	return (
 		<div className="relative" ref={ref}>
 			<Button
@@ -32,7 +37,7 @@ export default function LanguageToggleButton() {
 						return (
 							<Button
 								key={code}
-								onClick={() => changeLanguage(code)}
+								onClick={() => handleChangeLanguage(code)}
 								className={`flex w-full items-center gap-3 px-4 py-2 text-left transition-colors duration-150 hover:bg-gray-100 ${
 									isActive ? "bg-gray-200 font-semibold" : ""
 								}`}

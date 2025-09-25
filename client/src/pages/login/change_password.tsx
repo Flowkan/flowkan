@@ -50,10 +50,10 @@ const ChangePassword = () => {
 				/>
 			));
 		} catch (error) {
-			if(error instanceof AxiosError){
-				const message = error.response?.data.error ?? ""
+			if (error instanceof AxiosError) {
+				const message = error.response?.data.error ?? "";
 				toast.custom((t) => (
-				<CustomToast
+					<CustomToast
 						message={__("login.change_password.toast.message.error", message)}
 						t={t}
 						type="error"
@@ -71,10 +71,7 @@ const ChangePassword = () => {
 				>
 					<div className="flex flex-col items-center justify-center py-5">
 						<div className="flex">
-							<IconLogo className="text-accent mr-2 h-6 w-6" />
-							<span className="text-2xl font-bold text-gray-100">
-								{t("header.title", "Flowkan")}
-							</span>
+							<IconLogo width={120} height={40} className="h-auto w-24" />
 						</div>
 						<h2 className="text-lg font-semibold text-zinc-300 md:text-xl">
 							{t("recovery_password.form.title", "Cambiar Contraseña")}
