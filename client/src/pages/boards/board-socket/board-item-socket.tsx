@@ -21,7 +21,8 @@ interface BoardItemSocketProps {
 }
 
 const BoardItemSocket = ({ children }: BoardItemSocketProps) => {
-	const { boardId } = useParams<{ boardId: string }>();
+	// const { boardId } = useParams<{ boardId: string }>();
+	const { slug:boardId } = useParams<{ slug: string }>();
 	const socket = useSocket();
 	const board = useAppSelector(getCurrentBoard);
 
@@ -49,7 +50,10 @@ const BoardItemSocket = ({ children }: BoardItemSocketProps) => {
 			? coordsItemDrag.current.y / window.innerHeight
 			: 0;
 
+			
+			
 		if (boardId && board) {
+			
 			const {
 				draggableId,
 				source: { droppableId },
@@ -62,7 +66,7 @@ const BoardItemSocket = ({ children }: BoardItemSocketProps) => {
 				(card) => Number(card.id) === Number(draggableId),
 			);
 			if (!task) return;
-
+			console.log(boardId,board);
 			socket.emit("board:dragstart", { start,task, x, y });
 			setIsDragging(true);
 		}

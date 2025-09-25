@@ -29,6 +29,8 @@ export default class BoardHandler {
     },
   ) {
     const { start, task, x, y } = payload;
+    console.log(start);
+    
     if (!socket.data.room) return;
     const { draggableId } = start as DragStart;
     const userId = socket.data.user?.id;
