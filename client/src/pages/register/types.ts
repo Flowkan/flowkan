@@ -4,4 +4,5 @@ export interface UserRegister {
 	password: string;
 	confirmPassword: string;
 	photo: File | null;
+	turnstileResponse: string;
 }
