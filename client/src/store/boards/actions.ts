@@ -1,6 +1,7 @@
 import type { AppThunk } from "..";
 import type { User } from "../../pages/login/types";
 import type { Board, Column, Task } from "../../pages/boards/types";
+import type { DropResult } from "@hello-pangea/dnd";
 import type { AuthActions, AuthActionsRejected } from "../auth/actions";
 import type {
 	ProfileActions,
@@ -13,6 +14,14 @@ import type {
 // ─── BOARDS ──────────────────────────────────────────────
 //
 
+type UpdateRemoteBoard = {
+	type: "boards/update/remote";
+	payload: DropResult;
+};
+export const updateRemoteBoard = (result: DropResult): UpdateRemoteBoard => ({
+	type: "boards/update/remote",
+	payload: result,
+});
 type FetchBoardsPending = { type: "boards/fetchBoards/pending" };
 type FetchBoardsFulfilled = {
 	type: "boards/fetchBoards/fulfilled";
@@ -239,7 +248,7 @@ export function fetchBoards(
 	return async (dispatch, _getState, { api }) => {
 		dispatch(fetchBoardsPending());
 		try {
-			const boards = await api.boards.getBoards(skip, limit);
+			const boards = await api.boards.getBoards(limit, skip);
 			dispatch(fetchBoardsFulfilled(boards));
 		} catch (error) {
 			if (error instanceof Error) {
@@ -413,6 +422,7 @@ export type Actions =
 	| AuthActions
 	| UserActions
 	| ProfileActions
+	| UpdateRemoteBoard
 	| FetchBoardsPending
 	| FetchBoardsFulfilled
 	| FetchBoardsRejected

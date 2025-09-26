@@ -2,40 +2,36 @@ import { Outlet, useParams, useLocation } from "react-router-dom";
 import { BoardToolbar } from "./BoardToolbar";
 import { BackofficeHeader } from "./backoffice_header";
 import { useBoards } from "../../store/boards/hooks";
+import { useEffect, useState } from "react";
 
 export function BackofficeLayout() {
 	const { slug } = useParams<{ slug: string }>();
 	const location = useLocation();
-
+	const [boardId, setBoardId] = useState("");
+	const [isBoardPage, setIsBoardPage] = useState(false);
 	const allBoards = useBoards();
-	let boardId;
-	if (allBoards.length > 0) {
-		const foundBoard = allBoards.find((b) => b.slug === slug);
 
-		if (foundBoard) {
-			boardId = foundBoard.id.toString();
+	useEffect(() => {
+		if (allBoards.length > 0) {
+			const foundBoard = allBoards.find((b) => b.slug === slug);
+
+			if (foundBoard) {
+				setBoardId(foundBoard.id.toString());
+			}
 		}
-	}
+	}, [allBoards, slug]);
 
-	const isBoardPage =
-		location.pathname.startsWith("/boards/") && boardId !== undefined;
+	useEffect(() => {
+		if (location.pathname.startsWith("/boards/")) {
+			setIsBoardPage(true);
+		}
+	}, [location]);
 
 	return (
 		<div className="flex min-h-screen flex-col">
 			<BackofficeHeader />
 
-			{isBoardPage && (
-				<BoardToolbar
-					board={{
-						id: boardId ?? "",
-						title: "",
-						slug: "",
-						lists: [],
-						members: [],
-						image: "",
-					}}
-				/>
-			)}
+			{isBoardPage && <BoardToolbar boardId={boardId} />}
 
 			<main className="flex-1">
 				<Outlet />

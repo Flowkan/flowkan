@@ -13,6 +13,8 @@ import { PricingPage } from "./pages/PricingPage";
 import { FeaturesPage } from "./pages/FeaturesPage";
 import { SolutionsPage } from "./pages/SolutionsPage";
 import { SkeletonCustom } from "./components/ui/skeleton/skeleton";
+import BoardItemSocket from "./pages/boards/board-socket/board-item-socket.tsx";
+import SocketProvider from "./hooks/socket/socket-provider.tsx";
 
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((m) => ({ default: m.LoginPage })),
@@ -209,7 +211,11 @@ function App() {
 								</div>
 							}
 						>
-							<Board />
+							<SocketProvider>
+								<BoardItemSocket>
+									<Board />
+								</BoardItemSocket>
+							</SocketProvider>
 						</Suspense>
 					}
 				/>

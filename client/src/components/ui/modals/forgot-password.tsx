@@ -19,10 +19,8 @@ import { AxiosError } from "axios";
 
 interface ForgotPasswordProps
 	extends Omit<ComponentProps<"dialog">, "ref" | "onSubmit"> {
-	// onSubmit?:(e:FormEvent<HTMLFormElement>)=>void;
 	show?: boolean;
 	onClose?: () => void;
-	// dialogRef: RefObject<HTMLDialogElement>
 }
 
 const ForgotPassword = ({
@@ -55,7 +53,7 @@ const ForgotPassword = ({
 			));
 		} catch (error) {
 			if (error instanceof AxiosError) {
-                const message =  error.response?.data.error ?? ""
+				const message = error.response?.data.error ?? "";
 				toast.custom((t) => (
 					<CustomToast
 						message={__("login.forgot_password.toast.message.error", message)}
@@ -63,8 +61,7 @@ const ForgotPassword = ({
 						type="error"
 					/>
 				));
-                handleClose()
-
+				handleClose();
 			}
 		}
 	}
@@ -101,7 +98,7 @@ const ForgotPassword = ({
 		return () => {
 			modal?.removeEventListener("keydown", handleKeyUp);
 		};
-	}, []);
+	}, [onClose]);
 	return (
 		<dialog
 			className={`backdrop:from-primary/10 shadow-accent/60 m-auto rounded-md bg-zinc-100/40 shadow-2xl backdrop-blur-3xl backdrop:pointer-events-none backdrop:bg-gradient-to-b backdrop:to-transparent backdrop:backdrop-blur-xl`}
@@ -137,8 +134,9 @@ const ForgotPassword = ({
 							ref={inputEmail}
 						/>
 						<ul className="px-1 pt-1 text-xs text-red-600">
-							{errorsForm.email &&
-								errorsForm.email.map((err) => <li key={err}>{err}</li>)}
+							{errorsForm.email?.map((err) => (
+								<li key={err}>{err}</li>
+							))}
 						</ul>
 					</div>
 					<div className="flex gap-2">
