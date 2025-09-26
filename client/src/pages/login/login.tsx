@@ -16,18 +16,19 @@ import { useLoginAction } from "../../store/auth/hooks";
 import { useLoadedProfile } from "../../store/profile/hooks";
 import { loginWithOAuth } from "../../store/auth/actions";
 import ForgotPassword from "../../components/ui/modals/forgot-password";
+import Turnstile from "react-turnstile";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
 	const loginAction = useLoginAction();
 	const profileLoadedAction = useLoadedProfile();
 	const dispatch = useAppDispatch();
-	// const modalForgotPassword = useRef<HTMLDialogElement|null>(null)
 	const [showModal, setShowModal] = useState(false);
 
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
+		turnstileResponse: "",
 	});
 
 	const { email, password } = formData;
@@ -210,6 +211,17 @@ export const LoginPage = () => {
 									)}
 								</button>
 							</div>
+						</div>
+						<div className="relative flex w-full justify-center">
+							<Turnstile
+								sitekey={import.meta.env.VITE_TURNSTILE_API_KEY}
+								onVerify={(token) =>
+									setFormData((prev) => ({
+										...prev,
+										turnstileResponse: token,
+									}))
+								}
+							/>
 						</div>
 						<div>
 							<Button
