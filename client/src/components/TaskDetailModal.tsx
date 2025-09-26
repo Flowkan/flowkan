@@ -11,6 +11,10 @@ import { Editor } from "@tinymce/tinymce-react";
 import { Icon } from "@iconify/react";
 import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
+import { useAI } from "../hooks/useAI";
+import { CustomToast } from "./CustomToast";
+import toast from "react-hot-toast";
+import { SpinnerLoadingText } from "./ui/Spinner";
 
 interface TaskDetailModalProps {
 	task: Task;
@@ -57,6 +61,8 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const addMenuRef = useRef<HTMLDivElement>(null);
 	const editorRef = useRef(null);
 	const { t } = useTranslation();
+
+	const { generateDescriptionFromTitle, loading } = useAI();
 
 	useEffect(() => {
 		if (contentInputRef.current) contentInputRef.current.focus();
@@ -244,6 +250,24 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		}
 	};
 
+	const handleGenerateWithAI = async () => {
+		if (!task.title) return;
+		setEditedDescription("");
+		try {
+			await generateDescriptionFromTitle(task.title, (description: string) => {
+				setEditedDescription(description);
+			});
+		} catch (error) {
+			toast.custom((t) => (
+				<CustomToast
+					message="Error al generar la descripción"
+					type="error"
+					t={t}
+				/>
+			));
+		}
+	};
+
 	return (
 		<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black p-4">
 			<div
@@ -347,6 +371,18 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							>
 								<Icon icon="mdi:account-group-outline" className="text-lg" />{" "}
 								{t("board.members", "Miembros")}
+							</Button>
+							<Button
+								onClick={handleGenerateWithAI}
+								disabled={loading}
+								className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
+							>
+								<Icon icon="mdi:robot" className="text-lg" />
+								{loading ? (
+									<SpinnerLoadingText text="Generando" />
+								) : (
+									"Descripción con IA"
+								)}
 							</Button>
 						</div>
 
@@ -529,7 +565,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								onClick={handleStopRecording}
 								className="rounded bg-white px-3 py-1 text-sm font-semibold text-red-600 hover:bg-gray-200"
 							>
-								{t("board.stop", "Detemer")}
+								{t("board.stop", "Detener")}
 							</Button>
 						</div>
 					)}
