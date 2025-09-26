@@ -13,6 +13,7 @@ import {
 import { upload, processImage } from "../lib/uploadConfigure";
 import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
 import passport from "passport";
+import { validateTurnstile } from "../middlewares/turnstile.middleware";
 
 const router = Router();
 
@@ -20,11 +21,17 @@ const model = new AuthModel(prisma);
 const service = new AuthService(model);
 const controller = new AuthController(service);
 
-router.post("/login", validateUserFields(loginSchema), controller.login);
+router.post(
+  "/login",
+  validateTurnstile,
+  validateUserFields(loginSchema),
+  controller.login,
+);
 
 router.post(
   "/register",
   upload.single("photo"),
+  validateTurnstile,
   processImage(
     "users",
     { original: {}, thumb: { width: 100, height: 100 } },
