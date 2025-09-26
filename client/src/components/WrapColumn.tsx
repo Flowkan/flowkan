@@ -64,20 +64,20 @@ const WrapColumn = ({
 			clearTimeout(debounceTimeout);
 		};
 	}, []);
-	const items = useMemo(() => {
+	const items = useMemo(() => {			
 		if (
 			remoteDrag &&
 			remoteDrag.destination?.droppableId === columnId &&
 			remoteDrag.destination.index >= 0
 		) {
-			const clone: taskWithPlaceholder = [...cards];
+			const clone: taskWithPlaceholder = cards ? [...cards] : [];
 			clone.splice(remoteDrag.destination.index, 0, {
 				id: "remote-placeholder",
 				isPlaceholder: true,
 			});
 			return clone;
 		}
-		return cards;
+		return cards ? cards : [];
 	}, [cards, remoteDrag, columnId]);
 	return (
 		<div

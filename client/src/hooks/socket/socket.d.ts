@@ -2,8 +2,11 @@
 
 import type { DragStart, DragUpdate, DropResult } from "@hello-pangea/dnd";
 import type { Task } from "../../pages/boards/types";
+import type { User } from "../../pages/login/types";
 
 type TaskClean = Omit<Task, "assignees">;
+
+type BoardUser = User
 
 export interface SocketError {
 	code: string;
@@ -41,6 +44,7 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
 	"user:update": (user: BoardUser) => void;
 	"join:room": (roomId: string) => void;
+	"leave:room": (roomId: string) => void;
 	"request:users": () => void;
 	"error:occurred": (error: SocketError) => void;
 

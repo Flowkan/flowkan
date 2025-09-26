@@ -54,7 +54,7 @@ const Board = () => {
 	const [resolvedBoardId, setResolvedBoardId] = useState<string | undefined>(
 		undefined,
 	);
-	const boardData = useAppSelector((state) => state.boards.currentBoard);
+	const boardData = useAppSelector((state) => state.boards.currentBoard);	
 
 	const selectedTask = useMemo(() => {
 		if (!boardData || !selectedTaskId) return null;

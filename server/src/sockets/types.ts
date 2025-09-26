@@ -54,6 +54,7 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   "user:update": (user: BoardUser) => void;
   "join:room": (roomId: string) => void;
+  "leave:room": (roomId: string) => void;
   "request:users": () => void;
   "error:occurred": (error: SocketError) => void;
 

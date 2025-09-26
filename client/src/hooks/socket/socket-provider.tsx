@@ -1,42 +1,37 @@
 import { useEffect, type ReactNode } from "react";
 import { SocketContext } from "./context";
 import { socket } from "../../socket";
-import { useNavigate } from "react-router-dom";
 import storage from "../../utils/storage";
 import { AUTH_ERRORS } from "../../utils/socket_errors";
-import { useAppSelector } from "../../store";
-import { getCurrentBoard } from "../../store/boards/selectors";
+import { useAuth, useLogoutAction } from "../../store/auth/hooks";
 
 interface SocketProviderProps {
 	children: ReactNode;
 }
 
-const SocketProvider = ({ children }: SocketProviderProps) => {
-	const board = useAppSelector(getCurrentBoard);
-	const token = storage.get("auth") || "";
-	const navigate = useNavigate();
-	const boardId = board?.id;
+const SocketProvider = ({ children }: SocketProviderProps) => {	
+	const logout = useLogoutAction()
+	const isLogged = useAuth();	
 	useEffect(() => {
-		if (boardId && token) {
-			socket.auth = {
-				//Mientras el socket se use solo en /board/:boardId
-				token,
-				// user,
-				boardId,
-			};
-			socket.on("error:occurred", (error) => {
-				if (error.code === AUTH_ERRORS.ACCESS_DENIED) {
-					navigate("/login", { replace: true });
-				}
-			});
-			socket.connect();
+		if(isLogged){
+			const token = storage.get("auth");
+			if (!socket.connected && token) {
+				socket.auth = {
+					//Mientras el socket se use solo en /board/:boardId
+					token,					
+				};
+				socket.connect();
+				socket.on("error:occurred", (error) => {
+					if (error.code === AUTH_ERRORS.ACCESS_DENIED) {					
+						logout()					
+					}
+				});
+			}
 		}
-
 		return () => {
-			socket.off("error:occurred");
-			socket.disconnect();
+			socket.off("error:occurred");			
 		};
-	}, [boardId, token]);
+	}, [isLogged,logout]);
 	return (
 		<SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
 	);

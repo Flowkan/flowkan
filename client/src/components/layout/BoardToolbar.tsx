@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ShareBoard from "../ui/modals/share-board";
 import { Avatar } from "../ui/Avatar";
-import { useSocket } from "../../hooks/socket/context";
-import type { User } from "../../pages/login/types";
-import type { ServerToClientEvents } from "../../hooks/socket/socket";
+import { useUsersOnBoard } from "../../hooks/socket/useUsersOnBoard";
 
-type UsersListPayload = Parameters<ServerToClientEvents["users:list"]>[0];
 
 interface BoardToolbarProps {
 	readonly boardId: string;
@@ -13,23 +10,7 @@ interface BoardToolbarProps {
 
 export function BoardToolbar({ boardId }: BoardToolbarProps) {
 	const [showShareForm, setShowShareForm] = useState(false);
-	const [users, setUsers] = useState<User[]>([]);
-	const socket = useSocket();
-	useEffect(() => {
-		if (boardId) {
-			socket.emit("join:room", boardId);
-			socket.emit("request:users");
-		}
-	}, [socket, boardId]);
-	useEffect(() => {
-		const handleUsersList = (payload: UsersListPayload) => {
-			setUsers([...payload]);
-		};
-		socket.on("users:list", handleUsersList);
-		return () => {
-			socket.off("users:list", handleUsersList);
-		};
-	}, [socket, boardId]);
+	const users = useUsersOnBoard(boardId)	
 
 	const handleShowShareForm = (event: React.MouseEvent) => {
 		event.preventDefault();
