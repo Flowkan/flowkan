@@ -215,6 +215,7 @@ export const LoginPage = () => {
 						<div className="relative flex w-full justify-center">
 							<Turnstile
 								sitekey={import.meta.env.VITE_TURNSTILE_API_KEY}
+								theme="light"
 								onVerify={(token) =>
 									setFormData((prev) => ({
 										...prev,
