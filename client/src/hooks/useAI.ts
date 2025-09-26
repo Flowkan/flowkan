@@ -14,18 +14,60 @@ export const useAI = () => {
 		setError(null);
 
 		let description = "";
-    // const maxLenghtDescription = 300;
 
 		try {
 			const { textStream } = await streamText({
 				model: openrouter("google/gemma-3-12b-it:free"),
-				prompt: `Genera una descripción clara y concisa para esta tarea: "${title}"`,
+				prompt: `Genera una descripción clara y detallada paso a paso para esta tarea: "${title}"`,
 			});
 
 			for await (const chunk of textStream) {
-        if(description.match(/\.\s*$/)) break; //control longitud sin cortar palabras. 1 frase.
+
 				description += chunk;
-				onChunk?.(description); // editor en tiempo real
+				//
+        // --- Formateando Markdown a HTML ---
+        //
+				let formatted = description;
+
+				// headings
+				formatted = formatted
+          .replace(/^# (.+)$/gm, "<h1>$1</h1>")
+          .replace(/^## (.+)$/gm, "<h2>$1</h2>")
+          .replace(/^### (.+)$/gm, "<h3>$1</h3>")
+          .replace(/^#### (.+)$/gm, "<h4>$1</h4>");
+
+				// texto que llega en negrita y cursiva
+				formatted = formatted.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+        formatted = formatted.replace(/\*(.+?)\*/g, "<em>$1</em>");
+
+				// Listas que empiecen por * o - al inicio
+				const lines = formatted.split("\n");
+				let inList = false;
+				formatted = lines
+					.map((line) => {
+						const listItemMatch = line.match(/^\s*[\*\-]\s+(.*)$/);
+						if (listItemMatch) {
+							if (!inList) {
+								inList = true;
+                formatted = formatted.replace(/(?<!<\/h3>|<\/li>)\n/g, "<br>");
+								return "<ul><li>" + listItemMatch[1] + "</li>";
+							} else {
+								return "<li>" + listItemMatch[1] + "</li>";
+							}
+						} else {
+							if (inList) {
+								inList = false;
+								return "</ul>" + line;
+							}
+							return line;
+						}
+					})
+					.join("\n");
+
+				// Saltos de línea fuera de h3/li
+				formatted = formatted.replace(/(?<!<\/h3>|<\/li>)\n/g, "<br>");
+
+				onChunk?.(formatted); // descripcion en tiempo real
 			}
 
 			return description;

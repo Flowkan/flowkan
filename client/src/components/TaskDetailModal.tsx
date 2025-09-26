@@ -255,7 +255,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		setEditedDescription("");
 		try {
 			await generateDescriptionFromTitle(task.title, (description: string) => {
-				setEditedDescription(description);
+				setEditedDescription(description + '<p><em>Creado desde Flowkan\n</em></p><br>' );
 			});
 		} catch (error) {
 			toast.custom((t) => (
@@ -269,7 +269,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	};
 
 	return (
-		<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black p-4">
+		<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
 			<div
 				ref={modalRef}
 				className="bg-background-card relative flex max-h-5/6 w-full max-w-5xl flex-col overflow-y-auto rounded-lg p-6 shadow-2xl md:flex-row"
@@ -381,7 +381,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								{loading ? (
 									<SpinnerLoadingText text="Generando" />
 								) : (
-									"Descripción con IA"
+									"Generar descripción"
 								)}
 							</Button>
 						</div>
@@ -449,7 +449,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						</div>
 					)}
 
-					<div className="mb-6 flex flex-col">
+					<div className="bg-gray/20 mb-6 flex flex-col">
 						<h4 className="text-text-heading mb-2 flex items-center gap-2 font-semibold">
 							<Icon
 								icon="mdi:note-edit-outline"
@@ -462,7 +462,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							onInit={(_evt, editor) => (editorRef.current = editor)}
 							value={editedDescription}
 							init={{
-								height: 200,
+								height: 400,
+								// content_css:"tinymce-5-dark, document",
+								content_css: "document",
 								menubar: false,
 								plugins: [
 									"advlist",
@@ -471,11 +473,11 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									"link",
 									"image",
 									"charmap",
+									"exportpdf",
 									"preview",
 									"anchor",
 									"searchreplace",
 									"visualblocks",
-									"code",
 									"fullscreen",
 									"insertdatetime",
 									"media",
@@ -488,7 +490,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									"undo redo | blocks | " +
 									"bold italic forecolor | alignleft aligncenter " +
 									"alignright alignjustify | bullist numlist outdent indent | " +
-									"removeformat | help",
+									"removeformat | exportpdf | help",
 								content_style:
 									"body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
 							}}
