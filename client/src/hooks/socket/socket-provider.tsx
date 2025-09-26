@@ -36,7 +36,7 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
 			socket.off("error:occurred");
 			socket.disconnect();
 		};
-	}, [boardId, navigate, token]);
+	}, [boardId, token]);
 	return (
 		<SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
 	);

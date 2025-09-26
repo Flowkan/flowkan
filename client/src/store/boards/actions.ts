@@ -13,7 +13,6 @@ import type {
 //
 // ─── BOARDS ──────────────────────────────────────────────
 //
-
 type UpdateRemoteBoard = {
 	type: "boards/update/remote";
 	payload: DropResult;
@@ -22,6 +21,7 @@ export const updateRemoteBoard = (result: DropResult): UpdateRemoteBoard => ({
 	type: "boards/update/remote",
 	payload: result,
 });
+
 type FetchBoardsPending = { type: "boards/fetchBoards/pending" };
 type FetchBoardsFulfilled = {
 	type: "boards/fetchBoards/fulfilled";
@@ -248,7 +248,7 @@ export function fetchBoards(
 	return async (dispatch, _getState, { api }) => {
 		dispatch(fetchBoardsPending());
 		try {
-			const boards = await api.boards.getBoards(limit, skip);
+			const boards = await api.boards.getBoards(skip, limit);
 			dispatch(fetchBoardsFulfilled(boards));
 		} catch (error) {
 			if (error instanceof Error) {

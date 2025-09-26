@@ -22,9 +22,8 @@ export function BackofficeLayout() {
 	}, [allBoards, slug]);
 
 	useEffect(() => {
-		if (location.pathname.startsWith("/boards/")) {
-			setIsBoardPage(true);
-		}
+		const isBoardDetail = /^\/boards\/[^/]+/.test(location.pathname);
+		setIsBoardPage(isBoardDetail);
 	}, [location]);
 
 	return (
