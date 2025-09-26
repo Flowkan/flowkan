@@ -17,7 +17,7 @@ export const useAI = () => {
 
 		try {
 			const { textStream } = await streamText({
-				model: openrouter("google/gemma-3-12b-it:free"),
+				model: openrouter("x-ai/grok-4-fast:free"),
 				prompt: `Genera una descripción clara y detallada paso a paso para esta tarea: "${title}"`,
 			});
 
