@@ -13,18 +13,45 @@ export interface SocketError {
 }
 
 export interface Task {
-  id?: number | undefined;
+  id: number | undefined;
   title: string;
   listId: number;
-  description?: string | undefined;
+  description: string | undefined;
   position: number;
 }
+
+type TaskClean = Omit<Task, "assignees">;
 
 export interface DragStart {
   draggableId: string;
   type: string;
   source: { droppableId: string; index: number };
   mode: string;
+}
+
+export interface DragUpdate {
+  draggableId: string;
+  type: string;
+  source: { droppableId: string; index: number };
+  destination?: { droppableId: string; index: number };
+  mode: string;
+}
+
+export interface DropResult {
+  draggableId: string;
+  type: string;
+  source: { droppableId: string; index: number };
+  destination: { droppableId: string; index: number } | null;
+  reason: "DROP" | "CANCEL";
+}
+
+// --- Chat ---
+export interface ChatMessage {
+  senderId: number;
+  text: string;
+  timestamp: string;
+  senderAvatar?: string | null;
+  senderName?: string | null;
 }
 
 // Eventos que el servidor enviará al cliente
@@ -37,18 +64,22 @@ export interface ServerToClientEvents {
 
   // --- Board events ---
   "board:dragstarted": (payload: {
-    start: unknown;
+    start: DragStart;
+    board: BoardWithRelations;
     userId: string;
     name: string;
-    task: Task;
+    task: TaskClean;
     x: number;
     y: number;
   }) => void;
   "board:dragshowcoords": (payload: { x: number; y: number }) => void;
-  "board:dragupdated": (payload: { update: unknown }) => void;
-  "board:dragend": (payload: { result: unknown }) => void;
-  //Errors
+  "board:dragupdated": (payload: { update: DragUpdate }) => void;
+  "board:dragend": (payload: { result: DropResult }) => void;
   "board:dragfailed": (payload: { draggableId: string }) => void;
+
+  // --- Chat events ---
+  "board:chatMessage": (msg: ChatMessage) => void;
+  "chat:history": (msgs: ChatMessage[]) => void;
 }
 
 export interface ClientToServerEvents {
@@ -60,17 +91,24 @@ export interface ClientToServerEvents {
 
   // --- Board events ---
   "board:dragstart": (payload: {
-    start: unknown;
-    task: Task;
+    start: DragStart;
+    task: TaskClean;
     x: number;
     y: number;
   }) => void;
   "board:dragsendcoords": (payload: { x: number; y: number }) => void;
-  "board:dragupdate": (payload: { update: unknown }) => void;
-  "board:dragupdated": (payload: { update: unknown }) => void;
-  "board:dragend": (payload: { result: unknown }) => void;
-  //Errors
+  "board:dragupdate": (payload: { update: DragUpdate }) => void;
+  "board:dragupdated": (payload: { update: DragUpdate }) => void;
+  "board:dragend": (payload: { result: DropResult }) => void;
   "board:dragfailed": (payload: { draggableId: string }) => void;
+
+  // --- Chat events ---
+  "board:joinChat": (payload: { boardId: string; userId: number }) => void;
+  "board:leaveChat": (payload: { boardId: string; userId: number }) => void;
+  "board:chatMessage": (payload: {
+    boardId: string;
+    message: ChatMessage;
+  }) => void;
 }
 
 type UserData = {
@@ -100,6 +138,17 @@ export type SocketUser = Socket<
   };
 };
 
+export type SocketChat = Socket<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  Record<string, never>,
+  SocketData
+> & {
+  handshake: Socket["handshake"] & {
+    auth: AuthPayload;
+  };
+};
+
 export type ServerUser = Server<
   ClientToServerEvents,
   ServerToClientEvents,
@@ -115,6 +164,13 @@ export type SocketBoard = Socket<
 >;
 
 export type ServerBoard = Server<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  Record<string, never>,
+  SocketData
+>;
+
+export type ServerChat = Server<
   ClientToServerEvents,
   ServerToClientEvents,
   Record<string, never>,

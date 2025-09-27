@@ -6,7 +6,7 @@ import type { User } from "../../pages/login/types";
 
 type TaskClean = Omit<Task, "assignees">;
 
-type BoardUser = User
+type BoardUser = User;
 
 export interface SocketError {
 	code: string;
@@ -39,6 +39,10 @@ export interface ServerToClientEvents {
 	"board:dragend": (payload: { result: DropResult }) => void;
 	//Errors
 	"board:dragfailed": (payload: { draggableId: string }) => void;
+
+	// Chat
+	"board:chatMessage": (msg: ChatMessage) => void;
+	"chat:history": (msgs: ChatMessage[]) => void;
 }
 
 export interface ClientToServerEvents {
@@ -64,4 +68,12 @@ export interface ClientToServerEvents {
 	"board:dragupdated": (payload: { update: DragUpdate }) => void;
 
 	"board:dragend": (payload: { result: DropResult }) => void;
+
+	// --- Chat events ---
+	"board:joinChat": (payload: { boardId: string; userId: number }) => void;
+	"board:leaveChat": (payload: { boardId: string; userId: number }) => void;
+	"board:chatMessage": (payload: {
+		boardId: string;
+		message: ChatMessage;
+	}) => void;
 }

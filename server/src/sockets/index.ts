@@ -1,6 +1,14 @@
 import { Server } from "socket.io";
 import UserHandler from "./handlers/user";
-import { ServerBoard, ServerUser, SocketBoard, SocketUser } from "./types";
+import ChatHandler from "./handlers/chat";
+import {
+  ServerBoard,
+  ServerChat,
+  ServerUser,
+  SocketBoard,
+  SocketChat,
+  SocketUser,
+} from "./types";
 
 import BoardHandler from "./handlers/board";
 import createHttpError from "http-errors";
@@ -52,15 +60,17 @@ export default function registerSockets(io: Server) {
       socket.data.user = user;
       next();
     } catch (error) {
-      next(createHttpError(500, "Autenticación inválida"));
+      next(createHttpError(500, `${error}`));
     }
   });
 
   const userHandler = new UserHandler(io as ServerUser);
   const boardHandler = new BoardHandler(io as ServerBoard);
+  const chatHandler = new ChatHandler(io as ServerChat);
   io.on("connection", (socket) => {
     userHandler.initialize(socket as SocketUser);
     boardHandler.initialize(socket as SocketBoard);
+    chatHandler.initialize(socket as SocketChat);
 
     console.log("Nuevo cliente conectado:", socket.id);
   });
