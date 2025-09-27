@@ -1,5 +1,9 @@
 import type { ReactNode } from "react";
 import { randomColor } from "../../lib/randomColor";
+import { BoardToolbar } from "./BoardToolbar";
+import { useParams, useLocation } from "react-router-dom";
+import { useBoards } from "../../store/boards/hooks";
+import { useState, useEffect } from "react";
 
 interface BackofficePageProps {
 	title?: string;
@@ -14,20 +18,30 @@ export const BackofficePage = ({
 	className,
 	backgroundImg,
 }: BackofficePageProps) => {
+	const { slug } = useParams<{ slug: string }>();
+	const allBoards = useBoards();
+	const location = useLocation();
+	const [boardId, setBoardId] = useState("");
+
+	useEffect(() => {
+		if (allBoards.length > 0 && slug) {
+			const foundBoard = allBoards.find((b) => b.slug === slug);
+			if (foundBoard) {
+				setBoardId(foundBoard.id.toString());
+			}
+		}
+	}, [allBoards, slug]);
+
 	let generatedBg;
 	if (location.pathname !== "/boards") {
-		let bg;
-		if (backgroundImg) {
-			bg = backgroundImg;
-		} else if (title) {
-			bg = randomColor(title, true);
-		} else {
-			bg = undefined;
-		}
-		generatedBg = bg;
+		generatedBg =
+			backgroundImg || (title ? randomColor(title, true) : undefined);
 	} else {
 		generatedBg = undefined;
 	}
+
+	const isBoardPage = boardId.length > 0;
+
 	return (
 		<div
 			className={`min-h-screen w-full ${className ?? ""}`}
@@ -40,6 +54,11 @@ export const BackofficePage = ({
 				backgroundRepeat: "no-repeat",
 			}}
 		>
+			{isBoardPage && (
+				<div className="flex w-full bg-white/45">
+					<BoardToolbar boardId={boardId} />
+				</div>
+			)}
 			{title && (
 				<h1 className="mb-2 pt-2 text-center text-2xl font-bold">{title}</h1>
 			)}

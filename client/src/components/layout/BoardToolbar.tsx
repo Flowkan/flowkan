@@ -22,12 +22,8 @@ export function BoardToolbar({ boardId }: BoardToolbarProps) {
 	return (
 		<>
 			<div className="ml-auto flex items-center gap-2 p-2">
-				{/* Contenedor principal con el "divide" */}
 				<div className="flex items-center divide-x divide-solid divide-gray-300">
-					{/* Avatares */}
 					<div className="flex -space-x-2 pr-4">
-						{" "}
-						{/* Añade padding a la derecha (pr-4) para el espacio antes del separador */}
 						{users.slice(0, 5).map((user) => (
 							<div key={user.id} className="relative px-2">
 								<Avatar
@@ -45,15 +41,12 @@ export function BoardToolbar({ boardId }: BoardToolbarProps) {
 						)}
 					</div>
 
-					{/* Chat */}
 					<div className="pr-4 pl-4">
 						{boardId && <ChatWindow boardId={boardId} />}
 					</div>
 
 					{/* Botón Compartir */}
 					<div className="pl-4">
-						{" "}
-						{/* Añade padding a la izquierda (pl-4) */}
 						<button
 							onClick={handleShowShareForm}
 							className="bg-primary hover:bg-primary-hover rounded px-3 py-1 text-white"
