@@ -3,12 +3,14 @@ import ShareBoard from "../ui/modals/share-board";
 import { Avatar } from "../ui/Avatar";
 import { useUsersOnBoard } from "../../hooks/socket/useUsersOnBoard";
 import { ChatWindow } from "../ui/ChatWindow";
+import { getContrastColor } from "../../utils/contrastColor";
 
 interface BoardToolbarProps {
 	readonly boardId: string;
+	readonly image: string | undefined;
 }
 
-export function BoardToolbar({ boardId }: BoardToolbarProps) {
+export function BoardToolbar({ boardId, image }: BoardToolbarProps) {
 	const [showShareForm, setShowShareForm] = useState(false);
 	const users = useUsersOnBoard(boardId);
 
@@ -18,11 +20,14 @@ export function BoardToolbar({ boardId }: BoardToolbarProps) {
 	};
 
 	const handleCloseShareForm = () => setShowShareForm(false);
+	const dividerColor = image ? getContrastColor(image) : "grey";
 
 	return (
 		<>
 			<div className="ml-auto flex items-center gap-2 p-2">
-				<div className="flex items-center divide-x divide-solid divide-gray-300">
+				<div
+					className={`flex items-center divide-x divide-solid divide-${dividerColor}`}
+				>
 					<div className="flex -space-x-2 pr-4">
 						{users.slice(0, 5).map((user) => (
 							<div key={user.id} className="relative px-2">

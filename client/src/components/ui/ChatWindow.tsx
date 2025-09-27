@@ -39,9 +39,9 @@ export function ChatWindow({ boardId }: ChatWindowProps) {
 		<div ref={ref}>
 			<Button
 				onClick={() => setOpen(true)}
-				className="bg-primary hover:bg-primary/90 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-white shadow-lg md:h-9 md:w-9"
+				className="bg-primary hover:bg-primary/90 flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full text-white shadow-lg"
 			>
-				<Icon icon="mdi:message-text" className="h-5 w-5 md:h-6 md:w-6" />
+				<Icon icon="mdi:message-text" className="h-3 w-3 md:h-5 md:w-5" />
 			</Button>
 
 			{open && (

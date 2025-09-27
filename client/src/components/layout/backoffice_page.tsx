@@ -56,7 +56,7 @@ export const BackofficePage = ({
 		>
 			{isBoardPage && (
 				<div className="flex w-full bg-white/45">
-					<BoardToolbar boardId={boardId} />
+					<BoardToolbar boardId={boardId} image={backgroundImg} />
 				</div>
 			)}
 			{title && (
