@@ -60,7 +60,7 @@ export default function registerSockets(io: Server) {
       socket.data.user = user;
       next();
     } catch (error) {
-      next(createHttpError(500, "Autenticación inválida"));
+      next(createHttpError(500, `${error}`));
     }
   });
 

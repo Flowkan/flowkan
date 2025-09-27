@@ -56,6 +56,9 @@ const Board = () => {
 	);
 	const boardData = useAppSelector((state) => state.boards.currentBoard);
 
+	const { handleDragStart, handleDragUpdate, handleDragEnd } =
+		useBoardItemSocket();
+
 	const selectedTask = useMemo(() => {
 		if (!boardData || !selectedTaskId) return null;
 		return boardData.lists
@@ -167,7 +170,13 @@ const Board = () => {
 				}
 			}
 		},
-		[boardData, updateBoardRemoteMode, updateColumnAction, updateTaskAction],
+		[
+			boardData,
+			handleDragEnd,
+			updateBoardRemoteMode,
+			updateColumnAction,
+			updateTaskAction,
+		],
 	);
 
 	const handleAddTask = useCallback(
@@ -249,9 +258,6 @@ const Board = () => {
 		},
 		[boardData, removeColumnAction],
 	);
-
-	const { handleDragStart, handleDragUpdate, handleDragEnd } =
-		useBoardItemSocket();
 
 	if (error) return <div>Error al cargar el tablero: {error}</div>;
 

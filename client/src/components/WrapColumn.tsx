@@ -64,7 +64,7 @@ const WrapColumn = ({
 			clearTimeout(debounceTimeout);
 		};
 	}, []);
-	const items = useMemo(() => {			
+	const items = useMemo(() => {
 		if (
 			remoteDrag &&
 			remoteDrag.destination?.droppableId === columnId &&
@@ -77,7 +77,7 @@ const WrapColumn = ({
 			});
 			return clone;
 		}
-		return cards ? cards : [];
+		return cards ?? [];
 	}, [cards, remoteDrag, columnId]);
 	return (
 		<div
