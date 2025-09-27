@@ -34,6 +34,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 			<img
 				src={`${baseUrl}/uploads/users/${photo}_${format}.webp`}
 				alt={name}
+				title={name}
 				className={`${className} rounded-full object-cover`}
 				style={{
 					width: size,

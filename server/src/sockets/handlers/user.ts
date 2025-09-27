@@ -4,9 +4,9 @@ import BoardModel from "../../models/BoardModel";
 import prisma from "../../config/db";
 
 export default class UserHandler {
-  private connectedUsers: Map<string, BoardUser> = new Map();
-  private boardService = new BoardService(new BoardModel(prisma));
-  constructor(private io: ServerUser) {}
+  private readonly connectedUsers: Map<string, BoardUser> = new Map();
+  private readonly boardService = new BoardService(new BoardModel(prisma));
+  constructor(private readonly io: ServerUser) {}
 
   initialize(socket: SocketUser) {
     this.handleUserConnected(socket);
@@ -29,14 +29,13 @@ export default class UserHandler {
   }
 
   private handleUserConnected(socket: SocketUser) {
-    // const { boardId } = socket.handshake.auth;
     const userData = socket.data.user;
     if (!userData) {
       console.warn("Datos de autenticación incompletos");
       return;
     }
-    
-    this.connectedUsers.set(socket.id, userData);    
+
+    this.connectedUsers.set(socket.id, userData);
   }
   private handleUserUpdate(socket: SocketUser, user: BoardUser) {
     if (user && socket.data.room) {
@@ -49,17 +48,18 @@ export default class UserHandler {
   }
 
   private async handleRequestUsers(socket: SocketUser) {
-    const roomId = socket.data.room
-    if(!roomId){
-          socket.emit("users:list", []);      
-          return;
+    const roomId = socket.data.room;
+    if (!roomId) {
+      socket.emit("users:list", []);
+      return;
     }
     const socketsInRoom = await this.io.in(roomId).fetchSockets();
-    const usersInRoom = socketsInRoom.map(sock => sock.data.user) as BoardUser[]
+    const usersInRoom = socketsInRoom.map(
+      (sock) => sock.data.user,
+    ) as BoardUser[];
     console.log(usersInRoom);
-    
+
     socket.emit("users:list", usersInRoom);
-    
   }
 
   private async handleJoinRoom(socket: SocketUser, roomId: string) {
@@ -89,11 +89,13 @@ export default class UserHandler {
       socket.broadcast.to(roomId).emit("user:joined", {
         user: userData,
         roomId,
-      });    
+      });
       const socketsInRoom = await this.io.in(roomId).fetchSockets();
-      const usersInRoom = socketsInRoom.map(sock => sock.data.user) as BoardUser[]
-            
-      socket.emit("users:list", usersInRoom);  
+      const usersInRoom = socketsInRoom.map(
+        (sock) => sock.data.user,
+      ) as BoardUser[];
+
+      socket.emit("users:list", usersInRoom);
     } else {
       console.warn(
         `Acceso denegado ${userData.id}, no es miembro del tablero ${roomId}`,
@@ -108,14 +110,12 @@ export default class UserHandler {
   private handleLeaveRoom(socket: SocketUser, roomId: string) {
     if (socket.data.user) {
       this.io.to(roomId).emit("user:disconnected", socket.data.user);
-      // this.connectedUsers.delete(socket.id);
       socket.leave(roomId);
     }
   }
 
   private handleDisconnect(socket: SocketUser) {
     if (socket.data.room && socket.data.user) {
-      // console.log("Desconectado");
       //Asegura que el usuario estaba en la sala se desconecte
       this.io.to(socket.data.room).emit("user:disconnected", socket.data.user);
     }

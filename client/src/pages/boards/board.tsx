@@ -54,7 +54,10 @@ const Board = () => {
 	const [resolvedBoardId, setResolvedBoardId] = useState<string | undefined>(
 		undefined,
 	);
-	const boardData = useAppSelector((state) => state.boards.currentBoard);	
+	const boardData = useAppSelector((state) => state.boards.currentBoard);
+
+	const { handleDragStart, handleDragUpdate, handleDragEnd } =
+		useBoardItemSocket();
 
 	const selectedTask = useMemo(() => {
 		if (!boardData || !selectedTaskId) return null;
@@ -167,7 +170,13 @@ const Board = () => {
 				}
 			}
 		},
-		[boardData, updateBoardRemoteMode, updateColumnAction, updateTaskAction],
+		[
+			boardData,
+			handleDragEnd,
+			updateBoardRemoteMode,
+			updateColumnAction,
+			updateTaskAction,
+		],
 	);
 
 	const handleAddTask = useCallback(
@@ -250,9 +259,6 @@ const Board = () => {
 		[boardData, removeColumnAction],
 	);
 
-	const { handleDragStart, handleDragUpdate, handleDragEnd } =
-		useBoardItemSocket();
-
 	if (error) return <div>Error al cargar el tablero: {error}</div>;
 
 	return (
@@ -267,7 +273,7 @@ const Board = () => {
 						<div
 							ref={provided.innerRef}
 							{...provided.droppableProps}
-							className="custom-scrollbar flex h-[calc(100vh-4rem)] gap-4 overflow-x-auto px-4 py-8 sm:px-8"
+							className="custom-scrollbar flex min-h-[calc(100vh-8rem)] items-stretch gap-6 overflow-x-auto px-4 py-8 sm:px-8"
 						>
 							{boardData?.lists.map((column) => (
 								<Column
