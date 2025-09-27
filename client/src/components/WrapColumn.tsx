@@ -85,7 +85,7 @@ const WrapColumn = ({
 			{...provided.droppableProps}
 			className={`min-h-[50px] flex-grow rounded-md p-2 transition-colors duration-200 ${
 				snapshot.isDraggingOver ? "bg-background-hover-column" : ""
-			} custom-scrollbar overflow-y-auto`}
+			} `}
 		>
 			{items.map((item, index: number) => {
 				return (

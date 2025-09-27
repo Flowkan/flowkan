@@ -157,7 +157,7 @@ const Column = ({
 	}
 
 	return (
-		<div className="flex min-h-32 w-80 max-w-md flex-shrink-0 flex-grow flex-col rounded-lg bg-white/45 p-4 shadow-xl">
+		<div className="flex w-80 max-w-md flex-shrink-0 flex-grow flex-col rounded-lg bg-white/45 p-4 shadow-xl">
 			<div className="mb-4 flex items-center justify-between">
 				<h3
 					onClick={handleTitleClick}
