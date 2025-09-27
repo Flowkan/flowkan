@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { openrouter } from "../lib/openrouter";
 import { streamText } from "ai";
+import { formattedToHTML } from "../utils/formatted";
+import { useTranslation } from "react-i18next";
 
 export const useAI = () => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const { t } = useTranslation();
 
 	const generateDescriptionFromTitle = async (
 		title: string,
@@ -18,58 +21,33 @@ export const useAI = () => {
 		try {
 			const { textStream } = await streamText({
 				model: openrouter("x-ai/grok-4-fast:free"),
-				prompt: `Genera una descripción clara y detallada paso a paso para esta tarea: "${title}"`,
+				prompt: t("boardModal.AI.prompt", {
+					title,
+					defaultValue: `
+          Actúa como un asistente de gestión de proyectos y experto en la organización de tareas. Tu objetivo es generar una descripción completa y detallada para una nueva tarjeta de tarea, basándote únicamente en su título.
+          El estilo de la respuesta debe ser conciso, con un formato de lista de verificación y/o pasos detallados, emulando el formato de un boceto a lápiz para una planificación rápida. La descripción debe ser lo suficientemente detallada para guiar la ejecución de la tarea.
+
+          Criterios de generación:
+          Analiza el {{title}}: Identifica el objetivo, el sujeto y la acción principal.
+          Genera la Estructura para {{title}}: Crea una lista de pasos o secciones que cualquier persona necesitaría seguir para completar esa tarea.
+          `,
+				}),
 			});
 
+			let buffer = "";
 			for await (const chunk of textStream) {
-
 				description += chunk;
-				//
-        // --- Formateando Markdown a HTML ---
-        //
-				let formatted = description;
-
-				// headings
-				formatted = formatted
-          .replace(/^# (.+)$/gm, "<h1>$1</h1>")
-          .replace(/^## (.+)$/gm, "<h2>$1</h2>")
-          .replace(/^### (.+)$/gm, "<h3>$1</h3>")
-          .replace(/^#### (.+)$/gm, "<h4>$1</h4>");
-
-				// texto que llega en negrita y cursiva
-				formatted = formatted.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-        formatted = formatted.replace(/\*(.+?)\*/g, "<em>$1</em>");
-
-				// Listas que empiecen por * o - al inicio
-				const lines = formatted.split("\n");
-				let inList = false;
-				formatted = lines
-					.map((line) => {
-						const listItemMatch = line.match(/^\s*[\*\-]\s+(.*)$/);
-						if (listItemMatch) {
-							if (!inList) {
-								inList = true;
-                formatted = formatted.replace(/(?<!<\/h3>|<\/li>)\n/g, "<br>");
-								return "<ul><li>" + listItemMatch[1] + "</li>";
-							} else {
-								return "<li>" + listItemMatch[1] + "</li>";
-							}
-						} else {
-							if (inList) {
-								inList = false;
-								return "</ul>" + line;
-							}
-							return line;
-						}
-					})
-					.join("\n");
-
-				// Saltos de línea fuera de h3/li
-				formatted = formatted.replace(/(?<!<\/h3>|<\/li>)\n/g, "<br>");
-
-				onChunk?.(formatted); // descripcion en tiempo real
+				buffer += chunk;
+				if (buffer.length >= 30) {
+					let formatted = formattedToHTML(description);
+					onChunk?.(formatted); // descripcion en tiempo real
+					buffer = "";
+				}
 			}
-
+			if (buffer) {
+				let formatted = formattedToHTML(description);
+				onChunk?.(formatted);
+			}
 			return description;
 		} catch (err: unknown) {
 			if (err instanceof Error) {
