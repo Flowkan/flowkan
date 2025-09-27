@@ -1,20 +1,23 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { openrouter } from "../lib/openrouter";
 import { streamText } from "ai";
 import { formattedToHTML } from "../utils/formatted";
 import { useTranslation } from "react-i18next";
 
 export const useAI = () => {
+	const { t } = useTranslation();
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const { t } = useTranslation();
-
+	const abortAction = useRef<AbortController | null>(null);
 	const generateDescriptionFromTitle = async (
 		title: string,
 		onChunk?: (chunk: string) => void,
-	): Promise<string> => {
+	): Promise<string | null> => {
+		abortAction.current = new AbortController();
 		setLoading(true);
 		setError(null);
+
+		const signal = abortAction.current.signal;
 
 		let description = "";
 
@@ -32,6 +35,7 @@ export const useAI = () => {
           Genera la Estructura para {{title}}: Crea una lista de pasos o secciones que cualquier persona necesitaría seguir para completar esa tarea.
           `,
 				}),
+				abortSignal: signal,
 			});
 
 			let buffer = "";
@@ -52,12 +56,25 @@ export const useAI = () => {
 		} catch (err: unknown) {
 			if (err instanceof Error) {
 				setError(err.message || "Error al generar");
+				if(err.message.includes("limit") || err.message.includes("quota")) {
+					setError(err.message || "Límite dario máximo de peticiones alcanzadas.")
+				}
 			}
-			return ""; // devolver string vacío en caso de error
+			return null;
 		} finally {
 			setLoading(false);
+			abortAction.current = null;
 		}
 	};
 
-	return { generateDescriptionFromTitle, loading, error };
+	const stopGenerationDescription = () => {
+		abortAction.current?.abort();
+	};
+
+	return {
+		generateDescriptionFromTitle,
+		loading,
+		error,
+		stopGenerationDescription,
+	};
 };

@@ -62,7 +62,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const editorRef = useRef(null);
 	const { t } = useTranslation();
 
-	const { generateDescriptionFromTitle, loading } = useAI();
+	const {
+		generateDescriptionFromTitle,
+		loading,
+		stopGenerationDescription,
+		error,
+	} = useAI();
 
 	useEffect(() => {
 		if (contentInputRef.current) contentInputRef.current.focus();
@@ -255,7 +260,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		setEditedDescription("");
 		try {
 			await generateDescriptionFromTitle(task.title, (description: string) => {
-				setEditedDescription(description + '<p><em>Creado desde Flowkan\n</em></p><br>' );
+				setEditedDescription(
+					description + "<p><em>Creado desde Flowkan\n</em></p><br>",
+				);
 			});
 		} catch (error) {
 			toast.custom((t) => (
@@ -267,6 +274,18 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 			));
 		}
 	};
+
+	useEffect(() => {
+		if (error) {
+			toast.custom((t) => (
+				<CustomToast
+					message="Límite máximo de peticiones diarias alcanzado"
+					t={t}
+					type="error"
+				/>
+			));
+		}
+	}, [error]);
 
 	return (
 		<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
@@ -373,8 +392,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								{t("board.members", "Miembros")}
 							</Button>
 							<Button
-								onClick={handleGenerateWithAI}
-								disabled={loading}
+								onClick={
+									loading ? stopGenerationDescription : handleGenerateWithAI
+								}
 								className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
 							>
 								<Icon icon="mdi:robot" className="text-lg" />
@@ -382,6 +402,18 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									<SpinnerLoadingText text="Generando" />
 								) : (
 									"Generar descripción"
+								)}
+
+								{loading && (
+									<span
+										className="absolute right-2 flex cursor-pointer items-center justify-center"
+										onClick={(e) => {
+											e.stopPropagation();
+											stopGenerationDescription();
+										}}
+									>
+										<Icon icon="oui:stop-filled" width="16" height="16"  style={{color: "#a21717"}} />
+									</span>
 								)}
 							</Button>
 						</div>
