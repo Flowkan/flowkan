@@ -12,6 +12,7 @@ import { FormFields } from "../../components/ui/FormFields";
 import { WithOtherServices } from "./withOtherServices/WithOtherServices";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { __ } from "../../utils/i18nextHelper";
+import Turnstile from "react-turnstile";
 
 const RegisterPage = () => {
 	const navigate = useNavigate();
@@ -22,6 +23,7 @@ const RegisterPage = () => {
 		password: "",
 		confirmPassword: "",
 		photo: null,
+		turnstileResponse: "",
 	});
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -311,6 +313,17 @@ const RegisterPage = () => {
 							/>
 						</div>
 
+						<div className="relative flex w-full justify-center">
+							<Turnstile
+								sitekey={import.meta.env.VITE_TURNSTILE_API_KEY}
+								onVerify={(token) =>
+									setFormData((prev) => ({
+										...prev,
+										turnstileResponse: token,
+									}))
+								}
+							/>
+						</div>
 						<div>
 							<Button
 								type="submit"
