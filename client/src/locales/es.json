@@ -68,6 +68,11 @@
 			}
 		}
 	},
+	"boardModal": {
+		"AI": {
+			"prompt": "\n          Actúa como un asistente de gestión de proyectos y experto en la organización de tareas. Tu objetivo es generar una descripción completa y detallada para una nueva tarjeta de tarea, basándote únicamente en su título.\n          El estilo de la respuesta debe ser conciso, con un formato de lista de verificación y/o pasos detallados, emulando el formato de un boceto a lápiz para una planificación rápida. La descripción debe ser lo suficientemente detallada para guiar la ejecución de la tarea.\n\n          Criterios de generación:\n          Analiza el {{title}}: Identifica el objetivo, el sujeto y la acción principal.\n          Genera la Estructura para {{title}}: Crea una lista de pasos (- [ ]) o secciones que cualquier persona necesitaría seguir para completar esa tarea.\n          "
+		}
+	},
 	"boardsitem": {
 		"confirm": "¿Seguro que quieres borrar este tablero?"
 	},

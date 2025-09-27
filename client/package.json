@@ -16,9 +16,11 @@
 	"dependencies": {
 		"@hello-pangea/dnd": "18.0.1",
 		"@iconify/react": "6.0.2",
+		"@openrouter/ai-sdk-provider": "1.2.0",
 		"@redux-devtools/extension": "3.3.0",
 		"@tailwindcss/vite": "4.1.11",
 		"@tinymce/tinymce-react": "6.3.0",
+		"ai": "5.0.54",
 		"axios": "1.12.1",
 		"clsx": "2.1.1",
 		"i18next": "25.4.2",
@@ -34,7 +36,7 @@
 		"redux-thunk": "3.1.0",
 		"socket.io-client": "4.8.1",
 		"tailwindcss": "4.1.11",
-		"zod": "4.0.5"
+		"zod": "4.1.11"
 	},
 	"devDependencies": {
 		"@eslint/js": "9.30.1",
@@ -53,6 +55,7 @@
 		"jsdom": "26.1.0",
 		"prettier": "3.6.2",
 		"prettier-plugin-tailwindcss": "0.6.14",
+		"turnstile-types": "1.2.3",
 		"typescript": "5.8.3",
 		"typescript-eslint": "8.35.1",
 		"vite": "7.1.5",
