@@ -30,9 +30,9 @@ export const BackofficePage = ({
 	}
 	return (
 		<div
-			className={`w-full min-h-screen ${className ?? ""}`}
+			className={`min-h-screen w-full ${className ?? ""}`}
 			style={{
-				background: backgroundImg
+				backgroundImage: backgroundImg
 					? `linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.3), rgba(0,0,0,0)), url(${import.meta.env.VITE_BASE_URL}${backgroundImg}_o.webp)`
 					: generatedBg,
 				backgroundSize: "cover",
@@ -40,7 +40,9 @@ export const BackofficePage = ({
 				backgroundRepeat: "no-repeat",
 			}}
 		>
-			{title && <h1 className="mb-4 text-2xl font-bold">{title}</h1>}
+			{title && (
+				<h1 className="mb-2 pt-2 text-center text-2xl font-bold">{title}</h1>
+			)}
 			{children}
 		</div>
 	);

@@ -1,21 +1,16 @@
 import { useState } from "react";
 import ShareBoard from "../ui/modals/share-board";
-import type { Board } from "../../pages/boards/types";
-import { useBoardSocket } from "../../hooks/useBoardSocket";
 import { Avatar } from "../ui/Avatar";
-import { getUserLogged } from "../../store/profile/selectors";
-import { useAppSelector } from "../../store";
+import { useUsersOnBoard } from "../../hooks/socket/useUsersOnBoard";
 import { ChatWindow } from "../ui/ChatWindow";
 
 interface BoardToolbarProps {
-	readonly board: Board;
+	readonly boardId: string;
 }
 
-export function BoardToolbar({ board }: BoardToolbarProps) {
+export function BoardToolbar({ boardId }: BoardToolbarProps) {
 	const [showShareForm, setShowShareForm] = useState(false);
-	const userData = useAppSelector(getUserLogged);
-	const currentUserId = userData?.id;
-	const users = useBoardSocket(board.id?.toString(), currentUserId);
+	const users = useUsersOnBoard(boardId);
 
 	const handleShowShareForm = (event: React.MouseEvent) => {
 		event.preventDefault();
@@ -52,11 +47,7 @@ export function BoardToolbar({ board }: BoardToolbarProps) {
 
 					{/* Chat */}
 					<div className="pr-4 pl-4">
-						{" "}
-						{/* Añade padding a ambos lados (pl-4 pr-4) para el espacio */}
-						{board.id && userData?.id && (
-							<ChatWindow boardId={board.id} currentUserId={userData.id} />
-						)}
+						{boardId && <ChatWindow boardId={boardId} />}
 					</div>
 
 					{/* Botón Compartir */}
@@ -74,7 +65,10 @@ export function BoardToolbar({ board }: BoardToolbarProps) {
 			</div>
 
 			{showShareForm && (
-				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
+				<ShareBoard
+					boardId={boardId}
+					handleHideMessage={handleCloseShareForm}
+				/>
 			)}
 		</>
 	);

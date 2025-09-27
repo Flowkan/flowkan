@@ -16,18 +16,19 @@ import { useLoginAction } from "../../store/auth/hooks";
 import { useLoadedProfile } from "../../store/profile/hooks";
 import { loginWithOAuth } from "../../store/auth/actions";
 import ForgotPassword from "../../components/ui/modals/forgot-password";
+import Turnstile from "react-turnstile";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
 	const loginAction = useLoginAction();
 	const profileLoadedAction = useLoadedProfile();
 	const dispatch = useAppDispatch();
-	// const modalForgotPassword = useRef<HTMLDialogElement|null>(null)
 	const [showModal, setShowModal] = useState(false);
 
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
+		turnstileResponse: "",
 	});
 
 	const { email, password } = formData;
@@ -127,8 +128,15 @@ export const LoginPage = () => {
 	}
 	return (
 		<Page>
-			<div className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 sm:px-6 lg:px-8">
-				<div className="bg-background-card w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl transition-all duration-300 hover:scale-[1.01]">
+			<div
+				className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 sm:px-6 lg:px-8"
+				style={{
+					backgroundImage: `url('/meta/fondo_formulario.png')`,
+					backgroundSize: "cover",
+					backgroundPosition: "center",
+				}}
+			>
+				<div className="bg-background-card/95 w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-[1.01]">
 					<div>
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
 							{t("login.loginForm.title", "Iniciar Sesión")}
@@ -203,6 +211,17 @@ export const LoginPage = () => {
 									)}
 								</button>
 							</div>
+						</div>
+						<div className="relative flex w-full justify-center">
+							<Turnstile
+								sitekey={import.meta.env.VITE_TURNSTILE_API_KEY}
+								onVerify={(token) =>
+									setFormData((prev) => ({
+										...prev,
+										turnstileResponse: token,
+									}))
+								}
+							/>
 						</div>
 						<div>
 							<Button

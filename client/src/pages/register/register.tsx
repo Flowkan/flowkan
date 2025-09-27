@@ -12,6 +12,7 @@ import { FormFields } from "../../components/ui/FormFields";
 import { WithOtherServices } from "./withOtherServices/WithOtherServices";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { __ } from "../../utils/i18nextHelper";
+import Turnstile from "react-turnstile";
 
 const RegisterPage = () => {
 	const navigate = useNavigate();
@@ -22,6 +23,7 @@ const RegisterPage = () => {
 		password: "",
 		confirmPassword: "",
 		photo: null,
+		turnstileResponse: "",
 	});
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -127,7 +129,14 @@ const RegisterPage = () => {
 
 	return (
 		<Page>
-			<div className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 sm:px-6 lg:px-8">
+			<div
+				className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 sm:px-6 lg:px-8"
+				style={{
+					backgroundImage: `url('/meta/fondo_formulario.png')`,
+					backgroundSize: "cover",
+					backgroundPosition: "center",
+				}}
+			>
 				<div className="bg-background-card w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl transition-all duration-300 hover:scale-[1.01]">
 					<div>
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
@@ -304,6 +313,17 @@ const RegisterPage = () => {
 							/>
 						</div>
 
+						<div className="relative flex w-full justify-center">
+							<Turnstile
+								sitekey={import.meta.env.VITE_TURNSTILE_API_KEY}
+								onVerify={(token) =>
+									setFormData((prev) => ({
+										...prev,
+										turnstileResponse: token,
+									}))
+								}
+							/>
+						</div>
 						<div>
 							<Button
 								type="submit"

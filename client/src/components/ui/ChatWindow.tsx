@@ -1,19 +1,24 @@
 import { useState } from "react";
-import { useChatSocket, type ChatMessage } from "../../hooks/useChatSocket";
+import {
+	useChatSocket,
+	type ChatMessage,
+} from "../../hooks/socket/useChatSocket";
 import { Icon } from "@iconify/react";
 import { Avatar } from "./Avatar";
 import { Button } from "./Button";
 import { useDismiss } from "../../hooks/useDismissClickAndEsc";
+import { useAppSelector } from "../../store";
+import { getUserLogged } from "../../store/profile/selectors";
 
 interface ChatWindowProps {
 	readonly boardId: string;
-	readonly currentUserId: number;
 }
 
-export function ChatWindow({ boardId, currentUserId }: ChatWindowProps) {
-	const { messages, sendMessage } = useChatSocket(boardId, currentUserId);
+export function ChatWindow({ boardId }: ChatWindowProps) {
+	const { messages, sendMessage } = useChatSocket(boardId);
 	const [text, setText] = useState("");
 	const { open, setOpen, ref } = useDismiss<HTMLDivElement>();
+	const user = useAppSelector(getUserLogged);
 
 	const handleSend = () => {
 		if (text.trim()) {
@@ -48,12 +53,10 @@ export function ChatWindow({ boardId, currentUserId }: ChatWindowProps) {
 							<div
 								key={i}
 								className={`flex items-end ${
-									msg.senderId === currentUserId
-										? "justify-end"
-										: "justify-start"
+									msg.senderId === user?.id ? "justify-end" : "justify-start"
 								}`}
 							>
-								{msg.senderId !== currentUserId && msg.senderAvatar && (
+								{msg.senderId !== user?.id && msg.senderAvatar && (
 									<Avatar
 										name={msg.senderName || ""}
 										photo={msg.senderAvatar}
@@ -63,7 +66,7 @@ export function ChatWindow({ boardId, currentUserId }: ChatWindowProps) {
 
 								<div
 									className={`inline-block max-w-[80%] rounded px-2 py-1 text-sm ${
-										msg.senderId === currentUserId
+										msg.senderId === user?.id
 											? "bg-primary text-white"
 											: "bg-gray-200 text-gray-800"
 									}`}
