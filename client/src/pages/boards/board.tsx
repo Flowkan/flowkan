@@ -28,6 +28,7 @@ import { Button } from "../../components/ui/Button";
 import { FormFields } from "../../components/ui/FormFields";
 import { Icon } from "@iconify/react";
 import { t } from "i18next";
+import { useDismiss } from "../../hooks/useDismissClickAndEsc";
 
 const Board = () => {
 	const fetchBoardAction = useFetchBoardByIdAction();
@@ -49,7 +50,7 @@ const Board = () => {
 
 	const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
 	const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const { open: openMenu, setOpen: setOpenMenu, ref: refMenu } = useDismiss<HTMLDivElement>();
 	const [newColumnName, setNewColumnName] = useState("");
 	const [resolvedBoardId, setResolvedBoardId] = useState<string | undefined>(
 		undefined,
@@ -233,9 +234,7 @@ const Board = () => {
 		[boardData, updateColumnAction],
 	);
 
-	const handleAddColumnToggle = useCallback(() => {
-		setIsMenuOpen((prev) => !prev);
-	}, []);
+	const handleAddColumnToggle = () => setOpenMenu((prev) => !prev);
 
 	const handleCreateColumn = useCallback(() => {
 		if (newColumnName.trim() !== "" && boardData) {
@@ -247,7 +246,7 @@ const Board = () => {
 			};
 			addColumnAction(boardData.id, newColumn);
 			setNewColumnName("");
-			setIsMenuOpen(false);
+			setOpenMenu(false);
 		}
 	}, [boardData, newColumnName, addColumnAction]);
 
@@ -305,7 +304,7 @@ const Board = () => {
 							{provided.placeholder}
 
 							{/* Add new column */}
-							<div className="relative flex w-full flex-row items-baseline justify-start sm:w-80">
+							<div className="relative flex w-full flex-row items-baseline justify-start sm:w-80" ref={refMenu}>
 								<Button
 									onClick={handleAddColumnToggle}
 									className="text-text-placeholder hover:bg-background-hover-column border-border-medium bg-gray/20 hover:border-accent bg-border-light bg-gray/80 flex h-10 w-10 items-center justify-center rounded-lg border-2 text-2xl font-semibold shadow-md transition-colors duration-200"
@@ -314,8 +313,8 @@ const Board = () => {
 										<Icon icon="oui:plus" width="1.2em" height="1.2em" />
 									</div>
 								</Button>
-								{isMenuOpen && (
-									<div className="bg-background-dark-footer fixed top-24 right-4 z-50 w-72 rounded-lg border border-gray-200 p-4 shadow-lg">
+								{openMenu && (
+									<div className="bg-background-dark-footer fixed top-24 right-4 z-50 w-72 rounded-lg border border-gray-200 p-4 shadow-lg" ref={refMenu}>
 										<h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
 											{t("board.add_column", "Añadir Columna")}
 										</h3>

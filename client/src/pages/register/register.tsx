@@ -322,6 +322,7 @@ const RegisterPage = () => {
 										turnstileResponse: token,
 									}))
 								}
+								theme="light"
 							/>
 						</div>
 						<div>

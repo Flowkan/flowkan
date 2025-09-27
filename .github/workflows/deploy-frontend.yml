@@ -28,6 +28,7 @@ jobs:
           echo "VITE_API_VERSION=${{ secrets.VITE_API_VERSION }}" >> .env.production
           echo "VITE_TINY_MCE=${{ secrets.VITE_TINY_MCE }}" >> .env.production
           echo "VITE_TURNSTILE_API_KEY=${{ secrets.VITE_TURNSTILE_API_KEY }}" >> .env.production
+          echo "VITE_OPENROUTER_KEY=${{ secrets.VITE_OPENROUTER_KEY }}" >> .env.production
 
       - name: Install and Build (Vite)
         working-directory: client
