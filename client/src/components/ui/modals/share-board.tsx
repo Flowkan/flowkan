@@ -2,16 +2,15 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../Button";
 import CloseButton from "../close-button";
-import type { Board } from "../../../pages/boards/types";
 import { createInvitationLink } from "../../../pages/boards/service";
 import "./modal-boards.css";
 
 interface ShareBoardProps {
-	board: Board;
+	boardId: string;
 	handleHideMessage: () => void;
 }
 
-const ShareBoard = ({ board, handleHideMessage }: ShareBoardProps) => {
+const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 	const { t } = useTranslation();
 	const [invitationLink, setInvitationLink] = useState<string | null>(null);
 	const [status, setStatus] = useState<
@@ -26,7 +25,7 @@ const ShareBoard = ({ board, handleHideMessage }: ShareBoardProps) => {
 	};
 
 	const handleGenerateLink = async () => {
-		if (!board.id) {
+		if (!boardId) {
 			setError(
 				"No se puede generar el enlace: el ID del tablero no está definido.",
 			);
@@ -37,7 +36,7 @@ const ShareBoard = ({ board, handleHideMessage }: ShareBoardProps) => {
 		setError(null);
 
 		try {
-			const response = await createInvitationLink(board.id);
+			const response = await createInvitationLink(boardId);
 			const token = response.token;
 			const FE_BASE_URL = window.location.origin;
 			let fullInvitationUrl = `${FE_BASE_URL}/invitacion?token=${token}&username=${response.inviterName}&title=${response.boardTitle}&boardId=${response.boardId}&boardSlug=${response.slug}`;
