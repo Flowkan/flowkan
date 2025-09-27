@@ -1,20 +1,16 @@
 import { useState } from "react";
 import ShareBoard from "../ui/modals/share-board";
-import type { Board } from "../../pages/boards/types";
-import { useBoardSocket } from "../../hooks/useBoardSocket";
 import { Avatar } from "../ui/Avatar";
-import { getUserLogged } from "../../store/profile/selectors";
-import { useAppSelector } from "../../store";
+import { useUsersOnBoard } from "../../hooks/socket/useUsersOnBoard";
+
 
 interface BoardToolbarProps {
-	readonly board: Board;
+	readonly boardId: string;
 }
 
-export function BoardToolbar({ board }: BoardToolbarProps) {
+export function BoardToolbar({ boardId }: BoardToolbarProps) {
 	const [showShareForm, setShowShareForm] = useState(false);
-	const userData = useAppSelector(getUserLogged);
-	const currentUserId = userData?.id;
-	const users = useBoardSocket(board.id?.toString(), currentUserId);
+	const users = useUsersOnBoard(boardId)	
 
 	const handleShowShareForm = (event: React.MouseEvent) => {
 		event.preventDefault();
@@ -54,7 +50,10 @@ export function BoardToolbar({ board }: BoardToolbarProps) {
 			</div>
 
 			{showShareForm && (
-				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
+				<ShareBoard
+					boardId={boardId}
+					handleHideMessage={handleCloseShareForm}
+				/>
 			)}
 		</>
 	);

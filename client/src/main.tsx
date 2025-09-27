@@ -13,6 +13,7 @@ import { type User } from "../src/pages/login/types.ts";
 import { I18nextProvider } from "react-i18next";
 import i18n from "../src/lib/i18nextHandlers.ts";
 import configureStore from "./store/index.ts";
+import SocketProvider from "./hooks/socket/socket-provider.tsx";
 
 // import { store } from "./store/store.ts";
 
@@ -36,13 +37,15 @@ createRoot(document.getElementById("root")!).render(
 		<ErrorBoundary>
 			<Provider store={store}>
 				<I18nextProvider i18n={i18n}>
-					<RouterProvider router={router} />
-					<Toaster
-						position="top-center"
-						containerStyle={{
-							top: 80,
-						}}
-					/>
+					<SocketProvider>
+						<RouterProvider router={router} />
+						<Toaster
+							position="top-center"
+							containerStyle={{
+								top: 80,
+							}}
+						/>
+					</SocketProvider>
 				</I18nextProvider>
 			</Provider>
 		</ErrorBoundary>

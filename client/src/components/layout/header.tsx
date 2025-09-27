@@ -8,16 +8,19 @@ import { Icon } from "@iconify/react";
 import IconLogo from "../icons/IconLogo";
 import { Button } from "../ui/Button";
 import { useLogoutAction } from "../../store/auth/hooks";
+import { useSocket } from "../../hooks/socket/context";
 
 export const Header: React.FC = () => {
 	const { t } = useTranslation();
 	const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 	const [isOpen, setIsOpen] = useState(false);
 	const logoutAction = useLogoutAction();
+	const socket = useSocket()
 
 	const handleLogout = () => {
 		logoutAction();
 		setIsOpen(false);
+		socket.disconnect()//Desconecta el socket
 	};
 
 	return (
