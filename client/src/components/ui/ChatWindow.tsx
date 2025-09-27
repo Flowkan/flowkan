@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
 	useChatSocket,
 	type ChatMessage,
@@ -19,6 +19,14 @@ export function ChatWindow({ boardId }: ChatWindowProps) {
 	const [text, setText] = useState("");
 	const { open, setOpen, ref } = useDismiss<HTMLDivElement>();
 	const user = useAppSelector(getUserLogged);
+
+	const messagesEndRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (open && messagesEndRef.current) {
+			messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+		}
+	}, [messages, open]);
 
 	const handleSend = () => {
 		if (text.trim()) {
@@ -56,7 +64,7 @@ export function ChatWindow({ boardId }: ChatWindowProps) {
 									msg.senderId === user?.id ? "justify-end" : "justify-start"
 								}`}
 							>
-								{msg.senderId !== user?.id && msg.senderAvatar && (
+								{msg.senderId !== user?.id && (
 									<Avatar
 										name={msg.senderName || ""}
 										photo={msg.senderAvatar}
@@ -75,6 +83,7 @@ export function ChatWindow({ boardId }: ChatWindowProps) {
 								</div>
 							</div>
 						))}
+						<div ref={messagesEndRef} />
 					</div>
 
 					<div className="flex border-t">
