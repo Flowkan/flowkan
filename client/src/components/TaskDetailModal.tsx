@@ -399,9 +399,11 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							>
 								<Icon icon="mdi:robot" className="text-lg" />
 								{loading ? (
-									<SpinnerLoadingText text="Generando" />
+									<SpinnerLoadingText
+										text={t("boardModal.AI.btnLoading-On", "Generando")}
+									/>
 								) : (
-									"Generar descripción"
+									t("boardModal.AI.btnLoading-Off", "Generar descripción")
 								)}
 
 								{loading && (
