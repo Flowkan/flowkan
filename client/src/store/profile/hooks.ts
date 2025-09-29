@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useAppDispatch } from "..";
 import type { User } from "../../pages/login/types";
 import type { ProfileType } from "../../pages/profile/types";
@@ -6,7 +7,6 @@ import { loadedProfile, updateProfile } from "./actions";
 //
 // ─── BOARDS PROFILE ──────────────────────────────────────────────
 //
-
 
 export function useUpdatedProfile() {
 	const dispatch = useAppDispatch();
@@ -17,7 +17,8 @@ export function useUpdatedProfile() {
 
 export function useLoadedProfile() {
 	const dispatch = useAppDispatch();
-	return function () {
+	const loadProfile = useCallback(() => {
 		return dispatch(loadedProfile());
-	};
+	}, [dispatch]);
+	return loadProfile;
 }
