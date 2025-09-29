@@ -9,13 +9,16 @@ type validationResult<T> = {
 type Validator<T> = (data:unknown,fieldName?:keyof T) => validationResult<T>
 export function useValidationForm<T>(validator:Validator<T>) {
     const [data,setData] = useState<T|null>(null)
-    const [error,setError] = useState<ErrorValidation<T>|null>(null);    
+    const [error,setError] = useState<ErrorValidation<T>|null>(null); 
+    const [isValid,setIsValid] = useState(false); 
+    const [fieldApproved,setFieldApproved] = useState<[keyof T,boolean]|null>(null);  
     const validate = useCallback((formData:unknown,fieldName?:keyof T)=>{
         const result = validator(formData,fieldName)
         if(fieldName){
             setError(prev => {
                 const newErrors:ErrorValidation<T> = {...prev}
                 if(result.error){
+                    setIsValid(false)
                     const fieldError = result.error.errorsList[fieldName];
                     if(fieldError){
                         newErrors[fieldName] = fieldError
@@ -34,9 +37,11 @@ export function useValidationForm<T>(validator:Validator<T>) {
                     ...prev as T,
                     ...result.data as Partial<T>
                 }))
+                setFieldApproved([fieldName,true])
             }else{
                 setData(result.data)
             }
+            setIsValid(true)
         }
         // setData(result.data)
         return result.error === null
@@ -44,11 +49,23 @@ export function useValidationForm<T>(validator:Validator<T>) {
     const reset = useCallback(()=>{
         setData(null)
         setError(null)
+        setIsValid(false)
     },[])
+    const checkField = useCallback((fieldName:keyof T)=>{
+        if(data){
+            if(data[fieldName]){
+                return true
+            }
+        }
+        return false
+    },[data])
     return {
         validate,
         reset,
         data,
-        error
+        error,
+        isValid,
+        fieldApproved,
+        checkField
     }
 }

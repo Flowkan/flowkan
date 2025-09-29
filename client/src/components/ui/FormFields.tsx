@@ -3,6 +3,7 @@ import { EyeShow, EyeHide } from "./ShowOrHidePass";
 import clsx from "clsx";
 import { Button } from "./Button";
 import { useTranslation } from "react-i18next";
+import { IconCheck } from "../icons/IconCheck";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	id: string;
@@ -13,7 +14,8 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	inputClassName?: string;
 	ref?: React.RefObject<HTMLInputElement | null>;
 	className?:string;
-	errors?:string[]
+	errors?:string[];
+	fieldApproved?:boolean;	
 }
 
 export const FormFields = ({
@@ -28,6 +30,7 @@ export const FormFields = ({
 	onChange,
 	ref,
 	errors=[],
+	fieldApproved=false,
 	className="",	
 	...props
 }: InputProps) => {
@@ -63,6 +66,7 @@ export const FormFields = ({
 						isPassword && "pr-10",
 						className ? className : defaultStyleInput,
 						hasError && 'border-red-400 focus:border-red-400 focus:ring-red-400 focus:ring-2',						
+						fieldApproved ? 'border-emerald-500':''
 
 					)}
 					{...props}
@@ -100,7 +104,18 @@ export const FormFields = ({
 					>
 						{showPassword ? <EyeHide /> : <EyeShow />}
 					</Button>
-				)}				
+				)}	
+				{
+					fieldApproved  && !hasError &&
+					(
+						<div className={clsx(
+							"absolute top-[50%] translate-y-[-50%] z-10",
+							isPassword ? "right-9" : "right-2"
+						)}>
+							<IconCheck className="text-emerald-500" />
+						</div>
+					)
+				}			
 			</div>
 			<ul className={clsx(
 				"px-1 text-xs text-red-600 transition-opacity duration-400",

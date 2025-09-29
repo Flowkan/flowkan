@@ -48,7 +48,7 @@ export const LoginPage = () => {
 		return validationForm(LoginFormSchema,data,fieldName)
 	},[])
 
-	const { error,validate } = useValidationForm<Omit<typeof formData,"turnstileResponse">>(LoginValidator)	
+	const { error,validate,checkField } = useValidationForm<Omit<typeof formData,"turnstileResponse">>(LoginValidator)	
 
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
@@ -91,9 +91,12 @@ export const LoginPage = () => {
 		try {			
 			
 			//Validaciones con zod
+			const isValidForm = validate({email,password})
+			if(isValidForm){
+				await loginAction(formData);
+				await profileLoadedAction();
+			}
 
-			await loginAction(formData);
-			await profileLoadedAction();
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				setFormData((prevData) => ({
@@ -177,6 +180,7 @@ export const LoginPage = () => {
 							value={formData.email}
 							onBlur={handleBlur}
 							errors={error?.email}
+							fieldApproved={checkField("email")}
 						/>
 
 						<FormFields
@@ -196,6 +200,7 @@ export const LoginPage = () => {
 							value={formData.password}
 							onBlur={handleBlur}
 							errors={error?.password}
+							fieldApproved={checkField("email")}
 						/>
 
 						<div className="flex items-center justify-between">

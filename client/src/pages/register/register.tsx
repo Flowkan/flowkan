@@ -75,21 +75,20 @@ const RegisterPage = () => {
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setIsSubmitting(true);
-		
-		const isValid = validate({
-			name: formData.name,
-			email: formData.email,
-			password: formData.password,
-			confirmPassword: formData.confirmPassword,
-			photo: formData.photo,
-		});
-		if (isValid) {
-			alert("Formulario correcto");
-		} else {
-			setIsSubmitting(false);
-			return;
-		}
 		try {
+			// Validaciones con zod
+			const isValid = validate({
+				name: formData.name,
+				email: formData.email,
+				password: formData.password,
+				confirmPassword: formData.confirmPassword,
+				photo: formData.photo,
+			});
+			if (!isValid) {								
+				setIsSubmitting(false);
+				return;
+			} 
+				
 			await register(formData);
 			navigate("/verify-pending", {
 				state: {
