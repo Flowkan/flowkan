@@ -200,7 +200,7 @@ export const LoginPage = () => {
 							value={formData.password}
 							onBlur={handleBlur}
 							errors={error?.password}
-							fieldApproved={checkField("email")}
+							fieldApproved={checkField("password")}
 						/>
 
 						<div className="flex items-center justify-between">
