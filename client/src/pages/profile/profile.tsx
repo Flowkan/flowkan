@@ -208,7 +208,6 @@ const Profile = () => {
 										label="Email"
 										type="email"
 										name="email"
-										disabled={true}
 										value={user.email}
 										readonly
 										onChange={handleChangeField}
