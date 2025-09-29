@@ -251,3 +251,57 @@ describe("BoardService - happy path", () => {
     });
   });
 });
+
+describe("BoardService - errors", () => {
+  test("should throw an error if the board does not exist when update", async () => {
+    mockBoardModel.update = jest.fn().mockImplementation(() => {
+      throw new Error("Board no encontrado");
+    });
+
+    await expect(
+      boardService.update({
+        userId: 1,
+        boardId: 1,
+        data: { title: "BoardTitle" },
+      }),
+    ).rejects.toThrow("Board no encontrado");
+    expect(mockBoardModel.update).toHaveBeenCalledTimes(1);
+  });
+
+  test("should throw an error if the user is not the owner of the board when update", async () => {
+    mockBoardModel.update = jest.fn().mockImplementation(() => {
+      throw new Error("No tienes permiso para actualizar este board");
+    });
+
+    await expect(
+      boardService.update({
+        userId: 1,
+        boardId: 1,
+        data: { title: "BoardTitle" },
+      }),
+    ).rejects.toThrow("No tienes permiso para actualizar este board");
+    expect(mockBoardModel.update).toHaveBeenCalledTimes(1);
+  });
+
+  test("should throw an error if the board does not exist when delete", async () => {
+    mockBoardModel.delete = jest.fn().mockImplementation(() => {
+      throw new Error("Board no encontrado");
+    });
+
+    await expect(
+      boardService.delete({ userId: 1, boardId: 1 }),
+    ).rejects.toThrow("Board no encontrado");
+    expect(mockBoardModel.delete).toHaveBeenCalledTimes(1);
+  });
+
+  test("should throw an error if the user is not the owner of the board when delete", async () => {
+    mockBoardModel.delete = jest.fn().mockImplementation(() => {
+      throw new Error("No tienes permiso para actualizar este board");
+    });
+
+    await expect(
+      boardService.delete({ userId: 1, boardId: 1 }),
+    ).rejects.toThrow("No tienes permiso para actualizar este board");
+    expect(mockBoardModel.delete).toHaveBeenCalledTimes(1);
+  });
+});
