@@ -99,14 +99,6 @@ function App() {
 					}
 				/>
 				<Route
-					path="profile"
-					element={
-						<AuthRoute requireAuth={true}>
-							<Profile />
-						</AuthRoute>
-					}
-				/>
-				<Route
 					path="/invitacion"
 					element={
 						<Suspense
@@ -167,8 +159,8 @@ function App() {
 			<Route
 				path="/boards"
 				element={
-					<AuthRoute requireAuth={true}>												
-						<BackofficeLayout />							
+					<AuthRoute requireAuth={true}>
+						<BackofficeLayout />
 					</AuthRoute>
 				}
 			>
@@ -210,10 +202,40 @@ function App() {
 									/>
 								</div>
 							}
-						>							
+						>
 							<BoardItemSocket>
 								<Board />
-							</BoardItemSocket>							
+							</BoardItemSocket>
+						</Suspense>
+					}
+				/>
+			</Route>
+			<Route
+				path="/profile"
+				element={
+					<AuthRoute requireAuth={true}>
+						<BackofficeLayout />
+					</AuthRoute>
+				}
+			>
+				<Route
+					index
+					element={
+						<Suspense
+							fallback={
+								<div className="flex min-h-screen items-center justify-center">
+									<SkeletonCustom
+										rows={1}
+										columns={4}
+										rowHeight="h-200"
+										gap="gap-4"
+										className="w-full min-w-6xl p-10 shadow-2xl"
+										spinnerText="Cargando Tablero"
+									/>
+								</div>
+							}
+						>
+							<Profile />
 						</Suspense>
 					}
 				/>

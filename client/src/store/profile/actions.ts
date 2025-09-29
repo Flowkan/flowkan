@@ -70,20 +70,16 @@ export const profileLoadedRejected = (error: Error): ProfileLoadedRejected => ({
 	payload: error,
 });
 
-export function loadedProfile():AppThunk<Promise<void>>{
-	return async(dispatch,getState,{api})=>{
-		const state = getState()
-		if(state.profile){
-			return
-		}
-		dispatch(profileLoadedPending())
+export function loadedProfile(): AppThunk<Promise<void>> {
+	return async (dispatch, _getState, { api }) => {
+		dispatch(profileLoadedPending());
 		try {
 			const { error, profile } = await api.profile.getProfileData();
 			if (error) {
 				throw new Error(error);
 			}
-			if(profile){								
-				dispatch(profileLoadedFulFilled(profile))
+			if (profile) {
+				dispatch(profileLoadedFulFilled(profile));
 			}
 		} catch (error) {
 			if (error instanceof Error) {
