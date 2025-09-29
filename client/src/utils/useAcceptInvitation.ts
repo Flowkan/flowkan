@@ -11,23 +11,19 @@ export const useAcceptInvitation = () => {
 		const token = localStorage.getItem("invitationToken");
 		const boardId = localStorage.getItem("invitationBoardId");
 		const boardSlug = localStorage.getItem("invitationBoardSlug");
-		const invitationProcessed = localStorage.getItem("invitationProcessed");
 
-		if (isAuthenticated && token && boardId && !invitationProcessed) {
-			localStorage.setItem("invitationProcessed", "true");
-
+		if (isAuthenticated && token && boardId && boardSlug) {
 			acceptInvitation(boardId, token)
 				.then(() => {
-					localStorage.removeItem("invitationToken");
-					localStorage.removeItem("invitationBoardId");
-					localStorage.removeItem("invitationBoardSlug");
 					navigate(`/boards/${boardSlug}`, { replace: true });
 				})
 				.catch(() => {
+					navigate("/boards", { replace: true });
+				})
+				.finally(() => {
 					localStorage.removeItem("invitationToken");
 					localStorage.removeItem("invitationBoardId");
 					localStorage.removeItem("invitationBoardSlug");
-					navigate("/boards", { replace: true });
 				});
 		}
 	}, [isAuthenticated, navigate]);
