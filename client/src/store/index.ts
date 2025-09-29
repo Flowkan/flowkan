@@ -70,7 +70,9 @@ const failureRedirects =
 			return undefined;
 		}
 		if (status === 401) {
-			router.navigate("/login");
+			localStorage.removeItem("auth");
+			localStorage.removeItem("user");
+			router.navigate("/login", {replace: true})
 			return undefined;
 		}
 
