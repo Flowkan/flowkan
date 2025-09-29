@@ -2,7 +2,14 @@ import { Page } from "../../components/layout/page";
 import { NavLink, useNavigate } from "react-router-dom";
 import type { UserRegister } from "./types";
 import toast from "react-hot-toast";
-import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
+import {
+	useCallback,
+	useRef,
+	useState,
+	type ChangeEvent,
+	type FocusEvent,
+	type FormEvent,
+} from "react";
 import { CustomToast } from "../../components/CustomToast";
 import { register } from "./service";
 import { useTranslation } from "react-i18next";
@@ -13,6 +20,12 @@ import { WithOtherServices } from "./withOtherServices/WithOtherServices";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { __ } from "../../utils/i18nextHelper";
 import Turnstile from "react-turnstile";
+import { useValidationForm } from "../../hooks/useValidationForm";
+import { validationForm } from "../../utils/validations";
+import { RegisterFormSchema } from "../../utils/auth.schema";
+import type z from "zod";
+
+type RegisterForm = z.infer<typeof RegisterFormSchema>;
 
 const RegisterPage = () => {
 	const navigate = useNavigate();
@@ -33,11 +46,21 @@ const RegisterPage = () => {
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 	const fileRef = useRef<HTMLInputElement>(null);
 
-	const validateEmail = (email: string): boolean => {
-		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		return re.test(String(email).toLowerCase());
-	};
+	const registerValidator = useCallback((data: unknown,fieldName?:keyof RegisterForm) => {
+		return validationForm(RegisterFormSchema, data,fieldName);
+	}, []);
+	const { error, validate } =
+		useValidationForm<RegisterForm>(registerValidator);
 
+	const handleBlur = (e: FocusEvent<HTMLInputElement, Element>) => {		
+		validate({
+			name: formData.name,
+			email: formData.email,
+			password: formData.password,
+			confirmPassword: formData.confirmPassword,
+			photo: formData.photo,
+		},e.target.name as keyof RegisterForm);
+	};
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, type, value, files } = e.target;
 		setFormData((prevData: UserRegister) => ({
@@ -52,55 +75,20 @@ const RegisterPage = () => {
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setIsSubmitting(true);
-
-		if (!validateEmail(email)) {
-			toast.custom((t) => (
-				<CustomToast
-					message="Por favor, introduce una dirección de correo válida."
-					t={t}
-					type="error"
-				/>
-			));
+		
+		const isValid = validate({
+			name: formData.name,
+			email: formData.email,
+			password: formData.password,
+			confirmPassword: formData.confirmPassword,
+			photo: formData.photo,
+		});
+		if (isValid) {
+			alert("Formulario correcto");
+		} else {
 			setIsSubmitting(false);
 			return;
 		}
-
-		if (password.trim() === "" || confirmPassword.trim() === "") {
-			toast.custom((t) => (
-				<CustomToast
-					message="La contraseña no puede estar vacía."
-					t={t}
-					type="error"
-				/>
-			));
-			setIsSubmitting(false);
-			return;
-		}
-
-		if (password.trim() !== confirmPassword.trim()) {
-			toast.custom((t) => (
-				<CustomToast
-					message="Las contraseñas no coinciden."
-					t={t}
-					type="error"
-				/>
-			));
-			setIsSubmitting(false);
-			return;
-		}
-
-		if (password.trim().length < 8) {
-			toast.custom((t) => (
-				<CustomToast
-					message="La contraseña debe ser de al menos 8 caracteres."
-					t={t}
-					type="error"
-				/>
-			));
-			setIsSubmitting(false);
-			return;
-		}
-
 		try {
 			await register(formData);
 			navigate("/verify-pending", {
@@ -253,6 +241,8 @@ const RegisterPage = () => {
 								)}
 								onChange={handleChange}
 								value={name}
+								errors={error?.name}
+								onBlur={handleBlur}
 							/>
 
 							<FormFields
@@ -273,6 +263,8 @@ const RegisterPage = () => {
 								)}
 								onChange={handleChange}
 								value={email}
+								errors={error?.email}
+								onBlur={handleBlur}
 							/>
 
 							<FormFields
@@ -290,6 +282,8 @@ const RegisterPage = () => {
 								)}
 								onChange={handleChange}
 								value={password}
+								errors={error?.password}
+								onBlur={handleBlur}
 							/>
 
 							<FormFields
@@ -310,6 +304,8 @@ const RegisterPage = () => {
 								)}
 								onChange={handleChange}
 								value={confirmPassword}
+								errors={error?.confirmPassword}
+								onBlur={handleBlur}
 							/>
 						</div>
 

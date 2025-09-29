@@ -1,12 +1,10 @@
 import z from 'zod';
-// import type {ForgotPasswordSchema, NewPasswordSchema}  from '../utils/auth.schema';
-// import type { ZodSchema } from 'zod/v3';
 
-type ErrorValidation<Data> = {
+export type ErrorValidation<Data> = {
     [k in keyof Data]?:string[]
 }
 
-class ValidationError<Data> extends Error {
+export class ValidationError<Data> extends Error {
     public errorsList:ErrorValidation<Data>;
     // constructor(zodError:z.ZodError<Data>){
     constructor(zodError:z.ZodError<Data>){
@@ -17,8 +15,12 @@ class ValidationError<Data> extends Error {
 }
 
 // type Schema = typeof ForgotPasswordSchema 
-export function validationForm<T extends z.ZodType>(schema:T,data:unknown){
-    const parseData = schema.safeParse(data)
+export function validationForm<T extends z.ZodObject>(schema:T,data:unknown,fieldToValidate?:keyof z.infer<T>){
+    let schemaToUse = schema;
+    if(fieldToValidate){
+        schemaToUse = schema.pick({ [fieldToValidate]:true } as const) as T
+    }
+    const parseData = schemaToUse.safeParse(data)
     if(!parseData.success){        
         return {error:new ValidationError<z.infer<T>>(parseData.error),data:null}
         // throw new ValidationError(parseData.error)
