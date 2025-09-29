@@ -4,6 +4,7 @@ import { Button } from "../../components/ui/Button";
 import { Page } from "../../components/layout/page";
 import { useTranslation } from "react-i18next";
 import { Avatar } from "../../components/ui/Avatar";
+import { useAuth } from "../../store/auth/hooks";
 
 const InvitationPage = () => {
 	const { t } = useTranslation();
@@ -12,12 +13,13 @@ const InvitationPage = () => {
 	const boardTitle = searchParams.get("title");
 	const invitatorName = searchParams.get("username");
 	const invitatorPhoto = searchParams.get("photo");
+	const boardSlug = searchParams.get("boardSlug");
 	const navigate = useNavigate();
+	const isLogged = useAuth();
 
 	useEffect(() => {
 		const token = searchParams.get("token");
 		const boardId = searchParams.get("boardId");
-		const boardSlug = searchParams.get("boardSlug");
 		if (token && boardId && boardSlug) {
 			localStorage.setItem("invitationToken", token);
 			localStorage.setItem("invitationBoardId", boardId);
@@ -25,7 +27,7 @@ const InvitationPage = () => {
 		} else {
 			navigate("/", { replace: true });
 		}
-	}, [searchParams, navigate]);
+	}, [searchParams, navigate, boardSlug]);
 
 	const handleLogin = () => {
 		navigate("/login");
@@ -71,18 +73,29 @@ const InvitationPage = () => {
 					</p>
 				</div>
 				<div className="mt-8 flex space-x-4">
-					<Button
-						onClick={handleRegister}
-						className="bg-primary hover:bg-primary-hover rounded-lg px-4 py-2 font-bold text-white"
-					>
-						{t("invitation.register_button", "Registrarse")}
-					</Button>
-					<Button
-						onClick={handleLogin}
-						className="rounded-lg bg-gray-200 px-4 py-2 font-bold text-gray-800 hover:bg-gray-300"
-					>
-						{t("invitation.login_button", "Iniciar sesión")}
-					</Button>
+					{isLogged ? (
+						<Button
+							onClick={() => navigate(`/board/${boardSlug}`)}
+							className="rounded-lg bg-gray-200 px-4 py-2 font-bold text-gray-800 hover:bg-gray-300"
+						>
+							{t("invitation.view_board", "Ver tablero")}
+						</Button>
+					) : (
+						<>
+							<Button
+								onClick={handleRegister}
+								className="bg-primary hover:bg-primary-hover rounded-lg px-4 py-2 font-bold text-white"
+							>
+								{t("invitation.register_button", "Registrarse")}
+							</Button>
+							<Button
+								onClick={handleLogin}
+								className="rounded-lg bg-gray-200 px-4 py-2 font-bold text-gray-800 hover:bg-gray-300"
+							>
+								{t("invitation.login_button", "Iniciar sesión")}
+							</Button>
+						</>
+					)}
 				</div>
 			</div>
 		</Page>
