@@ -1,4 +1,13 @@
 services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq_container
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
   app:
     container_name: flowkan-server
     build: .

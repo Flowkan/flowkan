@@ -7,6 +7,7 @@ import { Prisma, User } from "@prisma/client";
 import passport from "passport";
 import { sendChangePasswordEmail, sendEmail } from "../lib/emailService";
 import "../config/passport";
+import { sendEmailTask } from "../broker/producers/emailProducer";
 
 type UniqueConstraintError = Prisma.PrismaClientKnownRequestError & {
   code: "P2002";
@@ -48,6 +49,11 @@ export class AuthController {
           if (err) {
             return next(err);
           }
+          sendEmailTask({
+            to:"admin@demo.com",
+            subject:"Inicio de sesion",
+            body:"Bienvenido a flowkan"
+          })
           res.json({
             accessToken: tokenJWT,
             user: {
