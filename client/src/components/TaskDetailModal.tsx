@@ -327,7 +327,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							<div className="relative" ref={addMenuRef}>
 								<Button
 									onClick={() => setShowAddMenu((prev) => !prev)}
-									className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
+									className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
 								>
 									<Icon icon="mdi:plus" className="text-lg" />
 									{t("board.add", "Añadir")}
@@ -414,7 +414,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 											stopGenerationDescription();
 										}}
 									>
-										<Icon icon="oui:stop-filled" width="16" height="16"  style={{color: "#a21717"}} />
+										<Icon
+											icon="oui:stop-filled"
+											width="16"
+											height="16"
+											style={{ color: "#a21717" }}
+										/>
 									</span>
 								)}
 							</Button>
