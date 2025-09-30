@@ -145,8 +145,9 @@ export class BoardController {
       });
 
       if (currentBoard?.image) {
-        const originalToDelete = `/uploads/boards/${currentBoard.image}_o.webp`;
-        const thumbnailToDelete = `/uploads/boards/${currentBoard.image}_t.webp`;
+        const imageName = currentBoard.image.replace(".webp", "");
+        const originalToDelete = `/uploads/boards/${imageName}_o.webp`;
+        const thumbnailToDelete = `/uploads/boards/${imageName}_t.webp`;
         deleteImage({
           originalImagePath: originalToDelete,
           thumbnailImagePath: thumbnailToDelete,
@@ -168,8 +169,9 @@ export class BoardController {
       await this.boardService.delete({ userId, boardId });
 
       if (currentBoard?.image) {
-        const originalToDelete = `/uploads/boards/${currentBoard.image}_o.webp`;
-        const thumbnailToDelete = `/uploads/boards/${currentBoard.image}_t.webp`;
+        const imageName = currentBoard.image.replace(".webp", "");
+        const originalToDelete = `/uploads/boards/${imageName}_o.webp`;
+        const thumbnailToDelete = `/uploads/boards/${imageName}_t.webp`;
         deleteImage({
           originalImagePath: originalToDelete,
           thumbnailImagePath: thumbnailToDelete,

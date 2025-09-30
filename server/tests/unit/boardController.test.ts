@@ -35,6 +35,7 @@ let res: any;
 
 beforeEach(() => {
   jest.clearAllMocks();
+  process.env.JWT_SECRET = "fake-secret";
 
   boardController = new BoardController(mockBoardService, mockAuthService);
 
@@ -231,5 +232,163 @@ describe("boardController - happy path", () => {
       originalImagePath: "/uploads/boards/old-image_o.webp",
       thumbnailImagePath: "/uploads/boards/old-image_t.webp",
     });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockUpdatedBoard);
+  });
+
+  test("should delete an existing board without image", async () => {
+    req.apiUserId = 1;
+    req.params.id = "1";
+
+    mockBoardService.get = jest
+      .fn()
+      .mockResolvedValue({ id: 1, title: "Board 1" });
+    mockBoardService.delete = jest.fn().mockResolvedValue(undefined);
+
+    await boardController.delete(req, res);
+
+    expect(mockBoardService.get).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: 1,
+    });
+    expect(mockBoardService.delete).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: 1,
+    });
+    expect(res.status).toHaveBeenCalledWith(204);
+    expect(res.json).toHaveBeenCalledWith({});
+  });
+
+  test("should delete an existing board with image", async () => {
+    req.apiUserId = 1;
+    req.params.id = "1";
+
+    const mockCurrentBoard = {
+      id: 1,
+      title: "Board 1",
+      ownerId: 1,
+      image: "image.webp",
+    };
+
+    mockBoardService.get = jest.fn().mockResolvedValue(mockCurrentBoard);
+    mockBoardService.delete = jest.fn().mockResolvedValue(undefined);
+
+    await boardController.delete(req, res);
+
+    expect(mockBoardService.get).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: 1,
+    });
+    expect(mockBoardService.delete).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: 1,
+    });
+    expect(deleteImage).toHaveBeenCalledWith({
+      originalImagePath: "/uploads/boards/image_o.webp",
+      thumbnailImagePath: "/uploads/boards/image_t.webp",
+    });
+    expect(res.status).toHaveBeenCalledWith(204);
+    expect(res.json).toHaveBeenCalledWith({});
+  });
+
+  test("should generate an invitation link for a board", async () => {
+    req.apiUserId = 1;
+    req.params.id = "1";
+
+    const mockBoard = {
+      id: 1,
+      title: "Board 1",
+      ownerId: 1,
+      slug: "board-1",
+      image: "board.webp",
+    };
+
+    const mockInviter = {
+      id: 1,
+      name: "Test",
+      photo: "photo.jpg",
+    };
+
+    const jwtMock = jest.requireMock("jsonwebtoken") as { sign: jest.Mock };
+    jwtMock.sign.mockReturnValue("fake-token");
+
+    mockBoardService.get = jest.fn().mockResolvedValue(mockBoard);
+    mockAuthService.findById = jest.fn().mockResolvedValue(mockInviter);
+
+    await boardController.shareBoard(req, res);
+
+    expect(mockBoardService.get).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: 1,
+    });
+    expect(mockAuthService.findById).toHaveBeenCalledWith(1);
+    expect(jwtMock.sign).toHaveBeenCalledWith(
+      { boardId: 1, inviterId: 1, type: "board-invitation" },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" },
+    );
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({
+      token: "fake-token",
+      inviterName: "Test",
+      boardTitle: "Board 1",
+      inviterPhoto: "photo.jpg",
+      boardId: 1,
+      slug: "board-1",
+    });
+  });
+
+  test("should accept a board invitation successfully", async () => {
+    req.apiUserId = 1;
+    req.body = { token: "fake-token" };
+
+    const mockPayload = {
+      boardId: "1",
+      inviterId: 2,
+      email: "test@test.com",
+      type: "board-invitation",
+    };
+
+    const jwtMock = jest.requireMock("jsonwebtoken") as { verify: jest.Mock };
+    jwtMock.verify.mockReturnValue(mockPayload);
+
+    mockBoardService.acceptInvitation = jest.fn().mockResolvedValue(undefined);
+
+    await boardController.acceptInvitation(req, res);
+
+    expect(jwtMock.verify).toHaveBeenCalledWith(
+      "fake-token",
+      process.env.JWT_SECRET,
+    );
+    expect(mockBoardService.acceptInvitation).toHaveBeenCalledWith({
+      boardId: 1,
+      userId: 1,
+    });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith(
+      "¡Invitación aceptada para el tablero 1!",
+    );
+  });
+
+  test("should return every member in a board", async () => {
+    req.apiUserId = 1;
+    req.params.id = "1";
+
+    const mockUsers = [
+      { userId: 1, boardId: "1", name: "User 1" },
+      { userId: 2, boardId: "1", name: "User 2" },
+      { userId: 3, boardId: "1", name: "User 3" },
+    ];
+
+    mockBoardService.getBoardUsers = jest.fn().mockResolvedValue(mockUsers);
+
+    await boardController.boardUsers(req, res);
+
+    expect(mockBoardService.getBoardUsers).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: "1",
+    });
+    expect(mockBoardService.getBoardUsers).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith(mockUsers);
   });
 });
