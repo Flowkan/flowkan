@@ -3,13 +3,12 @@ import { Page } from "../components/layout/page";
 import React from "react";
 import { Link } from "react-router-dom";
 
-// Definición de la interfaz para la estructura de las soluciones
 interface SolutionItem {
-	key: string; // Clave para la traducción
-	icon: React.ReactNode; // Elemento SVG del icono
+	key: string;
+	icon: React.ReactNode;
 	iconClasses: {
-		circle: string; // Clase de fondo para el círculo
-		svg: string; // Clase de color para el SVG
+		circle: string;
+		svg: string;
 	};
 }
 
@@ -146,23 +145,18 @@ export const SolutionsPage: React.FC = () => {
 						</p>
 					</div>
 
-					{/* Burbujas de fondo (Estilo Home) */}
 					<div className="absolute top-0 left-0 z-0 h-full w-full opacity-20">
 						<div className="bg-accent-light animate-blob absolute -top-16 -left-16 h-64 w-64 rounded-full opacity-70 mix-blend-multiply blur-xl filter"></div>
 						<div className="bg-primary-light animate-blob animation-delay-2000 absolute right-0 -bottom-20 h-64 w-64 rounded-full opacity-70 mix-blend-multiply blur-xl filter"></div>
 					</div>
 				</section>
 
-				{/* --- */}
-
-				{/* Sección de Soluciones por Caso de Uso */}
 				<section className="bg-background-light-grey px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-7xl">
 						<h2 className="text-text-heading mb-16 text-center text-3xl font-bold md:text-4xl">
 							{t("solutions.main.title", "Encuentra tu Solución Perfecta")}
 						</h2>
 
-						{/* Grid de Cards de Soluciones (2 columnas en tablet, 3 en desktop) */}
 						<div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
 							{solutionsData.map((solution) => (
 								<div
@@ -197,11 +191,8 @@ export const SolutionsPage: React.FC = () => {
 					</div>
 				</section>
 
-				{/* --- */}
-
-				{/* Sección de CTA al final */}
 				<section className="bg-background-page px-6 py-20 md:px-12">
-					<div className="mx-auto max-w-4xl max-w-7xl text-center">
+					<div className="mx-auto max-w-7xl text-center">
 						<h2 className="text-text-heading mb-4 text-3xl font-bold md:text-4xl">
 							{t(
 								"solutions.cta.title",
