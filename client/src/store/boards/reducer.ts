@@ -1,5 +1,6 @@
 import type { Actions, ActionsRejected } from "./actions";
 import type { Board, Column } from "../../pages/boards/types";
+import { applyDragResult } from "../../utils/tools";
 import type { BoardsState } from "../types/defaultStates";
 
 const storedUser = localStorage.getItem("user");
@@ -23,6 +24,17 @@ export function boardsReducer(
 	action: Actions,
 ): BoardsState["boards"] {
 	switch (action.type) {
+		case "boards/update/remote": {
+			if (!state.currentBoard) {
+				return state;
+			}
+			const updateBoard = applyDragResult(state.currentBoard, action.payload);
+			console.log("Reducer nuevo", updateBoard);
+			return {
+				...state,
+				currentBoard: updateBoard,
+			};
+		}
 		case "boards/fetchBoard/pending":
 			return { ...state, loading: true, error: null };
 

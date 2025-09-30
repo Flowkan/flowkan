@@ -27,7 +27,11 @@ beforeEach(() => {
 });
 
 describe("Verify that the credentials are correct", () => {
-	const mockCredentials = { email: "test@example.com", password: "12345678" };
+	const mockCredentials = {
+		email: "test@example.com",
+		password: "12345678",
+		turnstileResponse: "fdsafasdfsad",
+	};
 
 	// Tipado de mockResponse según AxiosResponse
 	const mockResponse: AxiosResponse<{
@@ -37,7 +41,7 @@ describe("Verify that the credentials are correct", () => {
 			name: string;
 			email: string;
 			password: string;
-			photo?: string | null | undefined;
+			photo: string | null | undefined;
 		};
 	}> = {
 		data: {
@@ -47,6 +51,7 @@ describe("Verify that the credentials are correct", () => {
 				name: "Test User",
 				email: "test@example.com",
 				password: "12345678",
+				photo: null,
 			},
 		},
 		status: 200,

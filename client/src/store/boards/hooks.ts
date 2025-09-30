@@ -13,6 +13,7 @@ import {
 	editColumn,
 	addAssignee,
 	removeAssignee,
+	updateRemoteBoard,
 } from "./actions";
 import {
 	getBoards,
@@ -22,6 +23,7 @@ import {
 	getUiPending,
 	getUiError,
 } from "./selectors";
+import type { DropResult } from "@hello-pangea/dnd";
 
 //
 // ─── BOARDS HOOKS ──────────────────────────────────────────────
@@ -57,6 +59,13 @@ export function useFetchBoardByIdAction() {
 		},
 		[dispatch],
 	);
+}
+
+export function useUpdateBoardRemote() {
+	const dispatch = useAppDispatch();
+	return function (result: DropResult) {
+		return dispatch(updateRemoteBoard(result));
+	};
 }
 
 export function useAddBoardAction() {

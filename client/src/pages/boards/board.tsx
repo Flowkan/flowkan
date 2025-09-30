@@ -1,10 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
-import {
-	DragDropContext,
-	Droppable,
-	type DropResult,
-	type DraggableLocation,
-} from "@hello-pangea/dnd";
+import { DragDropContext, Droppable, type DropResult } from "@hello-pangea/dnd";
 import { useParams, useNavigate } from "react-router-dom";
 import Column from "../../components/Column";
 import TaskDetailModal from "../../components/TaskDetailModal";
@@ -21,7 +16,11 @@ import {
 	useBoards,
 	useFetchBoardsAction,
 	useBoardsLoading,
+	useUpdateBoardRemote,
 } from "../../store/boards/hooks";
+import { useBoardItemSocket } from "./board-socket/context";
+import { useSocket } from "../../hooks/socket/context";
+import { applyDragResult } from "../../utils/tools";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { editTask } from "../../store/boards/actions";
@@ -29,32 +28,7 @@ import { Button } from "../../components/ui/Button";
 import { FormFields } from "../../components/ui/FormFields";
 import { Icon } from "@iconify/react";
 import { t } from "i18next";
-
-const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
-	const result = Array.from(list);
-	const [removed] = result.splice(startIndex, 1);
-	result.splice(endIndex, 0, removed);
-	return result;
-};
-
-const move = <T,>(
-	source: T[],
-	destination: T[],
-	droppableSource: DraggableLocation,
-	droppableDestination: DraggableLocation,
-): { [key: string]: T[] } => {
-	const sourceClone = Array.from(source);
-	const destClone = Array.from(destination);
-	const [removed] = sourceClone.splice(droppableSource.index, 1);
-
-	destClone.splice(droppableDestination.index, 0, removed);
-
-	const result: { [key: string]: T[] } = {};
-	result[droppableSource.droppableId] = sourceClone;
-	result[droppableDestination.droppableId] = destClone;
-
-	return result;
-};
+import { useDismiss } from "../../hooks/useDismissClickAndEsc";
 
 const Board = () => {
 	const fetchBoardAction = useFetchBoardByIdAction();
@@ -65,21 +39,26 @@ const Board = () => {
 	const addColumnAction = useAddColumnAction();
 	const updateColumnAction = useUpdateColumnAction();
 	const removeColumnAction = useDeleteColumnAction();
+	const updateBoardRemoteMode = useUpdateBoardRemote();
 	const { slug } = useParams<{ slug: string }>();
 	const allBoards = useBoards();
 	const boardsLoading = useBoardsLoading();
 	const navigate = useNavigate();
 	const error = useBoardsError();
+	const socket = useSocket();
 	const dispatch = useAppDispatch();
 
 	const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
 	const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const { open: openMenu, setOpen: setOpenMenu, ref: refMenu } = useDismiss<HTMLDivElement>();
 	const [newColumnName, setNewColumnName] = useState("");
 	const [resolvedBoardId, setResolvedBoardId] = useState<string | undefined>(
 		undefined,
 	);
 	const boardData = useAppSelector((state) => state.boards.currentBoard);
+
+	const { handleDragStart, handleDragUpdate, handleDragEnd } =
+		useBoardItemSocket();
 
 	const selectedTask = useMemo(() => {
 		if (!boardData || !selectedTaskId) return null;
@@ -122,74 +101,83 @@ const Board = () => {
 		}
 	}, [error, navigate]);
 
+	useEffect(() => {
+		if (!socket) return;
+
+		const handleRemoteDragEnd = ({ result }: { result: DropResult }) => {
+			updateBoardRemoteMode(result);
+		};
+
+		socket.on("board:dragend", handleRemoteDragEnd);
+
+		return () => {
+			socket.off("board:dragend", handleRemoteDragEnd);
+		};
+	}, [socket, updateBoardRemoteMode]);
+
 	const onDragEnd = useCallback(
 		(result: DropResult) => {
+			const { destination, source, type } = result;
+
+			handleDragEnd(result);
+			if (!destination) {
+				handleDragEnd(result);
+				return;
+			}
+
+			if (
+				destination.droppableId === source.droppableId &&
+				destination.index === source.index
+			) {
+				return;
+			}
+
+			updateBoardRemoteMode(result);
+
 			if (!boardData) return;
-			const { type, source, destination } = result;
-			if (!destination) return;
+			const newBoardData = applyDragResult(boardData, result);
 
-			// ARRASRTRE DE COLUMNAS
 			if (type === "column") {
-				const newLists = reorder(
-					boardData.lists,
-					source.index,
-					destination.index,
-				);
-
-				newLists.forEach((col, index) => {
-					updateColumnAction(Number(col.id), { position: index });
+				newBoardData.lists.forEach((list, index) => {
+					updateColumnAction(Number(list.id), { position: index });
 				});
 			} else {
-				// ARRASRTRE DE TARJETAS
-				const sInd = source.droppableId;
-				const dInd = destination.droppableId;
-
-				const sourceCol = boardData.lists.find(
-					(c) => c.id?.toString() === sInd,
+				const destListId = destination.droppableId;
+				const sourceListId = source.droppableId;
+				const destCol = newBoardData.lists.find(
+					(c) => c.id?.toString() === destListId,
 				);
-				const destCol = boardData.lists.find((c) => c.id?.toString() === dInd);
-				if (!sourceCol || !destCol) return;
 
-				let newSourceCards;
-				let newDestCards;
-
-				if (sInd === dInd) {
-					newSourceCards = reorder(
-						sourceCol.cards,
-						source.index,
-						destination.index,
-					);
-					newDestCards = newSourceCards;
-				} else {
-					const result = move(
-						sourceCol.cards,
-						destCol.cards,
-						source,
-						destination,
-					);
-					newSourceCards = result[sInd];
-					newDestCards = result[dInd];
-				}
-
-				// Persistencia en API: actualizar posición de cada tarjeta
-				newDestCards.forEach((t, index) => {
-					updateTaskAction(Number(dInd), t.id!.toString(), {
-						listId: Number(dInd),
-						position: index,
-					});
-				});
-
-				if (sInd !== dInd) {
-					newSourceCards.forEach((t, index) => {
-						updateTaskAction(Number(sInd), t.id!.toString(), {
-							listId: Number(sInd),
+				if (destCol) {
+					destCol.cards.forEach((task, index) => {
+						updateTaskAction(Number(destListId), task.id!.toString(), {
+							listId: Number(destListId),
 							position: index,
 						});
 					});
 				}
+
+				if (sourceListId !== destListId) {
+					const sourceCol = newBoardData.lists.find(
+						(c) => c.id?.toString() === sourceListId,
+					);
+					if (sourceCol) {
+						sourceCol.cards.forEach((task, index) => {
+							updateTaskAction(Number(sourceListId), task.id!.toString(), {
+								position: index,
+							});
+						});
+					}
+				}
 			}
 		},
-		[boardData, updateTaskAction, updateColumnAction],
+		[
+			boardData,
+			handleDragEnd,
+			updateBoardRemoteMode,
+			updateColumnAction,
+			updateTaskAction,
+		],
 	);
 
 	const handleAddTask = useCallback(
@@ -204,7 +192,6 @@ const Board = () => {
 				description: "",
 				position: (currentColumn.cards ?? []).length,
 			};
-
 			addTaskAction(Number(columnId), newTask);
 		},
 		[boardData, addTaskAction],
@@ -214,7 +201,7 @@ const Board = () => {
 		(
 			columnId: string,
 			taskId: string,
-			updatedFields: { title?: string; description?: string } | FormData,
+			updatedFields: { title?: string; description?: string },
 		) => {
 			updateTaskAction(Number(columnId), taskId, updatedFields);
 		},
@@ -247,9 +234,7 @@ const Board = () => {
 		[boardData, updateColumnAction],
 	);
 
-	const handleAddColumnToggle = useCallback(() => {
-		setIsMenuOpen((prev) => !prev);
-	}, []);
+	const handleAddColumnToggle = () => setOpenMenu((prev) => !prev);
 
 	const handleCreateColumn = useCallback(() => {
 		if (newColumnName.trim() !== "" && boardData) {
@@ -261,7 +246,7 @@ const Board = () => {
 			};
 			addColumnAction(boardData.id, newColumn);
 			setNewColumnName("");
-			setIsMenuOpen(false);
+			setOpenMenu(false);
 		}
 	}, [boardData, newColumnName, addColumnAction]);
 
@@ -277,13 +262,17 @@ const Board = () => {
 
 	return (
 		<BackofficePage title={boardData?.title} backgroundImg={boardData?.image}>
-			<DragDropContext onDragEnd={onDragEnd}>
+			<DragDropContext
+				onDragStart={handleDragStart}
+				onDragUpdate={handleDragUpdate}
+				onDragEnd={onDragEnd}
+			>
 				<Droppable droppableId="board" type="column" direction="horizontal">
 					{(provided) => (
 						<div
 							ref={provided.innerRef}
 							{...provided.droppableProps}
-							className="custom-scrollbar flex gap-4 px-4 py-8 sm:px-8"
+							className="custom-scrollbar flex min-h-[calc(100vh-8rem)] items-stretch gap-6 overflow-x-auto px-4 py-8 sm:px-8"
 						>
 							{boardData?.lists.map((column) => (
 								<Column
@@ -315,18 +304,17 @@ const Board = () => {
 							{provided.placeholder}
 
 							{/* Add new column */}
-							<div className="items-left relative flex h-full w-80 flex-shrink-0 flex-col">
+							<div className="relative flex w-full flex-row items-baseline justify-start sm:w-80" ref={refMenu}>
 								<Button
 									onClick={handleAddColumnToggle}
 									className="text-text-placeholder hover:bg-background-hover-column border-border-medium bg-gray/20 hover:border-accent bg-border-light bg-gray/80 flex h-10 w-10 items-center justify-center rounded-lg border-2 text-2xl font-semibold shadow-md transition-colors duration-200"
 								>
-									{/* Icon Plus */}
 									<div className="shadow-md transition-all duration-200 ease-in-out hover:scale-[1.45] hover:rotate-90 hover:shadow-xl hover:shadow-indigo-300/30 active:scale-123">
 										<Icon icon="oui:plus" width="1.2em" height="1.2em" />
 									</div>
 								</Button>
-								{isMenuOpen && (
-									<div className="bg-background-dark-footer absolute top-16 z-50 mt-2 w-full rounded-lg border border-gray-200 p-4 shadow-lg">
+								{openMenu && (
+									<div className="bg-background-dark-footer fixed top-24 right-4 z-50 w-72 rounded-lg border border-gray-200 p-4 shadow-lg" ref={refMenu}>
 										<h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
 											{t("board.add_column", "Añadir Columna")}
 										</h3>

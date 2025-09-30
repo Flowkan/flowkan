@@ -3,20 +3,18 @@ import { Page } from "../components/layout/page";
 import React from "react";
 import { Link } from "react-router-dom";
 
-// Definición de la interfaz para la estructura de las características
 interface FeatureItem {
-	key: string; // Clave para la traducción
-	icon: React.ReactNode; // Elemento SVG del icono
+	key: string;
+	icon: React.ReactNode;
 	iconClasses: {
-		circle: string; // Clase de fondo para el círculo (ej: bg-accent-lightest)
-		svg: string; // Clase de color para el SVG (ej: text-accent)
+		circle: string;
+		svg: string;
 	};
 }
 
 export const FeaturesPage: React.FC = () => {
 	const { t } = useTranslation();
 
-	// 💡 He reutilizado algunos iconos que ya tenías en la HomePage
 	const featuresData: FeatureItem[] = [
 		{
 			key: "kanban",
@@ -111,7 +109,7 @@ export const FeaturesPage: React.FC = () => {
 				</svg>
 			),
 			iconClasses: {
-				circle: "bg-secondary-lightest", // Asumiendo una clase 'secondary' o usando 'primary'
+				circle: "bg-secondary-lightest",
 				svg: "text-secondary",
 			},
 		},
@@ -176,29 +174,23 @@ export const FeaturesPage: React.FC = () => {
 						</p>
 						<Link
 							to="/register"
-							className="bg-primary text-text-on-accent hover:bg-primary-dark transform rounded-lg px-8 py-4 text-lg font-semibold shadow-lg transition duration-300 hover:scale-105"
+							className="bg-primary text-text-on-accent hover:bg-primary-dark transform rounded-lg px-6 py-3 text-base font-semibold shadow-lg transition duration-300 hover:scale-105 md:px-8 md:py-4 md:text-lg"
 						>
 							{t("features.banner.cta", "Empezar a Organizar Ahora")} &rarr;
 						</Link>
 					</div>
 
-					{/* Las burbujas de fondo animadas (Estilo Home) */}
 					<div className="absolute top-0 left-0 z-0 h-full w-full opacity-20">
 						<div className="bg-accent-light animate-blob absolute -top-16 -left-16 h-64 w-64 rounded-full opacity-70 mix-blend-multiply blur-xl filter"></div>
 						<div className="bg-primary-light animate-blob animation-delay-2000 absolute right-0 -bottom-20 h-64 w-64 rounded-full opacity-70 mix-blend-multiply blur-xl filter"></div>
 					</div>
 				</section>
-
-				{/* --- */}
-
-				{/* Sección de Cards de Características Detalladas */}
 				<section className="bg-background-light-grey px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-7xl">
 						<h2 className="text-text-heading mb-16 text-center text-3xl font-bold md:text-4xl">
 							{t("features.main.title", "Funcionalidades Clave de Flowkan")}
 						</h2>
 
-						{/* Grid de Características (2 columnas en tablet, 3 en desktop) */}
 						<div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
 							{featuresData.map((feature) => (
 								<div
@@ -227,9 +219,6 @@ export const FeaturesPage: React.FC = () => {
 					</div>
 				</section>
 
-				{/* --- */}
-
-				{/* Sección de CTA al final (Estilo Home Docs) */}
 				<section className="bg-background-page px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-4xl max-w-7xl text-center">
 						<h2 className="text-text-heading mb-4 text-3xl font-bold md:text-4xl">
@@ -246,7 +235,7 @@ export const FeaturesPage: React.FC = () => {
 						</p>
 						<Link
 							to="/register"
-							className="bg-accent text-text-on-accent hover:bg-accent-dark transform rounded-lg px-8 py-4 text-lg font-semibold shadow-lg transition duration-300 hover:scale-105"
+							className="bg-accent text-text-on-accent hover:bg-accent-dark transform rounded-lg px-6 py-3 text-base font-semibold shadow-lg transition duration-300 hover:scale-105 md:px-8 md:py-4 md:text-lg"
 						>
 							{t("features.cta.button", "Comenzar Gratis Hoy Mismo")} &rarr;
 						</Link>

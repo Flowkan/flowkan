@@ -18,7 +18,7 @@
 		background-color: white;
 		padding: 30px;
 		border-radius: 8px;
-		width: 50%;
+		width: min(90%, 500px);
 		max-width: 500px;
 		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 
@@ -99,9 +99,11 @@
 	}
 }
 
-@media screen and (min-width: 838px) {
+@media screen and (max-width: 500px) {
 	.modal-bg {
 		.modal-card {
+			width: 90%;
+			padding: 20px;
 			.modal-btns-container {
 				display: flex;
 				flex-direction: row;

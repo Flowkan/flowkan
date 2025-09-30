@@ -13,6 +13,8 @@ import { PricingPage } from "./pages/PricingPage";
 import { FeaturesPage } from "./pages/FeaturesPage";
 import { SolutionsPage } from "./pages/SolutionsPage";
 import { SkeletonCustom } from "./components/ui/skeleton/skeleton";
+import BoardItemSocket from "./pages/boards/board-socket/board-item-socket.tsx";
+// import SocketProvider from "./hooks/socket/socket-provider.tsx";
 
 const LoginPage = lazy(() =>
 	import("./pages/login/login").then((m) => ({ default: m.LoginPage })),
@@ -93,14 +95,6 @@ function App() {
 							>
 								<RegisterPage />
 							</Suspense>
-						</AuthRoute>
-					}
-				/>
-				<Route
-					path="profile"
-					element={
-						<AuthRoute requireAuth={true}>
-							<Profile />
 						</AuthRoute>
 					}
 				/>
@@ -209,7 +203,39 @@ function App() {
 								</div>
 							}
 						>
-							<Board />
+							<BoardItemSocket>
+								<Board />
+							</BoardItemSocket>
+						</Suspense>
+					}
+				/>
+			</Route>
+			<Route
+				path="/profile"
+				element={
+					<AuthRoute requireAuth={true}>
+						<BackofficeLayout />
+					</AuthRoute>
+				}
+			>
+				<Route
+					index
+					element={
+						<Suspense
+							fallback={
+								<div className="flex min-h-screen items-center justify-center">
+									<SkeletonCustom
+										rows={1}
+										columns={4}
+										rowHeight="h-200"
+										gap="gap-4"
+										className="w-full min-w-6xl p-10 shadow-2xl"
+										spinnerText="Cargando Tablero"
+									/>
+								</div>
+							}
+						>
+							<Profile />
 						</Suspense>
 					}
 				/>

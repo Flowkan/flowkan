@@ -142,7 +142,7 @@ export const removeAssignee = async (
 	cardId: number,
 	assigneeId: number,
 ): Promise<void> => {
-	await apiClient.delete(`${CARD_ENDPOINT.CARDS}/removeAssignee`, {
-		data: { cardId, assigneeId },
-	});
+	await apiClient.delete(
+		`${CARD_ENDPOINT.CARDS}/removeAssignee/${cardId}/${assigneeId}`,
+	);
 };

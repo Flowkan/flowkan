@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Droppable } from "@hello-pangea/dnd";
 import type { Column as ColumnType, Task } from "../pages/boards/types";
-import TaskCard from "./TaskCard";
 import DropdownMenu from "./DropdownMenu";
+import WrapColumn from "./WrapColumn";
 
 interface Props {
 	column: ColumnType;
@@ -54,7 +54,7 @@ const Column = ({
 				setEditedTitle(column.title);
 			}
 		} else if (editedTitle.trim() !== column.title && column.id) {
-			onEditColumnTitle(column.id!, editedTitle.trim());
+			onEditColumnTitle(column.id, editedTitle.trim());
 		}
 	}, [
 		editedTitle,
@@ -72,7 +72,7 @@ const Column = ({
 				if (editedTitle.trim() === "") {
 					e.currentTarget.blur();
 				} else if (column.id) {
-					onEditColumnTitle(column.id!, editedTitle.trim());
+					onEditColumnTitle(column.id, editedTitle.trim());
 				}
 			} else if (e.key === "Escape") {
 				setIsEditingTitle(false);
@@ -150,8 +150,14 @@ const Column = ({
 		};
 	}, [isAddingTask, newTaskContent, handleAddTask, handleCancelAddTask]);
 
+	const columnRef = useRef<HTMLDivElement | null>(null);
+	const widthGhost = useRef(0);
+	if (columnRef.current) {
+		widthGhost.current = columnRef.current.clientWidth;
+	}
+
 	return (
-		<div className="flex w-80 min-h-32 max-w-md flex-shrink-0 flex-grow flex-col rounded-lg bg-white/45 p-4 shadow-xl">
+		<div className="flex w-80 max-w-md flex-shrink-0 flex-grow flex-col rounded-lg bg-white/45 p-4 shadow-xl">
 			<div className="mb-4 flex items-center justify-between">
 				<h3
 					onClick={handleTitleClick}
@@ -291,24 +297,15 @@ const Column = ({
 
 			<Droppable droppableId={String(column.id)} type="task">
 				{(provided, snapshot) => (
-					<div
-						ref={provided.innerRef}
-						{...provided.droppableProps}
-						className={`flex-grow rounded-md p-2 transition-colors duration-200 ${snapshot.isDraggingOver ? "bg-background-hover-column" : ""}`}
-					>
-						{(column.cards ?? []).map((item: Task, index: number) => (
-							<TaskCard
-								key={item.id}
-								task={item}
-								index={index}
-								columnId={String(column.id)}
-								onEditTask={(updatedFields) => onEditTask(updatedFields)}
-								onDeleteTask={onDeleteTask}
-								onOpenTaskDetail={onOpenTaskDetail}
-							/>
-						))}
-						{provided.placeholder}
-					</div>
+					<WrapColumn
+						provided={provided}
+						snapshot={snapshot}
+						columnId={String(column.id)}
+						cards={column.cards}
+						onDeleteTask={onDeleteTask}
+						onEditTask={onEditTask}
+						onOpenTaskDetail={onOpenTaskDetail}
+					/>
 				)}
 			</Droppable>
 
@@ -317,7 +314,7 @@ const Column = ({
 					<button
 						ref={addTaskButtonRef}
 						onClick={handleStartAddingTask}
-						className="bg-background-input text-black/95 hover:bg-background-hover-card flex w-full items-center justify-center rounded-md py-2 font-semibold transition-colors duration-200"
+						className="bg-background-input hover:bg-background-hover-card flex w-full items-center justify-center rounded-md py-2 font-semibold text-black/95 transition-colors duration-200"
 					>
 						+ Añadir tarjeta
 					</button>

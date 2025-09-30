@@ -22,11 +22,9 @@ export async function updateFieldProfile(userId: string, form: FormData) {
 }
 
 export async function getProfileData() {
-	// console.log(`${resolveBaseURLFromEnv()}${pathUrl}`);
-
 	const response = await apiClient.get<ResponseProfileData>(
-		`${resolveBaseURLFromEnv()}${pathUrl}`,
+		`${resolveBaseURLFromEnv()}/${pathUrl}`,
 	);
-	// const {error,profile} = response.data
+
 	return response.data;
 }
