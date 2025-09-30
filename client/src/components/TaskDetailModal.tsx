@@ -267,7 +267,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		} catch (error) {
 			toast.custom((t) => (
 				<CustomToast
-					message="Error al generar la descripción"
+					message={`Error al generar la descripción ${error}`}
 					type="error"
 					t={t}
 				/>
@@ -414,7 +414,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 											stopGenerationDescription();
 										}}
 									>
-										<Icon icon="oui:stop-filled" width="16" height="16"  style={{color: "#a21717"}} />
+										<Icon
+											icon="oui:stop-filled"
+											width="16"
+											height="16"
+											style={{ color: "#a21717" }}
+										/>
 									</span>
 								)}
 							</Button>
@@ -552,8 +557,16 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 														<audio
 															controls
 															src={`${import.meta.env.VITE_BASE_URL}${mediaItem.url}`}
-															className="h-8"
-														/>
+															className="h-8 w-58"
+														>
+															<track
+																kind="captions"
+																label="Transcripción"
+																src=""
+																default
+															/>
+															Tu navegador no soporta la reproducción de audio.
+														</audio>
 													</>
 												) : (
 													<>
