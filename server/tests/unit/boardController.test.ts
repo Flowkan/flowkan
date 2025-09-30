@@ -2,6 +2,7 @@ import { BoardController } from "../../src/controllers/boardController";
 import AuthService from "../../src/services/AuthService";
 import BoardService from "../../src/services/BoardService";
 import { deleteImage } from "../../src/utils/fileUtils";
+import jwt, { JsonWebTokenError } from "jsonwebtoken";
 
 const mockBoardService = {
   getAllBoardsByUserId: jest.fn(),
@@ -24,10 +25,18 @@ jest.mock("../../src/utils/fileUtils", () => ({
   deleteImage: jest.fn(),
 }));
 
-jest.mock("jsonwebtoken", () => ({
+/* jest.mock("jsonwebtoken", () => ({
   sign: jest.fn(),
   verify: jest.fn(),
-}));
+})); */
+jest.mock("jsonwebtoken", () => {
+  const actual = jest.requireActual("jsonwebtoken");
+  return {
+    ...actual,
+    sign: jest.fn(),
+    verify: jest.fn(),
+  };
+});
 
 let boardController: BoardController;
 let req: any;
@@ -390,5 +399,340 @@ describe("boardController - happy path", () => {
     });
     expect(mockBoardService.getBoardUsers).toHaveBeenCalledTimes(1);
     expect(res.json).toHaveBeenCalledWith(mockUsers);
+  });
+});
+
+describe("boardController - error path", () => {
+  const originalSecret = process.env.JWT_SECRET;
+
+  afterEach(() => {
+    process.env.JWT_SECRET = originalSecret;
+  });
+
+  test("should throw an error when returning all boards", async () => {
+    req.apiUserId = 1;
+    req.query.limit = "10";
+    req.query.page = "1";
+
+    mockBoardService.getAllBoardsByUserId = jest
+      .fn()
+      .mockRejectedValue(new Error("Database error"));
+
+    await boardController.getAll(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith("Error al obtener los tableros");
+    expect(mockBoardService.getAllBoardsByUserId).toHaveBeenCalledWith(
+      1,
+      10,
+      0,
+    );
+  });
+
+  test("should throw an error when trying to get a board by ID", async () => {
+    req.apiUserId = 1;
+    req.params.id = "1";
+
+    mockBoardService.get = jest
+      .fn()
+      .mockRejectedValue(new Error("Database error"));
+
+    await boardController.get(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith("Error al obtener el tablero");
+    expect(mockBoardService.get).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: 1,
+    });
+  });
+
+  test("should throw an error when trying to get a board by title", async () => {
+    req.apiUserId = 1;
+    req.query.title = "Board";
+
+    mockBoardService.getBoardByTitle = jest
+      .fn()
+      .mockRejectedValue(new Error("Database error"));
+
+    await boardController.getBoardByTitle(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.send).toHaveBeenCalledWith(
+      "No existen tableros con este nombre",
+    );
+    expect(mockBoardService.getBoardByTitle).toHaveBeenCalledWith(1, "Board");
+  });
+
+  test("should throw an error when trying to get a board by member", async () => {
+    req.apiUserId = 1;
+    req.query.member = "Member";
+
+    mockBoardService.getBoardByMember = jest
+      .fn()
+      .mockRejectedValue(new Error("Database error"));
+
+    await boardController.getBoardByMember(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.send).toHaveBeenCalledWith("No hay tableros con este miembro");
+    expect(mockBoardService.getBoardByMember).toHaveBeenCalledWith(1, "Member");
+  });
+
+  test("should throw an error when trying to create a board", async () => {
+    req.apiUserId = 1;
+    req.body = { title: "New Board" };
+
+    mockBoardService.add = jest
+      .fn()
+      .mockRejectedValue(new Error("database error"));
+
+    await boardController.add(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith("Error al crear el tablero");
+    expect(mockBoardService.add).toHaveBeenCalledWith({
+      userId: 1,
+      title: "New Board",
+      slug: "new-board",
+    });
+  });
+
+  test("should throw an error when trying to create a board with an image", async () => {
+    req.apiUserId = 1;
+    req.body = { title: "New Board", image: "new-board.webp" };
+
+    mockBoardService.add = jest
+      .fn()
+      .mockRejectedValue(new Error("database error"));
+
+    await boardController.add(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith("Error al crear el tablero");
+    expect(mockBoardService.add).toHaveBeenCalledWith({
+      userId: 1,
+      title: "New Board",
+      image: "/uploads/boards/new-board.webp",
+      slug: "new-board",
+    });
+  });
+
+  test("should throw an error when trying to update a board", async () => {
+    req.apiUserId = 1;
+    req.params.id = "1";
+    req.body = { title: "Updated Board" };
+
+    mockBoardService.get = jest
+      .fn()
+      .mockResolvedValue({ id: 1, title: "Old Board", ownerId: 1 });
+    mockBoardService.update = jest
+      .fn()
+      .mockRejectedValue(new Error("Database error"));
+
+    await boardController.update(req, res);
+
+    expect(res.status).toHaveBeenLastCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith("Error al actualizar el tablero");
+    expect(mockBoardService.update).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: 1,
+      data: { title: "Updated Board" },
+    });
+  });
+
+  test("should throw an error when trying to update a board with an image", async () => {
+    req.apiUserId = 1;
+    req.params.id = "1";
+    req.body = { image: "updated-img.webp" };
+
+    mockBoardService.get = jest.fn().mockResolvedValue({
+      id: 1,
+      title: "Old Board",
+      ownerId: 1,
+      image: "old-image.webp",
+    });
+    mockBoardService.update = jest
+      .fn()
+      .mockRejectedValue(new Error("Database error"));
+
+    await boardController.update(req, res);
+
+    expect(res.status).toHaveBeenLastCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith("Error al actualizar el tablero");
+    expect(mockBoardService.update).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: 1,
+      data: { image: "/uploads/boards/updated-img.webp" },
+    });
+  });
+
+  test("should throw an error when trying to delete a board", async () => {
+    req.apiUserId = 1;
+    req.params.id = "1";
+
+    mockBoardService.get = jest
+      .fn()
+      .mockResolvedValue({ userId: 1, boardId: 1 });
+    mockBoardService.delete = jest
+      .fn()
+      .mockRejectedValue(new Error("Database error"));
+
+    await boardController.delete(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith("Error al eliminar el tablero");
+    expect(mockBoardService.delete).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: 1,
+    });
+  });
+
+  test("should return 500 if boardService.get fails", async () => {
+    req.apiUserId = 1;
+    req.params.id = "1";
+
+    mockBoardService.get = jest.fn().mockRejectedValue(new Error("DB error"));
+
+    await boardController.shareBoard(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith(
+      "Error al generar el enlace de invitación",
+    );
+    expect(mockBoardService.get).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: 1,
+    });
+  });
+
+  test("should return 500 if authService.findById fails", async () => {
+    req.apiUserId = 1;
+    req.params.id = "1";
+
+    mockBoardService.get = jest
+      .fn()
+      .mockResolvedValue({ id: 1, title: "Board 1" });
+    mockAuthService.findById = jest
+      .fn()
+      .mockRejectedValue(new Error("DB error"));
+
+    await boardController.shareBoard(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith(
+      "Error al generar el enlace de invitación",
+    );
+    expect(mockBoardService.get).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: 1,
+    });
+    expect(mockAuthService.findById).toHaveBeenCalledWith(1);
+  });
+
+  test("should return 500 if jwt.sign fails", async () => {
+    process.env.JWT_SECRET = "test-secret";
+
+    req.apiUserId = 1;
+    req.params.id = "1";
+
+    mockBoardService.get = jest
+      .fn()
+      .mockResolvedValue({ id: 1, title: "Board 1" });
+    mockAuthService.findById = jest
+      .fn()
+      .mockResolvedValue({ id: 1, name: "Test" });
+
+    const jwtMock = jest.requireMock("jsonwebtoken") as { sign: jest.Mock };
+    jwtMock.sign.mockImplementation(() => {
+      throw new Error("Token generation failed");
+    });
+
+    await boardController.shareBoard(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith(
+      "Error al generar el enlace de invitación",
+    );
+  });
+
+  test("should throw an error if JWT_SECRET is not defined", async () => {
+    delete process.env.JWT_SECRET;
+
+    req.apiUserId = 1;
+    req.params.id = "1";
+
+    await expect(boardController.shareBoard(req, res)).rejects.toThrow(
+      "JWT_SECRET is not defined in environment variables",
+    );
+  });
+
+  test("should throw an error if boardService.acceptInvitation fails", async () => {
+    req.apiUserId = 1;
+    req.body = { token: "fake-token" };
+
+    const jwtMock = jest.requireMock("jsonwebtoken") as { verify: jest.Mock };
+    jwtMock.verify.mockReturnValue({ boardId: "1" });
+
+    mockBoardService.acceptInvitation = jest
+      .fn()
+      .mockRejectedValue(new Error("Database error"));
+
+    await boardController.acceptInvitation(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith("Error al aceptar la invitación");
+    expect(mockBoardService.acceptInvitation).toHaveBeenCalledWith({
+      boardId: 1,
+      userId: 1,
+    });
+  });
+
+  test("should return 401 if token is invalid or expired", async () => {
+    req.apiUserId = 1;
+    req.body = { token: "fake-token" };
+
+    const jwtMock = jest.requireMock("jsonwebtoken") as { verify: jest.Mock };
+    jwtMock.verify.mockImplementation(() => {
+      throw new JsonWebTokenError("invalid token");
+    });
+
+    await boardController.acceptInvitation(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.send).toHaveBeenCalledWith(
+      "Enlace de invitación inválido o expirado",
+    );
+  });
+
+  test("should throw an error if JWT_SECRET is not defined for acceptInvitation", async () => {
+    delete process.env.JWT_SECRET;
+
+    req.apiUserId = 1;
+    req.body = { token: "fake-token" };
+
+    await expect(boardController.acceptInvitation(req, res)).rejects.toThrow(
+      "JWT_SECRET no está en las variables de entorno",
+    );
+  });
+
+  test("should return 500 if boardService.getBoardUsers fails", async () => {
+    req.apiUserId = 1;
+    req.params.id = "1";
+
+    mockBoardService.getBoardUsers = jest
+      .fn()
+      .mockRejectedValue(new Error("Database error"));
+
+    await boardController.boardUsers(req, res);
+
+    expect(mockBoardService.getBoardUsers).toHaveBeenCalledWith({
+      userId: 1,
+      boardId: "1",
+    });
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith(
+      "Error al obtener usuarios del tablero",
+    );
   });
 });

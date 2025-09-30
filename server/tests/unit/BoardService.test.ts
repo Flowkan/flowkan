@@ -252,7 +252,7 @@ describe("BoardService - happy path", () => {
   });
 });
 
-describe("BoardService - errors", () => {
+describe("BoardService - error path", () => {
   test("should throw an error if the board does not exist when update", async () => {
     mockBoardModel.update = jest.fn().mockImplementation(() => {
       throw new Error("Board no encontrado");

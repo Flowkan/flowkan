@@ -180,7 +180,6 @@ export class BoardController {
 
       res.status(204).json({});
     } catch (err) {
-      console.log("errsaddsfdsdsafor", err);
       res.status(500).send("Error al eliminar el tablero");
     }
   };
