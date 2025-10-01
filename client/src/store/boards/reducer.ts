@@ -37,7 +37,6 @@ export function boardsReducer(
 				return state;
 			}
 			const updateBoard = applyDragResult(state.currentBoard, action.payload);
-			console.log("Reducer nuevo", updateBoard);
 			return {
 				...state,
 				currentBoard: updateBoard,

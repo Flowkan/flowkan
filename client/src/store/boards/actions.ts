@@ -273,11 +273,11 @@ export function fetchBoards({
 	};
 }
 
-export function fetchBoard(id: string): AppThunk<Promise<void>> {
+export function fetchBoard(slug: string): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
 		dispatch(fetchBoardPending());
 		try {
-			const board = await api.boards.getBoard(id);
+			const board = await api.boards.getBoard(slug);
 			dispatch(fetchBoardFulfilled(board));
 		} catch (error) {
 			if (error instanceof Error) {
