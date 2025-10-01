@@ -65,6 +65,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 							labelClassName="form-label"
 							value={titleInput}
 							onChange={handleTitleChange}
+							autoFocus
 						/>
 					</div>
 					<div className="file-container">

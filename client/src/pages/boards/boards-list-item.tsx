@@ -5,14 +5,13 @@ import { useState } from "react";
 import EditButton from "../../components/ui/edit-button";
 import ConfirmDelete from "../../components/ui/modals/confirm-delete";
 import ShareBoard from "../../components/ui/modals/share-board";
-import ShareIcon from "../../components/icons/share-icon.svg";
-import { Button } from "../../components/ui/Button";
 import "./boards-list-item.css";
 import { useTranslation } from "react-i18next";
 import { deleteBoard, editBoard } from "../../store/boards/actions";
 import { useAppDispatch } from "../../store";
 import EditBoard from "../../components/ui/modals/edit-board";
 import { randomColor } from "../../lib/randomColor";
+import ShareButton from "../../components/ui/share-button";
 
 interface BoardsItemProps {
 	board: Board;
@@ -116,13 +115,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 								<TrashButton showConfirm={handleShowConfirm} />
 							</div>
 							<div className="share-icon container">
-								<Button
-									onClick={handleShowShareForm}
-									className="share-btn"
-									variant="secondary"
-								>
-									<img src={ShareIcon} alt="Share board" />
-								</Button>
+								<ShareButton showShareForm={handleShowShareForm} />
 							</div>
 						</div>
 					</div>

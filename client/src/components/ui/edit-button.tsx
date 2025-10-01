@@ -1,5 +1,6 @@
-import EditIcon from "../icons/edit-icon.svg";
 import "../../pages/boards/boards-list-item.css";
+import { Icon } from "@iconify/react";
+import { Button } from "./Button";
 
 interface EditButtonProps {
 	showEditForm: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -7,9 +8,19 @@ interface EditButtonProps {
 
 const EditButton = ({ showEditForm }: EditButtonProps) => {
 	return (
-		<button className="edit-btn" onClick={(ev) => showEditForm(ev)}>
-			<img src={EditIcon} alt="Edit board" />
-		</button>
+		<Button
+			className="edit-btn"
+			onClick={(ev) => showEditForm(ev)}
+			title="Editar"
+		>
+			<Icon name="edit"
+				icon="bi:pencil-fill"
+				width="20"
+				height="20"
+				style={{ color: "#181bfb" }}
+				className="cursor-pointer transition-transform duration-200 hover:scale-120"
+			/>
+		</Button>
 	);
 };
 
