@@ -18,7 +18,6 @@ const defaultState: BoardsState = {
 		error: null,
 		currentPage: 1,
 		totalPages: 1,
-		totalCount: 0,
 		hasMore: false,
 	},
 	ui: { pending: false, error: null },
@@ -48,14 +47,15 @@ export function boardsReducer(
 			return { ...state, loading: true, error: null };
 
 		case "boards/fetchBoards/fulfilled":
-			const { boards, pagination } = action.payload;
 			return {
 				...state,
 				loading: false,
-				boards: pagination.page === 1 ? boards : [...state.boards, ...boards],
+				boards:
+					action.payload.pagination.page === 1
+						? action.payload.boards
+						: [...state.boards, ...action.payload.boards],
 				currentPage: action.payload.pagination.page,
 				totalPages: action.payload.pagination.totalPages,
-				totalCount: action.payload.pagination.totalCount,
 				hasMore: action.payload.pagination.hasNextPage,
 			};
 
