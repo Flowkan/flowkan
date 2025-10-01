@@ -51,6 +51,7 @@
 		"eslint-plugin-react-hooks": "5.2.0",
 		"eslint-plugin-react-refresh": "0.4.20",
 		"globals": "16.3.0",
+		"happy-dom": "19.0.2",
 		"i18next-scanner": "4.6.0",
 		"jsdom": "26.1.0",
 		"prettier": "3.6.2",
