@@ -76,7 +76,7 @@ class BoardModel {
       },
       ...boardWithRelationsData,
       take: limit,
-      skip: skip,
+      skip,
     });
   }
 

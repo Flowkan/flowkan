@@ -11,7 +11,16 @@ const defaultState: BoardsState = {
 		user: storedUser ? JSON.parse(storedUser) : null,
 	},
 	profile: null,
-	boards: { boards: [], currentBoard: null, loading: false, error: null },
+	boards: {
+		boards: [],
+		currentBoard: null,
+		loading: false,
+		error: null,
+		currentPage: 1,
+		totalPages: 1,
+		totalCount: 0,
+		hasMore: false,
+	},
 	ui: { pending: false, error: null },
 };
 
@@ -39,7 +48,16 @@ export function boardsReducer(
 			return { ...state, loading: true, error: null };
 
 		case "boards/fetchBoards/fulfilled":
-			return { ...state, loading: false, boards: action.payload };
+			const { boards, pagination } = action.payload;
+			return {
+				...state,
+				loading: false,
+				boards: pagination.page === 1 ? boards : [...state.boards, ...boards],
+				currentPage: action.payload.pagination.page,
+				totalPages: action.payload.pagination.totalPages,
+				totalCount: action.payload.pagination.totalCount,
+				hasMore: action.payload.pagination.hasNextPage,
+			};
 
 		case "boards/fetchBoard/fulfilled":
 			return { ...state, loading: false, currentBoard: action.payload };

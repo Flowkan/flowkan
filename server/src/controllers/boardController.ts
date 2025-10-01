@@ -37,7 +37,7 @@ export class BoardController {
       const userId = req.apiUserId;
       const limit = Math.max(parseInt(req.query.limit as string) || 10, 1);
       const page = Math.max(parseInt(req.query.page as string) || 1, 1);
-      const skip = (page - 1) * limit < 0 ? 0 : (page - 1) * limit;
+      const skip = (page - 1) * limit;
       const withCount = req.query.withCount === "true";
 
       if (withCount) {
@@ -48,9 +48,14 @@ export class BoardController {
           ]);
         return res.json({
           boards,
-          totalCount,
-          page,
-          limit,
+          pagination: {
+            limit,
+            page,
+            totalCount,
+            totalPages: Math.ceil(totalCount / limit),
+            hasNextPage: page < Math.ceil(totalCount / limit),
+            hasPrevPage: page > 1,
+          },
         });
       }
 

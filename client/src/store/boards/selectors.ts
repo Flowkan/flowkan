@@ -5,6 +5,12 @@ import type { RootState } from "..";
 //
 
 export const getBoards = (state: RootState) => state.boards.boards;
+export const getBoardsPagination = (state: RootState) => ({
+  currentPage: state.boards.currentPage,
+  totalPages: state.boards.totalPages,
+  totalCount: state.boards.totalCount,
+  hasMore: state.boards.hasMore,
+});
 
 export const getBoardsByTitle = (state: RootState, seachTitle: string) =>
 	state.boards.boards.filter((b) =>
@@ -52,9 +58,9 @@ export const getBoardsLoading = (state: RootState) => state.boards.loading;
 
 export const getBoardsError = (state: RootState) => state.boards.error;
 
-// 
+//
 // ─── UI ──────────────────────────────────────────────
-// 
+//
 
 export const getUi = (state: RootState) => state.ui;
 

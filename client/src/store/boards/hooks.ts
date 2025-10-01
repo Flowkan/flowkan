@@ -46,8 +46,8 @@ export function useBoardsError() {
 
 export function useFetchBoardsAction() {
 	const dispatch = useAppDispatch();
-	return function (skip: number, limit: number) {
-		return dispatch(fetchBoards(skip, limit));
+	return function (page: number, limit: number) {
+		return dispatch(fetchBoards({ page, limit }));
 	};
 }
 
