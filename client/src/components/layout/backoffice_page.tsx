@@ -1,9 +1,6 @@
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { randomColor } from "../../lib/randomColor";
 import { BoardToolbar } from "./BoardToolbar";
-import { useParams, useLocation } from "react-router-dom";
-import { useBoards } from "../../store/boards/hooks";
-import { useState, useEffect } from "react";
 import { getContrastColor } from "../../utils/contrastColor";
 
 interface BackofficePageProps {
@@ -11,6 +8,7 @@ interface BackofficePageProps {
 	children: ReactNode;
 	className?: string;
 	backgroundImg?: string;
+	boardId?: string | null;
 }
 
 export const BackofficePage = ({
@@ -18,30 +16,15 @@ export const BackofficePage = ({
 	children,
 	className,
 	backgroundImg,
+	boardId,
 }: BackofficePageProps) => {
-	const { slug } = useParams<{ slug: string }>();
-	const allBoards = useBoards();
-	const location = useLocation();
-	const [boardId, setBoardId] = useState("");
-
-	useEffect(() => {
-		if (allBoards.length > 0 && slug) {
-			const foundBoard = allBoards.find((b) => b.slug === slug);
-			if (foundBoard) {
-				setBoardId(foundBoard.id.toString());
-			}
-		}
-	}, [allBoards, slug]);
-
 	let generatedBg;
-	if (location.pathname !== "/boards") {
+	if (boardId) {
 		generatedBg =
 			backgroundImg || (title ? randomColor(title, true) : undefined);
 	} else {
 		generatedBg = undefined;
 	}
-
-	const isBoardPage = boardId.length > 0;
 
 	let colorToContrast: string;
 
@@ -67,7 +50,7 @@ export const BackofficePage = ({
 				backgroundRepeat: "no-repeat",
 			}}
 		>
-			{isBoardPage && (
+			{boardId && (
 				<div className="flex w-full bg-white/45">
 					<BoardToolbar boardId={boardId} image={backgroundImg} />
 				</div>

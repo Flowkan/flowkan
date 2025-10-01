@@ -13,9 +13,6 @@ import {
 	useDeleteColumnAction,
 	useDeleteTaskction,
 	useUpdateColumnAction,
-	useBoards,
-	useFetchBoardsAction,
-	useBoardsLoading,
 	useUpdateBoardRemote,
 } from "../../store/boards/hooks";
 import { useBoardItemSocket } from "./board-socket/context";
@@ -32,7 +29,6 @@ import { useDismiss } from "../../hooks/useDismissClickAndEsc";
 
 const Board = () => {
 	const fetchBoardAction = useFetchBoardByIdAction();
-	const fetchBoardsAction = useFetchBoardsAction();
 	const addTaskAction = useAddTaskAction();
 	const updateTaskAction = useUpdateTaskAction();
 	const deleteTaskAction = useDeleteTaskction();
@@ -41,8 +37,6 @@ const Board = () => {
 	const removeColumnAction = useDeleteColumnAction();
 	const updateBoardRemoteMode = useUpdateBoardRemote();
 	const { slug } = useParams<{ slug: string }>();
-	const allBoards = useBoards();
-	const boardsLoading = useBoardsLoading();
 	const navigate = useNavigate();
 	const error = useBoardsError();
 	const socket = useSocket();
@@ -50,11 +44,12 @@ const Board = () => {
 
 	const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
 	const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-	const { open: openMenu, setOpen: setOpenMenu, ref: refMenu } = useDismiss<HTMLDivElement>();
+	const {
+		open: openMenu,
+		setOpen: setOpenMenu,
+		ref: refMenu,
+	} = useDismiss<HTMLDivElement>();
 	const [newColumnName, setNewColumnName] = useState("");
-	const [resolvedBoardId, setResolvedBoardId] = useState<string | undefined>(
-		undefined,
-	);
 	const boardData = useAppSelector((state) => state.boards.currentBoard);
 
 	const { handleDragStart, handleDragUpdate, handleDragEnd } =
@@ -69,31 +64,8 @@ const Board = () => {
 
 	useEffect(() => {
 		if (!slug) return;
-
-		if (allBoards.length > 0) {
-			const foundBoard = allBoards.find((b) => b.slug === slug);
-
-			if (foundBoard) {
-				const newId = foundBoard.id.toString();
-				if (newId !== resolvedBoardId) {
-					setResolvedBoardId(newId);
-					fetchBoardAction(newId);
-				}
-			} else if (!foundBoard) {
-				console.error("Board no encontrado para el slug:", slug);
-			}
-		} else if (!boardsLoading) {
-			fetchBoardsAction(0, 100);
-		}
-	}, [
-		slug,
-		allBoards,
-		fetchBoardsAction,
-		fetchBoardAction,
-		navigate,
-		boardsLoading,
-		resolvedBoardId,
-	]);
+		fetchBoardAction(slug);
+	}, [slug, fetchBoardAction]);
 
 	useEffect(() => {
 		if (error === "Error al cargar tablero") {
@@ -248,7 +220,7 @@ const Board = () => {
 			setNewColumnName("");
 			setOpenMenu(false);
 		}
-	}, [boardData, newColumnName, addColumnAction]);
+	}, [newColumnName, boardData, addColumnAction, setOpenMenu]);
 
 	const handleDeleteColumnClick = useCallback(
 		(columnId: string | number) => {
@@ -261,7 +233,11 @@ const Board = () => {
 	if (error) return <div>Error al cargar el tablero: {error}</div>;
 
 	return (
-		<BackofficePage title={boardData?.title} backgroundImg={boardData?.image}>
+		<BackofficePage
+			title={boardData?.title}
+			backgroundImg={boardData?.image}
+			boardId={boardData?.id}
+		>
 			<DragDropContext
 				onDragStart={handleDragStart}
 				onDragUpdate={handleDragUpdate}
@@ -304,7 +280,10 @@ const Board = () => {
 							{provided.placeholder}
 
 							{/* Add new column */}
-							<div className="relative flex w-full flex-row items-baseline justify-start sm:w-80" ref={refMenu}>
+							<div
+								className="relative flex w-full flex-row items-baseline justify-start sm:w-80"
+								ref={refMenu}
+							>
 								<Button
 									onClick={handleAddColumnToggle}
 									className="text-text-placeholder hover:bg-background-hover-column border-border-medium bg-gray/20 hover:border-accent bg-border-light bg-gray/80 flex h-10 w-10 items-center justify-center rounded-lg border-2 text-2xl font-semibold shadow-md transition-colors duration-200"
@@ -314,7 +293,10 @@ const Board = () => {
 									</div>
 								</Button>
 								{openMenu && (
-									<div className="bg-background-dark-footer fixed top-24 right-4 z-50 w-72 rounded-lg border border-gray-200 p-4 shadow-lg" ref={refMenu}>
+									<div
+										className="bg-background-dark-footer fixed top-24 right-4 z-50 w-72 rounded-lg border border-gray-200 p-4 shadow-lg"
+										ref={refMenu}
+									>
 										<h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
 											{t("board.add_column", "Añadir Columna")}
 										</h3>
@@ -348,7 +330,7 @@ const Board = () => {
 			{selectedTask && selectedColumnId && (
 				<TaskDetailModal
 					task={selectedTask}
-					boardId={resolvedBoardId}
+					boardId={boardData?.id}
 					columnId={selectedColumnId}
 					onClose={closeTaskDetail}
 					onEditTask={(data) =>

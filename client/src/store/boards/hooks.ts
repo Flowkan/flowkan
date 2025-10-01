@@ -54,8 +54,8 @@ export function useFetchBoardsAction() {
 export function useFetchBoardByIdAction() {
 	const dispatch = useAppDispatch();
 	return useCallback(
-		(id: string) => {
-			dispatch(fetchBoard(id));
+		(slug: string) => {
+			dispatch(fetchBoard(slug));
 		},
 		[dispatch],
 	);
