@@ -81,7 +81,10 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 				/>
 			)}
 			{showShareForm && (
-				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
+				<ShareBoard
+					boardId={board.id}
+					handleHideMessage={handleCloseShareForm}
+				/>
 			)}
 			<li className="board-item">
 				<Link to={`/boards/${board.slug}`} className="board-link">

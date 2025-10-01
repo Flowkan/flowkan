@@ -20,7 +20,7 @@ class BoardService {
 
   async getAllBoards(
     limit: number = 10,
-    skip: number = 0,
+    skip: number = 0
   ): Promise<BoardWithRelations[]> {
     return this.boardModel.getAll(limit, skip);
   }

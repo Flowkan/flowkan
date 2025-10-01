@@ -13,6 +13,11 @@ RUN npm install
 
 COPY . .
 
+RUN mkdir -p /usr/src/app/uploads \
+    && chown -R www-data:www-data /usr/src/app
+
+USER www-data
+
 RUN npx prisma generate
 
 RUN npm run build

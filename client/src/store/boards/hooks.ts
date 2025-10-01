@@ -13,6 +13,7 @@ import {
 	editColumn,
 	addAssignee,
 	removeAssignee,
+	updateRemoteBoard,
 	addLabel,
 	removeLabel,
 } from "./actions";
@@ -24,6 +25,7 @@ import {
 	getUiPending,
 	getUiError,
 } from "./selectors";
+import type { DropResult } from "@hello-pangea/dnd";
 
 //
 // ─── BOARDS HOOKS ──────────────────────────────────────────────
@@ -46,8 +48,8 @@ export function useBoardsError() {
 
 export function useFetchBoardsAction() {
 	const dispatch = useAppDispatch();
-	return function (skip: number, limit: number) {
-		return dispatch(fetchBoards(skip, limit));
+	return function (page: number, limit: number) {
+		return dispatch(fetchBoards({ page, limit }));
 	};
 }
 
@@ -59,6 +61,13 @@ export function useFetchBoardByIdAction() {
 		},
 		[dispatch],
 	);
+}
+
+export function useUpdateBoardRemote() {
+	const dispatch = useAppDispatch();
+	return function (result: DropResult) {
+		return dispatch(updateRemoteBoard(result));
+	};
 }
 
 export function useAddBoardAction() {

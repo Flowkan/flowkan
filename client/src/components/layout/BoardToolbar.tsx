@@ -1,20 +1,18 @@
 import { useState } from "react";
 import ShareBoard from "../ui/modals/share-board";
-import type { Board } from "../../pages/boards/types";
-import { useBoardSocket } from "../../hooks/useBoardSocket";
 import { Avatar } from "../ui/Avatar";
-import { getUserLogged } from "../../store/profile/selectors";
-import { useAppSelector } from "../../store";
+import { useUsersOnBoard } from "../../hooks/socket/useUsersOnBoard";
+import { ChatWindow } from "../ui/ChatWindow";
+import { getContrastColor } from "../../utils/contrastColor";
 
 interface BoardToolbarProps {
-	readonly board: Board;
+	readonly boardId: string;
+	readonly image: string | undefined;
 }
 
-export function BoardToolbar({ board }: BoardToolbarProps) {
+export function BoardToolbar({ boardId, image }: BoardToolbarProps) {
 	const [showShareForm, setShowShareForm] = useState(false);
-	const userData = useAppSelector(getUserLogged);
-	const currentUserId = userData?.id;
-	const users = useBoardSocket(board.id?.toString(), currentUserId);
+	const users = useUsersOnBoard(boardId);
 
 	const handleShowShareForm = (event: React.MouseEvent) => {
 		event.preventDefault();
@@ -22,39 +20,53 @@ export function BoardToolbar({ board }: BoardToolbarProps) {
 	};
 
 	const handleCloseShareForm = () => setShowShareForm(false);
+	const dividerColor = image ? getContrastColor(image) : "grey";
 
 	return (
 		<>
 			<div className="ml-auto flex items-center gap-2 p-2">
-				<div className="flex -space-x-2">
-					{users.slice(0, 5).map((user) => (
-						<div key={user.id} className="relative px-2">
-							<Avatar
-								name={user.name}
-								photo={user.photo}
-								size={30}
-								className="animate-enter-avatar"
-							/>
-						</div>
-					))}
-					{users.length > 5 && (
-						<div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 text-xs font-bold text-gray-700">
-							+{users.length - 5}
-						</div>
-					)}
-				</div>
-
-				{/* Botón Compartir */}
-				<button
-					onClick={handleShowShareForm}
-					className="bg-primary hover:bg-primary-hover rounded px-3 py-1 text-white"
+				<div
+					className={`flex items-center divide-x divide-solid divide-${dividerColor}`}
 				>
-					Compartir
-				</button>
+					<div className="flex -space-x-2 pr-4">
+						{users.slice(0, 5).map((user) => (
+							<div key={user.id} className="relative px-2">
+								<Avatar
+									name={user.name}
+									photo={user.photo}
+									size={30}
+									className="animate-enter-avatar"
+								/>
+							</div>
+						))}
+						{users.length > 5 && (
+							<div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 text-xs font-bold text-gray-700">
+								+{users.length - 5}
+							</div>
+						)}
+					</div>
+
+					<div className="pr-4 pl-4">
+						{boardId && <ChatWindow boardId={boardId} />}
+					</div>
+
+					{/* Botón Compartir */}
+					<div className="pl-4">
+						<button
+							onClick={handleShowShareForm}
+							className="bg-primary hover:bg-primary-hover rounded px-3 py-1 text-white"
+						>
+							Compartir
+						</button>
+					</div>
+				</div>
 			</div>
 
 			{showShareForm && (
-				<ShareBoard board={board} handleHideMessage={handleCloseShareForm} />
+				<ShareBoard
+					boardId={boardId}
+					handleHideMessage={handleCloseShareForm}
+				/>
 			)}
 		</>
 	);

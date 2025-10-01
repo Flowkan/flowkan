@@ -55,6 +55,18 @@ export type Board = {
 	image: string;
 };
 
+export type BoardsResponse = {
+	boards: Board[];
+	pagination: {
+		limit: number;
+		page: number;
+		totalCount: number;
+		totalPages: number;
+		hasNextPage: boolean;
+		hasPrevPage: boolean;
+	};
+};
+
 export type BoardMember = {
 	userId: number;
 	role: string;

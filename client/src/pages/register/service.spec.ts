@@ -17,6 +17,7 @@ describe("register", () => {
 		password: "securePass123",
 		confirmPassword: "securePass123",
 		photo: null,
+		turnstileResponse: "adsfasdf",
 	};
 
 	beforeEach(() => {

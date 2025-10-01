@@ -37,7 +37,7 @@ export function profileReducer(
 			return null;
 		case "profile/update/fulfilled":
 		case "profile/loaded/fulfilled":
-			return { ...action.payload };
+			return { ...state, ...action.payload };
 		default:
 			return state;
 	}

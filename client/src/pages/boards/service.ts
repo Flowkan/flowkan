@@ -6,14 +6,14 @@ import {
 	LIST_ENDPOINT,
 } from "../../utils/endpoints";
 import type { User } from "../login/types";
-import type { Board, Column, Label, Task } from "./types";
+import type { Board, BoardsResponse, Label, Column, Task } from "./types";
 
 export const getBoards = async (
+	page: number,
 	limit: number,
-	skip: number,
-): Promise<Board[]> => {
-	const response = await apiClient.get<Board[]>(BOARD_ENDPOINTS.BOARDS, {
-		params: { limit, skip },
+): Promise<BoardsResponse> => {
+	const response = await apiClient.get<BoardsResponse>(BOARD_ENDPOINTS.BOARDS, {
+		params: { page, limit, withCount: true },
 	});
 
 	return response.data;

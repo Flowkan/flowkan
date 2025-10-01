@@ -1,5 +1,6 @@
 import type { Actions, ActionsRejected } from "./actions";
 import type { Board, Column } from "../../pages/boards/types";
+import { applyDragResult } from "../../utils/tools";
 import type { BoardsState } from "../types/defaultStates";
 
 const storedUser = localStorage.getItem("user");
@@ -10,7 +11,16 @@ const defaultState: BoardsState = {
 		user: storedUser ? JSON.parse(storedUser) : null,
 	},
 	profile: null,
-	boards: { boards: [], currentBoard: null, loading: false, error: null },
+	boards: {
+		boards: [],
+		currentBoard: null,
+		loading: false,
+		error: null,
+		currentPage: 1,
+		totalPages: 1,
+		totalCount: 0,
+		hasMore: false,
+	},
 	ui: { pending: false, error: null },
 };
 
@@ -23,11 +33,31 @@ export function boardsReducer(
 	action: Actions,
 ): BoardsState["boards"] {
 	switch (action.type) {
+		case "boards/update/remote": {
+			if (!state.currentBoard) {
+				return state;
+			}
+			const updateBoard = applyDragResult(state.currentBoard, action.payload);
+			console.log("Reducer nuevo", updateBoard);
+			return {
+				...state,
+				currentBoard: updateBoard,
+			};
+		}
 		case "boards/fetchBoard/pending":
 			return { ...state, loading: true, error: null };
 
 		case "boards/fetchBoards/fulfilled":
-			return { ...state, loading: false, boards: action.payload };
+			const { boards, pagination } = action.payload;
+			return {
+				...state,
+				loading: false,
+				boards: pagination.page === 1 ? boards : [...state.boards, ...boards],
+				currentPage: action.payload.pagination.page,
+				totalPages: action.payload.pagination.totalPages,
+				totalCount: action.payload.pagination.totalCount,
+				hasMore: action.payload.pagination.hasNextPage,
+			};
 
 		case "boards/fetchBoard/fulfilled":
 			return { ...state, loading: false, currentBoard: action.payload };

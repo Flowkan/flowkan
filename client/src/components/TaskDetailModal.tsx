@@ -13,6 +13,10 @@ import { Editor } from "@tinymce/tinymce-react";
 import { Icon } from "@iconify/react";
 import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
+import { useAI } from "../hooks/useAI";
+import { CustomToast } from "./CustomToast";
+import toast from "react-hot-toast";
+import { SpinnerLoadingText } from "./ui/Spinner";
 import { getContrastColor } from "../lib/colorUtils";
 
 interface TaskDetailModalProps {
@@ -99,6 +103,13 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 			</div>
 		);
 	};
+
+	const {
+		generateDescriptionFromTitle,
+		loading,
+		stopGenerationDescription,
+		error,
+	} = useAI();
 
 	useEffect(() => {
 		if (contentInputRef.current) contentInputRef.current.focus();
@@ -286,8 +297,40 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		}
 	};
 
+	const handleGenerateWithAI = async () => {
+		if (!task.title) return;
+		setEditedDescription("");
+		try {
+			await generateDescriptionFromTitle(task.title, (description: string) => {
+				setEditedDescription(
+					description + "<p><em>Creado desde Flowkan\n</em></p><br>",
+				);
+			});
+		} catch (error) {
+			toast.custom((t) => (
+				<CustomToast
+					message={`Error al generar la descripción ${error}`}
+					type="error"
+					t={t}
+				/>
+			));
+		}
+	};
+
+	useEffect(() => {
+		if (error) {
+			toast.custom((t) => (
+				<CustomToast
+					message="Límite máximo de peticiones diarias alcanzado"
+					t={t}
+					type="error"
+				/>
+			));
+		}
+	}, [error]);
+
 	return (
-		<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black p-4">
+		<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
 			<div
 				ref={modalRef}
 				className="bg-background-card relative flex max-h-5/6 w-full max-w-5xl flex-col overflow-y-auto rounded-lg p-6 shadow-2xl md:flex-row"
@@ -326,7 +369,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							<div className="relative" ref={addMenuRef}>
 								<Button
 									onClick={() => setShowAddMenu((prev) => !prev)}
-									className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
+									className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
 								>
 									<Icon icon="mdi:plus" className="text-lg" />
 									{t("board.add", "Añadir")}
@@ -392,6 +435,38 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							>
 								<Icon icon="mdi:account-group-outline" className="text-lg" />{" "}
 								{t("board.members", "Miembros")}
+							</Button>
+							<Button
+								onClick={
+									loading ? stopGenerationDescription : handleGenerateWithAI
+								}
+								className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
+							>
+								<Icon icon="mdi:robot" className="text-lg" />
+								{loading ? (
+									<SpinnerLoadingText
+										text={t("boardModal.AI.btnLoading-On", "Generando")}
+									/>
+								) : (
+									t("boardModal.AI.btnLoading-Off", "Generar descripción")
+								)}
+
+								{loading && (
+									<span
+										className="absolute right-2 flex cursor-pointer items-center justify-center"
+										onClick={(e) => {
+											e.stopPropagation();
+											stopGenerationDescription();
+										}}
+									>
+										<Icon
+											icon="oui:stop-filled"
+											width="16"
+											height="16"
+											style={{ color: "#a21717" }}
+										/>
+									</span>
+								)}
 							</Button>
 						</div>
 
@@ -532,7 +607,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						</div>
 					)}
 
-					<div className="mb-6 flex flex-col">
+					<div className="bg-gray/20 mb-6 flex flex-col">
 						<h4 className="text-text-heading mb-2 flex items-center gap-2 font-semibold">
 							<Icon
 								icon="mdi:note-edit-outline"
@@ -545,7 +620,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							onInit={(_evt, editor) => (editorRef.current = editor)}
 							value={editedDescription}
 							init={{
-								height: 200,
+								height: 400,
+								// content_css:"tinymce-5-dark, document",
+								content_css: "document",
 								menubar: false,
 								plugins: [
 									"advlist",
@@ -554,11 +631,11 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									"link",
 									"image",
 									"charmap",
+									"exportpdf",
 									"preview",
 									"anchor",
 									"searchreplace",
 									"visualblocks",
-									"code",
 									"fullscreen",
 									"insertdatetime",
 									"media",
@@ -571,7 +648,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									"undo redo | blocks | " +
 									"bold italic forecolor | alignleft aligncenter " +
 									"alignright alignjustify | bullist numlist outdent indent | " +
-									"removeformat | help",
+									"removeformat | exportpdf | help",
 								content_style:
 									"body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
 							}}
@@ -599,8 +676,16 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 														<audio
 															controls
 															src={`${import.meta.env.VITE_BASE_URL}${mediaItem.url}`}
-															className="h-8"
-														/>
+															className="h-8 w-58"
+														>
+															<track
+																kind="captions"
+																label="Transcripción"
+																src=""
+																default
+															/>
+															Tu navegador no soporta la reproducción de audio.
+														</audio>
 													</>
 												) : (
 													<>
@@ -648,7 +733,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								onClick={handleStopRecording}
 								className="rounded bg-white px-3 py-1 text-sm font-semibold text-red-600 hover:bg-gray-200"
 							>
-								{t("board.stop", "Detemer")}
+								{t("board.stop", "Detener")}
 							</Button>
 						</div>
 					)}

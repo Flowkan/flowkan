@@ -1,4 +1,4 @@
-import { Board, Prisma, PrismaClient, User } from "@prisma/client";
+import { Board, Prisma, PrismaClient } from "@prisma/client";
 
 export const safeUserSelect = {
   id: true,
@@ -47,7 +47,7 @@ export type BoardWithRelations = Prisma.BoardGetPayload<
 >;
 
 class BoardModel {
-  private prisma: PrismaClient;
+  private readonly prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
@@ -76,7 +76,7 @@ class BoardModel {
       },
       ...boardWithRelationsData,
       take: limit,
-      skip: skip,
+      skip,
     });
   }
 

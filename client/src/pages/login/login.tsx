@@ -1,6 +1,13 @@
 import { Page } from "../../components/layout/page";
 import { NavLink } from "react-router-dom";
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import {
+	useCallback,
+	useEffect,
+	useState,
+	type ChangeEvent,
+	type FocusEvent,
+	type FormEvent,
+} from "react";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
 import type { Credentials } from "./types";
@@ -16,22 +23,32 @@ import { useLoginAction } from "../../store/auth/hooks";
 import { useLoadedProfile } from "../../store/profile/hooks";
 import { loginWithOAuth } from "../../store/auth/actions";
 import ForgotPassword from "../../components/ui/modals/forgot-password";
+import Turnstile from "react-turnstile";
+import { validationForm } from "../../utils/validations";
+import { LoginFormSchema } from "../../utils/auth.schema";
+import { useValidationForm } from "../../hooks/useValidationForm";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
 	const loginAction = useLoginAction();
 	const profileLoadedAction = useLoadedProfile();
 	const dispatch = useAppDispatch();
-	// const modalForgotPassword = useRef<HTMLDialogElement|null>(null)
 	const [showModal, setShowModal] = useState(false);
 
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
 		password: "",
+		turnstileResponse: "",
 	});
 
 	const { email, password } = formData;
 	const disabled = !email || !password;
+
+	const LoginValidator = useCallback((data:unknown,fieldName?:keyof Omit<typeof formData, "turnstileResponse">)=>{
+		return validationForm(LoginFormSchema,data,fieldName)
+	},[])
+
+	const { error,validate,checkField } = useValidationForm<Omit<typeof formData,"turnstileResponse">>(LoginValidator)	
 
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
@@ -50,12 +67,7 @@ export const LoginPage = () => {
 			}
 			dispatch(loginWithOAuth({ token, user }));
 		}
-	}, [dispatch]);
-
-	const validateEmail = (email: string): boolean => {
-		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		return re.test(String(email).toLowerCase());
-	};
+	}, [dispatch]);	
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -65,38 +77,26 @@ export const LoginPage = () => {
 		}));
 	};
 
+	const handleBlur = (e: FocusEvent<HTMLInputElement, Element>) => {		
+		const { name } = e.target
+		validate({
+			email,
+			password
+		},name as keyof Omit<typeof formData, "turnstileResponse">)	
+		
+	};
+
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		try {
-			// Validar el email primero
-			if (!validateEmail(formData.email)) {
-				toast.custom((t) => (
-					<CustomToast
-						message="Por favor, introduce una dirección de correo válida."
-						t={t}
-						type="error"
-					/>
-				));
-				return;
+		try {			
+			
+			//Validaciones con zod
+			const isValidForm = validate({email,password})
+			if(isValidForm){
+				await loginAction(formData);
+				await profileLoadedAction();
 			}
 
-			// Si el email es válido, validar la contraseña
-			if (formData.password.trim() === "") {
-				toast.custom((t) => (
-					<CustomToast
-						message={__(
-							"login.toast.message.errorEmptyPassword",
-							"La contraseña no puede estar vacía.",
-						)}
-						t={t}
-						type="error"
-					/>
-				));
-				return;
-			}
-
-			await loginAction(formData);
-			await profileLoadedAction();
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				setFormData((prevData) => ({
@@ -178,6 +178,9 @@ export const LoginPage = () => {
 							)}
 							onChange={handleChange}
 							value={formData.email}
+							onBlur={handleBlur}
+							errors={error?.email}
+							fieldApproved={checkField("email")}
 						/>
 
 						<FormFields
@@ -195,6 +198,9 @@ export const LoginPage = () => {
 							)}
 							onChange={handleChange}
 							value={formData.password}
+							onBlur={handleBlur}
+							errors={error?.password}
+							fieldApproved={checkField("password")}
 						/>
 
 						<div className="flex items-center justify-between">
@@ -210,6 +216,18 @@ export const LoginPage = () => {
 									)}
 								</button>
 							</div>
+						</div>
+						<div className="relative flex w-full justify-center">
+							<Turnstile
+								sitekey={import.meta.env.VITE_TURNSTILE_API_KEY}
+								theme="light"
+								onVerify={(token) =>
+									setFormData((prev) => ({
+										...prev,
+										turnstileResponse: token,
+									}))
+								}
+							/>
 						</div>
 						<div>
 							<Button
