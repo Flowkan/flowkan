@@ -16,19 +16,6 @@ import { BoardFilters } from "../../components/BoardFilters";
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 
-/* function EmptyList() {
-	const { t } = useTranslation();
-	return (
-		<div className="empty-list">
-			<div className="p-empty-list">
-				<p>{t("emptylist.p1", "Todavía no tienes ningún tablero.")}</p>
-				<p>{t("emptylist.p2", "¿Quieres crear uno?")}</p>
-			</div>
-			<AddButton showAddForm={} />
-		</div>
-	);
-} */
-
 const BoardsList = () => {
 	const { t } = useTranslation();
 	const [showAddForm, setShowAddForm] = useState(false);
@@ -40,7 +27,7 @@ const BoardsList = () => {
 
 	const dispatch = useAppDispatch();
 	const boards = useAppSelector(getBoards);
-	const { hasMore, totalCount } = useAppSelector(getBoardsPagination);
+	const { hasMore } = useAppSelector(getBoardsPagination);
 
 	const showBoards = useAppSelector((state) =>
 		getBoardFilterCombine(state, searchBoard, searchMember),
@@ -98,8 +85,7 @@ const BoardsList = () => {
 										<BoardsItem key={board.id} board={board} />
 									))}
 								</ul>
-								{/* <div className="mt-6 flex justify-center text-gray-500"> */}
-								{hasMore && totalCount > 0 ? (
+								{hasMore ? (
 									<div ref={loaderRef}>
 										<SpinnerLoadingText
 											text={t("boardslist.pagination.loading", "Cargando más")}

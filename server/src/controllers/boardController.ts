@@ -51,7 +51,6 @@ export class BoardController {
           pagination: {
             limit,
             page,
-            totalCount,
             totalPages: Math.ceil(totalCount / limit),
             hasNextPage: page < Math.ceil(totalCount / limit),
             hasPrevPage: page > 1,

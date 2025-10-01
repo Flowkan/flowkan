@@ -30,7 +30,6 @@ type FetchBoardsFulfilled = {
 		pagination: {
 			page: number;
 			totalPages: number;
-			totalCount: number;
 			hasNextPage: boolean;
 			hasPrevPage: boolean;
 		};

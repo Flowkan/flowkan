@@ -42,7 +42,6 @@ export type BoardsState = {
 		error: string | null;
 		currentPage: number;
 		totalPages: number;
-		totalCount: number;
 		hasMore: boolean;
 	};
 	ui: {

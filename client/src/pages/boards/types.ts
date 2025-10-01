@@ -60,7 +60,6 @@ export type BoardsResponse = {
 	pagination: {
 		limit: number;
 		page: number;
-		totalCount: number;
 		totalPages: number;
 		hasNextPage: boolean;
 		hasPrevPage: boolean;

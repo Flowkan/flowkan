@@ -6,10 +6,9 @@ import type { RootState } from "..";
 
 export const getBoards = (state: RootState) => state.boards.boards;
 export const getBoardsPagination = (state: RootState) => ({
-  currentPage: state.boards.currentPage,
-  totalPages: state.boards.totalPages,
-  totalCount: state.boards.totalCount,
-  hasMore: state.boards.hasMore,
+	currentPage: state.boards.currentPage,
+	totalPages: state.boards.totalPages,
+	hasMore: state.boards.hasMore,
 });
 
 export const getBoardsByTitle = (state: RootState, seachTitle: string) =>
