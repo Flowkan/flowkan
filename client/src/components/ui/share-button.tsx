@@ -8,7 +8,7 @@ interface ShareButtonProps {
 
 const ShareButton = ({ showShareForm }: ShareButtonProps) => {
 	return (
-		<Button className="share-btn" onClick={showShareForm}>
+		<Button className="share-btn" onClick={showShareForm} title="Compartir">
 			<Icon
 				name="share"
 				icon="bi:share-fill"
