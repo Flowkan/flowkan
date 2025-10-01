@@ -9,8 +9,9 @@
     "skipLibCheck": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "types": ["node", "jest"]
+    "types": ["node", "jest"],
+    "jsx": "react-jsx", 
   },
-  "include": ["src/**/*.ts", "tests"],
+  "include": ["src/**/*.ts", "tests", "src/broker/consumers/emailConsumer.ts"],
   "exclude": ["node_modules", "dist"]
 }

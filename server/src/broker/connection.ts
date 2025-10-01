@@ -55,6 +55,16 @@ export async function setupBroker():Promise<amqplib.Channel> {
                 queue.options
             )
         }
+
+        //Crear Bindings
+        for (const binding of Topology.bindings) {
+            await channel.bindQueue(
+                binding.queue,
+                binding.exchange,
+                binding.routingKey
+            )
+        }
+
         registerErrorHandlers();
 
         return channel as amqplib.Channel

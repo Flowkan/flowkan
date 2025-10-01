@@ -8,7 +8,7 @@ async function startWorker(){
 
         console.log("--- WORKER INICIANDO: Escuchando tareas ---")
 
-        startEmailConsumer(channel)
+        await startEmailConsumer(channel)
 
         console.log("Worker activo, esperando nuevos mensajes...");
         
@@ -31,3 +31,5 @@ function handleShutdown(signal:NodeJS.Signals){
 
 process.on("SIGINT",handleShutdown)
 process.on("SIGTERM",handleShutdown)
+
+startWorker()

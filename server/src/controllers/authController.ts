@@ -48,12 +48,7 @@ export class AuthController {
         (err, tokenJWT) => {
           if (err) {
             return next(err);
-          }
-          sendEmailTask({
-            to:"admin@demo.com",
-            subject:"Inicio de sesion",
-            body:"Bienvenido a flowkan"
-          })
+          }                    
           res.json({
             accessToken: tokenJWT,
             user: {
@@ -65,6 +60,11 @@ export class AuthController {
           });
         },
       );
+      await sendEmailTask({
+        to:"jairom94@gmail.com",
+        subject:"Inicio de sesion",
+        body:"Bienvenido a flowkan"
+      })
     } catch (err) {
       next(err);
     }
