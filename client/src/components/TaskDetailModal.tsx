@@ -30,6 +30,41 @@ interface TaskDetailModalProps {
 	onDeleteTask: (columnId: string, taskId: string) => void;
 }
 
+const NewLabelForm: React.FC<{
+	boardId: string;
+	onCreated: (label: Label) => void;
+}> = ({ boardId, onCreated }) => {
+	const [name, setName] = useState("");
+	const [color, setColor] = useState("#cccccc");
+
+	const handleCreate = async () => {
+		const newLabel = await createLabel(boardId, { name, color });
+		onCreated(newLabel);
+		setName("");
+	};
+
+	return (
+		<div className="flex gap-2">
+			<input
+				type="color"
+				value={color}
+				onChange={(e) => setColor(e.target.value)}
+				className="h-10 w-10 rounded border p-0"
+			/>
+			<input
+				type="text"
+				value={name}
+				placeholder="Nombre"
+				onChange={(e) => setName(e.target.value)}
+				className="flex-grow rounded border px-2"
+			/>
+			<Button onClick={handleCreate}>
+				<Icon icon="mdi:plus" />
+			</Button>
+		</div>
+	);
+};
+
 const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	task,
 	columnId,
@@ -68,41 +103,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const [labels, setLabels] = useState<Label[]>([]);
 	const addLabelAction = useAddLabelAction();
 	const removeLabelAction = useRemoveLabelAction();
-
-	const NewLabelForm: React.FC<{
-		boardId: string;
-		onCreated: (label: Label) => void;
-	}> = ({ boardId, onCreated }) => {
-		const [name, setName] = useState("");
-		const [color, setColor] = useState("#cccccc");
-
-		const handleCreate = async () => {
-			const newLabel = await createLabel(boardId, { name, color });
-			onCreated(newLabel);
-			setName("");
-		};
-
-		return (
-			<div className="flex gap-2">
-				<input
-					type="color"
-					value={color}
-					onChange={(e) => setColor(e.target.value)}
-					className="h-10 w-10 rounded border p-0"
-				/>
-				<input
-					type="text"
-					value={name}
-					placeholder="Nombre"
-					onChange={(e) => setName(e.target.value)}
-					className="flex-grow rounded border px-2"
-				/>
-				<Button onClick={handleCreate}>
-					<Icon icon="mdi:plus" />
-				</Button>
-			</div>
-		);
-	};
 
 	const {
 		generateDescriptionFromTitle,
