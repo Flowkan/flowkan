@@ -30,7 +30,6 @@ passport.use(
       profile: GoogleProfile,
       done,
     ) => {
-      console.log("DATOS PROFILE", profile.emails, profile.displayName);
       try {
         const email = profile.emails![0].value;
         let user = await authService.findByEmail(email);

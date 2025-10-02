@@ -15,7 +15,6 @@ export class ListController {
       const lists = await this.listService.getAllLists(userId, boardId);
       res.json(lists);
     } catch (err) {
-      console.log("asdfasd", err);
       res.status(500).send("Error al obtener las listas");
     }
   };

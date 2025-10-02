@@ -57,7 +57,6 @@ export default class UserHandler {
     const usersInRoom = socketsInRoom.map(
       (sock) => sock.data.user,
     ) as BoardUser[];
-    console.log(usersInRoom);
 
     socket.emit("users:list", usersInRoom);
   }
