@@ -45,12 +45,17 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 			<li className="board-item">
 				<Link to={`/boards/${board.slug}`} className="board-link">
 					{board.image ? (
-						<div className="img-container">
-							<img
-								className="board-img"
-								src={`${import.meta.env.VITE_BASE_URL}${board.image}_t.webp`}
-								alt="board-img"
-							/>
+						<div
+							className="img-container"
+							style={{ background: randomColor(board.title, true) }}
+						>
+							<div>
+								<img
+									className="board-img"
+									src={`${import.meta.env.VITE_BASE_URL}${board.image}_t.webp`}
+									alt={`board-img-${board.title}`}
+								/>
+							</div>
 						</div>
 					) : (
 						<div className="img-container">
