@@ -1,27 +1,8 @@
 import * as amqplib from "amqplib";
 import { setupBroker } from "../connection";
 import { Exchanges, RoutingKeys } from "../config";
+import { EmailPayload } from "../types";
 
-// interface EmailPayload {
-//   to: string;
-//   subject: string;
-//   body: string;
-// }
-
-interface EmailPayload {
-    to: string;
-    subject: string;
-    // 💡 NUEVO: Campo que define el tipo de acción
-    type: 'CONFIRMATION' | 'PASSWORD_RESET' | 'WELCOME' | 'GENERIC'; 
-    
-    // 💡 Datos específicos requeridos por el tipo (ej. un token o URL)
-    data: {
-        token?: string; 
-        url?: string;
-        username?: string;
-        // ... otros campos necesarios
-    };
-}
 
 export async function sendEmailTask(payload: EmailPayload) {
   

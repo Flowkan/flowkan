@@ -12,6 +12,6 @@
     "types": ["node", "jest"],
     "jsx": "react-jsx", 
   },
-  "include": ["src/**/*.ts", "tests", "src/broker/consumers/emailConsumer.ts"],
+  "include": ["src/**/*.ts", "tests", "src/broker/consumers/emailConsumer.ts", "src/services/TemplateEmailService.ts"],
   "exclude": ["node_modules", "dist"]
 }

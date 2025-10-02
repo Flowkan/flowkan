@@ -5,7 +5,6 @@ import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
 import { Prisma, User } from "@prisma/client";
 import passport from "passport";
-import { sendChangePasswordEmail, sendEmail } from "../lib/emailService";
 import "../config/passport";
 import { sendEmailTask } from "../broker/producers/emailProducer";
 
@@ -59,12 +58,18 @@ export class AuthController {
             },
           });
         },
-      );
+      );    
+      
+      const frontendUrl = process.env.FRONTEND_WEB_URL || 'http://localhost:5173'
+
       await sendEmailTask({
-        to:"jairom94@gmail.com",
-        subject:"Inicio de sesion",
-        body:"Bienvenido a flowkan"
-      })
+        type:'WELCOME',
+        to:'jairom94@gmail.com',
+        data:{
+          name:user.name,
+          url:frontendUrl,
+        }        
+      })  
     } catch (err) {
       next(err);
     }
@@ -98,12 +103,32 @@ export class AuthController {
         expiresIn: "1d",
       });
 
-      await sendEmail(
-        newUser.email,
-        "Confirma tu cuenta",
-        `<h1>Bienvenido ${newUser.name}!</h1>
-              <p>Haz click <a href="${process.env.FRONTEND_WEB_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
-      );
+      // await sendEmail(
+      //   newUser.email,
+      //   "Confirma tu cuenta",
+      //   `<h1>Bienvenido ${newUser.name}!</h1>
+      //         <p>Haz click <a href="${process.env.FRONTEND_WEB_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
+      // );
+
+      const frontendUrl = process.env.FRONTEND_WEB_URL || 'http://localhost:5173'
+      
+      await sendEmailTask({
+        type:'WELCOME',
+        to:newUser.email,
+        data:{
+          name:newUser.name,
+          url:frontendUrl,
+        }        
+      })
+      await sendEmailTask({
+        to:newUser.email,
+        type:'CONFIRMATION',
+        data:{
+          name:newUser.name,
+          url:frontendUrl,
+          token
+        }
+      })
 
       res.status(201).json({ success: true, user: safeUser });
     } catch (err: unknown) {
@@ -220,14 +245,24 @@ export class AuthController {
           );
         });
 
-        const headerEmail = {
-          to: email,
-          subject: "Cambiar contraseña",
-        };
-        await sendChangePasswordEmail(headerEmail, {
-          url_frontend: process.env.FRONTEND_WEB_URL,
-          token,
-        });
+        // const headerEmail = {
+        //   to: email,
+        //   subject: "Cambiar contraseña",
+        // };
+        // await sendChangePasswordEmail(headerEmail, {
+        //   url_frontend: process.env.FRONTEND_WEB_URL,
+        //   token,
+        // });
+
+        const frontendUrl = process.env.FRONTEND_WEB_URL || 'http://localhost:5173'
+        await sendEmailTask({
+          to:email,
+          type:'PASSWORD_RESET',
+          data:{
+            url:frontendUrl,
+            token
+          }
+        })
 
         await this.authService.generatedToken(user.id, token);
 

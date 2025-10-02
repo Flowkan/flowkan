@@ -1,126 +1,96 @@
+import * as React from 'react';
 import {
   Body,
-  Column,
+  Button,
   Container,
   Head,
   Heading,
-  Html,
-  Img,
-  Link,
+  Hr,
+  Html,  
   Preview,
-  Row,
   Section,
-  Tailwind,
   Text,
+  Tailwind,
 } from '@react-email/components';
-import IconLogo from './icons/Logo';
+import HeaderEmail from './components/header';
 
-interface SlackConfirmEmailProps {
-  nombreUsuario:string;
+
+interface WelcomeProps {
+  name?: string;
+  url?:string
 }
 
-
-const baseUrl = process.env.API_BASE_URL  
-
 export const Welcome = ({
-  nombreUsuario,
-}: SlackConfirmEmailProps) => (
-  <Html>
-    <Head />
-    <Tailwind>
-      <Body className='p-2'>
-        <Preview>Confirma su direccionde email</Preview>
-        <Container className='mx-auto'>
-          <Section className='flex justify-center'>
-            <IconLogo />
-          </Section>
-          <Heading className='text-3xl'>Confirma su direccionde email</Heading>
-          <Text className='text-lg'>
-            Muchas gracias por su registro en flowkan, esperamos que le sea de utilidad 
-            todas nuestras funciones
-          </Text>                
-        </Container>
-      </Body>
-    </Tailwind>
-  </Html>
-);
+  name = 'Usuario',
+  url="http://localhost:5173"
+}: WelcomeProps) => {
+  const previewText = `¡Bienvenido a Flowkan, ${name}! Empieza a organizar tus proyectos.`;
 
+  return (
+    <Html>
+      <Head />
+      <Preview>{previewText}</Preview>
+      <Tailwind
+        config={{
+          theme: {
+            extend: {
+              colors: {
+                brand: '#df539f', 
+              },
+            },
+          },
+        }}
+      >
+        <Body className="bg-slate-50 font-sans">
+          <Container className="bg-white max-w-xl my-12 rounded-lg shadow-lg overflow-hidden">                        
+            <HeaderEmail />            
+            <Section className="px-10 py-8">
+              <Heading as="h2" className="text-2xl font-bold text-slate-800">
+                ¡Hola, {name}! Te damos la bienvenida.
+              </Heading>
+              <Text className="text-slate-700 leading-relaxed mt-4">
+                Estamos muy contentos de que te unas a nosotros. Flowkan es tu nuevo centro de mando para organizar tareas, gestionar proyectos y colaborar con tu equipo de una manera visual e intuitiva.
+              </Text>
+              <Text className="text-slate-700 leading-relaxed mt-4">
+                Para empezar, te recomendamos crear tu primer tablero y añadir algunas tareas. ¡Es la mejor forma de ver el poder de Flowkan en acción!
+              </Text>
+                            
+              <Section className="text-center mt-6">
+                <Button
+                  href={`${url}/boards`}
+                  className="bg-brand text-white font-semibold py-3 px-6 rounded-lg"
+                >
+                  Ir a mi panel
+                </Button>
+              </Section>
+            </Section>
 
+            <Section className="px-10 pb-8">
+              <Hr className="border-slate-200" />
+              <Heading as="h3" className="text-xl font-bold text-slate-800 mt-6">
+                Próximos pasos recomendados:
+              </Heading>
+              <ul className="list-disc list-inside text-slate-700 mt-4">
+                <li><strong>Crea tu primer tablero:</strong> Organiza un proyecto personal o de equipo.</li>
+                <li><strong>Invita a tus colaboradores:</strong> La magia de Flowkan está en el trabajo en equipo.</li>
+                <li><strong>Personaliza tus columnas:</strong> Adapta el flujo de trabajo a tus necesidades.</li>
+              </ul>
+            </Section>
+            
+            <Section className="text-center p-6 bg-slate-100">
+              <Text className="text-sm text-slate-500">
+                Si tienes alguna pregunta, visita nuestra <a href={`${url}/ayuda`} className="text-brand underline">sección de ayuda</a>.
+              </Text>
+              <Text className="text-xs text-slate-400 mt-2">
+                © {new Date().getFullYear()} Flowkan.es - Todos los derechos reservados.
+              </Text>
+            </Section>
+
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
+  );
+};
 
 export default Welcome;
-
-const footerText = {
-  fontSize: '12px',
-  color: '#b7b7b7',
-  lineHeight: '15px',
-  textAlign: 'left' as const,
-  marginBottom: '50px',
-};
-
-const footerLink = {
-  color: '#b7b7b7',
-  textDecoration: 'underline',
-};
-
-const footerLogos = {
-  marginBottom: '32px',
-  paddingLeft: '8px',
-  paddingRight: '8px',
-};
-
-const socialMediaIcon = {
-  display: 'inline',
-  marginLeft: '8px',
-};
-
-const main = {
-  backgroundColor: '#ffffff',
-  margin: '0 auto',
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-};
-
-const container = {
-  margin: '0 auto',
-  padding: '0px 20px',
-};
-
-const logoContainer = {
-  marginTop: '32px',
-};
-
-const h1 = {
-  color: '#1d1c1d',
-  fontSize: '36px',
-  fontWeight: '700',
-  margin: '30px 0',
-  padding: '0',
-  lineHeight: '42px',
-};
-
-const heroText = {
-  fontSize: '20px',
-  lineHeight: '28px',
-  marginBottom: '30px',
-};
-
-const codeBox = {
-  background: 'rgb(245, 244, 245)',
-  borderRadius: '4px',
-  marginBottom: '30px',
-  padding: '40px 10px',
-};
-
-const confirmationCodeText = {
-  fontSize: '30px',
-  textAlign: 'center' as const,
-  verticalAlign: 'middle',
-};
-
-const text = {
-  color: '#000',
-  fontSize: '14px',
-  lineHeight: '24px',
-};
-
-
