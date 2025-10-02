@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import type { Task } from "../pages/boards/types";
 import type { User } from "../pages/login/types";
 import { getBoardUsers } from "../pages/boards/service";
@@ -160,6 +160,26 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		}
 	};
 
+	const handleClose = useCallback(() => {
+		const updatedFields: { title?: string; description?: string } = {};
+		handleSaveTitle();
+		handleSaveDescription();
+		if (editedContent.trim() !== (task.title || "").trim()) {
+			updatedFields.title = editedContent.trim();
+		}
+		if (editedDescription.trim() !== (task.description || "").trim()) {
+			updatedFields.description = editedDescription.trim();
+		}
+
+		if (Object.keys(updatedFields).length > 0) {
+			toast.custom((t) => (
+				<CustomToast message="Cambios guardados" type="success" t={t} />
+			));
+		}
+
+		onClose();
+	}, [editedContent, editedDescription, onClose]);
+
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			const target = event.target as Node;
@@ -168,12 +188,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 				!modalRef.current.contains(target) &&
 				!(target as HTMLElement).closest(".tox")
 			) {
-				onClose();
+				handleClose();
 			}
 		};
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [onClose]);
+	}, [handleClose]);
 
 	useEffect(() => {
 		if (!showUsers) return;
@@ -294,9 +314,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 				className="bg-background-card relative flex max-h-5/6 w-full max-w-5xl flex-col overflow-y-auto rounded-lg p-6 shadow-2xl md:flex-row"
 			>
 				<Button
-					onClick={() => {
-						onClose();
-					}}
+					onClick={handleClose}
 					className="text-text-placeholder hover:text-text-body absolute top-3 right-3 z-10 text-4xl leading-none"
 					title="Cerrar y guardar"
 				>
@@ -512,7 +530,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									"link",
 									"image",
 									"charmap",
-									"exportpdf",
 									"preview",
 									"anchor",
 									"searchreplace",
@@ -529,7 +546,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									"undo redo | blocks | " +
 									"bold italic forecolor | alignleft aligncenter " +
 									"alignright alignjustify | bullist numlist outdent indent | " +
-									"removeformat | exportpdf | help",
+									"removeformat | help",
 								content_style:
 									"body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
 							}}
