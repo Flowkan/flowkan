@@ -44,9 +44,8 @@ export const deleteBoard = async (boardId: string): Promise<void> => {
 	await apiClient.delete(`${BOARD_ENDPOINTS.BOARDS}/${boardId}`);
 };
 
-export const getBoard = async (boardId: string): Promise<Board> => {
-	const idSlug = boardId.split("-")[0];
-	const response = await apiClient.get<Board>(BOARD_ENDPOINTS.BY_ID(idSlug));
+export const getBoard = async (slug: string): Promise<Board> => {
+	const response = await apiClient.get<Board>(BOARD_ENDPOINTS.BY_ID(slug));
 	return response.data;
 };
 

@@ -20,7 +20,7 @@ const authService = new AuthService(authModel);
 const controller = new BoardController(service, authService);
 
 router.get("/", jwtAuth.guard, controller.getAll);
-router.get("/:id", jwtAuth.guard, controller.get);
+router.get("/:slug", jwtAuth.guard, controller.get);
 router.post(
   "/",
   jwtAuth.guard,
