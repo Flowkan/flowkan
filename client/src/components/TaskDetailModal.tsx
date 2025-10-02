@@ -530,7 +530,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									"link",
 									"image",
 									"charmap",
-									"exportpdf",
 									"preview",
 									"anchor",
 									"searchreplace",
@@ -547,7 +546,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									"undo redo | blocks | " +
 									"bold italic forecolor | alignleft aligncenter " +
 									"alignright alignjustify | bullist numlist outdent indent | " +
-									"removeformat | exportpdf | help",
+									"removeformat | help",
 								content_style:
 									"body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
 							}}
