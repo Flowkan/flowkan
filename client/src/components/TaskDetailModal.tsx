@@ -161,12 +161,23 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	};
 
 	const handleClose = useCallback(() => {
+		const updatedFields: { title?: string; description?: string } = {};
 		handleSaveTitle();
 		handleSaveDescription();
+		if (editedContent.trim() !== (task.title || "").trim()) {
+			updatedFields.title = editedContent.trim();
+		}
+		if (editedDescription.trim() !== (task.description || "").trim()) {
+			updatedFields.description = editedDescription.trim();
+		}
+
+		if (Object.keys(updatedFields).length > 0) {
+			toast.custom((t) => (
+				<CustomToast message="Cambios guardados" type="success" t={t} />
+			));
+		}
+
 		onClose();
-		toast.custom((t) => (
-			<CustomToast message="Cambios guardados" type="success" t={t} />
-		));
 	}, [editedContent, editedDescription, onClose]);
 
 	useEffect(() => {
