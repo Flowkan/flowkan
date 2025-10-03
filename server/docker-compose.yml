@@ -24,11 +24,9 @@ services:
       - .env
     depends_on:
       rabbitmq:
-        condition: service_healthy # <--- Espera a que el healthcheck pase
+        condition: service_healthy # Espera a que el healthcheck pase
       db:
-        condition: service_healthy # <--- Espera a que el healthcheck pase
-      # - rabbitmq
-      # - db
+        condition: service_healthy # Espera a que el healthcheck pase
     volumes:
       - ./server:/usr/src/app
       - .:/usr/src/app:delegated

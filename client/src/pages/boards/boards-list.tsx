@@ -5,38 +5,29 @@ import "./boards-list.css";
 import { useTranslation } from "react-i18next";
 import NewBoard from "../../components/ui/modals/new-board";
 import { useAppSelector, useAppDispatch } from "../../store";
-import { getBoardFilterCombine, getBoards } from "../../store/boards/selectors";
+import {
+	getBoardFilterCombine,
+	getBoards,
+	getBoardsPagination,
+} from "../../store/boards/selectors";
 import { BackofficePage } from "../../components/layout/backoffice_page";
 import { fetchBoards } from "../../store/boards/actions";
 import { BoardFilters } from "../../components/BoardFilters";
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
 
-/* function EmptyList() {
-	const { t } = useTranslation();
-	return (
-		<div className="empty-list">
-			<div className="p-empty-list">
-				<p>{t("emptylist.p1", "Todavía no tienes ningún tablero.")}</p>
-				<p>{t("emptylist.p2", "¿Quieres crear uno?")}</p>
-			</div>
-			<AddButton showAddForm={} />
-		</div>
-	);
-} */
-
 const BoardsList = () => {
 	const { t } = useTranslation();
 	const [showAddForm, setShowAddForm] = useState(false);
 	const [searchBoard, setSearchBoard] = useState("");
 	const [searchMember, setSearchMember] = useState("");
-	const [skip, setSkip] = useState(0);
+	const [page, setPage] = useState(1);
 
-	const LIMIT = 10; // pendiente ajustar la cantidad según style
+	const LIMIT = 15;
 
 	const dispatch = useAppDispatch();
 	const boards = useAppSelector(getBoards);
-	const hasMore = boards.length > 0 && boards.length % LIMIT === 0;
+	const { hasMore } = useAppSelector(getBoardsPagination);
 
 	const showBoards = useAppSelector((state) =>
 		getBoardFilterCombine(state, searchBoard, searchMember),
@@ -45,9 +36,10 @@ const BoardsList = () => {
 	const handleShowAddForm = () => setShowAddForm(true);
 	const handleCloseAddForm = () => setShowAddForm(false);
 	const handleLoadMore = () => {
-		setSkip((prev) => prev + LIMIT);
+		if (hasMore) {
+			setPage((prev) => prev + 1);
+		}
 	};
-
 	const loaderRef = useInfiniteScroll({
 		hasMoreData: hasMore,
 		fetchMoreData: handleLoadMore,
@@ -56,8 +48,8 @@ const BoardsList = () => {
 	});
 
 	useEffect(() => {
-		dispatch(fetchBoards(skip, LIMIT));
-	}, [dispatch, skip, LIMIT]);
+		dispatch(fetchBoards({ page, limit: LIMIT }));
+	}, [dispatch, page]);
 
 	return (
 		<>
@@ -93,14 +85,10 @@ const BoardsList = () => {
 										<BoardsItem key={board.id} board={board} />
 									))}
 								</ul>
-								{/* <div className="mt-6 flex justify-center text-gray-500"> */}
 								{hasMore ? (
 									<div ref={loaderRef}>
 										<SpinnerLoadingText
-											text={t(
-												"boardslist.pagination.loading",
-												"Cargando más",
-											)}
+											text={t("boardslist.pagination.loading", "Cargando más")}
 										/>
 									</div>
 								) : (

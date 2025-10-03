@@ -76,7 +76,7 @@ class BoardModel {
       },
       ...boardWithRelationsData,
       take: limit,
-      skip: skip,
+      skip,
     });
   }
 
@@ -132,6 +132,26 @@ class BoardModel {
 
   async get({
     userId,
+    boardSlug,
+  }: {
+    userId: number;
+    boardSlug: string;
+  }): Promise<BoardWithRelations | null> {
+    return await this.prisma.board.findFirst({
+      where: {
+        slug: boardSlug,
+        members: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+      ...boardWithRelationsData,
+    });
+  }
+
+  async getById({
+    userId,
     boardId,
   }: {
     userId: number;
@@ -139,7 +159,7 @@ class BoardModel {
   }): Promise<BoardWithRelations | null> {
     return await this.prisma.board.findFirst({
       where: {
-        id: Number(boardId),
+        id: boardId,
         members: {
           some: {
             userId: userId,

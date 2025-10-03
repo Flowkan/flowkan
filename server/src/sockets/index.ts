@@ -71,7 +71,5 @@ export default function registerSockets(io: Server) {
     userHandler.initialize(socket as SocketUser);
     boardHandler.initialize(socket as SocketBoard);
     chatHandler.initialize(socket as SocketChat);
-
-    console.log("Nuevo cliente conectado:", socket.id);
   });
 }

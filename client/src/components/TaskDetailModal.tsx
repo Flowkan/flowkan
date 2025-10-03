@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import type { Task } from "../pages/boards/types";
 import type { User } from "../pages/login/types";
 import { getBoardUsers } from "../pages/boards/service";
@@ -160,6 +160,26 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		}
 	};
 
+	const handleClose = useCallback(() => {
+		const updatedFields: { title?: string; description?: string } = {};
+		handleSaveTitle();
+		handleSaveDescription();
+		if (editedContent.trim() !== (task.title || "").trim()) {
+			updatedFields.title = editedContent.trim();
+		}
+		if (editedDescription.trim() !== (task.description || "").trim()) {
+			updatedFields.description = editedDescription.trim();
+		}
+
+		if (Object.keys(updatedFields).length > 0) {
+			toast.custom((t) => (
+				<CustomToast message="Cambios guardados" type="success" t={t} />
+			));
+		}
+
+		onClose();
+	}, [editedContent, editedDescription, onClose]);
+
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			const target = event.target as Node;
@@ -168,12 +188,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 				!modalRef.current.contains(target) &&
 				!(target as HTMLElement).closest(".tox")
 			) {
-				onClose();
+				handleClose();
 			}
 		};
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [onClose]);
+	}, [handleClose]);
 
 	useEffect(() => {
 		if (!showUsers) return;
@@ -267,7 +287,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		} catch (error) {
 			toast.custom((t) => (
 				<CustomToast
-					message="Error al generar la descripción"
+					message={`Error al generar la descripción ${error}`}
 					type="error"
 					t={t}
 				/>
@@ -294,9 +314,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 				className="bg-background-card relative flex max-h-5/6 w-full max-w-5xl flex-col overflow-y-auto rounded-lg p-6 shadow-2xl md:flex-row"
 			>
 				<Button
-					onClick={() => {
-						onClose();
-					}}
+					onClick={handleClose}
 					className="text-text-placeholder hover:text-text-body absolute top-3 right-3 z-10 text-4xl leading-none"
 					title="Cerrar y guardar"
 				>
@@ -327,7 +345,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							<div className="relative" ref={addMenuRef}>
 								<Button
 									onClick={() => setShowAddMenu((prev) => !prev)}
-									className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
+									className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
 								>
 									<Icon icon="mdi:plus" className="text-lg" />
 									{t("board.add", "Añadir")}
@@ -414,7 +432,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 											stopGenerationDescription();
 										}}
 									>
-										<Icon icon="oui:stop-filled" width="16" height="16"  style={{color: "#a21717"}} />
+										<Icon
+											icon="oui:stop-filled"
+											width="16"
+											height="16"
+											style={{ color: "#a21717" }}
+										/>
 									</span>
 								)}
 							</Button>
@@ -507,7 +530,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									"link",
 									"image",
 									"charmap",
-									"exportpdf",
 									"preview",
 									"anchor",
 									"searchreplace",
@@ -524,7 +546,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									"undo redo | blocks | " +
 									"bold italic forecolor | alignleft aligncenter " +
 									"alignright alignjustify | bullist numlist outdent indent | " +
-									"removeformat | exportpdf | help",
+									"removeformat | help",
 								content_style:
 									"body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
 							}}
@@ -552,8 +574,16 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 														<audio
 															controls
 															src={`${import.meta.env.VITE_BASE_URL}${mediaItem.url}`}
-															className="h-8"
-														/>
+															className="h-8 w-58"
+														>
+															<track
+																kind="captions"
+																label="Transcripción"
+																src=""
+																default
+															/>
+															Tu navegador no soporta la reproducción de audio.
+														</audio>
 													</>
 												) : (
 													<>

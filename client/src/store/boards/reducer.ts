@@ -11,7 +11,15 @@ const defaultState: BoardsState = {
 		user: storedUser ? JSON.parse(storedUser) : null,
 	},
 	profile: null,
-	boards: { boards: [], currentBoard: null, loading: false, error: null },
+	boards: {
+		boards: [],
+		currentBoard: null,
+		loading: false,
+		error: null,
+		currentPage: 1,
+		totalPages: 1,
+		hasMore: false,
+	},
 	ui: { pending: false, error: null },
 };
 
@@ -29,7 +37,6 @@ export function boardsReducer(
 				return state;
 			}
 			const updateBoard = applyDragResult(state.currentBoard, action.payload);
-			console.log("Reducer nuevo", updateBoard);
 			return {
 				...state,
 				currentBoard: updateBoard,
@@ -39,7 +46,17 @@ export function boardsReducer(
 			return { ...state, loading: true, error: null };
 
 		case "boards/fetchBoards/fulfilled":
-			return { ...state, loading: false, boards: action.payload };
+			return {
+				...state,
+				loading: false,
+				boards:
+					action.payload.pagination.page === 1
+						? action.payload.boards
+						: [...state.boards, ...action.payload.boards],
+				currentPage: action.payload.pagination.page,
+				totalPages: action.payload.pagination.totalPages,
+				hasMore: action.payload.pagination.hasNextPage,
+			};
 
 		case "boards/fetchBoard/fulfilled":
 			return { ...state, loading: false, currentBoard: action.payload };

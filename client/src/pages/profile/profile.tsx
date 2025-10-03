@@ -65,7 +65,6 @@ const Profile = () => {
 		async (field: keyof ProfileUpdateType) => {
 			const dataParse = ProfileUpdateSchema.safeParse(user);
 			if (!dataParse.success) {
-				console.log(z.flattenError(dataParse.error).fieldErrors);
 				const errorsList = z.flattenError(dataParse.error).fieldErrors;
 				if (field in errorsList && errorsList[field]) {
 					const msgErrors = errorsList[field].join(", ");

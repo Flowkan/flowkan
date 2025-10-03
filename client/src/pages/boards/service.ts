@@ -5,14 +5,14 @@ import {
 	LIST_ENDPOINT,
 } from "../../utils/endpoints";
 import type { User } from "../login/types";
-import type { Board, Column, Task } from "./types";
+import type { Board, BoardsResponse, Column, Task } from "./types";
 
 export const getBoards = async (
+	page: number,
 	limit: number,
-	skip: number,
-): Promise<Board[]> => {
-	const response = await apiClient.get<Board[]>(BOARD_ENDPOINTS.BOARDS, {
-		params: { limit, skip },
+): Promise<BoardsResponse> => {
+	const response = await apiClient.get<BoardsResponse>(BOARD_ENDPOINTS.BOARDS, {
+		params: { page, limit, withCount: true },
 	});
 
 	return response.data;
@@ -43,9 +43,8 @@ export const deleteBoard = async (boardId: string): Promise<void> => {
 	await apiClient.delete(`${BOARD_ENDPOINTS.BOARDS}/${boardId}`);
 };
 
-export const getBoard = async (boardId: string): Promise<Board> => {
-	const idSlug = boardId.split("-")[0];
-	const response = await apiClient.get<Board>(BOARD_ENDPOINTS.BY_ID(idSlug));
+export const getBoard = async (slug: string): Promise<Board> => {
+	const response = await apiClient.get<Board>(BOARD_ENDPOINTS.BY_ID(slug));
 	return response.data;
 };
 
