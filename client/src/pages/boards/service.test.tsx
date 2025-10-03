@@ -66,11 +66,11 @@ describe("getBoards", () => {
 			data: mockBoards,
 		});
 
-		const result = await getBoards(10, 0);
+		const result = await getBoards(2, 3);
 
 		expect(result).toEqual(mockBoards);
 		expect(apiClient.get).toHaveBeenCalledWith(BOARD_ENDPOINTS.BOARDS, {
-			params: { limit: 10, skip: 0 },
+			params: { page: 2, limit: 3, withCount: true },
 		});
 	});
 

@@ -26,6 +26,9 @@ describe("boardsReducer", () => {
 		currentBoard: null,
 		loading: false,
 		error: null,
+		currentPage: 1,
+		totalPages: 1,
+		hasMore: false,
 	};
 
 	test("should manage boards/update/remote action with no currentBoard", () => {
@@ -86,26 +89,37 @@ describe("boardsReducer", () => {
 	});
 
 	test("should manage boards/fetchBoards/fulfilled", () => {
-		const boardsPayload: Board[] = [
-			{
-				id: "1",
-				slug: "board-slug",
-				title: "board 1",
-				lists: [],
-				members: [],
-				image: "image.jpg",
+		const fetchBoardsPayload = {
+			boards: [
+				{
+					id: "1",
+					slug: "board-slug",
+					title: "board 1",
+					lists: [],
+					members: [],
+					image: "image.jpg",
+				},
+			],
+			pagination: {
+				page: 1,
+				totalPages: 2,
+				hasNextPage: true,
+				hasPrevPage: false,
 			},
-		];
+		};
 
 		const result = boardsReducer(boardsDefaultstateBoards, {
 			type: "boards/fetchBoards/fulfilled",
-			payload: boardsPayload,
+			payload: fetchBoardsPayload,
 		});
 
 		expect(result).toEqual({
 			...boardsDefaultstateBoards,
 			loading: false,
-			boards: boardsPayload,
+			boards: fetchBoardsPayload.boards,
+			currentPage: fetchBoardsPayload.pagination.page,
+			totalPages: fetchBoardsPayload.pagination.totalPages,
+			hasMore: fetchBoardsPayload.pagination.hasNextPage,
 		});
 	});
 
@@ -285,6 +299,9 @@ describe("boardsReducer", () => {
 		},
 		loading: false,
 		error: null,
+		currentPage: 1,
+		totalPages: 1,
+		hasMore: false,
 	};
 
 	test("should manage boards/addColumn/fulfilled", () => {
@@ -498,6 +515,9 @@ describe("boardsReducer", () => {
 		},
 		loading: false,
 		error: null,
+		currentPage: 1,
+		totalPages: 1,
+		hasMore: false,
 	};
 
 	test("should manage boards/addTask/fulfilled", () => {
@@ -765,6 +785,9 @@ describe("boardsReducer", () => {
 		},
 		loading: false,
 		error: null,
+		currentPage: 1,
+		totalPages: 1,
+		hasMore: false,
 	};
 
 	test("should manage cards/addAssignee/fulfilled when adding assignee to correct task", () => {

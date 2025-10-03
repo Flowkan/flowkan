@@ -10,6 +10,7 @@ const mockBoardService = {
   get: jest.fn(),
   getBoardByTitle: jest.fn(),
   getBoardByMember: jest.fn(),
+  getById: jest.fn(),
   add: jest.fn(),
   update: jest.fn(),
   delete: jest.fn(),
@@ -110,15 +111,19 @@ describe("boardController - happy path", () => {
     expect(mockBoardService.getBoardCountByUserId).toHaveBeenCalledTimes(1);
     expect(res.json).toHaveBeenCalledWith({
       boards: mockBoards,
-      totalCount: mockTotalCount,
-      page: 1,
-      limit: 10,
+      pagination: {
+        limit: 10,
+        page: 1,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     });
   });
 
   test("should return a board by ID", async () => {
     req.apiUserId = 1;
-    req.params.id = "1";
+    req.params.slug = "board-1";
 
     const mockBoard = { userId: 1, title: "Board 1" };
     mockBoardService.get = jest.fn().mockResolvedValue(mockBoard);
@@ -127,7 +132,7 @@ describe("boardController - happy path", () => {
 
     expect(mockBoardService.get).toHaveBeenCalledWith({
       userId: 1,
-      boardId: 1,
+      boardSlug: "board-1",
     });
     expect(mockBoardService.get).toHaveBeenCalledTimes(1);
     expect(res.json).toHaveBeenCalledWith(mockBoard);
@@ -223,7 +228,7 @@ describe("boardController - happy path", () => {
       ownerId: 1,
       image: "/uploads/boards/new-image.webp",
     };
-    mockBoardService.get = jest
+    mockBoardService.getById = jest
       .fn()
       .mockResolvedValueOnce(mockCurrentBoard)
       .mockResolvedValueOnce(mockUpdatedBoard);
@@ -249,14 +254,14 @@ describe("boardController - happy path", () => {
     req.apiUserId = 1;
     req.params.id = "1";
 
-    mockBoardService.get = jest
+    mockBoardService.getById = jest
       .fn()
       .mockResolvedValue({ id: 1, title: "Board 1" });
     mockBoardService.delete = jest.fn().mockResolvedValue(undefined);
 
     await boardController.delete(req, res);
 
-    expect(mockBoardService.get).toHaveBeenCalledWith({
+    expect(mockBoardService.getById).toHaveBeenCalledWith({
       userId: 1,
       boardId: 1,
     });
@@ -279,12 +284,12 @@ describe("boardController - happy path", () => {
       image: "image.webp",
     };
 
-    mockBoardService.get = jest.fn().mockResolvedValue(mockCurrentBoard);
+    mockBoardService.getById = jest.fn().mockResolvedValue(mockCurrentBoard);
     mockBoardService.delete = jest.fn().mockResolvedValue(undefined);
 
     await boardController.delete(req, res);
 
-    expect(mockBoardService.get).toHaveBeenCalledWith({
+    expect(mockBoardService.getById).toHaveBeenCalledWith({
       userId: 1,
       boardId: 1,
     });
@@ -321,12 +326,12 @@ describe("boardController - happy path", () => {
     const jwtMock = jest.requireMock("jsonwebtoken") as { sign: jest.Mock };
     jwtMock.sign.mockReturnValue("fake-token");
 
-    mockBoardService.get = jest.fn().mockResolvedValue(mockBoard);
+    mockBoardService.getById = jest.fn().mockResolvedValue(mockBoard);
     mockAuthService.findById = jest.fn().mockResolvedValue(mockInviter);
 
     await boardController.shareBoard(req, res);
 
-    expect(mockBoardService.get).toHaveBeenCalledWith({
+    expect(mockBoardService.getById).toHaveBeenCalledWith({
       userId: 1,
       boardId: 1,
     });
@@ -431,7 +436,7 @@ describe("boardController - error path", () => {
 
   test("should throw an error when trying to get a board by ID", async () => {
     req.apiUserId = 1;
-    req.params.id = "1";
+    req.params.slug = "board-1";
 
     mockBoardService.get = jest
       .fn()
@@ -443,7 +448,7 @@ describe("boardController - error path", () => {
     expect(res.send).toHaveBeenCalledWith("Error al obtener el tablero");
     expect(mockBoardService.get).toHaveBeenCalledWith({
       userId: 1,
-      boardId: 1,
+      boardSlug: "board-1",
     });
   });
 
@@ -588,11 +593,13 @@ describe("boardController - error path", () => {
     });
   });
 
-  test("should return 500 if boardService.get fails", async () => {
+  test("should return 500 if boardService.getById fails", async () => {
     req.apiUserId = 1;
-    req.params.id = "1";
+    req.params = { id: "1" };
 
-    mockBoardService.get = jest.fn().mockRejectedValue(new Error("DB error"));
+    mockBoardService.getById = jest
+      .fn()
+      .mockRejectedValue(new Error("DB error"));
 
     await boardController.shareBoard(req, res);
 
@@ -600,7 +607,7 @@ describe("boardController - error path", () => {
     expect(res.send).toHaveBeenCalledWith(
       "Error al generar el enlace de invitación",
     );
-    expect(mockBoardService.get).toHaveBeenCalledWith({
+    expect(mockBoardService.getById).toHaveBeenCalledWith({
       userId: 1,
       boardId: 1,
     });
@@ -608,9 +615,9 @@ describe("boardController - error path", () => {
 
   test("should return 500 if authService.findById fails", async () => {
     req.apiUserId = 1;
-    req.params.id = "1";
+    req.params = { id: "1" };
 
-    mockBoardService.get = jest
+    mockBoardService.getById = jest
       .fn()
       .mockResolvedValue({ id: 1, title: "Board 1" });
     mockAuthService.findById = jest
@@ -623,7 +630,7 @@ describe("boardController - error path", () => {
     expect(res.send).toHaveBeenCalledWith(
       "Error al generar el enlace de invitación",
     );
-    expect(mockBoardService.get).toHaveBeenCalledWith({
+    expect(mockBoardService.getById).toHaveBeenCalledWith({
       userId: 1,
       boardId: 1,
     });

@@ -116,14 +116,17 @@ describe("BoardService - happy path", () => {
   });
 
   test("should return a board for a given user and board ID", async () => {
-    const mockBoards = { data: { userId: 1, boardId: 2 } };
+    const mockBoards = { data: { userId: 1, boardSlug: "board-1" } };
     mockBoardModel.get = jest.fn().mockResolvedValue(mockBoards);
 
-    const result = await boardService.get({ userId: 1, boardId: 2 });
+    const result = await boardService.get({ userId: 1, boardSlug: "board-1" });
 
     expect(result).toEqual(mockBoards);
     expect(mockBoardModel.get).toHaveBeenCalledTimes(1);
-    expect(mockBoardModel.get).toHaveBeenCalledWith({ userId: 1, boardId: 2 });
+    expect(mockBoardModel.get).toHaveBeenCalledWith({
+      userId: 1,
+      boardSlug: "board-1",
+    });
   });
 
   test("should return a new board", async () => {
