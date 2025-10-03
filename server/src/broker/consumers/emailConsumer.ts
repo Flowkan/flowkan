@@ -65,8 +65,7 @@ export async function sendMailService(payload: EmailPayload): Promise<void> {
         default:
             const { name,url } = payload.data as dataUser
             // console.log(payload.data);
-            
-             emailContent = {
+            emailContent = {
                 subject: 'Bienvenido a nuestra plataforma',
                 html:await generateWelcomeEmailTemplate(url!,name),
             };

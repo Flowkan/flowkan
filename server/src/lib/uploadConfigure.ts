@@ -3,6 +3,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import sharp from "sharp";
+import { sendToMakeThumbnailTask } from "../broker/producers/thumbnailProducer";
 
 const rootUploadPath = path.join(process.cwd(), "public", "uploads");
 if (!fs.existsSync(rootUploadPath)) {
@@ -38,7 +39,7 @@ export const upload = multer({
 
 export function processImage(
   subfolder: "users" | "boards",
-  sizes: {
+  sizes:{
     original: { width?: number; height?: number };
     thumb: { width?: number; height?: number };
   },
@@ -65,11 +66,21 @@ export function processImage(
       }
       await original.toFile(originalPath);
 
+      await sendToMakeThumbnailTask({
+        userId:req.apiUserId,
+        originalPath,
+        thumbPath,
+        thumbSize: {
+          width:sizes.thumb.width ?? 200,
+          height:sizes.thumb.height ?? 200
+        },
+      })
+
       // thumbnail
-      await sharp(req.file.buffer)
-        .resize(sizes.thumb)
-        .webp({ quality: 80 })
-        .toFile(thumbPath);
+      // await sharp(req.file.buffer)
+      //   .resize(sizes.thumb)
+      //   .webp({ quality: 80 })
+      //   .toFile(thumbPath);
 
       req.body[bodyField] = baseName;
 

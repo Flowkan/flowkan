@@ -2,13 +2,16 @@ import "dotenv/config";
 
 const rabbitHost = process.env.RABBITMQ_HOST || 'rabbitmq'
 
-export const RABBITMQ_URL = `amqp://guest:guest@${rabbitHost}:5672/`
+export const RABBITMQ_URL = process.env.RABBITMQ_BROKER_URL || "amqp://guest:guest@rabbitmq:5672/";     
+//`amqp://guest:guest@${rabbitHost}:5672/`
   //process.env.RABBITMQ_BROKER_URL || "amqp://guest:guest@localhost:5672/"
 
   //"amqp://guest:guest@rabbitmq:5672/";
+  
 
 export const Queues = {
   EMAIL_QUEUE: "email_tasks",
+  THUMBNAIL_QUEUE:"thumbnail_task"
 };
 
 export const Exchanges = {
@@ -47,6 +50,11 @@ const Bindings = [
     routingKey:RoutingKeys.EMAIL_SEND
   },
   {
+    exchange:Exchanges.TASK_EXCHANGE,
+    queue: Queues.THUMBNAIL_QUEUE,
+    routingKey:RoutingKeys.THUMBNAIL_GENERATE
+  },
+  {
     exchange:DLQ_EXCHANGE,
     queue: DLQ_Queues.EMAIL_DLQ,
     routingKey:RoutingKeys.EMAIL_SEND
@@ -69,6 +77,10 @@ export const Topology = {
   queues:[
     {
         name:Queues.EMAIL_QUEUE,
+        options:{ durable:true }
+    },
+    {
+        name:Queues.THUMBNAIL_QUEUE,
         options:{ durable:true }
     },
     {
