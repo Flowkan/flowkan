@@ -40,6 +40,9 @@ export type BoardsState = {
 		currentBoard: Board | null;
 		loading: boolean;
 		error: string | null;
+		currentPage: number;
+		totalPages: number;
+		hasMore: boolean;
 	};
 	ui: {
 		pending: boolean;

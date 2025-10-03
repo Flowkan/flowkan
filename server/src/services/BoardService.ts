@@ -1,7 +1,6 @@
 import { Board, Prisma } from "@prisma/client";
 import BoardModel, { BoardWithRelations, SafeUser } from "../models/BoardModel";
 
-
 class BoardService {
   private readonly boardModel: BoardModel;
 
@@ -37,9 +36,16 @@ class BoardService {
 
   async get(data: {
     userId: number;
-    boardId: number;
+    boardSlug: string;
   }): Promise<BoardWithRelations | null> {
     return this.boardModel.get(data);
+  }
+
+  async getById(data: {
+    userId: number;
+    boardId: number;
+  }): Promise<BoardWithRelations | null> {
+    return this.boardModel.getById(data);
   }
 
   async add(data: {

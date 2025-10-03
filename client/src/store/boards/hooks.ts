@@ -46,16 +46,16 @@ export function useBoardsError() {
 
 export function useFetchBoardsAction() {
 	const dispatch = useAppDispatch();
-	return function (skip: number, limit: number) {
-		return dispatch(fetchBoards(skip, limit));
+	return function (page: number, limit: number) {
+		return dispatch(fetchBoards({ page, limit }));
 	};
 }
 
 export function useFetchBoardByIdAction() {
 	const dispatch = useAppDispatch();
 	return useCallback(
-		(id: string) => {
-			dispatch(fetchBoard(id));
+		(slug: string) => {
+			dispatch(fetchBoard(slug));
 		},
 		[dispatch],
 	);
@@ -70,7 +70,7 @@ export function useUpdateBoardRemote() {
 
 export function useAddBoardAction() {
 	const dispatch = useAppDispatch();
-	return function (board: FormData): Promise<Board> {
+	return function (board: FormData) {
 		return dispatch(addBoard(board));
 	};
 }

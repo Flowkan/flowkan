@@ -37,7 +37,7 @@ export class BoardController {
       const userId = req.apiUserId;
       const limit = Math.max(parseInt(req.query.limit as string) || 10, 1);
       const page = Math.max(parseInt(req.query.page as string) || 1, 1);
-      const skip = (page - 1) * limit < 0 ? 0 : (page - 1) * limit;
+      const skip = (page - 1) * limit;
       const withCount = req.query.withCount === "true";
 
       if (withCount) {
@@ -48,9 +48,13 @@ export class BoardController {
           ]);
         return res.json({
           boards,
-          totalCount,
-          page,
-          limit,
+          pagination: {
+            limit,
+            page,
+            totalPages: Math.ceil(totalCount / limit),
+            hasNextPage: page < Math.ceil(totalCount / limit),
+            hasPrevPage: page > 1,
+          },
         });
       }
 
@@ -66,8 +70,8 @@ export class BoardController {
   get = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const boardId = Number(req.params.id);
-      const board = await this.boardService.get({ userId, boardId });
+      const boardSlug = req.params.slug;
+      const board = await this.boardService.get({ userId, boardSlug });
       res.json(board);
     } catch (err) {
       res.status(500).send("Error al obtener el tablero");
@@ -124,9 +128,9 @@ export class BoardController {
   update = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
-      const boardId = parseInt(req.params.id);
+      const boardId = Number(req.params.id);
       const { title, image }: { title?: string; image?: string } = req.body;
-      const currentBoard = await this.boardService.get({ userId, boardId });
+      const currentBoard = await this.boardService.getById({ userId, boardId });
 
       const data: Prisma.BoardUpdateInput = {};
 
@@ -164,7 +168,7 @@ export class BoardController {
     try {
       const userId = req.apiUserId;
       const boardId = parseInt(req.params.id);
-      const currentBoard = await this.boardService.get({ userId, boardId });
+      const currentBoard = await this.boardService.getById({ userId, boardId });
 
       await this.boardService.delete({ userId, boardId });
 
@@ -193,7 +197,7 @@ export class BoardController {
     try {
       const userId = req.apiUserId;
       const boardId = Number(req.params.id);
-      const board = await this.boardService.get({ userId, boardId });
+      const board = await this.boardService.getById({ userId, boardId });
       const inviter = await this.authService.findById(userId);
       const payload = {
         boardId: boardId,

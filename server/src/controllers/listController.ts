@@ -3,7 +3,7 @@ import ListService from "../services/ListService";
 import createHttpError from "http-errors";
 
 export class ListController {
-  private listService: ListService
+  private listService: ListService;
   constructor(listService: ListService) {
     this.listService = listService;
   }
@@ -15,7 +15,6 @@ export class ListController {
       const lists = await this.listService.getAllLists(userId, boardId);
       res.json(lists);
     } catch (err) {
-      console.log("asdfasd", err);
       res.status(500).send("Error al obtener las listas");
     }
   };
@@ -40,7 +39,11 @@ export class ListController {
         boardId,
         position,
       });
-      res.status(201).json(list);
+      const listWithCards = {
+        ...list,
+        cards: [],
+      };
+      res.status(201).json(listWithCards);
     } catch (err) {
       res.status(500).send("Error al crear la lista");
     }
@@ -55,7 +58,9 @@ export class ListController {
       res.json(list);
     } catch (err) {
       if (err instanceof Error && err.message.includes("permiso")) {
-        return next(createHttpError(403, err.message ||  "Error al actualizar la lista"))
+        return next(
+          createHttpError(403, err.message || "Error al actualizar la lista"),
+        );
       }
       next(err);
     }
@@ -69,7 +74,9 @@ export class ListController {
       res.status(204).send();
     } catch (err) {
       if (err instanceof Error && err.message.includes("permiso")) {
-        return next(createHttpError(403, err.message ||  "Error al eliminar la lista"));
+        return next(
+          createHttpError(403, err.message || "Error al eliminar la lista"),
+        );
       }
       next(err);
     }

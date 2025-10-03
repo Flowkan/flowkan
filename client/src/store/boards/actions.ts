@@ -25,7 +25,15 @@ export const updateRemoteBoard = (result: DropResult): UpdateRemoteBoard => ({
 type FetchBoardsPending = { type: "boards/fetchBoards/pending" };
 type FetchBoardsFulfilled = {
 	type: "boards/fetchBoards/fulfilled";
-	payload: Board[];
+	payload: {
+		boards: Board[];
+		pagination: {
+			page: number;
+			totalPages: number;
+			hasNextPage: boolean;
+			hasPrevPage: boolean;
+		};
+	};
 };
 type FetchBoardsRejected = {
 	type: "boards/fetchBoards/rejected";
@@ -52,16 +60,7 @@ type GetBoardUsersRejected = {
 	payload: Error;
 };
 
-type AddBoardPending = {
-	type: "boards/addBoard/pending";
-};
-
 type AddBoardFulfilled = { type: "boards/addBoard/fulfilled"; payload: Board };
-
-type AddBoardRejected = {
-	type: "boards/addBoard/rejected";
-	payload: Error;
-};
 
 type DeleteBoardFulfilled = {
 	type: "boards/deleteBoards";
@@ -115,10 +114,10 @@ export const fetchBoardsPending = (): FetchBoardsPending => ({
 	type: "boards/fetchBoards/pending",
 });
 export const fetchBoardsFulfilled = (
-	boards: Board[],
+	payload: FetchBoardsFulfilled["payload"],
 ): FetchBoardsFulfilled => ({
 	type: "boards/fetchBoards/fulfilled",
-	payload: boards,
+	payload,
 });
 export const fetchBoardsRejected = (error: Error): FetchBoardsRejected => ({
 	type: "boards/fetchBoards/rejected",
@@ -151,18 +150,9 @@ export const getBoardUsersRejected = (error: Error): GetBoardUsersRejected => ({
 	payload: error,
 });
 
-export const addBoardPending = (): AddBoardPending => ({
-	type: "boards/addBoard/pending",
-});
-
 export const addBoardFulfilled = (board: Board): AddBoardFulfilled => ({
 	type: "boards/addBoard/fulfilled",
 	payload: board,
-});
-
-export const addBoardRejected = (error: Error): AddBoardRejected => ({
-	type: "boards/addBoard/rejected",
-	payload: error,
 });
 
 export const editBoardFulfilled = (
@@ -259,15 +249,22 @@ export const removeAssigneeFulfilled = (
 });
 
 // ─── Thunks ─────────────────────────────
-export function fetchBoards(
-	skip: number,
-	limit: number,
-): AppThunk<Promise<void>> {
+export function fetchBoards({
+	page,
+	limit,
+}: {
+	page: number;
+	limit: number;
+}): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
+		const { loading, hasMore } = _getState().boards;
+
+		// Bloquea fetch si ya está cargando o si no hay más, excepto page 1
+		if (loading || (!hasMore && page !== 1)) return;
 		dispatch(fetchBoardsPending());
 		try {
-			const boards = await api.boards.getBoards(skip, limit);
-			dispatch(fetchBoardsFulfilled(boards));
+			const { pagination, boards } = await api.boards.getBoards(page, limit);
+			dispatch(fetchBoardsFulfilled({ pagination, boards }));
 		} catch (error) {
 			if (error instanceof Error) {
 				dispatch(fetchBoardsRejected(error));
@@ -276,11 +273,11 @@ export function fetchBoards(
 	};
 }
 
-export function fetchBoard(id: string): AppThunk<Promise<void>> {
+export function fetchBoard(slug: string): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
 		dispatch(fetchBoardPending());
 		try {
-			const board = await api.boards.getBoard(id);
+			const board = await api.boards.getBoard(slug);
 			dispatch(fetchBoardFulfilled(board));
 		} catch (error) {
 			if (error instanceof Error) {
@@ -304,20 +301,10 @@ export function getBoardUsers(id: string): AppThunk<Promise<void>> {
 	};
 }
 
-export function addBoard(data: FormData): AppThunk<Promise<Board>> {
+export function addBoard(data: FormData): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
-		try {
-			dispatch(addBoardPending());
-
-			const createdBoard = await api.boards.createBoard(data);
-			dispatch(addBoardFulfilled(createdBoard));
-			return createdBoard;
-		} catch (error) {
-			if (error instanceof Error) {
-				dispatch(addBoardRejected(error));
-			}
-			throw error;
-		}
+		const board = await api.boards.createBoard(data);
+		dispatch(addBoardFulfilled(board));
 	};
 }
 
@@ -457,9 +444,7 @@ export type Actions =
 	| FetchBoardPending
 	| FetchBoardFulfilled
 	| FetchBoardRejected
-	| AddBoardPending
 	| AddBoardFulfilled
-	| AddBoardRejected
 	| DeleteBoardFulfilled
 	| EditBoardFulfilled
 	| EditBoardRejected
