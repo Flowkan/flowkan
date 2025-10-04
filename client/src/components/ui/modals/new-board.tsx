@@ -44,7 +44,7 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 			await dispatch(addBoard(boardData));
 			onClose(); // Cierra el modal solo si la creación fue exitosa
 		} catch (error) {
-			console.error("Error al crear el tablero", error);
+			console.error(t("newboard.error", "Error al crear el tablero"), error);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -82,9 +82,16 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 							ref={fileRef}
 						/>
 					</div>
-					<Button type="submit" className="form-btn" disabled={isDisabled || isSubmitting}>
+					<Button
+						type="submit"
+						className="form-btn"
+						disabled={isDisabled || isSubmitting}
+					>
 						{isSubmitting ? (
-							<SpinnerLoadingText text="Creando" className="text-white"/>
+							<SpinnerLoadingText
+								text={t("newboard.spinner", "Creando")}
+								className="text-white"
+							/>
 						) : (
 							t("newboard.form.button", "CREAR")
 						)}

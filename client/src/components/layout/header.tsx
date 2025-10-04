@@ -15,12 +15,12 @@ export const Header: React.FC = () => {
 	const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 	const [isOpen, setIsOpen] = useState(false);
 	const logoutAction = useLogoutAction();
-	const socket = useSocket()
+	const socket = useSocket();
 
 	const handleLogout = () => {
 		logoutAction();
 		setIsOpen(false);
-		socket.disconnect()//Desconecta el socket
+		socket.disconnect(); //Desconecta el socket
 	};
 
 	return (
@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
 								"text-primary hover:text-primary-hover rounded-lg px-4 text-center font-semibold"
 							}
 						>
-							{t("boardslist.title", "Mis tableros")}
+							{t("header.boardslist.title", "Mis tableros")}
 						</NavLink>
 					)}
 				</nav>
@@ -85,7 +85,11 @@ export const Header: React.FC = () => {
 				<button
 					className="text-text-heading p-2 md:hidden"
 					onClick={() => setIsOpen(!isOpen)}
-					aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
+					aria-label={
+						isOpen
+							? t("header.btnmenu.close", "Cerrar menú")
+							: t("header.btnmenu.open", "Abrir menú")
+					}
 				>
 					<Icon icon="lucide:menu" className="h-6 w-6" />
 				</button>
@@ -108,7 +112,7 @@ export const Header: React.FC = () => {
 						<button
 							className="text-text-heading p-2"
 							onClick={() => setIsOpen(false)}
-							aria-label="Cerrar menú"
+							aria-label={t("header.btnmenu.close", "Cerrar menú")}
 						>
 							<Icon icon="lucide:x" className="h-6 w-6" />
 						</button>

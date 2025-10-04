@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import { CustomToast } from "../../CustomToast";
 import { __ } from "../../../utils/i18nextHelper";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 interface ForgotPasswordProps
 	extends Omit<ComponentProps<"dialog">, "ref" | "onSubmit"> {
@@ -28,6 +29,7 @@ const ForgotPassword = ({
 	show = false,
 	...props
 }: ForgotPasswordProps) => {
+	const { t } = useTranslation();
 	const [email, setEmail] = useState("");
 	const [errorsForm, setErrorsForm] = useState<{
 		[k in keyof FormSendEmail]?: string[];
@@ -108,7 +110,7 @@ const ForgotPassword = ({
 			<div className="w-[80vw] rounded-lg md:w-[40dvw]">
 				<div className="bg-accent-hover/60 flex items-center justify-between px-3 py-4 backdrop-blur-3xl">
 					<p className="text-lg font-thin tracking-wide text-white">
-						Recuperar Contraseña
+						{t("forgotpsw.recover", "Recuperar Contraseña")}
 					</p>
 					<button
 						className="hover:bg-accent cursor-pointer rounded-md p-2 transition-colors duration-300"
@@ -121,14 +123,14 @@ const ForgotPassword = ({
 				<form className="flex flex-col gap-4 p-5" onSubmit={handleSubmit}>
 					<div className="flex-1">
 						<label className="text-lg font-bold" htmlFor="forgot-password">
-							Correo electrónico
+							{t("forgotpsw.email", "Correo electrónico")}
 						</label>
 						<FormFields
 							type="email"
 							name="forgot-password"
 							id="forgot-password"
 							className={`border-accent text-md focus:outline-accent inline-block w-full flex-1 rounded-lg border p-2 tracking-wide focus:outline-2 ${errorsForm.email ? "border-red-500 placeholder:text-red-300 focus:outline-2 focus:outline-red-500" : ""} `}
-							placeholder="Correo electrónico"
+							placeholder={t("forgotpsw.email", "Correo electrónico")}
 							value={email}
 							onChange={handleChange}
 							ref={inputEmail}
@@ -143,14 +145,14 @@ const ForgotPassword = ({
 						<input
 							className="bg-primary hover:bg-primary-hover cursor-pointer rounded-lg px-4 py-2 text-white transition-colors duration-300"
 							type="submit"
-							value="Enviar"
+							value={t("forgotpsw.send", "Enviar")}
 						/>
 						<button
 							className="bg-accent hover:bg-accent-hover cursor-pointer rounded-lg px-4 py-2 text-white transition-colors duration-300"
 							type="button"
 							onClick={handleClose}
 						>
-							Cancel
+							{t("forgotpsw.cancel", "Cancelar")}
 						</button>
 					</div>
 				</form>

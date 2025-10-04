@@ -24,15 +24,19 @@
 			"features": "Características",
 			"solutions": "Soluciones",
 			"prices": "Precios",
-			"backoffice": "Backoffice"
+			"boardslist": "Mis tableros"
 		},
 		"login": "Login",
-		"signup": "Registro"
+		"signup": "Registro",
+		"btnmenu": {
+			"open": "Abrir menú",
+			"close": "Cerrar menú"
+		}
 	},
 	"footer": {
 		"description": "FlowKan te ayuda a organizar tu trabajo y a tu equipo de forma visual y eficiente. Simplifica la gestión de proyectos y alcanza tus objetivos.",
 		"privacy": "Política de privacidad",
-		"terms": "Términos y condiciones de\tservicio",
+		"terms": "Términos y condiciones de servicio",
 		"title": "Contacto",
 		"contact": {
 			"email": "Email",
@@ -80,9 +84,6 @@
 		"p1": "Todavía no tienes ningún tablero.",
 		"p2": "¿Quieres crear uno?"
 	},
-	"boardslist": {
-		"title": "Mis tableros"
-	},
 	"invitation": {
 		"title": "Invitación a tablero",
 		"shared": "te ha compartido el tablero:",
@@ -91,12 +92,14 @@
 		"login_button": "Iniciar sesión"
 	},
 	"newboard": {
+		"error": "Error al crear el tablero",
 		"form": {
 			"header": "Crear tablero",
 			"title": "Título del tablero",
 			"img": "Fondo",
 			"button": "CREAR"
-		}
+		},
+		"spinner": "Creando"
 	},
 	"editboard": {
 		"form": {
@@ -184,6 +187,12 @@
 				}
 			}
 		}
+	},
+	"forgotpsw": {
+		"recover": "Recuperar Contraseña",
+		"email": "Correo electrónico",
+		"send": "Enviar",
+		"cancel": "Cancelar"
 	},
 	"notFound": {
 		"title": "Página no encontrada",
