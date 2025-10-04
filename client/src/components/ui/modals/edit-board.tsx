@@ -1,11 +1,14 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
+import { __ } from "../../../utils/i18nextHelper";
 import { Form } from "../Form";
 import { FormFields } from "../FormFields";
 import "./modal-boards.css";
 import CloseButton from "../close-button";
 import { Button } from "../Button";
 import type { EditBoardsData } from "../../../pages/boards/types";
+import toast from "react-hot-toast";
+import { CustomToast } from "../../CustomToast";
 
 interface EditFormProps {
 	handleEditForm: (newData: EditBoardsData) => void;
@@ -31,16 +34,37 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		const newData: EditBoardsData = {};
-		if (titleInput) {
-			newData.title = titleInput;
-		}
-		if (fileRef.current?.files?.[0]) {
-			newData.image = fileRef.current?.files?.[0];
-		}
+		try {
+			const newData: EditBoardsData = {};
 
-		handleEditForm(newData);
-		handleHideMessage();
+			if (titleInput) {
+				newData.title = titleInput;
+			}
+
+			const file = fileRef.current?.files?.[0];
+			if (file) {
+				const maxSizeMB = 5;
+
+				if (file.size > maxSizeMB * 1024 * 1024) {
+					throw new Error("La imagen es demasiado grande (máx. 5 MB).");
+				}
+
+				newData.image = file;
+			}
+
+			handleEditForm(newData);
+			handleHideMessage();
+		} catch (error) {
+			if (error instanceof Error) {
+				toast.custom((toast) => (
+					<CustomToast
+						message={__("editboard.toast.error", "Imagen demasiado grande")}
+						t={toast}
+						type="error"
+					/>
+				));
+			}
+		}
 	};
 
 	return (

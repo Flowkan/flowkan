@@ -104,7 +104,10 @@
 			"newtitle": "Nuevo título",
 			"newimg": "Nuevo fondo"
 		},
-		"edit": "EDITAR"
+		"edit": "EDITAR",
+		"toast": {
+			"error": "Imagen demasiado grande"
+		}
 	},
 	"home": {
 		"banner": "Simplifica tus tareas, maximiza tu productividad",

@@ -1,0 +1,108 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EditBoard > should render 1`] = `
+<div>
+  <div
+    class="modal-bg"
+  >
+    <article
+      class="modal-card"
+    >
+      <button
+        class="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none focus:ring-inset closebtn-form"
+        type="button"
+      >
+        <span
+          class="sr-only"
+        >
+          Close menu
+        </span>
+        <svg
+          aria-hidden="true"
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 18L18 6M6 6l12 12"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+        </svg>
+      </button>
+      <h3
+        class="modal-header"
+      >
+        Editar tablero
+      </h3>
+      <form
+        class="modal-form"
+        id="edittitleform"
+        method="POST"
+      >
+        <div
+          class="form-element"
+        >
+          <div>
+            <label
+              class="text-sm font-medium text-gray-800 form-label"
+              for="boardtitle"
+            >
+              Nuevo título
+            </label>
+            <div
+              class="relative mt-3"
+            >
+              <input
+                class="transition-all duration-300 w-full rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-green-600 focus:outline-none"
+                id="boardtitle"
+                name="boardtitle"
+                type="text"
+                value=""
+              />
+            </div>
+            <ul
+              class="px-1 text-xs text-red-600 transition-opacity duration-400 opacity-0"
+            />
+          </div>
+        </div>
+        <div
+          class="file-container"
+        >
+          <div>
+            <label
+              class="text-sm font-medium text-gray-800 upload-img-label"
+              for="bg-img"
+            >
+              Nuevo fondo
+            </label>
+            <div
+              class="relative mt-3 upload-img-container"
+            >
+              <input
+                class="transition-all duration-300 w-full rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-green-600 focus:outline-none"
+                id="bg-img"
+                name="bg-img"
+                type="file"
+              />
+            </div>
+            <ul
+              class="px-1 text-xs text-red-600 transition-opacity duration-400 opacity-0"
+            />
+          </div>
+        </div>
+        <button
+          class="btn-undefined form-btn cursor-not-allowed opacity-50"
+          disabled=""
+          type="submit"
+        >
+          EDITAR
+        </button>
+      </form>
+    </article>
+  </div>
+</div>
+`;

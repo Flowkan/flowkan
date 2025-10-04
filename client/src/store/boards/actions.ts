@@ -248,6 +248,15 @@ export const removeAssigneeFulfilled = (
 	payload: { cardId, userId },
 });
 
+// ─── UI ──────────────────────────────────────────────
+type UIResetError = {
+	type: "ui/reset-error";
+};
+
+export const uiResetError = (): UIResetError => ({
+	type: "ui/reset-error",
+});
+
 // ─── Thunks ─────────────────────────────
 export function fetchBoards({
 	page,
