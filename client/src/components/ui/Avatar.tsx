@@ -28,6 +28,10 @@ export const Avatar: React.FC<AvatarProps> = ({
 	const bgColor = randomColor(name);
 	const initialsName = getInitialsName(name);
 
+	if (!photo) {
+		initialsName;
+	}
+
 	if (photo) {
 		const baseUrl = import.meta.env.VITE_BASE_URL;
 		return (
