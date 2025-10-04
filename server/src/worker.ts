@@ -1,6 +1,7 @@
 import * as amqplib from 'amqplib'
 import { closeBroker, setupBroker } from './broker/connection';
 import { startEmailConsumer } from './broker/consumers/emailConsumer';
+import { startThumbnailConsumer } from './broker/consumers/thumbnailConsumer';
 async function startWorker(){
     let channel:amqplib.Channel;
     try {
@@ -9,6 +10,8 @@ async function startWorker(){
         console.log("--- WORKER INICIANDO: Escuchando tareas ---")
 
         await startEmailConsumer(channel)
+
+        await startThumbnailConsumer(channel)
 
         console.log("Worker activo, esperando nuevos mensajes...");
         
