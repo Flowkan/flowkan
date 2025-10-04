@@ -9,9 +9,6 @@ export const useDeleteAccount = () => {
 	const logout = useLogoutAction();
 
 	const handleDelete = async () => {
-		const confirmed = window.confirm("¿Estás seguro de eliminar tu cuenta?");
-		if (!confirmed) return;
-
 		try {
 			setLoading(true);
 			await deactivateUser();
@@ -19,9 +16,11 @@ export const useDeleteAccount = () => {
 			localStorage.clear();
 			logout();
 			navigate("/", { replace: true });
+			return true;
 		} catch (err: unknown) {
-			console.log(err)
-			alert(err);
+			if (err instanceof Error)
+				console.error("Hubo un error al eliminar la cuenta.");
+			return false;
 		} finally {
 			setLoading(false);
 		}

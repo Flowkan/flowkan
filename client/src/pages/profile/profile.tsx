@@ -13,7 +13,8 @@ import { useLoadedProfile, useUpdatedProfile } from "../../store/profile/hooks";
 import Switch from "../../components/ui/Switch";
 import { Button } from "../../components/ui/Button";
 import { useDeleteAccount } from "../../hooks/auth/useDeleteAccount";
-import { SpinnerLoadingText } from "../../components/ui/Spinner";
+import ConfirmDelete from "../../components/ui/modals/confirm-delete";
+import { useTranslation } from "react-i18next";
 
 type EventInput = (e: ChangeEvent<HTMLInputElement>) => void;
 
@@ -25,7 +26,10 @@ const Profile = () => {
 
 	const loadProfileAction = useLoadedProfile();
 
+	// Estado para el modal de confirmación de borrado de cuenta
 	const { handleDelete, loading } = useDeleteAccount();
+	const [showModal, setShowModal] = useState(false);
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		loadProfileAction();
@@ -277,16 +281,22 @@ const Profile = () => {
 							<div className="flex justify-end">
 								<Button
 									type="submit"
-									onClick={handleDelete}
+									onClick={() => setShowModal(true)}
 									disabled={loading}
 									className={`relative flex items-center justify-center gap-2 rounded-lg px-4 py-3 font-medium text-white ${loading ? "cursor-not-allowed bg-red-500 opacity-70" : "bg-red-600 hover:bg-red-700 active:scale-[0.98]"} shadow-md transition-all duration-200 hover:shadow-lg`}
 								>
-									{loading ? (
-										<SpinnerLoadingText text="Eliminando" />
-									) : (
-										"Eliminar cuenta"
-									)}
+									{t("profile.deleteAccount", "Eliminar cuenta")}
 								</Button>
+								{showModal && (
+									<ConfirmDelete
+										message="¿Estás seguro de eliminar su cuenta? Si lo haces se perderán todos sus datos, desea continuar?"
+										handleDeleteBoard={async () => {
+											await handleDelete();
+											setShowModal(false);
+										}}
+										handleHideMessage={() => setShowModal(false)}
+									/>
+								)}
 							</div>
 						</div>
 					</div>
