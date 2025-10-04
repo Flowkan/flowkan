@@ -1,14 +1,20 @@
 import "../../pages/boards/boards-list-item.css";
 import { Icon } from "@iconify/react";
 import { Button } from "./Button";
+import { useTranslation } from "react-i18next";
 
 interface TrashButtonProps {
 	showConfirm: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const TrashButton = ({ showConfirm }: TrashButtonProps) => {
+	const { t } = useTranslation();
 	return (
-		<Button className="trash-btn" onClick={(ev) => showConfirm(ev)} title="Eliminar">
+		<Button
+			className="trash-btn"
+			onClick={(ev) => showConfirm(ev)}
+			title={t("trashbtn.title", "Eliminar")}
+		>
 			<Icon
 				name="trash"
 				icon="bi:trash-fill"

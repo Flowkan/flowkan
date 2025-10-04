@@ -26,9 +26,11 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 
 	const handleGenerateLink = async () => {
 		if (!boardId) {
-			setError(
+			const setErrorMsgId = t(
+				"share.error.id",
 				"No se puede generar el enlace: el ID del tablero no está definido.",
 			);
+			setError(setErrorMsgId);
 			return;
 		}
 
@@ -46,8 +48,12 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 			setInvitationLink(fullInvitationUrl);
 			setStatus("succeeded");
 		} catch (err) {
+			const setErrorMsgLink = t(
+				"share.error.link",
+				"Error al generar el enlace de invitación.",
+			);
 			setStatus("failed");
-			setError("Error al generar el enlace de invitación.");
+			setError(setErrorMsgLink);
 			console.error(err);
 		}
 	};
@@ -91,7 +97,7 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 								onClick={handleCopyLink}
 								className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-300 p-1 text-xs font-bold transition-colors hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
 							>
-								Copiar
+								{t("shate.board.link.copy", "Copiar")}
 							</Button>
 						</div>
 					)}

@@ -13,6 +13,9 @@
 		},
 		"title": "Backoffice"
 	},
+	"toolbar": {
+		"share": "Compartir"
+	},
 	"header": {
 		"menu": {
 			"profile": "Perfil",
@@ -31,6 +34,10 @@
 		"btnmenu": {
 			"open": "Abrir menú",
 			"close": "Cerrar menú"
+		},
+		"menubtn": {
+			"title": "Menu de ajustes de {{name}}",
+			"arialabel": "Menu del usuario"
 		}
 	},
 	"footer": {
@@ -55,6 +62,20 @@
 		"yes": "SI",
 		"no": "NO"
 	},
+	"chat": {
+		"title": "Chat del tablero",
+		"input": "Escribe un mensaje...",
+		"send": "Enviar"
+	},
+	"closebtn": {
+		"title": "Cerrar menú"
+	},
+	"editbtn": {
+		"title": "Editar"
+	},
+	"trashbtn": {
+		"title": "Eliminar"
+	},
 	"arialabels": {
 		"component": {
 			"FormFields": {
@@ -63,12 +84,24 @@
 			}
 		}
 	},
+	"uploadimg": {
+		"alt": "Foto de perfil",
+		"arialabel": {
+			"upload": "Subir imagen",
+			"edit": "Editar imagen"
+		}
+	},
 	"share": {
+		"error": {
+			"id": "No se puede generar el enlace: el ID del tablero no está definido.",
+			"link": "Error al generar el enlace de invitación."
+		},
 		"board": {
 			"title": "Compartir tablero",
 			"link": {
 				"text": "Genera un enlace de invitación que puedes compartir con quien quieras.",
-				"button": "Generar enlace de invitación"
+				"button": "Generar enlace de invitación",
+				"copy": "Copiar"
 			}
 		}
 	},

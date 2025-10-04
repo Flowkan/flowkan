@@ -31,8 +31,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			<Button
 				className="flex items-center rounded-full focus:outline-none"
 				onClick={toggleMenu}
-				title={`Menu de ajustes de ${user.name}`}
-				aria-label="Menu del usuario"
+				title={t("header.menubtn.title", { name: user.name })}
+				aria-label={t("header.menubtn.arialabel", "Menu del usuario")}
 			>
 				<Avatar
 					name={user.name}
