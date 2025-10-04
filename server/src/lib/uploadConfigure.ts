@@ -100,3 +100,28 @@ export const uploadMedia = multer({
   storage: mediaStorage,
   limits: { fileSize: 20 * 1024 * 1024 }, // Límite de 20MB
 });
+
+export const deletePhoto = async (
+  subfolder: "users" | "boards",
+  fileName: string,
+) => {
+  if (!fileName) return;
+
+  const originalPath = path.join(
+    rootUploadPath,
+    subfolder,
+    `${fileName}_o.webp`,
+  );
+  const thumbPath = path.join(rootUploadPath, subfolder, `${fileName}_t.webp`);
+
+  for (const filePath of [originalPath, thumbPath]) {
+    try {
+      if (fs.existsSync(filePath)) {
+        await fs.promises.unlink(filePath);
+        console.log("Borrado: ", filePath);
+      }
+    } catch (error) {
+      console.error("Error al borrar: ", filePath);
+    }
+  }
+};
