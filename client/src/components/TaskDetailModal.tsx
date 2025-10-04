@@ -132,9 +132,15 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 			mediaRecorder.start();
 			setRecording(true);
 		} catch (error) {
-			console.error("Error al acceder al micrófono:", error);
+			console.error(
+				t("board.mic_error", "Error al acceder al micrófono:"),
+				error,
+			);
 			alert(
-				"No se pudo iniciar la grabación. Asegúrate de que el micrófono esté disponible.",
+				t(
+					"board.mic_alert",
+					"No se pudo iniciar la grabación. Asegúrate de que el micrófono esté disponible.",
+				),
 			);
 			setRecording(false);
 		}
@@ -391,7 +397,10 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								>
 									<input
 										type="text"
-										placeholder="Buscar miembros..."
+										placeholder={t(
+											"board.lookfor_members",
+											"Buscar miembros...",
+										)}
 										value={searchTerm}
 										onChange={handleSearchChange}
 										className="mb-2 w-full rounded-md border p-1 text-sm outline-none"

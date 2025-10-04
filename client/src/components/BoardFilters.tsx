@@ -4,7 +4,7 @@ import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
 import { useDismiss } from "../hooks/useDismissClickAndEsc";
 import { Icon } from "@iconify/react";
-import "../pages/boards/boards-list.css"
+import "../pages/boards/boards-list.css";
 
 interface FilterProps {
 	searchBoard: string;
@@ -29,8 +29,8 @@ export const BoardFilters = ({
 			{/* Botón toggle */}
 			<Button
 				id="filters"
-				title="Filtros"
-				aria-label="Filtros"
+				title={t("backoffice.btn.title", "Filtros")}
+				aria-label={t("backoffice.btn.title", "Filtros")}
 				onClick={toggleFilter}
 				className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 			>
@@ -108,7 +108,7 @@ export const BoardFilters = ({
 								setSearchBoard("");
 								setSearchMember("");
 							}}
-							className="hover:bg-emerald-100 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm"
+							className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm hover:bg-emerald-100"
 						>
 							{t("backoffice.filtersForm.clearFilters", "Borrar")}
 						</Button>

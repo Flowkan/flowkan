@@ -1,5 +1,8 @@
 {
 	"backoffice": {
+		"btn": {
+			"title": "Filtros"
+		},
 		"filters": {
 			"icon": "Filtros"
 		},
@@ -90,6 +93,12 @@
 			"upload": "Subir imagen",
 			"edit": "Editar imagen"
 		}
+	},
+	"customtoast": {
+		"close": "Cerrar"
+	},
+	"dropdownmenu": {
+		"closebtn": "Cerrar menú"
 	},
 	"share": {
 		"error": {
@@ -291,6 +300,68 @@
 		"column_name": "Nombre de la columna",
 		"create_column": "Crear columna",
 		"delete_task": "¿Estás seguro de que quieres eliminar esta tarea?",
-		"delete_attachment": "¿Estás seguro de que quieres eliminar este adjunto?"
+		"delete_attachment": "¿Estás seguro de que quieres eliminar este adjunto?",
+		"mic_error": "Error al acceder al micrófono:",
+		"mic_alert": "No se pudo iniciar la grabación. Asegúrate de que el micrófono esté disponible.",
+		"lookfor_members": "Buscar miembros..."
+	},
+	"column": {
+		"deleteConfirm": "¿Estás seguro de que quieres eliminar la columna \"{{title}}\"? Todas las tareas dentro se perderán.",
+		"edit": "Haz clic para editar",
+		"dropdownmenu": {
+			"title": "Enumerar acciones"
+		},
+		"addcard": "Añadir tarjeta",
+		"copy": {
+			"alert": "Copiar lista (no implementado)",
+			"msg": "Copiar lista"
+		},
+		"move": {
+			"list": {
+				"alert": "Mover lista (no implementado)",
+				"msg": "Mover lista"
+			},
+			"cards": {
+				"alert": "Mover todas las tarjetas (no implementado)",
+				"msg": "Mover todas las tarjetas de esta lista"
+			}
+		},
+		"sort": {
+			"alert": "Ordenar por... (no implementado)",
+			"msg": "Ordenar por..."
+		},
+		"follow": {
+			"alert": "Seguir (no implementado)",
+			"msg": "Seguir"
+		},
+		"changecolor": {
+			"alert": "Cambiar color de lista (no implementado)",
+			"msg": "Cambiar color de lista"
+		},
+		"auto": {
+			"alert": "Automatización (no implementado)",
+			"msg": "Automatización"
+		},
+		"archive": {
+			"list": {
+				"confirm": "¿Estás seguro de que quieres archivar esta lista \"{{title}}\"?",
+				"alert": "Archivar esta lista (no implementado)",
+				"msg": "Archivar esta lista"
+			},
+			"cards": {
+				"confirm": "¿Estás seguro de que quieres archivar todas las tarjetas de \"{{title}}\"?",
+				"alert": "Archivar todas las tarjetas (no implementado)",
+				"msg": "Archivar todas las tarjetas de esta lista"
+			}
+		},
+		"delete": "Eliminar Columna",
+		"add": {
+			"btn": "+ Añadir tarjeta",
+			"action": {
+				"placeholder": "Título de la tarjeta...",
+				"btn": "Añadir tarjeta",
+				"cancel": "Cancelar"
+			}
+		}
 	}
 }
