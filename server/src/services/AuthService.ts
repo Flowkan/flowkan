@@ -54,6 +54,10 @@ class AuthService {
   async hasTokenRecently(userId: number) {
     return this.authModel.hasTokenRecently(userId);
   }
+
+  async deactivateUser(userId: number) {
+    await this.authModel.deactivateUser(userId);
+  }
 }
 
 export default AuthService;
