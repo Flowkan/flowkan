@@ -247,6 +247,8 @@
 		"delete": "Delete",
 		"add_column": "Add Column",
 		"column_name": "Column Name",
-		"create_column": "Create Column"
+		"create_column": "Create Column",
+		"delete_task": "Are you sure you want to delete this task?",
+		"delete_attachment": "Are you sure you want to delete this attachment?"
 	}
 }
