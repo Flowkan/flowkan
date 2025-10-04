@@ -77,9 +77,7 @@ class AuthModel {
     });
   }
 
-  async findById(
-    id: number,
-  ): Promise<{
+  async findById(id: number): Promise<{
     id: number;
     email: string;
     name: string;
@@ -154,6 +152,21 @@ class AuthModel {
       },
       orderBy: {
         expiresAt: "asc",
+      },
+    });
+  }
+
+  async deactivateUser(userId: number) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new Error(
+        "Usuario no encontrado o no tienes permiso para eliminar este usuario",
+      );
+    }
+
+    await this.prisma.user.deleteMany({
+      where: {
+        id: userId,
       },
     });
   }

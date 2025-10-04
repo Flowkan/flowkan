@@ -11,6 +11,9 @@ import { resolveBaseURLFromEnv } from "../../utils/resolveBaseUrlEnv";
 import { updateFieldProfile } from "./service";
 import { useLoadedProfile, useUpdatedProfile } from "../../store/profile/hooks";
 import Switch from "../../components/ui/Switch";
+import { Button } from "../../components/ui/Button";
+import { useDeleteAccount } from "../../hooks/auth/useDeleteAccount";
+import { SpinnerLoadingText } from "../../components/ui/Spinner";
 
 type EventInput = (e: ChangeEvent<HTMLInputElement>) => void;
 
@@ -21,6 +24,8 @@ const Profile = () => {
 	const updatedProfileAction = useUpdatedProfile();
 
 	const loadProfileAction = useLoadedProfile();
+
+	const { handleDelete, loading } = useDeleteAccount();
 
 	useEffect(() => {
 		loadProfileAction();
@@ -264,9 +269,24 @@ const Profile = () => {
 									classNameValue="mt-2 text-base text-gray-700 italic"
 									onEdit={handleSubmitEditField}
 								/>
+
 								<span className="text-xs text-red-500">
 									{errors.bio.message}
 								</span>
+							</div>
+							<div className="flex justify-end">
+								<Button
+									type="submit"
+									onClick={handleDelete}
+									disabled={loading}
+									className={`relative flex items-center justify-center gap-2 rounded-lg px-4 py-3 font-medium text-white ${loading ? "cursor-not-allowed bg-red-500 opacity-70" : "bg-red-600 hover:bg-red-700 active:scale-[0.98]"} shadow-md transition-all duration-200 hover:shadow-lg`}
+								>
+									{loading ? (
+										<SpinnerLoadingText text="Eliminando" />
+									) : (
+										"Eliminar cuenta"
+									)}
+								</Button>
 							</div>
 						</div>
 					</div>
