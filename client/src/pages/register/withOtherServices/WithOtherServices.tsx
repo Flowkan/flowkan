@@ -43,10 +43,9 @@ export const WithOtherServices = () => {
 			onClick={() => {
 				window.location.href = getOAuthUrl(services.label);
 			}}
-			aria-label={t(
-				"arialabels.component.WithOtherServices.service",
-				`Continuar con {{${services.label}}}`,
-			)}
+			aria-label={t("arialabels.component.WithOtherServices.service", {
+				label: services.label,
+			})}
 			className="border-border-light bg-background-card text-text-body hover:bg-background-light-grey inline-flex w-full justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors duration-200"
 		>
 			<img

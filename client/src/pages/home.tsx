@@ -19,14 +19,23 @@ export const HomePage: React.FC = () => {
 							</h1>
 
 							<p className="mb-6 text-base font-light sm:text-lg md:text-xl lg:text-2xl">
-								{t("home.description", "Tarjetas de Tareas, Listas, Tableros")}
+								{t(
+									"home.description",
+									"Organiza tu trabajo y colabora en tiempo real",
+								)}
 								<br />
-								{t("home.funtionality", "Arrastrar y soltar")}
+								{t(
+									"home.funtionality",
+									"Arrastra, comparte y recibe ayuda de IA",
+								)}
 							</p>
 
 							<Button
-								title="Saber más"
-								aria-label="Saber más sobre la aplicación"
+								title={t("home.more", "Saber Más")}
+								aria-label={t(
+									"home.more_arialabel",
+									"Saber más sobre la aplicación",
+								)}
 								className="bg-primary text-text-on-accent hover:bg-primary-dark transform rounded-lg px-6 py-3 text-base font-semibold shadow-lg transition duration-300 hover:scale-105 sm:px-8 sm:py-4 sm:text-lg"
 							>
 								{t("home.more", "Saber Más")}
@@ -36,7 +45,7 @@ export const HomePage: React.FC = () => {
 						<div className="flex justify-center lg:w-1/2 lg:justify-end">
 							<img
 								src="https://imgs.search.brave.com/7WNY_QRUFxwivusSxIeNog9dVL2TneO5PYrt_2Vr_Cc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuYXNhbmEuYml6/L3RyYW5zZm9ybS9h/YzI1Nzg5NS1jZGY1/LTRmZTItOGEzNC0y/YmVmNmFhNDE2OGUv/aW5saW5lLWFnaWxl/LXNwcmludC1wbGFu/bmluZy0xLTJ4P2lv/PXRyYW5zZm9ybTpm/aWxsLHdpZHRoOjI1/NjAmZm9ybWF0PXdl/YnA"
-								alt="Kanban Board Interface"
+								alt={t("interface", "Kanban Board Interface")}
 								className="w-full max-w-lg scale-105 rotate-3 transform rounded-lg shadow-2xl"
 							/>
 						</div>
@@ -130,24 +139,25 @@ export const HomePage: React.FC = () => {
 							<div className="bg-background-card flex transform flex-col items-center rounded-lg p-8 shadow-lg transition-transform duration-300 hover:-translate-y-2">
 								<div className="bg-primary-lightest mb-4 rounded-full p-4">
 									<svg
-										className="text-primary h-8 w-8"
-										fill="currentColor"
+										className="h-8 w-8"
+										fill="#0A0B0D"
 										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg"
 									>
 										<path
 											fillRule="evenodd"
-											d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+											d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L14.414 5A2 2 0 0115 6.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2-1a1 1 0 00-1 1v12a1 1 0 001 1h7a1 1 0 001-1V7.414l-2.586-2.586A1 1 0 0010 4.586V4a1 1 0 00-1-1H6z"
 											clipRule="evenodd"
-										></path>
+										/>
 									</svg>
 								</div>
 								<h3 className="text-text-heading mb-2 text-xl font-semibold">
-									{t("home.features.calendar", "Calendario Integrado")}
+									{t("home.features.files", "Adjuntar archivos")}
 								</h3>
 								<p className="text-text-body text-center">
 									{t(
-										"home.features.events",
-										"Organiza tus plazos y eventos importantes",
+										"home.features.filesDescription",
+										"Adjunta archivos y audios directamente a tus tareas",
 									)}
 									.
 								</p>
@@ -165,7 +175,7 @@ export const HomePage: React.FC = () => {
 							<div className="bg-background-light-grey flex flex-col items-center rounded-lg p-6 shadow-md">
 								<img
 									src="https://randomuser.me/api/portraits/women/68.jpg"
-									alt="Avatar Testimonio"
+									alt={t("home.ourUsers.testimony", "Avatar Testimonio")}
 									className="border-accent-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 								/>
 								<p className="text-text-body mb-4 italic">
@@ -185,7 +195,7 @@ export const HomePage: React.FC = () => {
 							<div className="bg-background-light-grey flex flex-col items-center rounded-lg p-6 shadow-md">
 								<img
 									src="https://randomuser.me/api/portraits/men/44.jpg"
-									alt="Avatar Testimonio"
+									alt={t("home.ourUsers.testimony", "Avatar Testimonio")}
 									className="border-primary-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 								/>
 								<p className="text-text-body mb-4 italic">
@@ -206,7 +216,7 @@ export const HomePage: React.FC = () => {
 							<div className="bg-background-light-grey flex flex-col items-center rounded-lg p-6 shadow-md">
 								<img
 									src="https://randomuser.me/api/portraits/women/79.jpg"
-									alt="Avatar Testimonio"
+									alt={t("home.ourUsers.testimony", "Avatar Testimonio")}
 									className="border-primary-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 								/>
 								<p className="text-text-body mb-4 italic">
@@ -227,7 +237,7 @@ export const HomePage: React.FC = () => {
 					</div>
 				</section>
 
-				<section className="bg-background-light-grey px-6 py-20 md:px-12">
+				{/* <section className="bg-background-light-grey px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-7xl text-center">
 						<h2 className="text-text-heading mb-12 text-3xl font-bold md:text-4xl">
 							{t("home.docs.title", "Cómo puedes usar nuestra plataforma")}
@@ -286,7 +296,7 @@ export const HomePage: React.FC = () => {
 							</div>
 						</div>
 					</div>
-				</section>
+				</section> */}
 			</main>
 		</Page>
 	);

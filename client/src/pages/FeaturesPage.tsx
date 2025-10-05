@@ -19,7 +19,7 @@ export const FeaturesPage: React.FC = () => {
 		{
 			key: "kanban",
 			icon: (
-				<svg fill="currentColor" viewBox="0 0 20 20">
+				<svg fill="#3B82F6" viewBox="0 0 20 20">
 					<path
 						fillRule="evenodd"
 						d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.586-1.586A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L5.707 6.293A1 1 0 015 6.586V7a2 2 0 00-2 2zm0 2h12v8H4V7z"
@@ -36,7 +36,7 @@ export const FeaturesPage: React.FC = () => {
 		{
 			key: "realTime",
 			icon: (
-				<svg fill="currentColor" viewBox="0 0 20 20">
+				<svg fill="#DF539F" viewBox="0 0 20 20">
 					<path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17.66 14.93A8.995 8.005 0 0112 18c-.015 0-.029-.001-.044-.001-.383 0-.761-.019-1.139-.06a.75.75 0 01-.767-.681.75.75 0 01.68-.767c.307-.03 1.054-.052 1.25-.052.128 0 .256.007.384.02a8.987 8.987 0 006.182-3.816.75.75 0 011.23.966zM12 12a1 1 0 011-1h4a1 1 0 010 2h-4a1 1 0 01-1-1zM6 10a1 1 0 011-1h4a1 1 0 110 2H7a1 1 0 01-1-1z"></path>
 				</svg>
 			),
@@ -62,18 +62,14 @@ export const FeaturesPage: React.FC = () => {
 			},
 		},
 		{
-			key: "automation",
+			key: "ia",
 			icon: (
 				<svg
 					fill="currentColor"
-					viewBox="0 0 20 20"
+					viewBox="0 0 24 24"
 					xmlns="http://www.w3.org/2000/svg"
 				>
-					<path
-						fillRule="evenodd"
-						d="M12.586 4.586a2 2 0 102.828 2.828l3.12-3.12-2.828-2.828-3.12 3.12zM2 10a8 8 0 1116 0H2zm-1 0a9 9 0 1118 0H1z"
-						clipRule="evenodd"
-					></path>
+					<path d="M7 3v2H5a2 2 0 0 0-2 2v2H1v2h2v2H1v2h2v2a2 2 0 0 0 2 2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2a2 2 0 0 0 2-2v-2h2v-2h-2v-2h2v-2h-2V7a2 2 0 0 0-2-2h-2V3h-2v2h-2V3h-2v2H9V3H7zm0 4h10v10H7V7z" />
 				</svg>
 			),
 			iconClasses: {
@@ -82,14 +78,18 @@ export const FeaturesPage: React.FC = () => {
 			},
 		},
 		{
-			key: "templates",
+			key: "chat",
 			icon: (
 				<svg
-					fill="currentColor"
+					fill="#3B82F6"
 					viewBox="0 0 20 20"
 					xmlns="http://www.w3.org/2000/svg"
 				>
-					<path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM5 10a1 1 0 00-1 1v2a1 1 0 001 1h10a1 1 0 001-1v-2a1 1 0 00-1-1H5zM6 15a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1z"></path>
+					<path
+						fillRule="evenodd"
+						d="M18 10c0 3.866-3.582 7-8 7a8.75 8.75 0 01-3.42-.682L3 17l.693-3.095A6.9 6.9 0 012 10c0-3.866 3.582-7 8-7s8 3.134 8 7z"
+						clipRule="evenodd"
+					/>
 				</svg>
 			),
 			iconClasses: {
@@ -98,26 +98,10 @@ export const FeaturesPage: React.FC = () => {
 			},
 		},
 		{
-			key: "calendar",
-			icon: (
-				<svg fill="currentColor" viewBox="0 0 20 20">
-					<path
-						fillRule="evenodd"
-						d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-						clipRule="evenodd"
-					></path>
-				</svg>
-			),
-			iconClasses: {
-				circle: "bg-secondary-lightest",
-				svg: "text-secondary",
-			},
-		},
-		{
 			key: "mobile",
 			icon: (
 				<svg
-					fill="currentColor"
+					fill="#DF539F"
 					viewBox="0 0 20 20"
 					xmlns="http://www.w3.org/2000/svg"
 				>
@@ -134,10 +118,32 @@ export const FeaturesPage: React.FC = () => {
 			},
 		},
 		{
+			key: "audio",
+			icon: (
+				<svg
+					fill="#75B168"
+					viewBox="0 0 20 20"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path d="M10 2a2 2 0 0 1 2 2v6a2 2 0 0 1-4 0V4a2 2 0 0 1 2-2z" />
+					<path
+						fillRule="evenodd"
+						d="M4 10a6 6 0 0 0 12 0h-2a4 4 0 0 1-8 0H4z"
+						clipRule="evenodd"
+					/>
+					<path d="M10 16a6 6 0 0 0 6-6h-2a4 4 0 0 1-8 0H4a6 6 0 0 0 6 6z" />
+				</svg>
+			),
+			iconClasses: {
+				circle: "bg-secondary-lightest",
+				svg: "text-secondary",
+			},
+		},
+		{
 			key: "files",
 			icon: (
 				<svg
-					fill="currentColor"
+					fill="#0A0B0D"
 					viewBox="0 0 20 20"
 					xmlns="http://www.w3.org/2000/svg"
 				>
@@ -224,7 +230,7 @@ export const FeaturesPage: React.FC = () => {
 						<h2 className="text-text-heading mb-4 text-3xl font-bold md:text-4xl">
 							{t(
 								"features.cta.title",
-								"Listos para Transformar tu Productividad?",
+								"¿Listos para transformar tu productividad?",
 							)}
 						</h2>
 						<p className="text-text-body mb-8 text-lg">
@@ -237,7 +243,7 @@ export const FeaturesPage: React.FC = () => {
 							to="/register"
 							className="bg-accent text-text-on-accent hover:bg-accent-dark transform rounded-lg px-6 py-3 text-base font-semibold shadow-lg transition duration-300 hover:scale-105 md:px-8 md:py-4 md:text-lg"
 						>
-							{t("features.cta.button", "Comenzar Gratis Hoy Mismo")} &rarr;
+							{t("features.cta.button", "Comenzar gratis hoy mismo")} &rarr;
 						</Link>
 					</div>
 				</section>

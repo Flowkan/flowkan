@@ -84,6 +84,9 @@
 			"FormFields": {
 				"hidePass": "Ocultar contraseña",
 				"showPass": "Mostrar contraseña"
+			},
+			"withOtherServices": {
+				"service": "Continuar con {{label}}"
 			}
 		}
 	},
@@ -154,9 +157,11 @@
 	},
 	"home": {
 		"banner": "Simplifica tus tareas, maximiza tu productividad",
-		"description": "Tarjetas de Tareas, Listas, Tableros",
-		"funtionality": "Arrastrar y soltar",
+		"description": "Organiza tu trabajo y colabora en tiempo real",
+		"funtionality": "Arrastra, comparte y recibe ayuda de IA",
 		"more": "Saber Más",
+		"more_arialabel": "Saber más sobre la aplicación",
+		"interface": "Kanban Board Interface",
 		"features": {
 			"title": "Características Destacadas",
 			"board": "Kanban Board",
@@ -165,11 +170,12 @@
 			"jobsTeam": "Trabaja en equipo en tiempo real sin esfuerzo",
 			"follow": "Seguimiento de Progreso",
 			"upToDay": "Mantente al tanto del avance de tus proyectos",
-			"calendar": "Calendario Integrado",
-			"events": "Organiza tus plazos y eventos importantes"
+			"files": "Adjuntar archivos",
+			"filesDescription": "Adjunta archivos y audios directamente a tus tareas"
 		},
 		"ourUsers": {
 			"title": "Lo que dicen nuestros usuarios",
+			"testimony": "Avatar Testimonio",
 			"feedbacks": {
 				"first": {
 					"text": "Esta aplicación ha transformado la forma en que gestionamos nuestros proyectos. ¡Absolutamente indispensable!",
@@ -201,6 +207,85 @@
 			}
 		},
 		"moreInformation": "Más información"
+	},
+	"pricing": {
+		"feature1": "Tableros Ilimitados",
+		"feature2": "Colaboradores Ilimitados",
+		"feature3": "Arrastrar y Soltar",
+		"feature4": "Adjuntos Ilimitados",
+		"feature5": "Plantillas Personalizadas",
+		"feature6": "Soporte Prioritario 24/7",
+		"feature7": "Integraciones Avanzadas",
+		"plan": {
+			"basic": {
+				"title": "Básico",
+				"price": "Gratis",
+				"description": "Para uso personal y equipos pequeños que están comenzando."
+			},
+			"pro": {
+				"title": "Pro",
+				"price": "9.99€",
+				"description": "Gestión de proyectos avanzada para equipos en crecimiento."
+			},
+			"business": {
+				"title": "Business",
+				"price": "19.99 €",
+				"description": "Solución completa para empresas que requieren alta escalabilidad."
+			}
+		},
+		"title": "Planes Simples y Transparentes",
+		"subtitle": "Encuentra la solución perfecta para tu equipo o tus proyectos personales.",
+		"billing": "Todos los precios son por usuario/mes, facturados mensualmente.",
+		"popular": "Más Popular",
+		"perMonth": "/mes",
+		"getStarted": "Comenzar Gratis",
+		"subscribe": "Suscribirse",
+		"featuresList": "Incluye:",
+		"faq": {
+			"title": "¿Tienes Preguntas?",
+			"subtitle": "Consulta nuestra sección de preguntas frecuentes o contáctanos directamente."
+		},
+		"contact": "Contactar con Soporte"
+	},
+	"solutions": {
+		"banner": {
+			"title": "Flowkan se adapta a cualquier flujo de trabajo",
+			"subtitle": "Descubre cómo miles de equipos en diferentes industrias usan nuestra plataforma."
+		},
+		"main": {
+			"title": "Encuentra tu Solución Perfecta"
+		},
+		"list": {
+			"realTimeCollaboration": {
+				"title": "Colaboración en Tiempo Real",
+				"description": "Todos los cambios en tableros y tareas se actualizan instantáneamente para todos los colaboradores."
+			},
+			"visualProjectManagement": {
+				"title": "Gestión Visual de Proyectos",
+				"description": "Organiza tus proyectos con tableros y columnas para ver el progreso de un vistazo."
+			},
+			"aiTaskDescriptions": {
+				"title": "Descripciones de Tareas con IA",
+				"description": "La IA genera automáticamente la descripción de cada tarea a partir del título."
+			},
+			"integratedChat": {
+				"title": "Chat Integrado",
+				"description": "Comunica a tu equipo directamente dentro del tablero sin depender de emails o apps externas."
+			},
+			"fileAndVoiceSharing": {
+				"title": "Compartir Archivos y Notas de Voz",
+				"description": "Adjunta archivos y notas de voz directamente en las tareas para centralizar la información."
+			},
+			"taskAssignmentTracking": {
+				"title": "Asignación y Seguimiento de Tareas",
+				"description": "Asigna tareas a colaboradores y sigue el progreso de cada tarea en tiempo real."
+			}
+		},
+		"cta": {
+			"title": "¿Listo para Implementar tu Solución Kanban?",
+			"subtitle": "Crea tu espacio de trabajo y configura tu primer tablero en minutos para ver el potencial completo.",
+			"button": "Comenzar Ahora"
+		}
 	},
 	"login": {
 		"error": "Error al procesar la información del usuario.",
@@ -278,6 +363,24 @@
 		"withOtherService": {
 			"otherTypeRegister": "O continúa con"
 		}
+	},
+	"registerconfirm": {
+		"ok": "Cuenta confirmada correctamente!",
+		"error": {
+			"token": "Token no proporcionado",
+			"confirm": "Ocurrió un error al confirmar la cuenta"
+		},
+		"loading": "Confirmando cuenta..."
+	},
+	"verifyPending": {
+		"noEmailFound": "info@example.com",
+		"title": "Verifica tu Correo Electrónico",
+		"success": "¡Registro exitoso!",
+		"emailSent": "Te hemos enviado un email para validar tu cuenta.",
+		"actionRequires": "Acción Requerida:",
+		"instruction1": "Haz clic en el enlace de confirmación dentro del correo electrónico que enviamos a:",
+		"instruction2": "¿No lo encuentras? Revisa tu carpeta de spam o correo no deseado.",
+		"goToLogin": "Entendido, ir a Iniciar Sesión"
 	},
 	"board": {
 		"add_to_task": "Añadir a la tarjeta",
@@ -400,5 +503,54 @@
 		"bio": "Biografía",
 		"deleteaccount": "Eliminar cuenta",
 		"confirmdelete": "¿Estás seguro de eliminar su cuenta? Si lo haces se perderán todos sus datos, desea continuar?"
+	},
+	"features": {
+		"banner": {
+			"title": "Todo lo que necesitas para trabajar mejor",
+			"subtitle": "Desde la colaboración en tiempo real hasta la asistencia con IA, centralizamos tu flujo de trabajo.",
+			"cta": "Empezar a organizar ahora"
+		},
+		"main": {
+			"title": "Funcionalidades clave de Flowkan"
+		},
+		"list": {
+			"kanban": {
+				"title": "Gestión visual con tableros Kanban",
+				"description": "Organiza tus tareas fácilmente arrastrando y soltando entre columnas."
+			},
+			"realTime": {
+				"title": "Colaboración en tiempo real",
+				"description": "Edita y gestiona proyectos junto a tu equipo sin interrupciones."
+			},
+			"progress": {
+				"title": "Seguimiento del progreso",
+				"description": "Consulta el estado de tus tareas y mide el avance de tu equipo."
+			},
+			"ia": {
+				"title": "Asistencia con inteligencia artificial",
+				"description": "Deja que la IA te ayude a redactar descripciones claras y completas para tus tareas."
+			},
+			"chat": {
+				"title": "Chat en tiempo real",
+				"description": "Comunícate al instante con tu equipo sin salir del tablero."
+			},
+			"mobile": {
+				"title": "Acceso desde cualquier dispositivo",
+				"description": "Trabaja desde tu móvil, tablet o escritorio sin perder funcionalidad."
+			},
+			"audio": {
+				"title": "Notas de voz",
+				"description": "Adjunta mensajes de voz a tus tareas para explicar detalles de manera rápida."
+			},
+			"files": {
+				"title": "Gestión de archivos",
+				"description": "Sube, organiza y comparte documentos directamente desde tus tableros."
+			}
+		},
+		"cta": {
+			"title": "¿Listos para transformar tu productividad?",
+			"subtitle": "Crea tu primer tablero en solo unos minutos. Sin necesidad de tarjeta de crédito.",
+			"button": "Comenzar gratis hoy mismo"
+		}
 	}
 }

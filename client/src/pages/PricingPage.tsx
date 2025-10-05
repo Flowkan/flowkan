@@ -11,10 +11,9 @@ export const PricingPage: React.FC = () => {
 		t("pricing.feature2", "Colaboradores Ilimitados"),
 		t("pricing.feature3", "Arrastrar y Soltar"),
 		t("pricing.feature4", "Adjuntos Ilimitados"),
-		t("pricing.feature5", "Calendario y Fechas"),
-		t("pricing.feature6", "Plantillas Personalizadas"),
-		t("pricing.feature7", "Soporte Prioritario 24/7"),
-		t("pricing.feature8", "Integraciones Avanzadas"),
+		t("pricing.feature5", "Plantillas Personalizadas"),
+		t("pricing.feature6", "Soporte Prioritario 24/7"),
+		t("pricing.feature7", "Integraciones Avanzadas"),
 	];
 
 	const plans = [
@@ -77,7 +76,7 @@ export const PricingPage: React.FC = () => {
 						<p className="text-sm italic opacity-80">
 							{t(
 								"pricing.billing",
-								"Todos los precios son por usuario/mes, facturados anualmente.",
+								"Todos los precios son por usuario/mes, facturados mensualmente.",
 							)}
 						</p>
 					</div>
