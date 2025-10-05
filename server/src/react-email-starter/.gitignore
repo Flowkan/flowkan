@@ -1,0 +1,32 @@
+# Dependencias
+# Ignora la carpeta donde se descargan todos los paquetes de npm.
+# Esta es la regla más importante.
+/node_modules
+
+# Archivos de build y caché de React Email
+# Ignora la carpeta que usa el servidor de desarrollo de React Email.
+/.react-email
+/out
+
+# Variables de Entorno
+# NUNCA subas archivos con claves secretas, contraseñas o datos de conexión.
+.env
+.env*.local
+.env.development
+.env.production
+.env.test
+
+# Logs
+# Ignora archivos de registro generados por npm, yarn, etc.
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración de editores
+.vscode/
+.idea/

@@ -1,4 +1,20 @@
 services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq_container
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - .env
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running", "-q"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
   app:
     container_name: flowkan-server
     build: .
@@ -7,15 +23,17 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      rabbitmq:
+        condition: service_healthy # Espera a que el healthcheck pase
+      db:
+        condition: service_healthy # Espera a que el healthcheck pase
     volumes:
       - ./server:/usr/src/app
       - .:/usr/src/app:delegated
       - /usr/src/app/node_modules
       - ./src:/usr/src/app/src:delegated,consistency=cached
     command: npm run dev
-    restart: always
-
+    restart: always  
   db:
     container_name: flowkan-db
     image: postgres:alpine3.22
@@ -25,7 +43,13 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data     
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:
+  rabbitmq_data:

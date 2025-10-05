@@ -13,10 +13,10 @@ RUN npm install
 
 COPY . .
 
-RUN mkdir -p /usr/src/app/uploads \
-    && chown -R www-data:www-data /usr/src/app
+# RUN mkdir -p /usr/src/app/uploads \
+#     && chown -R www-data:www-data /usr/src/app
 
-USER www-data
+# USER www-data
 
 RUN npx prisma generate
 

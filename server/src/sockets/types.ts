@@ -80,6 +80,16 @@ export interface ServerToClientEvents {
   // --- Chat events ---
   "board:chatMessage": (msg: ChatMessage) => void;
   "chat:history": (msgs: ChatMessage[]) => void;
+
+  // --- Notification ---
+  "user:thumbnailLoading": (data: { userId: number; originalPath: string }) => void;
+  "user:thumbnailCompleted": (data: ThumbnailCompletedPayload) => void;
+  "user:thumbnailError": () => void;
+
+  // --- System events ---
+  "system:thumbnailLoading": () => void;
+  "system:thumbnailCompleted": (payload:ThumbnailCompletedPayload) => void;
+  "system:thumbnailError": (payload:{error:string}) => void;
 }
 
 export interface ClientToServerEvents {
@@ -109,6 +119,15 @@ export interface ClientToServerEvents {
     boardId: string;
     message: ChatMessage;
   }) => void;
+
+  // --- System events ---
+  "system:thumbnailLoading": () => void;
+  "system:thumbnailCompleted": (payload:ThumbnailCompletedPayload) => void;
+  "system:thumbnailError": (payload:ThumbnailErrorPayload) => void;
+}
+
+type WorkerData = {
+  userId: number;
 }
 
 type UserData = {
@@ -120,7 +139,7 @@ type BoardData = {
   board: BoardWithRelations;
 };
 
-export type SocketData = UserData & BoardData;
+export type SocketData = UserData & BoardData & WorkerData;
 
 export interface AuthPayload {
   boardId: string;
@@ -176,3 +195,15 @@ export type ServerChat = Server<
   Record<string, never>,
   SocketData
 >;
+
+export interface ThumbnailCompletedPayload {
+  userId: number;
+  originalPath: string;
+  thumbPath: string;
+}
+
+export interface ThumbnailErrorPayload {
+  userId: number;
+  originalPath: string;
+  errorMessage: string;
+}
