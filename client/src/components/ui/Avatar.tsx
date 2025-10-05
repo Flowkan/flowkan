@@ -46,7 +46,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 		});
 		socket.on("user:thumbnailCompleted", (data) => {
 			const type = data.originalPath.split("/").at(-2)
-			if(type === "users") {
+			if(type === "users"){
 				setLoading(false);
 				const thumbName = data.thumbPath.split("/").at(-1);
 				setThumbCurrent(thumbName!);
