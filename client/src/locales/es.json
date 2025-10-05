@@ -552,5 +552,78 @@
 			"subtitle": "Crea tu primer tablero en solo unos minutos. Sin necesidad de tarjeta de crédito.",
 			"button": "Comenzar gratis hoy mismo"
 		}
+	},
+	"spinner": {
+		"login": "Cargando Login",
+		"register": "Cargando Registro",
+		"generateLink": "Generando enlace",
+		"pendingVerification": "Verificación pendiente",
+		"boardsList": "Lista de Tableros",
+		"loadBoard": "Cargando Tablero"
+	},
+	"zod": {
+		"errors": {
+			"invalidEmail": "No es un email válido",
+			"mandatoryEmail": "Debe indicar un email",
+			"psw": {
+				"min": "La contraseña debe tener al menos 8 caracteres",
+				"confirm": {
+					"min": "Debe tener al menos 8 caracteres"
+				},
+				"notMatch": "Las contraseñas no coinciden"
+			},
+			"loginForm": {
+				"requiredEmail": "El email es requerido",
+				"validEmail": "Debe ser un email válido",
+				"requiredPsw": "La contraseña es requerida",
+				"minPsw": "Debe tener mínimo 8 caracteres"
+			},
+			"registerForm": {
+				"requiredName": "El nombre es requerido",
+				"minName": "Debe tener mínimo 4 caracteres",
+				"formatName": "Su nombre solo debe contener letras, espacios y acentos",
+				"requiredEmail": "El email es requerido",
+				"validEmail": "Debe ser un email válido",
+				"requiredPsw": "La contraseña es requerida",
+				"minPsw": "Debe tener mínimo 8 caracteres",
+				"confirmPsw": "Se requiere confirmar su contraseña",
+				"notMatchPsw": "Las contraseñas no coinciden"
+			}
+		},
+		"validations": {
+			"email": "correo",
+			"url": "enlace",
+			"uuid": "uuid",
+			"cuid": "cuid",
+			"regex": "expresión regular",
+			"datetime": "fecha"
+		},
+		"types": {
+			"function": "función",
+			"number": "número",
+			"string": "texto",
+			"nan": "valor no númerico",
+			"integer": "entero",
+			"float": "decimal",
+			"boolean": "booleano",
+			"date": "fecha",
+			"bigint": "entero grande",
+			"undefined": "indefinido",
+			"symbol": "símbolo",
+			"null": "nulo",
+			"array": "lista",
+			"object": "objeto",
+			"unknown": "desconocido",
+			"promise": "promesa",
+			"void": "void",
+			"never": "nunca",
+			"map": "mapa",
+			"set": "conjunto"
+		}
+	},
+	"html": {
+		"descriptionKey": "Colabora con tu equipo en un solo lugar. Con nuestros tableros Kanban, centraliza tareas, optimiza flujos de trabajo y aumenta la productividad.",
+		"imageAlt": "Flowkan - Tablero de gestión de proyectos.",
+		"lang": "es_ES"
 	}
 }

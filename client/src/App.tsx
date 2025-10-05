@@ -14,6 +14,7 @@ import { FeaturesPage } from "./pages/FeaturesPage";
 import { SolutionsPage } from "./pages/SolutionsPage";
 import { SkeletonCustom } from "./components/ui/skeleton/skeleton";
 import BoardItemSocket from "./pages/boards/board-socket/board-item-socket.tsx";
+import { t } from "i18next";
 // import SocketProvider from "./hooks/socket/socket-provider.tsx";
 
 const LoginPage = lazy(() =>
@@ -57,7 +58,7 @@ function App() {
 											rowHeight="h-12"
 											gap="gap-4"
 											className="w-full max-w-md rounded-xl p-10 shadow-2xl"
-											spinnerText="Cargando Login"
+											spinnerText={t("spinner.login", "Cargando Login")}
 										/>
 									</div>
 								}
@@ -88,7 +89,7 @@ function App() {
 											rowHeight="h-12"
 											gap="gap-4"
 											className="w-full max-w-md rounded-xl p-10 shadow-2xl"
-											spinnerText="Cargando Registro"
+											spinnerText={t("spinner.register", "Cargando Registro")}
 										/>
 									</div>
 								}
@@ -110,7 +111,7 @@ function App() {
 										rowHeight="h-12"
 										gap="gap-4"
 										className="w-full max-w-md"
-										spinnerText="Generando enlace"
+										spinnerText={t("spinner.generateLink", "Generando enlace")}
 									/>
 								</div>
 							}
@@ -139,7 +140,10 @@ function App() {
 										rowHeight="h-12"
 										gap="gap-4"
 										className="w-full max-w-md"
-										spinnerText="Verificación pendiente"
+										spinnerText={t(
+											"spinner.pendingVerification",
+											"Verificación pendiente",
+										)}
 									/>
 								</div>
 							}
@@ -177,7 +181,7 @@ function App() {
 										columnWidth="w-full"
 										gap="gap-6"
 										className="grid w-full max-w-xl grid-cols-1 p-6 sm:grid-cols-2 md:grid-cols-3"
-										spinnerText="Lista de Tableros"
+										spinnerText={t("spinner.boardsList", "Lista de Tableros")}
 									/>
 								</div>
 							}
@@ -198,7 +202,7 @@ function App() {
 										rowHeight="h-200"
 										gap="gap-4"
 										className="w-full min-w-6xl p-10 shadow-2xl"
-										spinnerText="Cargando Tablero"
+										spinnerText={t("spinner.loadBoard", "Cargando Tablero")}
 									/>
 								</div>
 							}
@@ -230,7 +234,7 @@ function App() {
 										rowHeight="h-200"
 										gap="gap-4"
 										className="w-full min-w-6xl p-10 shadow-2xl"
-										spinnerText="Cargando Tablero"
+										spinnerText={t("spinner.loadBoard", "Cargando Tablero")}
 									/>
 								</div>
 							}
