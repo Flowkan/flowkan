@@ -295,4 +295,24 @@ export class AuthController {
       `${process.env.FRONTEND_WEB_URL}/login?token=${accessToken}&user=${encodedUser}`,
     );
   };
+
+  deactivateUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.apiUserId;
+      if (!userId) {
+        return res.status(401).json({ error: "No estas autorizado" });
+      }
+      const result = await this.authService.deactivateUser(userId);
+      res.clearCookie("auth", {
+        httpOnly: true,
+        path: "/",
+      });
+      res.json(result);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      next(error);
+    }
+  };
 }
