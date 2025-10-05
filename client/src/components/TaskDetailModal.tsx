@@ -40,7 +40,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	onDeleteTask,
 }) => {
 	const addAssignee = useAddAssigneeAction();
-	const { open, setOpen, ref } = useDismiss<HTMLDivElement>(isOpen);
+	const { open, ref } = useDismiss<HTMLDivElement>(isOpen);
 	const removeAssignee = useRemoveAssigneeAction();
 	const [editedContent, setEditedContent] = useState(task.title || "");
 	const [editedDescription, setEditedDescription] = useState(
@@ -70,16 +70,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const addMenuRef = useRef<HTMLDivElement>(null);
 	const editorRef = useRef(null);
 	const { t } = useTranslation();
-
-	useEffect(() => {
-		setOpen(isOpen);
-	}, [isOpen, setOpen]);
-
-	useEffect(() => {
-		if (!open && isOpen) {
-			onClose();
-		}
-	}, [open, isOpen, onClose]);
 
 	const {
 		generateDescriptionFromTitle,
@@ -210,6 +200,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		task.description,
 		task.title,
 	]);
+
+	useEffect(() => {
+		if (!open && isOpen) {
+			handleClose();
+		}
+	}, [open, isOpen, handleClose]);
 
 	useEffect(() => {
 		if (error) {
