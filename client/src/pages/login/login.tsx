@@ -44,11 +44,20 @@ export const LoginPage = () => {
 	const { email, password } = formData;
 	const disabled = !email || !password;
 
-	const LoginValidator = useCallback((data:unknown,fieldName?:keyof Omit<typeof formData, "turnstileResponse">)=>{
-		return validationForm(LoginFormSchema,data,fieldName)
-	},[])
+	const LoginValidator = useCallback(
+		(
+			data: unknown,
+			fieldName?: keyof Omit<typeof formData, "turnstileResponse">,
+		) => {
+			return validationForm(LoginFormSchema, data, fieldName);
+		},
+		[],
+	);
 
-	const { error,validate,checkField } = useValidationForm<Omit<typeof formData,"turnstileResponse">>(LoginValidator)	
+	const { error, validate, checkField } =
+		useValidationForm<Omit<typeof formData, "turnstileResponse">>(
+			LoginValidator,
+		);
 
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
@@ -62,12 +71,14 @@ export const LoginPage = () => {
 					user = JSON.parse(userDecoded);
 				} catch (e) {
 					console.error("Error al parsear el objeto de usuario OAuth:", e);
-					toast.error("Error al procesar la información del usuario.");
+					toast.error(
+						t("login.error", "Error al procesar la información del usuario."),
+					);
 				}
 			}
 			dispatch(loginWithOAuth({ token, user }));
 		}
-	}, [dispatch]);	
+	}, [dispatch]);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -77,26 +88,26 @@ export const LoginPage = () => {
 		}));
 	};
 
-	const handleBlur = (e: FocusEvent<HTMLInputElement, Element>) => {		
-		const { name } = e.target
-		validate({
-			email,
-			password
-		},name as keyof Omit<typeof formData, "turnstileResponse">)	
-		
+	const handleBlur = (e: FocusEvent<HTMLInputElement, Element>) => {
+		const { name } = e.target;
+		validate(
+			{
+				email,
+				password,
+			},
+			name as keyof Omit<typeof formData, "turnstileResponse">,
+		);
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		try {			
-			
+		try {
 			//Validaciones con zod
-			const isValidForm = validate({email,password})
-			if(isValidForm){
+			const isValidForm = validate({ email, password });
+			if (isValidForm) {
 				await loginAction(formData);
 				await profileLoadedAction();
 			}
-
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				setFormData((prevData) => ({

@@ -65,7 +65,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const usersRef = useRef<HTMLDivElement>(null);
 	const addMenuRef = useRef<HTMLDivElement>(null);
 	const editorRef = useRef(null);
-	const { t } = useTranslation();
+	const { t: translate } = useTranslation();
 
 	const { generateDescriptionFromTitle, loading, stopGenerationDescription } =
 		useAI();
@@ -133,11 +133,11 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 			setRecording(true);
 		} catch (error) {
 			console.error(
-				t("board.mic_error", "Error al acceder al micrófono:"),
+				translate("board.mic_error", "Error al acceder al micrófono:"),
 				error,
 			);
 			alert(
-				t(
+				translate(
 					"board.mic_alert",
 					"No se pudo iniciar la grabación. Asegúrate de que el micrófono esté disponible.",
 				),
@@ -158,9 +158,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 	const handleRemoveAttachment = (mediaId: number) => {
 		setConfirmMessage(
-			t(
+			translate(
 				"board.delete_attachment",
-				"¿Estás seguro de que quieres eliminar este adjunto",
+				"¿Estás seguro de que quieres eliminar este adjunto?",
 			),
 		);
 		setConfirmAction(() => () => {
@@ -180,7 +180,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 	const handleDelete = () => {
 		setConfirmMessage(
-			t(
+			translate(
 				"board.delete_task",
 				"¿Estás seguro de que quieres eliminar esta tarea?",
 			),
@@ -240,13 +240,13 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		try {
 			await generateDescriptionFromTitle(task.title, (description: string) => {
 				setEditedDescription(
-					description + "<p><em>Creado desde Flowkan\n</em></p><br>",
+					`${description}<p><em>${translate("board.created_from", "Creado desde Flowkan\n")}</em></p><br>`,
 				);
 			});
 		} catch (error) {
 			toast.custom((t) => (
 				<CustomToast
-					message={`Error al generar la descripción ${error}`}
+					message={translate("boardModal.AI.error", { error: error })}
 					type="error"
 					t={t}
 				/>
@@ -287,7 +287,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 						<div className="relative mb-6">
 							<h4 className="text-text-placeholder mb-2 text-sm font-semibold">
-								{t("board.add_to_task", "Añadir a la tarjeta")}
+								{translate("board.add_to_task", "Añadir a la tarjeta")}
 							</h4>
 							<div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
 								<div className="relative" ref={addMenuRef}>
@@ -296,7 +296,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 										className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
 									>
 										<Icon icon="mdi:plus" className="text-lg" />
-										{t("board.add", "Añadir")}
+										{translate("board.add", "Añadir")}
 									</Button>
 
 									{showAddMenu && (
@@ -312,7 +312,10 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 													icon="mdi:attachment"
 													className="mr-1 inline-block text-lg"
 												/>
-												{t("board.attach_document", "Adjuntar documento")}
+												{translate(
+													"board.attach_document",
+													"Adjuntar documento",
+												)}
 											</Button>
 											<Button
 												onClick={() => {
@@ -325,7 +328,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 													icon="mdi:microphone"
 													className="mr-1 inline-block text-lg"
 												/>
-												{t("board.attach_voice", "Grabar nota de voz")}
+												{translate("board.attach_voice", "Grabar nota de voz")}
 											</Button>
 										</div>
 									)}
@@ -340,22 +343,22 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 								<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
 									<Icon icon="mdi:tag-outline" className="text-lg" />{" "}
-									{t("board.labels", "Etiquetas")}
+									{translate("board.labels", "Etiquetas")}
 								</Button>
 								<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
 									<Icon icon="mdi:calendar-month-outline" className="text-lg" />{" "}
-									{t("board.dates", "Fechas")}
+									{translate("board.dates", "Fechas")}
 								</Button>
 								<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
 									<Icon icon="mdi:checkbox-outline" className="text-lg" />{" "}
-									{t("board.checklist", "Checklist")}
+									{translate("board.checklist", "Checklist")}
 								</Button>
 								<Button
 									onClick={handleToggleUsers}
 									className="bg-background-light-grey text-text-body hover:bg-background-hover-column relative flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
 								>
 									<Icon icon="mdi:account-group-outline" className="text-lg" />{" "}
-									{t("board.members", "Miembros")}
+									{translate("board.members", "Miembros")}
 								</Button>
 								<Button
 									onClick={
@@ -366,10 +369,16 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									<Icon icon="mdi:robot" className="text-lg" />
 									{loading ? (
 										<SpinnerLoadingText
-											text={t("boardModal.AI.btnLoading-On", "Generando")}
+											text={translate(
+												"boardModal.AI.btnLoading-On",
+												"Generando",
+											)}
 										/>
 									) : (
-										t("boardModal.AI.btnLoading-Off", "Generar descripción")
+										translate(
+											"boardModal.AI.btnLoading-Off",
+											"Generar descripción",
+										)
 									)}
 									{loading && (
 										<span
@@ -397,7 +406,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								>
 									<input
 										type="text"
-										placeholder={t(
+										placeholder={translate(
 											"board.lookfor_members",
 											"Buscar miembros...",
 										)}
@@ -407,7 +416,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									/>
 									{loadingUsers && (
 										<p className="text-center text-sm">
-											{t("board.load_users", "Cargando usuarios...")}
+											{translate("board.load_users", "Cargando usuarios...")}
 										</p>
 									)}
 									{usersError && (
@@ -440,7 +449,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						{assignedUsers.length > 0 && (
 							<div className="mb-6">
 								<h4 className="text-text-heading mb-2 text-sm font-semibold">
-									{t("board.members", "Miembros")}
+									{translate("board.members", "Miembros")}
 								</h4>
 								<div className="flex flex-wrap gap-2">
 									{assignedUsers.map((user) => (
@@ -462,7 +471,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									icon="mdi:note-edit-outline"
 									className="text-text-placeholder text-lg"
 								/>
-								{t("board.description", "Descripción")}
+								{translate("board.description", "Descripción")}
 							</h4>
 							<Editor
 								apiKey={import.meta.env.VITE_TINY_MCE}
@@ -509,7 +518,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						{task.media && task.media.length > 0 && (
 							<div className="mb-6">
 								<h4 className="text-text-heading mb-2 text-sm font-semibold">
-									{t("board.attatchments", "Adjuntos")}
+									{translate("board.attatchments.title", "Adjuntos")}
 								</h4>
 								<div className="space-y-2">
 									{task.media.map((mediaItem) => {
@@ -529,12 +538,17 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 															>
 																<track
 																	kind="captions"
-																	label="Transcripción"
+																	label={translate(
+																		"board.attatchments.audio.label",
+																		"Transcripción",
+																	)}
 																	src=""
 																	default
 																/>
-																Tu navegador no soporta la reproducción de
-																audio.
+																{translate(
+																	"board.attatchments.audio.msg",
+																	"Tu navegador no soporta la reproducción de audio.",
+																)}
 															</audio>
 														</>
 													) : (
@@ -548,7 +562,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 																	href={`${import.meta.env.VITE_BASE_URL}${mediaItem.url}`}
 																	target="_blank"
 																	rel="noopener noreferrer"
-																	title={`Ver ${mediaItem.fileName}`}
+																	title={translate("board.attatchments.media", {
+																		fileName: mediaItem.fileName,
+																	})}
 																>
 																	{mediaItem.fileName}
 																</a>
@@ -559,7 +575,10 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 												<button
 													onClick={() => handleRemoveAttachment(mediaItem.id)}
 													className="text-text-placeholder hover:text-red-500"
-													title="Eliminar archivo"
+													title={translate(
+														"board.attatchments.delete",
+														"Eliminar archivo",
+													)}
 												>
 													<Icon
 														icon="mdi:close-circle-outline"
@@ -577,13 +596,13 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							<div className="fixed bottom-4 left-1/2 z-50 flex w-[90%] max-w-md -translate-x-1/2 items-center justify-between rounded-lg bg-red-600 px-4 py-3 text-white shadow-lg">
 								<span className="flex items-center gap-2">
 									<Icon icon="mdi:record-circle" className="animate-pulse" />{" "}
-									{t("board.recording", "Grabando...")}
+									{translate("board.recording", "Grabando...")}
 								</span>
 								<Button
 									onClick={handleStopRecording}
 									className="rounded bg-white px-3 py-1 text-sm font-semibold text-red-600 hover:bg-gray-200"
 								>
-									{t("board.stop", "Detener")}
+									{translate("board.stop", "Detener")}
 								</Button>
 							</div>
 						)}
@@ -591,30 +610,30 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 					<div className="w-full flex-shrink-0 pt-6 md:w-64 md:pt-10">
 						<h4 className="text-text-placeholder mb-3 text-sm font-semibold">
-							{t("board.options", "Opciones")}
+							{translate("board.options", "Opciones")}
 						</h4>
 						<div className="space-y-2">
 							<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
 								<Icon icon="mdi:arrow-right-box" className="text-lg" />
-								{t("board.move", "Mover")}
+								{translate("board.move", "Mover")}
 							</Button>
 							<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
 								<Icon icon="mdi:content-copy" className="text-lg" />
-								{t("board.copy", "Copiar")}
+								{translate("board.copy", "Copiar")}
 							</Button>
 							<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200">
 								<Icon
 									icon="mdi:archive-arrow-down-outline"
 									className="text-lg"
 								/>{" "}
-								{t("board.archive", "Archivar")}
+								{translate("board.archive", "Archivar")}
 							</Button>
 							<Button
 								className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200"
 								onClick={handleDelete}
 							>
 								<Icon icon="mdi:trash-can-outline" className="text-lg" />
-								{t("board.delete", "Eliminar")}
+								{translate("board.delete", "Eliminar")}
 							</Button>
 						</div>
 					</div>

@@ -121,7 +121,7 @@ const ChangePassword = () => {
 						<input
 							className="bg-primary hover:bg-primary-hover cursor-pointer rounded-2xl px-4 py-3 text-xs font-thin tracking-wide text-gray-100 transition-colors duration-300"
 							type="submit"
-							value="Guardar Cambios"
+							value={t("recovery_password.save", "Guardar Cambios")}
 						/>
 					</div>
 				</form>

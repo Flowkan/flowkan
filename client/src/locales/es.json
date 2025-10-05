@@ -116,7 +116,8 @@
 	},
 	"boardModal": {
 		"AI": {
-			"prompt": "\n          Actúa como un asistente de gestión de proyectos y experto en la organización de tareas. Tu objetivo es generar una descripción completa y detallada para una nueva tarjeta de tarea, basándote únicamente en su título.\n          El estilo de la respuesta debe ser conciso, con un formato de lista de verificación y/o pasos detallados, emulando el formato de un boceto a lápiz para una planificación rápida. La descripción debe ser lo suficientemente detallada para guiar la ejecución de la tarea.\n\n          Criterios de generación:\n          Analiza el {{title}}: Identifica el objetivo, el sujeto y la acción principal.\n          Genera la Estructura para {{title}}: Crea una lista de pasos (- [ ]) o secciones que cualquier persona necesitaría seguir para completar esa tarea.\n          "
+			"prompt": "\n          Actúa como un asistente de gestión de proyectos y experto en la organización de tareas. Tu objetivo es generar una descripción completa y detallada para una nueva tarjeta de tarea, basándote únicamente en su título.\n          El estilo de la respuesta debe ser conciso, con un formato de lista de verificación y/o pasos detallados, emulando el formato de un boceto a lápiz para una planificación rápida. La descripción debe ser lo suficientemente detallada para guiar la ejecución de la tarea.\n\n          Criterios de generación:\n          Analiza el {{title}}: Identifica el objetivo, el sujeto y la acción principal.\n          Genera la Estructura para {{title}}: Crea una lista de pasos (- [ ]) o secciones que cualquier persona necesitaría seguir para completar esa tarea.\n          ",
+			"error": "Error al generar la descripción {{error}}"
 		}
 	},
 	"boardsitem": {
@@ -202,6 +203,7 @@
 		"moreInformation": "Más información"
 	},
 	"login": {
+		"error": "Error al procesar la información del usuario.",
 		"toast": {
 			"message": {
 				"errorEmptyPassword": "La contraseña no puede estar vacía.",
@@ -288,7 +290,15 @@
 		"checklist": "Checklist",
 		"load_users": "Cargando usuarios...",
 		"description": "Descripción",
-		"attatchments": "Adjuntos",
+		"attatchments": {
+			"title": "Adjuntos",
+			"audio": {
+				"label": "Transcripción",
+				"msg": "Tu navegador no soporta la reproducción de audio."
+			},
+			"media": "Ver {{fileName}}",
+			"delete": "Eliminar archivo"
+		},
 		"recording": "Grabando...",
 		"stop": "Detener",
 		"options": "Opciones",
@@ -303,7 +313,8 @@
 		"delete_attachment": "¿Estás seguro de que quieres eliminar este adjunto?",
 		"mic_error": "Error al acceder al micrófono:",
 		"mic_alert": "No se pudo iniciar la grabación. Asegúrate de que el micrófono esté disponible.",
-		"lookfor_members": "Buscar miembros..."
+		"lookfor_members": "Buscar miembros...",
+		"created_from": "Creado desde Flowkan\n"
 	},
 	"column": {
 		"deleteConfirm": "¿Estás seguro de que quieres eliminar la columna \"{{title}}\"? Todas las tareas dentro se perderán.",
@@ -363,5 +374,31 @@
 				"cancel": "Cancelar"
 			}
 		}
+	},
+	"deleteaccount": {
+		"error": "Hubo un error al eliminar la cuenta."
+	},
+	"recovery_password": {
+		"form": {
+			"title": "Cambiar Contraseña",
+			"field": {
+				"new_password": "Nueva contraseña",
+				"confirm_password": "Repetir contraseña"
+			}
+		},
+		"save": "Guardar Cambios"
+	},
+	"profile": {
+		"title": "Perfil de Usuario",
+		"switch": {
+			"label": "Permitir envío de notificaciones"
+		},
+		"username": "Nombre de usuario",
+		"email": "Email",
+		"birthdate": "Fec. Nacimiento",
+		"location": "Ubicación",
+		"bio": "Biografía",
+		"deleteaccount": "Eliminar cuenta",
+		"confirmdelete": "¿Estás seguro de eliminar su cuenta? Si lo haces se perderán todos sus datos, desea continuar?"
 	}
 }

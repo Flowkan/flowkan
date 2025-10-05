@@ -56,8 +56,10 @@ export const useAI = () => {
 		} catch (err: unknown) {
 			if (err instanceof Error) {
 				setError(err.message || "Error al generar");
-				if(err.message.includes("limit") || err.message.includes("quota")) {
-					setError(err.message || "Límite dario máximo de peticiones alcanzadas.")
+				if (err.message.includes("limit") || err.message.includes("quota")) {
+					setError(
+						err.message || "Límite diario máximo de peticiones alcanzadas.",
+					);
 				}
 			}
 			return null;
