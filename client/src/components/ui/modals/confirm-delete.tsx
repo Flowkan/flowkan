@@ -15,7 +15,7 @@ const ConfirmDelete = ({
 }: ConfirmDeleteProps) => {
 	const { t } = useTranslation();
 	return (
-		<div className="modal-bg">
+		<div data-modal className="modal-bg">
 			<article className="modal-card">
 				<h3 className="modal-header confirm">{message}</h3>
 				<div className="modal-btns-container">

@@ -22,8 +22,8 @@ export const useAI = () => {
 		let description = "";
 
 		try {
-			const { textStream } = await streamText({
-				model: openrouter("x-ai/grok-4-fast:free"),
+			const { textStream } = streamText({
+				model: openrouter("google/gemma-3n-e2b-it:free"),
 				prompt: t("boardModal.AI.prompt", {
 					title,
 					defaultValue: `
@@ -43,21 +43,23 @@ export const useAI = () => {
 				description += chunk;
 				buffer += chunk;
 				if (buffer.length >= 30) {
-					let formatted = formattedToHTML(description);
+					const formatted = formattedToHTML(description);
 					onChunk?.(formatted); // descripcion en tiempo real
 					buffer = "";
 				}
 			}
 			if (buffer) {
-				let formatted = formattedToHTML(description);
+				const formatted = formattedToHTML(description);
 				onChunk?.(formatted);
 			}
 			return description;
 		} catch (err: unknown) {
 			if (err instanceof Error) {
 				setError(err.message || "Error al generar");
-				if(err.message.includes("limit") || err.message.includes("quota")) {
-					setError(err.message || "Límite dario máximo de peticiones alcanzadas.")
+				if (err.message.includes("limit") || err.message.includes("quota")) {
+					setError(
+						err.message || "Límite dario máximo de peticiones alcanzadas.",
+					);
 				}
 			}
 			return null;

@@ -6,6 +6,7 @@ import {
 import type { Credentials, ResponseChangePassword } from "./types";
 import storage from "../../utils/storage";
 import { USER_ENDPOINTS } from "../../utils/endpoints";
+import { resolveBaseURLFromEnv } from "../../utils/resolveBaseUrlEnv";
 
 export const login = async (credentials: Credentials) => {
 	const response = await apiClient.post<{
@@ -55,4 +56,11 @@ export const changePassword = async (password:string,token:string) => {
 		}
 	)	
 	return response.data
+}
+
+export async function deactivateUser(): Promise<void> {
+	const response = await apiClient.delete(
+		`${resolveBaseURLFromEnv()}${USER_ENDPOINTS.DELETE_USER}`,
+	);
+	return response.data;
 }
