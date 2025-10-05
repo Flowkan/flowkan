@@ -9,9 +9,9 @@ async function startWorker(){
 
         console.log("--- WORKER INICIANDO: Escuchando tareas ---")
 
-        await startEmailConsumer(channel)
+        startEmailConsumer(channel)
 
-        await startThumbnailConsumer(channel)
+        startThumbnailConsumer(channel)
 
         console.log("Worker activo, esperando nuevos mensajes...");
         

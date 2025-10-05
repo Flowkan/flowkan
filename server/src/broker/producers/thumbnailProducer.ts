@@ -1,9 +1,15 @@
+import { appEvents } from "../../events/appEvents";
 import { Exchanges, RoutingKeys } from "../config";
 import { setupBroker } from "../connection";
 import { MakeThumbnailPayload } from "../types";
 
-export async function sendToMakeThumbnailTask(payload: MakeThumbnailPayload) {
-  
+export async function sendToMakeThumbnailTask(payload: MakeThumbnailPayload) {    
+    
+    appEvents.emit('thumbnail:processing', {
+        userId: payload.userId,
+        originalPath: payload.originalPath 
+    });
+
     const channel = await setupBroker();
     const message = JSON.stringify(payload);
     const buffer = Buffer.from(message);

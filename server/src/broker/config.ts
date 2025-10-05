@@ -26,9 +26,10 @@ export const ExchangeTypes = {
 
 //Keys para routing
 export const RoutingKeys = {
-    EMAIL_SEND: '*',
-    THUMBNAIL_GENERATE: '*',
-    FAIL_SEND_EMAIL:'dlx.email'
+    EMAIL_SEND: 'task.email.send',
+    THUMBNAIL_GENERATE: 'task.thumbnail.generate',
+    FAIL_SEND_EMAIL:'dlx.email',
+    FAIL_MAKE_THUMBNAIL:'dlx.thumbnail',
 };
 
 /**
@@ -39,7 +40,8 @@ export const DLQ_EXCHANGE = 'dlx_exchange';
 
 export const DLQ_Queues = {
   //Cola de email fallidos
-  EMAIL_DLQ:'dlq_email_tasks'
+  EMAIL_DLQ:'dlq_email_tasks',
+  THUMBNAIL_DLQ: 'dlq_thumbnail_tasks',
 }
 
 // Enlaze de exchange con las colas
@@ -57,7 +59,12 @@ const Bindings = [
   {
     exchange:DLQ_EXCHANGE,
     queue: DLQ_Queues.EMAIL_DLQ,
-    routingKey:RoutingKeys.EMAIL_SEND
+    routingKey:RoutingKeys.FAIL_SEND_EMAIL
+  },
+  {
+    exchange:DLQ_EXCHANGE,
+    queue: DLQ_Queues.THUMBNAIL_DLQ,
+    routingKey:RoutingKeys.FAIL_MAKE_THUMBNAIL
   }
 ]
 
@@ -77,14 +84,26 @@ export const Topology = {
   queues:[
     {
         name:Queues.EMAIL_QUEUE,
-        options:{ durable:true }
+        options:{ 
+          durable:true,
+          'x-dead-letter-exchange': DLQ_EXCHANGE,
+          'x-dead-letter-routing-key': RoutingKeys.FAIL_SEND_EMAIL,
+         }
     },
     {
         name:Queues.THUMBNAIL_QUEUE,
-        options:{ durable:true }
+        options:{ 
+          durable:true,
+          'x-dead-letter-exchange': DLQ_EXCHANGE,
+          'x-dead-letter-routing-key': RoutingKeys.FAIL_MAKE_THUMBNAIL,
+         }
     },
     {
       name:DLQ_Queues.EMAIL_DLQ,
+      options:{ durable:true }
+    },
+    {
+      name:DLQ_Queues.THUMBNAIL_DLQ,
       options:{ durable:true }
     }
   ],
