@@ -37,14 +37,20 @@ export const Avatar: React.FC<AvatarProps> = ({
 	const cleanThumb = `${photo}_${format}.webp`;
 
 	useEffect(() => {
-		socket.on("user:thumbnailLoading", () => {
-			setLoading(true);
-			setThumbCurrent(null);
+		socket.on("user:thumbnailLoading", (data) => {
+			const type = data.originalPath.split("/").at(-2)
+			if(type === "users"){
+				setLoading(true);
+				setThumbCurrent(null);
+			}
 		});
 		socket.on("user:thumbnailCompleted", (data) => {
-			setLoading(false);
-			const thumbName = data.thumbPath.split("/").at(-1);
-			setThumbCurrent(thumbName!);
+			const type = data.originalPath.split("/").at(-2)
+			if(type === "users") {
+				setLoading(false);
+				const thumbName = data.thumbPath.split("/").at(-1);
+				setThumbCurrent(thumbName!);
+			};
 		});
 		return () => {
 			socket.off("user:thumbnailLoading");
