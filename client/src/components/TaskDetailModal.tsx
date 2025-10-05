@@ -81,8 +81,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		}
 	}, [open, isOpen, onClose]);
 
-	const { generateDescriptionFromTitle, loading, stopGenerationDescription } =
-		useAI();
+	const {
+		generateDescriptionFromTitle,
+		loading,
+		stopGenerationDescription,
+		error,
+	} = useAI();
 
 	useEffect(() => {
 		if (contentInputRef.current) contentInputRef.current.focus();
@@ -181,10 +185,43 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	};
 
 	const handleClose = useCallback(() => {
+		const updatedFields: { title?: string; description?: string } = {};
+		if (editedContent.trim() !== (task.title || "").trim()) {
+			updatedFields.title = editedContent.trim();
+		}
+		if (editedDescription.trim() !== (task.description || "").trim()) {
+			updatedFields.description = editedDescription.trim();
+		}
+
+		if (Object.keys(updatedFields).length > 0) {
+			toast.custom((t) => (
+				<CustomToast message="Cambios guardados" type="success" t={t} />
+			));
+		}
 		handleSaveTitle();
 		handleSaveDescription();
 		onClose();
-	}, [handleSaveDescription, handleSaveTitle, onClose]);
+	}, [
+		editedContent,
+		editedDescription,
+		handleSaveDescription,
+		handleSaveTitle,
+		onClose,
+		task.description,
+		task.title,
+	]);
+
+	useEffect(() => {
+		if (error) {
+			toast.custom((t) => (
+				<CustomToast
+					message="Limite de peticiones alcanzado"
+					t={t}
+					type="error"
+				/>
+			));
+		}
+	});
 
 	const handleDelete = () => {
 		setConfirmMessage(
