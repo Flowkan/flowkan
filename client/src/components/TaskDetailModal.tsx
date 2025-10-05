@@ -16,7 +16,10 @@ import { CustomToast } from "./CustomToast";
 import toast from "react-hot-toast";
 import { SpinnerLoadingText } from "./ui/Spinner";
 import ConfirmDelete from "./ui/modals/confirm-delete";
+import { useDismiss } from "../hooks/useDismissClickAndEsc";
+
 interface TaskDetailModalProps {
+	isOpen: boolean;
 	task: Task;
 	columnId: string;
 	boardId?: string;
@@ -31,11 +34,13 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	task,
 	columnId,
 	boardId,
+	isOpen,
 	onClose,
 	onEditTask,
 	onDeleteTask,
 }) => {
 	const addAssignee = useAddAssigneeAction();
+	const { open, setOpen, ref } = useDismiss<HTMLDivElement>(isOpen);
 	const removeAssignee = useRemoveAssigneeAction();
 	const [editedContent, setEditedContent] = useState(task.title || "");
 	const [editedDescription, setEditedDescription] = useState(
@@ -60,12 +65,21 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
-	const modalRef = useRef<HTMLDivElement>(null);
 	const contentInputRef = useRef<HTMLInputElement>(null);
 	const usersRef = useRef<HTMLDivElement>(null);
 	const addMenuRef = useRef<HTMLDivElement>(null);
 	const editorRef = useRef(null);
 	const { t } = useTranslation();
+
+	useEffect(() => {
+		setOpen(isOpen);
+	}, [isOpen, setOpen]);
+
+	useEffect(() => {
+		if (!open && isOpen) {
+			onClose();
+		}
+	}, [open, isOpen, onClose]);
 
 	const { generateDescriptionFromTitle, loading, stopGenerationDescription } =
 		useAI();
@@ -74,17 +88,17 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		if (contentInputRef.current) contentInputRef.current.focus();
 	}, []);
 
-	const handleSaveTitle = () => {
+	const handleSaveTitle = useCallback(() => {
 		if (editedContent.trim() !== (task.title || "").trim()) {
 			onEditTask({ title: editedContent.trim() });
 		}
-	};
+	}, [editedContent, onEditTask, task.title]);
 
-	const handleSaveDescription = () => {
+	const handleSaveDescription = useCallback(() => {
 		if (editedDescription.trim() !== (task.description || "").trim()) {
 			onEditTask({ description: editedDescription.trim() });
 		}
-	};
+	}, [editedDescription, onEditTask, task.description]);
 
 	const handleUploadAttachments = (filesToUpload: (File | Blob)[]) => {
 		if (!task.id || filesToUpload.length === 0) return;
@@ -237,6 +251,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 					description + "<p><em>Creado desde Flowkan\n</em></p><br>",
 				);
 			});
+			handleSaveDescription();
 		} catch (error) {
 			toast.custom((t) => (
 				<CustomToast
@@ -252,7 +267,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		<>
 			<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
 				<div
-					ref={modalRef}
+					ref={ref}
 					className="bg-background-card relative flex max-h-5/6 w-full max-w-5xl flex-col overflow-y-auto rounded-lg p-6 shadow-2xl md:flex-row"
 				>
 					<Button
@@ -371,6 +386,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 											onClick={(e) => {
 												e.stopPropagation();
 												stopGenerationDescription();
+												handleSaveDescription();
 											}}
 										>
 											<Icon
