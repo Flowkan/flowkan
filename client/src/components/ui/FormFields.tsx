@@ -41,7 +41,7 @@ export const FormFields = ({
 	const cleanErrors = !Array.isArray(errors) ? [] : errors;
 	const hasError = cleanErrors.length > 0;
 	const defaultStyleInput =
-		"w-full rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-green-600 focus:outline-none";
+		"w-full rounded-xl px-4 py-2 text-sm border border-gray-300 focus:ring-2 focus:ring-green-600 focus:outline-none";
 	return (
 		<div>
 			{label && (

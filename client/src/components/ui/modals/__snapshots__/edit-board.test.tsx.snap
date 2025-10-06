@@ -15,7 +15,7 @@ exports[`EditBoard > should render 1`] = `
         <span
           class="sr-only"
         >
-          Close menu
+          closeBtn.title
         </span>
         <svg
           aria-hidden="true"
@@ -36,7 +36,7 @@ exports[`EditBoard > should render 1`] = `
       <h3
         class="modal-header"
       >
-        Editar tablero
+        editBoard.form.header
       </h3>
       <form
         class="modal-form"
@@ -51,13 +51,13 @@ exports[`EditBoard > should render 1`] = `
               class="text-sm font-medium text-gray-800 form-label"
               for="boardtitle"
             >
-              Nuevo título
+              editBoard.form.newTitle
             </label>
             <div
               class="relative mt-3"
             >
               <input
-                class="transition-all duration-300 w-full rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-green-600 focus:outline-none"
+                class="transition-all duration-300 w-full rounded-xl px-4 py-2 text-sm border border-gray-300 focus:ring-2 focus:ring-green-600 focus:outline-none"
                 id="boardtitle"
                 name="boardtitle"
                 type="text"
@@ -77,13 +77,13 @@ exports[`EditBoard > should render 1`] = `
               class="text-sm font-medium text-gray-800 upload-img-label"
               for="bg-img"
             >
-              Nuevo fondo
+              editBoard.form.newImg
             </label>
             <div
               class="relative mt-3 upload-img-container"
             >
               <input
-                class="transition-all duration-300 w-full rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-green-600 focus:outline-none"
+                class="transition-all duration-300 w-full rounded-xl px-4 py-2 text-sm border border-gray-300 focus:ring-2 focus:ring-green-600 focus:outline-none"
                 id="bg-img"
                 name="bg-img"
                 type="file"
@@ -99,7 +99,7 @@ exports[`EditBoard > should render 1`] = `
           disabled=""
           type="submit"
         >
-          EDITAR
+          editBoard.edit
         </button>
       </form>
     </article>

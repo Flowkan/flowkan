@@ -1,9 +1,28 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { BoardsState } from "../../../store/types/defaultStates";
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 import EditBoard from "./edit-board";
-import type { Board, EditBoardsData } from "../../../pages/boards/types";
+import { toast } from "react-hot-toast";
+
+vi.mock("react-hot-toast", () => {
+	const toast = {
+		custom: vi.fn(),
+		success: vi.fn(),
+		error: vi.fn(),
+	};
+	return {
+		__esModule: true,
+		default: toast,
+		toast,
+	};
+});
+
+vi.mock("react-i18next", () => ({
+	useTranslation: () => ({
+		t: (key: string) => key,
+	}),
+}));
 
 describe("EditBoard", () => {
 	const state: BoardsState = {
@@ -23,15 +42,6 @@ describe("EditBoard", () => {
 			hasMore: false,
 		},
 		ui: { pending: false, error: null },
-	};
-
-	const board: Board = {
-		id: "1",
-		slug: "board-1",
-		title: "board 1",
-		lists: [],
-		members: [],
-		image: "",
 	};
 
 	const handleEditForm = vi.fn();
@@ -68,16 +78,16 @@ describe("EditBoard", () => {
 		const { container } = renderComponent();
 
 		expect(container).toMatchSnapshot();
-		expect(screen.getByText("Editar tablero")).toBeDefined();
+		expect(screen.getByText("editBoard.form.header")).toBeDefined();
 	});
 
 	test("should call handleEditForm with updated title", async () => {
 		renderComponent();
 
-		const titleInput = screen.getByLabelText(/Nuevo título/);
-		const editButton = screen.getByRole("button", { name: /EDITAR/i });
+		const titleInput = screen.getByLabelText(/editBoard.form.newTitle/);
+		const editButton = screen.getByRole("button", { name: /editBoard.edit/i });
 
-		expect(editButton).toHaveTextContent("EDITAR");
+		expect(editButton).toHaveTextContent("editBoard.edit");
 		expect(editButton).toBeDisabled();
 
 		await userEvent.type(titleInput, "updated title");
@@ -93,8 +103,8 @@ describe("EditBoard", () => {
 	test("should call handleEditForm with updated image", async () => {
 		renderComponent();
 
-		const fileChanged = screen.getByLabelText(/Nuevo fondo/);
-		const editButton = screen.getByRole("button", { name: /EDITAR/i });
+		const fileChanged = screen.getByLabelText(/editBoard.form.newImg/);
+		const editButton = screen.getByRole("button", { name: /editBoard.edit/i });
 
 		const file = new File(["content"], "test-image.png", {
 			type: "image/png",
@@ -109,5 +119,20 @@ describe("EditBoard", () => {
 		expect(handleHideMessage).toHaveBeenCalled();
 	});
 
-	test("should render error");
+	test("should render error", async () => {
+		renderComponent();
+
+		const fileChanged = screen.getByLabelText(/editBoard.form.newImg/);
+		const editButton = screen.getByRole("button", { name: /editBoard.edit/i });
+
+		const bigFile = new File(["a".repeat(6 * 1024 * 1024)], "big.png", {
+			type: "image/png",
+		});
+
+		await userEvent.upload(fileChanged, bigFile);
+		await userEvent.click(editButton);
+
+		expect(toast.custom).toHaveBeenCalledTimes(1);
+		expect(toast.custom).toHaveBeenCalledWith(expect.any(Function));
+	});
 });
