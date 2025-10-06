@@ -23,41 +23,39 @@ const UploadImage = ({
 	icon,
 	name,
 	onSubmit,
-	error = false,	
+	error = false,
 }: UploadImageProps) => {
 	const fileRef = useRef<HTMLInputElement>(null);
 	const [newImage, setNewImage] = useState(previewUrl);
 	const [onEdit, setOnEdit] = useState(false);
 	const oldImage = useRef(previewUrl);
 	function handleChange(e: ChangeEvent<HTMLInputElement>) {
-		console.log(name);
 		const file = fileRef.current?.files?.[0];
 		if (file) {
 			setNewImage(URL.createObjectURL(file));
-			onChange(e, name);		
-			
-			setOnEdit(true);			
+			onChange(e, name);
+
+			setOnEdit(true);
 		}
 	}
-	
+
 	function handleCancel() {
 		setOnEdit(false);
-		
+
 		const e = {
 			target: { value: "", name, files: null, type: "file" },
 			currentTarget: { value: "", name, files: null, type: "file" },
 		} as ChangeEvent<HTMLInputElement>;
 		onChange(e, name);
-		setNewImage(oldImage.current)
-		fileRef.current!.value = ""
-		
+		setNewImage(oldImage.current);
+		fileRef.current!.value = "";
 	}
 	function handleSubmit() {
 		if (onSubmit) {
-			onSubmit(name as keyof ProfileUpdateType);			
+			onSubmit(name as keyof ProfileUpdateType);
 			setOnEdit(false);
 		}
-	}	
+	}
 
 	function handleSelectImage() {
 		fileRef.current?.click();
