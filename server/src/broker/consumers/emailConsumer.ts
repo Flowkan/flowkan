@@ -66,10 +66,10 @@ export async function sendMailService(payload: EmailPayload): Promise<void> {
       break;
     }
     case "GOODBYE":{
-      const { name } = payload.data as dataUser;
+      const { name,url } = payload.data as dataUser;
       emailContent = {
         subject: "Lamentamos verte partir",
-        html: await generateGoodbyeEmailTemplate(name!),
+        html: await generateGoodbyeEmailTemplate(name!,url!),
       }
     }
       
