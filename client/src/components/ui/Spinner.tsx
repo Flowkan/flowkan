@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { t } from "i18next";
 
 interface SpinnerProps {
 	text?: string;
@@ -6,7 +7,7 @@ interface SpinnerProps {
 }
 
 export const SpinnerLoadingText = ({
-	text = "Cargando",
+	text = t("spinner.general"),
 	className = "text-gray-700",
 }: SpinnerProps) => {
 	const [dots, setDots] = useState("");

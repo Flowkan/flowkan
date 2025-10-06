@@ -1,6 +1,7 @@
 import React, { useRef, useCallback } from "react";
 import { useDismiss } from "../hooks/useDismissClickAndEsc";
 import { Button } from "./ui/Button";
+import { useTranslation } from "react-i18next";
 
 interface DropdownMenuProps {
 	children: React.ReactNode;
@@ -21,6 +22,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 }) => {
 	const { open, setOpen, ref } = useDismiss<HTMLDivElement>();
 	const buttonRef = useRef<HTMLButtonElement>(null);
+	const { t } = useTranslation();
 
 	const toggleMenu = useCallback((e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -38,7 +40,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 				onClick={toggleMenu}
 				aria-expanded={open}
 				aria-haspopup="true"
-				title="Opciones"
+				title={t("dropdownMenu.options")}
 			>
 				{buttonContent}
 			</button>
@@ -61,7 +63,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 								<Button
 									onClick={onClose}
 									className="text-text-placeholder hover:text-danger-dark text-xl leading-none"
-									title="Cerrar menú"
+									title={t("dropdownMenu.closeBtn")}
 								>
 									&times;
 								</Button>

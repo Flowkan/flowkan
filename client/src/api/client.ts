@@ -3,6 +3,7 @@ import { resolveBaseURLFromEnv } from "../utils/resolveBaseUrlEnv";
 import { type AppDispatch, type Router } from "../store";
 import { logout } from "../store/auth/actions";
 import toast from "react-hot-toast";
+import i18next from "i18next";
 
 export const apiClient = axios.create({
 	baseURL: `${resolveBaseURLFromEnv()}`,
@@ -32,9 +33,15 @@ export const responseJwtInterceptors = (
 		(response) => response,
 		(error) => {
 			if (error.response?.status === 401) {
-				toast.error("Tu sesión ha expirado, inicia sesión nuevamente.", {
-					id: "session-expired",
-				});
+				toast.error(
+					i18next.t(
+						"sesionExpired",
+						"Tu sesión ha expirado, inicia sesión nuevamente.",
+					),
+					{
+						id: "session-expired",
+					},
+				);
 				localStorage.removeItem("auth");
 				localStorage.removeItem("user");
 				dispatch(logout());

@@ -4,7 +4,7 @@ import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
 import { useDismiss } from "../hooks/useDismissClickAndEsc";
 import { Icon } from "@iconify/react";
-import "../pages/boards/boards-list.css"
+import "../pages/boards/boards-list.css";
 
 interface FilterProps {
 	searchBoard: string;
@@ -29,15 +29,13 @@ export const BoardFilters = ({
 			{/* Botón toggle */}
 			<Button
 				id="filters"
-				title="Filtros"
-				aria-label="Filtros"
+				title={t("backoffice.btn.title")}
+				aria-label={t("backoffice.btn.title")}
 				onClick={toggleFilter}
 				className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 			>
 				{/* Icono filtro */}
-				<span className="sr-only">
-					{t("backoffice.filters.icon", "Filtros")}
-				</span>
+				<span className="sr-only">{t("backoffice.filters.icon")}</span>
 				{open ? (
 					<Icon
 						icon="material-symbols:filter-list-off"
@@ -61,7 +59,7 @@ export const BoardFilters = ({
 					className="filters-form animate-slide mx-auto mt-4 w-full max-w-5/6 rounded-xl bg-gray-100 p-2 shadow-inner"
 				>
 					<h2 className="mb-4 pt-4 text-center text-lg font-medium text-gray-800">
-						{t("backoffice.filtersForm.title", "Filtrar tableros")}
+						{t("backoffice.filtersForm.title")}
 					</h2>
 
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -69,15 +67,9 @@ export const BoardFilters = ({
 						<FormFields
 							id="filterBoard"
 							name="filterBoard"
-							label={t(
-								"backoffice.filtersForm.filterBoardLabel",
-								"Nombre del tablero",
-							)}
+							label={t("backoffice.filtersForm.filterBoardLabel")}
 							labelClassName="mb-1 block text-sm font-medium text-gray-700"
-							placeholder={t(
-								"backoffice.filtersForm.filterBoardPlaceholder",
-								"Buscar tableros",
-							)}
+							placeholder={t("backoffice.filtersForm.filterBoardPlaceholder")}
 							value={searchBoard}
 							onChange={(e) => setSearchBoard(e.target.value)}
 							className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -85,17 +77,11 @@ export const BoardFilters = ({
 
 						{/* Filtra por miembro/email */}
 						<FormFields
-							label={t(
-								"backoffice.filtersForm.filterMemberLabel",
-								"Miembro o email",
-							)}
+							label={t("backoffice.filtersForm.filterMemberLabel")}
 							labelClassName="mb-1 block text-sm font-medium text-gray-700"
 							id="filterMember"
 							name="filterMember"
-							placeholder={t(
-								"backoffice.filtersForm.filterMemberPlaceholder",
-								"Filtrar por miembro o email",
-							)}
+							placeholder={t("backoffice.filtersForm.filterMemberPlaceholder")}
 							value={searchMember}
 							onChange={(e) => setSearchMember(e.target.value)}
 							className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -108,9 +94,9 @@ export const BoardFilters = ({
 								setSearchBoard("");
 								setSearchMember("");
 							}}
-							className="hover:bg-emerald-100 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm"
+							className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm hover:bg-emerald-100"
 						>
-							{t("backoffice.filtersForm.clearFilters", "Borrar")}
+							{t("backoffice.filtersForm.clearFilters")}
 						</Button>
 					</div>
 				</Form>

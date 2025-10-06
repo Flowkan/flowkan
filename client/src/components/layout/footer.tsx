@@ -44,21 +44,16 @@ export const Footer: React.FC = () => {
 			<div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-4">
 				<div>
 					<h4 className="text-text-on-accent mb-4 font-bold">FlowKan</h4>
-					<p className="text-sm leading-relaxed">
-						{t(
-							"footer.description",
-							"FlowKan te ayuda a organizar tu trabajo y a tu equipo de forma visual y eficiente. Simplifica la gestión de proyectos y alcanza tus objetivos.",
-						)}
-					</p>
+					<p className="text-sm leading-relaxed">{t("footer.description")}</p>
 					<ul className="mt-4 space-y-2 text-sm">
 						<li>
 							<a href="#" className="hover:text-accent-hover transition-colors">
-								{t("footer.privacy", "Política de privacidad")}
+								{t("footer.privacy")}
 							</a>
 						</li>
 						<li>
 							<a href="#" className="hover:text-accent-hover transition-colors">
-								{t("footer.terms", "Términos y condiciones de servicio")}
+								{t("footer.terms")}
 							</a>
 						</li>
 					</ul>
@@ -66,11 +61,11 @@ export const Footer: React.FC = () => {
 
 				<div>
 					<h4 className="text-text-on-accent mb-4 font-bold">
-						{t("footer.title", "Contacto")}
+						{t("footer.title")}
 					</h4>
 					<ul className="space-y-2 text-sm">
 						<li>
-							{t("footer.contact.email", "Email")}:{" "}
+							{t("footer.contact.email")}:{" "}
 							<Link
 								to="mailto:info@flowkan.com"
 								className="hover:text-accent-hover transition-colors"
@@ -78,11 +73,15 @@ export const Footer: React.FC = () => {
 								info@flowkan.com
 							</Link>
 						</li>
-						<li>{t("footer.contact.phone", "Teléfono")}: +34 123 45 67 89</li>
+						<li>{t("footer.contact.phone")}: +34 123 45 67 89</li>
 						<li>
-							{t("footer.address.label", "Dirección")}:{" "}
-							{t("footer.address.street", "Calle")} Ficticia 123, 28001 Madrid,{" "}
-							{t("footer.address.country", "España")}
+							{t("footer.address.label")}:{" "}
+							{t("footer.address.full", {
+								street: "Ficticia, 123",
+								city: "Madrid",
+								cp: "28001",
+								country: t("footer.address.country"),
+							})}
 						</li>
 					</ul>
 					<div className="mt-4 flex space-x-4">
@@ -115,7 +114,7 @@ export const Footer: React.FC = () => {
 
 				<div className="md:col-span-2">
 					<h4 className="text-text-on-accent mb-4 font-bold">
-						{t("footer.clients", "Nuestros Clientes")}
+						{t("footer.clients")}
 					</h4>
 
 					<div className="grid grid-cols-4 gap-4">
@@ -136,8 +135,7 @@ export const Footer: React.FC = () => {
 			</div>
 
 			<div className="border-border-dark text-text-placeholder mt-8 border-t pt-6 text-center text-sm">
-				&copy; Flowkan {new Date().getFullYear()}{" "}
-				{t("footer.copy", "Todos los derechos reservados")}.
+				&copy; Flowkan {new Date().getFullYear()} {t("footer.copy")}.
 			</div>
 		</footer>
 	);

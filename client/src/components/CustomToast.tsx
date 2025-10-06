@@ -1,5 +1,6 @@
 import { type FC } from "react";
 import { toast, type Toast } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 // Definimos los tipos de mensaje que aceptará nuestro componente
 type ToastType = "success" | "error";
@@ -11,6 +12,7 @@ interface CustomToastProps {
 }
 
 export const CustomToast: FC<CustomToastProps> = ({ message, t, type }) => {
+	const { t: translate } = useTranslation();
 	// Objeto para manejar los estilos según el tipo de mensaje
 	const iconClasses = {
 		success: "text-green-500",
@@ -66,7 +68,7 @@ export const CustomToast: FC<CustomToastProps> = ({ message, t, type }) => {
 				onClick={() => toast.dismiss(t.id)}
 				className="ml-4 flex-shrink-0"
 			>
-				<span className="sr-only">Cerrar</span>
+				<span className="sr-only">{translate("customToast.close")}</span>
 				<svg
 					className="h-5 w-5 text-gray-400 hover:text-gray-500"
 					fill="none"

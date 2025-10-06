@@ -47,9 +47,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 		<div className="modal-bg">
 			<article className="modal-card">
 				<CloseButton className="closebtn-form" onClick={handleHideMessage} />
-				<h3 className="modal-header">
-					{t("editboard.form.header", "Editar tablero")}
-				</h3>
+				<h3 className="modal-header">{t("editBoard.form.header")}</h3>
 				<Form
 					id="edittitleform"
 					className="modal-form"
@@ -60,7 +58,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 						<FormFields
 							id="boardtitle"
 							name="boardtitle"
-							label={t("editboard.form.newtitle", "Nuevo título")}
+							label={t("editBoard.form.newTitle")}
 							type="text"
 							labelClassName="form-label"
 							value={titleInput}
@@ -71,7 +69,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 					<div className="file-container">
 						<FormFields
 							labelClassName="upload-img-label"
-							label={t("editboard.form.newimg", "Nuevo fondo")}
+							label={t("editBoard.form.newImg")}
 							inputClassName="upload-img-container"
 							id="bg-img"
 							name="bg-img"
@@ -81,7 +79,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 						/>
 					</div>
 					<Button type="submit" className="form-btn" disabled={isDisabled}>
-						{t("editboard.form.button", "EDITAR")}
+						{t("editBoard.edit")}
 					</Button>
 				</Form>
 			</article>

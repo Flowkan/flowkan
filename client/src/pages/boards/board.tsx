@@ -303,10 +303,7 @@ const Board = () => {
 										<div className="mb-4">
 											<FormFields
 												type="text"
-												placeholder={t(
-													"board.column_name",
-													"Nombre de la columna",
-												)}
+												placeholder={t("board.columnName")}
 												value={newColumnName}
 												onChange={(e) => setNewColumnName(e.target.value)}
 												className="w-full rounded border bg-gray-100 p-2 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
@@ -317,7 +314,7 @@ const Board = () => {
 												onClick={handleCreateColumn}
 												className="mt-2 w-full rounded bg-blue-500 p-2 text-white transition-colors duration-200 hover:bg-blue-600"
 											>
-												{t("board.create_column", "Crear columna")}
+												{t("board.createColumn")}
 											</Button>
 										</div>
 									</div>
