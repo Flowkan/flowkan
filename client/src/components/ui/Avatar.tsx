@@ -71,16 +71,18 @@ export const Avatar: React.FC<AvatarProps> = ({
 	if (photo) {
 		const baseUrl = import.meta.env.VITE_BASE_URL;
 		return (
-			<img
-				src={`${baseUrl}/uploads/users/${thumbCurrent ? thumbCurrent : cleanThumb}`}
-				alt={name}
-				title={name}
-				className={`${className} rounded-full object-cover`}
-				style={{
-					width: size,
-					height: size,
-				}}
-			/>
+			<div className="rounded-full p-1 border-1 border-white" style={{ width: size, height: size }}>
+				<img
+					src={`${baseUrl}/uploads/users/${thumbCurrent ? thumbCurrent : cleanThumb}`}
+					alt={name}
+					title={name}
+					className={`${className} rounded-full size-full object-cover`}
+					// style={{
+					// 	width: size,
+					// 	height: size,
+					// }}
+				/>
+			</div>
 		);
 	}
 	return (

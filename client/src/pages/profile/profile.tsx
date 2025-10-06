@@ -144,11 +144,11 @@ const Profile = () => {
 
 	return (
 		<div className="w-full">
-			<div className="shadow-primary mx-auto my-6 w-full max-w-sm rounded-xl shadow-[2px_2px_10px] md:my-10 md:max-w-4xl">
+			<div className="shadow-primary mx-auto my-6 w-full max-w-[70vw] rounded-xl shadow-[2px_2px_10px] md:my-10 md:max-w-4xl">
 				<h2 className="relative h-[120px] rounded-t-xl md:h-[200px]">
 					<Banner className="inline-block h-full w-full rounded-t-xl object-cover" />
 
-					<span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-2xl font-bold whitespace-nowrap text-gray-50 drop-shadow-lg md:text-4xl">
+					<span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-4xl font-bold whitespace-nowrap text-gray-50 text-shadow-md drop-shadow-lg md:text-4xl">
 						Perfil de Usuario
 					</span>
 				</h2>
@@ -178,7 +178,7 @@ const Profile = () => {
 										type="text"
 										name="name"
 										onChange={handleChangeField}
-										className="flex-1 rounded-lg border px-3 py-2"
+										className="flex-1 border px-3 py-2"
 										classNameValue="pr-8 text-2xl font-extrabold text-primary border-b border-primary/60 md:text-3xl"
 										onEdit={handleSubmitEditField}
 									/>
@@ -195,14 +195,14 @@ const Profile = () => {
 								/>
 							</div>
 
-							<div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+							<div className="grid grid-cols-2 gap-5 bg-amber-100">
 								<div>
 									<EditableField
 										label="Username"
 										name="username"
 										error={errors.username.error}
 										value={user.username ? user.username : ""}
-										className="flex-1 rounded-lg border px-3 py-2"
+										className="flex-1 border"
 										classNameValue="text-base font-semibold text-gray-500"
 										onChange={handleChangeField}
 										onEdit={handleSubmitEditField}
@@ -219,7 +219,7 @@ const Profile = () => {
 										value={user.email}
 										readonly
 										onChange={handleChangeField}
-										className="flex-1 rounded-lg border px-3 py-2"
+										className="flex-1 border px-3 py-2"
 										classNameValue="text-sm text-gray-800"
 										onEdit={() => {}}
 									/>
@@ -233,7 +233,7 @@ const Profile = () => {
 										error={errors.dateBirth.error}
 										onChange={handleChangeField}
 										value={user.dateBirth as string}
-										className="flex-1 rounded-lg border px-3 py-2"
+										className="flex-1 border"
 										classNameValue="text-sm text-gray-800"
 										onEdit={handleSubmitEditField}
 									/>
@@ -250,7 +250,7 @@ const Profile = () => {
 										name="location"
 										error={errors.location.error}
 										onChange={handleChangeField}
-										className="flex-1 rounded-lg border px-3 py-2"
+										className="flex-1 border"
 										classNameValue="text-sm text-gray-800"
 										onEdit={handleSubmitEditField}
 									/>
@@ -269,7 +269,7 @@ const Profile = () => {
 									value={user.bio as string}
 									onChange={handleChangeField}
 									rows={3}
-									className="flex-1 rounded-lg border px-3 py-2"
+									className="flex-1 border px-3 py-2"
 									classNameValue="mt-2 text-base text-gray-700 italic"
 									onEdit={handleSubmitEditField}
 								/>

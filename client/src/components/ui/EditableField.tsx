@@ -7,6 +7,7 @@ import {
 import { IconEdit } from "../icons/IconEdit";
 import { IconSave } from "../icons/IconSave";
 import type { ProfileUpdateType } from "../../pages/profile/types";
+import { IconCancel } from "../icons/IconCancel";
 
 const formatDate = (dateString: string) => {
 	if (!dateString) return "";
@@ -127,6 +128,9 @@ const EditableField = ({
 		onEdit(name);
 		setEnableEdit(false);
 	}
+	function handleCancelEdit() {
+		setEnableEdit(false);
+	}
 
 	function handleToValue() {
 		if (type === "date") {
@@ -158,7 +162,7 @@ const EditableField = ({
 						{!readonly && (
 							<Button
 								onClick={handleEdit}
-								className="text-primary hover:text-primary-hover absolute top-[50%] right-0 flex -translate-y-[50%] items-center justify-center p-1 transition duration-300 ease-in-out md:hidden group-hover:md:flex"
+								className="text-primary bg-amber-400 hover:text-primary-hover absolute top-[50%] right-0 flex -translate-y-[50%] items-center justify-center p-1 transition duration-300 ease-in-out md:hidden group-hover:md:flex"
 								aria-label={`Editar ${label}`}
 							>
 								<IconEdit className="size-5" />
@@ -174,14 +178,21 @@ const EditableField = ({
 							as={as}
 							rows={rows}
 							onChange={onChange}
-							className={`${className} border-accent text-accent focus:outline-accent text-lg font-semibold tracking-wider ${error ? "border-red-600" : ""}`}
+							className={`${className} px-2 py-1 rounded-l-lg border-accent text-accent focus:outline-accent text-lg font-semibold tracking-wider ${error ? "border-red-600" : ""}`}
 						/>
 						<Button
 							onClick={handleSaveEdit}
-							className="bg-primary hover:bg-primary-hover rounded-r-lg px-4"
+							className="bg-primary hover:bg-primary-hover px-2 cursor-pointer transition-colors duration-300"
 							aria-label={`Guardar ${label}`}
 						>
 							<IconSave className="text-white" />
+						</Button>
+						<Button
+							onClick={handleCancelEdit}
+							className="bg-accent hover:bg-accent-hover rounded-r-lg px-2 cursor-pointer transition-colors duration-300"
+							aria-label={`Guardar ${label}`}
+						>
+							<IconCancel className="text-white size-3"/>
 						</Button>
 					</div>
 				)}
