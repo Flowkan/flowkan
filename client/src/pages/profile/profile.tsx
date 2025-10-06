@@ -2,9 +2,8 @@ import { useCallback, useEffect, useState, type ChangeEvent } from "react";
 import UploadImage from "../../components/ui/UploadImage";
 import { IconEdit } from "../../components/icons/IconEdit";
 import EditableField from "../../components/ui/EditableField";
-import { ProfileUpdateSchema, type ProfileUpdateType } from "./types";
+import { ProfileUpdatedSchema, type ProfileUpdateType } from "./types";
 import { useAppSelector } from "../../store";
-import z from "zod";
 import Banner from "../../components/icons/Banner";
 import { getProfile, getUserLogged } from "../../store/profile/selectors";
 import { resolveBaseURLFromEnv } from "../../utils/resolveBaseUrlEnv";
@@ -15,8 +14,12 @@ import { Button } from "../../components/ui/Button";
 import { useDeleteAccount } from "../../hooks/auth/useDeleteAccount";
 import ConfirmDelete from "../../components/ui/modals/confirm-delete";
 import { useTranslation } from "react-i18next";
+import { validationForm } from "../../utils/validations";
+import { useValidationForm } from "../../hooks/useValidationForm";
 
 type EventInput = (e: ChangeEvent<HTMLInputElement>) => void;
+
+type ProfileFieldsAllowEdit = Omit<ProfileUpdateType,"email">
 
 const Profile = () => {
 	const userData = useAppSelector(getUserLogged);
@@ -53,45 +56,25 @@ const Profile = () => {
 				bio: profileData.bio,
 			}));
 		}
-	}, [profileData]);
-
-	const [errors, setErrors] = useState({
-		name: { error: false, message: "" },
-		photo: { error: false, message: "" },
-		username: { error: false, message: "" },
-		bio: { error: false, message: "" },
-		allowNotifications: { error: false, message: "" },
-		dateBirth: { error: false, message: "" },
-		location: { error: false, message: "" },
-	});
+	}, [profileData]);	
 
 	const previewImage =
 		user.photo && typeof user.photo === "string"
 			? `${resolveBaseURLFromEnv()}/uploads/users/${user.photo}_o.webp`
 			: "";
 
+	//Validaciones con zod usando el esquema ProfileUpdateSchema
+	const ProfileValidator = useCallback((data:unknown,fieldName?:keyof ProfileFieldsAllowEdit)=>{
+			return validationForm(ProfileUpdatedSchema,data,fieldName)
+		},[])
+	
+	const { error,validate } = useValidationForm<ProfileFieldsAllowEdit>(ProfileValidator)	
+
 	const handleSubmitEditField = useCallback(
-		async (field: keyof ProfileUpdateType) => {
-			const dataParse = ProfileUpdateSchema.safeParse(user);
-			if (!dataParse.success) {
-				const errorsList = z.flattenError(dataParse.error).fieldErrors;
-				if (field in errorsList && errorsList[field]) {
-					const msgErrors = errorsList[field].join(", ");
+		async (field: keyof ProfileUpdateType) => {			
+			const isValidate = validate(user,field as keyof ProfileFieldsAllowEdit)
 
-					setErrors((prevErrors) => ({
-						...prevErrors,
-						[field]: { error: true, message: msgErrors },
-					}));
-					return;
-				}
-			}
-
-			setErrors((prevErrors) => ({
-				...prevErrors,
-				[field]: { error: false, message: "" },
-			}));
-
-			if (userData) {
+			if (userData && isValidate) {
 				const formData = new FormData();
 				switch (field) {
 					case "photo":
@@ -120,7 +103,7 @@ const Profile = () => {
 				});
 			}
 		},
-		[updatedProfileAction, user, userData],
+		[updatedProfileAction, user, userData,validate],
 	);
 
 	function handleChangeField(
@@ -144,11 +127,11 @@ const Profile = () => {
 
 	return (
 		<div className="w-full">
-			<div className="shadow-primary mx-auto my-6 w-full max-w-sm rounded-xl shadow-[2px_2px_10px] md:my-10 md:max-w-4xl">
+			<div className="shadow-primary mx-auto my-6 w-full max-w-[70vw] rounded-xl shadow-[2px_2px_10px] md:my-10 md:max-w-4xl">
 				<h2 className="relative h-[120px] rounded-t-xl md:h-[200px]">
 					<Banner className="inline-block h-full w-full rounded-t-xl object-cover" />
 
-					<span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-2xl font-bold whitespace-nowrap text-gray-50 drop-shadow-lg md:text-4xl">
+					<span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-4xl font-bold whitespace-nowrap text-gray-50 text-shadow-md drop-shadow-lg md:text-4xl">
 						Perfil de Usuario
 					</span>
 				</h2>
@@ -158,33 +141,32 @@ const Profile = () => {
 							<UploadImage
 								name="photo"
 								previewUrl={previewImage}
+								value={user.photo}
 								onChange={handleChangeField as EventInput}
 								onSubmit={handleSubmitEditField}
-								error={errors.photo.error}
+								error={!!error?.photo}
 								icon={<IconEdit />}
 							/>
 							<span className="text-center text-xs text-red-500">
-								{errors.photo.message}
+								{error?.photo}
 							</span>
 						</div>
 
 						<div className="flex flex-1 flex-col gap-6 pt-2 md:pt-0">
-							<div className="flex flex-col gap-4 border-b pb-4">
+							<div className="flex flex-col gap-4 pb-4">
 								<div>
 									<EditableField
 										label=""
 										value={user.name}
-										error={errors.name.error}
+										error={!!error?.name}
+										errors={error?.name}
 										type="text"
 										name="name"
 										onChange={handleChangeField}
-										className="flex-1 rounded-lg border px-3 py-2"
+										className="flex-1 border px-3 py-2"
 										classNameValue="pr-8 text-2xl font-extrabold text-primary border-b border-primary/60 md:text-3xl"
 										onEdit={handleSubmitEditField}
-									/>
-									<span className="text-xs text-red-500">
-										{errors.name.message}
-									</span>
+									/>									
 								</div>
 								<Switch
 									label="Permitir envío de notificaciones"
@@ -195,21 +177,19 @@ const Profile = () => {
 								/>
 							</div>
 
-							<div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+							<div className="grid grid-cols-2 gap-5 bg-gray-100/50 shadow-md p-2 md:p-4 rounded-md">
 								<div>
 									<EditableField
 										label="Username"
 										name="username"
-										error={errors.username.error}
+										error={!!error?.username}
+										errors={error?.username}
 										value={user.username ? user.username : ""}
-										className="flex-1 rounded-lg border px-3 py-2"
+										className="flex-1 border"
 										classNameValue="text-base font-semibold text-gray-500"
 										onChange={handleChangeField}
 										onEdit={handleSubmitEditField}
-									/>
-									<span className="text-xs text-red-500">
-										{errors.username.message}
-									</span>
+									/>									
 								</div>
 								<div>
 									<EditableField
@@ -219,7 +199,7 @@ const Profile = () => {
 										value={user.email}
 										readonly
 										onChange={handleChangeField}
-										className="flex-1 rounded-lg border px-3 py-2"
+										className="flex-1 border px-3 py-2"
 										classNameValue="text-sm text-gray-800"
 										onEdit={() => {}}
 									/>
@@ -230,16 +210,14 @@ const Profile = () => {
 										label="Fec. Nacimiento"
 										type="date"
 										name="dateBirth"
-										error={errors.dateBirth.error}
+										error={!!error?.dateBirth}
+										errors={error?.dateBirth}
 										onChange={handleChangeField}
 										value={user.dateBirth as string}
-										className="flex-1 rounded-lg border px-3 py-2"
+										className="flex-1 border"
 										classNameValue="text-sm text-gray-800"
 										onEdit={handleSubmitEditField}
-									/>
-									<span className="text-xs text-red-500">
-										{errors.dateBirth.message}
-									</span>
+									/>									
 								</div>
 
 								<div>
@@ -248,15 +226,13 @@ const Profile = () => {
 										value={user.location ? user.location : ""}
 										type="text"
 										name="location"
-										error={errors.location.error}
+										error={!!error?.location}
+										errors={error?.location}
 										onChange={handleChangeField}
-										className="flex-1 rounded-lg border px-3 py-2"
+										className="flex-1 border"
 										classNameValue="text-sm text-gray-800"
 										onEdit={handleSubmitEditField}
-									/>
-									<span className="text-xs text-red-500">
-										{errors.location.message}
-									</span>
+									/>									
 								</div>
 							</div>
 
@@ -265,18 +241,15 @@ const Profile = () => {
 									label="Biografía"
 									as="textarea"
 									name="bio"
-									error={errors.bio.error}
-									value={user.bio as string}
+									error={!!error?.bio}
+									errors={error?.bio}
+									value={user.bio ? user.bio : ""}									
 									onChange={handleChangeField}
 									rows={3}
-									className="flex-1 rounded-lg border px-3 py-2"
+									className="flex-1 border px-3 py-2"
 									classNameValue="mt-2 text-base text-gray-700 italic"
 									onEdit={handleSubmitEditField}
 								/>
-
-								<span className="text-xs text-red-500">
-									{errors.bio.message}
-								</span>
 							</div>
 							<div className="flex justify-end">
 								<Button

@@ -14,19 +14,43 @@ interface ChatWindowProps {
 	readonly boardId: string;
 }
 
+const notificationSound = new Audio("/notification.mp3");
+
 export function ChatWindow({ boardId }: ChatWindowProps) {
-	const { messages, sendMessage } = useChatSocket(boardId);
+	const { messages, sendMessage, unreadCount, resetUnreadCount } =
+		useChatSocket(boardId);
 	const [text, setText] = useState("");
 	const { open, setOpen, ref } = useDismiss<HTMLDivElement>();
 	const user = useAppSelector(getUserLogged);
 
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
+	const prevUnreadCountRef = useRef(unreadCount);
+
 	useEffect(() => {
-		if (open && messagesEndRef.current) {
-			messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+		const isNewMessageReceived = unreadCount > prevUnreadCountRef.current;
+
+		if (!open && isNewMessageReceived) {
+			notificationSound.currentTime = 0;
+			notificationSound.play().catch((error) => {
+				console.warn(
+					"No se pudo reproducir el sonido (posiblemente por restricción de autoplay): ",
+					error,
+				);
+			});
 		}
-	}, [messages, open]);
+
+		prevUnreadCountRef.current = unreadCount;
+	}, [open, unreadCount]);
+
+	useEffect(() => {
+		if (open) {
+			resetUnreadCount();
+			if (messagesEndRef.current) {
+				messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+			}
+		}
+	}, [messages, open, resetUnreadCount]);
 
 	const handleSend = () => {
 		if (text.trim()) {
@@ -39,9 +63,14 @@ export function ChatWindow({ boardId }: ChatWindowProps) {
 		<div ref={ref}>
 			<Button
 				onClick={() => setOpen(true)}
-				className="bg-primary hover:bg-primary/90 flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full text-white shadow-lg"
+				className="bg-primary hover:bg-primary/90 relative flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full text-white shadow-lg"
 			>
 				<Icon icon="mdi:message-text" className="h-3 w-3 md:h-5 md:w-5" />
+				{!open && unreadCount > 0 && (
+					<div className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-xs text-white">
+						{unreadCount > 9 ? "9+" : unreadCount}
+					</div>
+				)}
 			</Button>
 
 			{open && (

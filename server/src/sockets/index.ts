@@ -72,7 +72,7 @@ export default function registerSockets(io: Server) {
 
   const notificationThumbnailHandler = new NotificationThumbnailHandler(
     io as ServerUser,
-  );  
+  );
   io.on("connection", (socket) => {
     userHandler.initialize(socket as SocketUser);
     boardHandler.initialize(socket as SocketBoard);
@@ -82,22 +82,21 @@ export default function registerSockets(io: Server) {
   });
 
   const workerNameSpace = io.of("/worker");
-  workerNameSpace.use(async(socket,next)=>{
+  workerNameSpace.use(async (socket, next) => {
     try {
-      const token = socket.handshake.auth.token
-      if(token === "superdupersecretworker"){
-        console.log("Worker autenticado");
-        const userId = socket.handshake.auth.userId
-        socket.data.userId = userId
-        return next()
+      const token = socket.handshake.auth.token;
+      if (token === "superdupersecretworker") {
+        const userId = socket.handshake.auth.userId;
+        socket.data.userId = userId;
+        return next();
       }
     } catch (error) {
-      next(createHttpError(500,`${error}`))
+      next(createHttpError(500, `${error}`));
     }
-  })
+  });
   // systemHandler
-  const systemHandler = new SystemEmitterHandler()
-  workerNameSpace.on("connection",(socket)=>{
-    systemHandler.initialize(socket as SocketUser)
-  })
+  const systemHandler = new SystemEmitterHandler();
+  workerNameSpace.on("connection", (socket) => {
+    systemHandler.initialize(socket as SocketUser);
+  });
 }
