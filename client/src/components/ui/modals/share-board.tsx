@@ -88,7 +88,7 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 								onClick={handleCopyLink}
 								className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-300 p-1 text-xs font-bold transition-colors hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
 							>
-								{t("shate.board.link.copy")}
+								{t("share.board.link.copy")}
 							</Button>
 						</div>
 					)}
