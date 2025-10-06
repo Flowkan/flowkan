@@ -42,8 +42,8 @@ jest.mock("jsonwebtoken", () => {
 
 type MockRequest = Partial<Request> & {
   apiUserId?: number;
-  query: Record<string, any>;
-  params: Record<string, any>;
+  query: Record<string, string>;
+  params: Record<string, string>;
 };
 
 let boardController: BoardController;
