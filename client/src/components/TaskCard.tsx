@@ -31,7 +31,7 @@ const TaskCard = ({ task, index, columnId, onOpenTaskDetail }: Props) => {
 				<DraggableTask
 					provided={provided}
 					snapshot={snapshot}
-					task={{ ...task, title: truncateWordTitle(task.title) }}
+					task={task}
 					handleClick={handleClick}
 				/>
 			)}
