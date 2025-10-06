@@ -19,7 +19,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 	const [titleInput, setTitleInput] = useState("");
 	const fileRef = useRef<HTMLInputElement>(null);
 	const [fileChanged, setFileChanged] = useState(false);
-	const { t } = useTranslation();
+	const { t: translation } = useTranslation();
 
 	const isDisabled = !titleInput && !fileChanged;
 
@@ -34,37 +34,25 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		try {
-			const newData: EditBoardsData = {};
+		const newData: EditBoardsData = {};
 
-			if (titleInput) {
-				newData.title = titleInput;
-			}
-
-			const file = fileRef.current?.files?.[0];
-			if (file) {
-				const maxSizeMB = 5;
-
-				if (file.size > maxSizeMB * 1024 * 1024) {
-					throw new Error("La imagen es demasiado grande (máx. 5 MB).");
-				}
-
-				newData.image = file;
-			}
-
-			handleEditForm(newData);
-			handleHideMessage();
-		} catch (error) {
-			if (error instanceof Error) {
-				toast.custom((toast) => (
-					<CustomToast
-						message={__("editboard.toast.error", "Imagen demasiado grande")}
-						t={toast}
-						type="error"
-					/>
-				));
-			}
+		if (titleInput) {
+			newData.title = titleInput;
 		}
+
+		const file = fileRef.current?.files?.[0];
+		if (file) {
+			const maxSizeMB = 5;
+
+			if (file.size > maxSizeMB * 1024 * 1024) {
+				toast.custom((t) => <CustomToast message={translation("")} />);
+			}
+
+			newData.image = file;
+		}
+
+		handleEditForm(newData);
+		handleHideMessage();
 	};
 
 	return (
@@ -72,7 +60,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 			<article className="modal-card">
 				<CloseButton className="closebtn-form" onClick={handleHideMessage} />
 				<h3 className="modal-header">
-					{t("editboard.form.header", "Editar tablero")}
+					{translation("editboard.form.header", "Editar tablero")}
 				</h3>
 				<Form
 					id="edittitleform"
@@ -84,7 +72,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 						<FormFields
 							id="boardtitle"
 							name="boardtitle"
-							label={t("editboard.form.newtitle", "Nuevo título")}
+							label={translation("editboard.form.newtitle", "Nuevo título")}
 							type="text"
 							labelClassName="form-label"
 							value={titleInput}
@@ -95,7 +83,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 					<div className="file-container">
 						<FormFields
 							labelClassName="upload-img-label"
-							label={t("editboard.form.newimg", "Nuevo fondo")}
+							label={translation("editboard.form.newimg", "Nuevo fondo")}
 							inputClassName="upload-img-container"
 							id="bg-img"
 							name="bg-img"
@@ -105,7 +93,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 						/>
 					</div>
 					<Button type="submit" className="form-btn" disabled={isDisabled}>
-						{t("editboard.form.button", "EDITAR")}
+						{translation("editboard.form.button", "EDITAR")}
 					</Button>
 				</Form>
 			</article>
