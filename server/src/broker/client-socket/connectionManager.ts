@@ -1,3 +1,4 @@
+import "dotenv/config";
 import ioClient, { Socket } from 'socket.io-client';
 import { ClientToServerEvents, ServerToClientEvents } from '../../sockets/types';
 
@@ -11,7 +12,7 @@ export const socketClientFromWorker:Socket<ServerToClientEvents,ClientToServerEv
 		transports: ["websocket"],
 		// autoConnect: true,
         auth:{
-            token:'superdupersecretworker'
+            token: process.env.SOCKET_WORKER_SECRET_KEY || 'superdupersecretworker'
         }
 	},
 )

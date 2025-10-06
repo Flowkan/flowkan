@@ -27,6 +27,7 @@ import Turnstile from "react-turnstile";
 import { validationForm } from "../../utils/validations";
 import { LoginFormSchema } from "../../utils/auth.schema";
 import { useValidationForm } from "../../hooks/useValidationForm";
+import { SEO } from "../../components/layout/seo";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
@@ -62,7 +63,9 @@ export const LoginPage = () => {
 					user = JSON.parse(userDecoded);
 				} catch (e) {
 					console.error("Error al parsear el objeto de usuario OAuth:", e);
-					toast.error("Error al procesar la información del usuario.");
+					toast.error(
+						t("login.error", "Error al procesar la información del usuario."),
+					);
 				}
 			}
 			dispatch(loginWithOAuth({ token, user }));
@@ -106,10 +109,7 @@ export const LoginPage = () => {
 				}));
 				toast.custom((t) => (
 					<CustomToast
-						message={__(
-							"login.toast.message.error",
-							"Credenciales incorrectas",
-						)}
+						message={__("login.toast.message.error")}
 						t={t}
 						type="error"
 					/>
@@ -126,138 +126,120 @@ export const LoginPage = () => {
 		setShowModal(false);
 	}
 	return (
-		<Page>
-			<div
-				className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 sm:px-6 lg:px-8"
-				style={{
-					backgroundImage: `url('/meta/fondo_formulario.png')`,
-					backgroundSize: "cover",
-					backgroundPosition: "center",
-				}}
-			>
-				<div className="bg-background-card/95 w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-[1.01]">
-					<div>
-						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
-							{t("login.loginForm.title", "Iniciar Sesión")}
-						</h1>
-						<p className="text-text-body mt-2 text-center text-sm">
-							{t("login.loginForm.question", "¿No tienes una cuenta?")}
-							<NavLink
-								to="/register"
-								className="text-text-link hover:text-accent-hover font-medium"
-							>
-								{" "}
-								{t("login.loginForm.signup", "Regístrate aquí")}
-							</NavLink>
-						</p>
-					</div>
-					<Form
-						className="mt-8 space-y-6"
-						onSubmit={handleSubmit}
-						method="POST"
-						initialValue={{
-							email: formData.email,
-							password: formData.password,
-						}}
-					>
-						<FormFields
-							label={t(
-								"login.loginForm.email.emailLabel",
-								"Dirección de Email",
-							)}
-							labelClassName="sr-only"
-							id="email-address"
-							name="email"
-							type="email"
-							autoFocus
-							aria-label="Email"
-							autoComplete="email"
-							required
-							className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-							placeholder={t(
-								"login.loginForm.email.placeholder",
-								"Correo electrónico",
-							)}
-							onChange={handleChange}
-							value={formData.email}
-							onBlur={handleBlur}
-							errors={error?.email}
-							fieldApproved={checkField("email")}
-						/>
-
-						<FormFields
-							label={t("login.loginForm.password.passwordLabel", "Contraseña")}
-							labelClassName="sr-only"
-							id="password"
-							name="password"
-							type="password"
-							aria-label="Password"
-							autoComplete="current-password"
-							required
-							className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative mt-3 block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-							placeholder={t(
-								"login.loginForm.password.passwordPlaceholder",
-								"Contraseña",
-							)}
-							onChange={handleChange}
-							value={formData.password}
-							onBlur={handleBlur}
-							errors={error?.password}
-							fieldApproved={checkField("password")}
-						/>
-
-						<div className="flex items-center justify-between">
-							<div className="text-sm">
-								<Button
-									onClick={handleShowModal}
-									type="button"
-									className="text-text-link hover:text-accent-hover font-medium hover:cursor-pointer"
+		<>
+			<SEO />
+			<Page>
+				<div
+					className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 sm:px-6 lg:px-8"
+					style={{
+						backgroundImage: `url('/meta/fondo_formulario.png')`,
+						backgroundSize: "cover",
+						backgroundPosition: "center",
+					}}
+				>
+					<div className="bg-background-card/95 w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-[1.01]">
+						<div>
+							<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
+								{t("login.loginForm.title")}
+							</h1>
+							<p className="text-text-body mt-2 text-center text-sm">
+								{t("login.loginForm.question")}
+								<NavLink
+									to="/register"
+									className="text-text-link hover:text-accent-hover font-medium"
 								>
-									{t(
-										"login.loginForm.forgetPassword",
-										"¿Olvidaste tu contraseña?",
-									)}
+									{" "}
+									{t("login.loginForm.signup")}
+								</NavLink>
+							</p>
+						</div>
+						<Form
+							className="mt-8 space-y-6"
+							onSubmit={handleSubmit}
+							method="POST"
+							initialValue={{
+								email: formData.email,
+								password: formData.password,
+							}}
+						>
+							<FormFields
+								label={t("login.loginForm.email.emailLabel")}
+								labelClassName="sr-only"
+								id="email-address"
+								name="email"
+								type="email"
+								autoComplete="email"
+								required
+								className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
+								placeholder={t("login.loginForm.email.placeholder")}
+								onChange={handleChange}
+								value={formData.email}
+								onBlur={handleBlur}
+								errors={error?.email}
+								fieldApproved={checkField("email")}
+							/>
+
+							<FormFields
+								label={t("login.loginForm.password.passwordLabel")}
+								labelClassName="sr-only"
+								id="password"
+								name="password"
+								type="password"
+								autoComplete="current-password"
+								required
+								className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative mt-3 block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
+								placeholder={t("login.loginForm.password.passwordPlaceholder")}
+								onChange={handleChange}
+								value={formData.password}
+								onBlur={handleBlur}
+								errors={error?.password}
+								fieldApproved={checkField("password")}
+							/>
+
+							<div className="flex items-center justify-between">
+								<div className="text-sm">
+									<button
+										onClick={handleShowModal}
+										type="button"
+										className="text-text-link hover:text-accent-hover font-medium hover:cursor-pointer"
+									>
+										{t("login.loginForm.forgetPassword")}
+									</button>
+								</div>
+							</div>
+							<div className="relative flex w-full justify-center">
+								<Turnstile
+									sitekey={import.meta.env.VITE_TURNSTILE_API_KEY}
+									theme="light"
+									onVerify={(token) =>
+										setFormData((prev) => ({
+											...prev,
+											turnstileResponse: token,
+										}))
+									}
+								/>
+							</div>
+							<div>
+								<Button
+									type="submit"
+									disabled={disabled}
+									className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
+								>
+									{status === "loading" ? (
+										<SpinnerLoadingText
+											text={t("login.loginForm.loginButton.spinner.loading")}
+										/>
+									) : (
+										t("login.loginForm.loginButton.spinner.default")
+									)}{" "}
 								</Button>
 							</div>
-						</div>
-						<div className="relative flex w-full justify-center">
-							<Turnstile
-								sitekey={import.meta.env.VITE_TURNSTILE_API_KEY}
-								theme="light"
-								onVerify={(token) =>
-									setFormData((prev) => ({
-										...prev,
-										turnstileResponse: token,
-									}))
-								}
-							/>
-						</div>
-						<div>
-							<Button
-								type="submit"
-								disabled={disabled}
-								className="group text-text-on-accent bg-primary hover:bg-primary-dark focus:ring-primary focus:ring-offset-background-card relative flex w-full transform justify-center rounded-md border border-transparent px-4 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
-							>
-								{status === "loading" ? (
-									<SpinnerLoadingText
-										text={t(
-											"login.loginForm.loginButton.spinner.loading",
-											"Cargando",
-										)}
-									/>
-								) : (
-									t(
-										"login.loginForm.loginButton.spinner.default",
-										"Iniciar Sesión",
-									)
-								)}{" "}
-							</Button>
-						</div>
-					</Form>
-					<ForgotPassword show={showModal} onClose={handleCloseModal} />
-					<WithOtherServices />
+						</Form>
+						<ForgotPassword show={showModal} onClose={handleCloseModal} />
+						<WithOtherServices />
+					</div>
 				</div>
-			</div>
-		</Page>
+			</Page>
+		</>
 	);
 };

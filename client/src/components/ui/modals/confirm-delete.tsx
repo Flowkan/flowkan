@@ -29,10 +29,10 @@ const ConfirmDelete = ({
 				<div className="modal-btns-container">
 					<div className="flex justify-center gap-2">
 						<button className="modal-btn yes" onClick={handleDeleteBoard}>
-							{t("confirm.yes", "SI")}
+							{t("confirm.yes")}
 						</button>
 						<button className="modal-btn" onClick={handleHideMessage}>
-							{t("confirm.no", "NO")}
+							{t("confirm.no")}
 						</button>
 					</div>
 				</div>

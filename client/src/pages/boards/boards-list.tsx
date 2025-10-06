@@ -54,17 +54,14 @@ const BoardsList = () => {
 	return (
 		<>
 			{showAddForm && <NewBoard onClose={handleCloseAddForm} />}
-			<BackofficePage
-				className="page-container"
-				title={t("boardslist.title", "Mis tableros")}
-			>
+			<BackofficePage className="page-container" title={t("boardsList.title")}>
 				<section className="boards-list-container">
 					<h2 className="sr-only">Lista de tableros</h2>
 					{!boards.length ? (
 						<div className="empty-list">
 							<div className="p-empty-list">
-								<p>{t("emptylist.p1", "Todavía no tienes ningún tablero.")}</p>
-								<p>{t("emptylist.p2", "¿Quieres crear uno?")}</p>
+								<p>{t("emptyList.p1")}</p>
+								<p>{t("emptyList.p2")}</p>
 							</div>
 							<AddButton showAddForm={handleShowAddForm} />
 						</div>
@@ -88,15 +85,12 @@ const BoardsList = () => {
 								{hasMore ? (
 									<div ref={loaderRef}>
 										<SpinnerLoadingText
-											text={t("boardslist.pagination.loading", "Cargando más")}
+											text={t("boardsList.pagination.loading")}
 										/>
 									</div>
 								) : (
 									<p className="sr-only text-sm text-gray-400">
-										{t(
-											"boardslist.pagination.endLoading",
-											"No hay más resultados.",
-										)}
+										{t("boardsList.pagination.endLoading")}
 									</p>
 								)}
 								{/* </div> */}

@@ -9,6 +9,7 @@ import {
 import { IconEdit } from "../icons/IconEdit";
 import { IconSave } from "../icons/IconSave";
 import type { ProfileUpdateType } from "../../pages/profile/types";
+import { useTranslation } from "react-i18next";
 import { IconCancel } from "../icons/IconCancel";
 import clsx from "clsx";
 
@@ -124,6 +125,8 @@ const EditableField = ({
 	onChange,
 }: EditableFieldProps) => {
 	const [enableEdit, setEnableEdit] = useState(false);
+	const { t } = useTranslation();
+
 	const [errorsLocal,setErrorsLocal] = useState<string[]>(errors);
 	const initialValue = useRef("");
 	const [localValue,setLocalValue] = useState(value);
@@ -185,7 +188,9 @@ const EditableField = ({
 							<Button
 								onClick={handleEdit}
 								className="cursor-pointer text-primary hover:text-primary-hover absolute top-[50%] right-0 flex -translate-y-[50%] items-center justify-center p-1 transition duration-300 ease-in-out md:hidden group-hover:md:flex"
-								aria-label={`Editar ${label}`}
+								aria-label={t("arialabels.component.editableField.edit", {
+									label,
+								})}
 							>
 								<IconEdit className="size-5" />
 							</Button>
@@ -212,7 +217,9 @@ const EditableField = ({
 								name === "name" ? "px-4" : "",
 								name == "bio" ? "px-6" :""
 							)}
-							aria-label={`Guardar ${label}`}
+							aria-label={t("arialabels.component.editableField.save", {
+								label,
+							})}
 						>
 							<IconSave className={clsx(
 								"text-white size-3",
@@ -226,7 +233,9 @@ const EditableField = ({
 								name === "name" ? "px-4" : "",
 								name == "bio" ? "px-6" :""
 							)}
-							aria-label={`Guardar ${label}`}
+							aria-label={t("arialabels.component.editableField.save", {
+								label,
+							})}
 						>
 							<IconCancel className={clsx(
 								"text-white size-3",

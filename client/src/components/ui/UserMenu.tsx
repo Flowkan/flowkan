@@ -31,8 +31,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			<Button
 				className="flex items-center rounded-full focus:outline-none"
 				onClick={toggleMenu}
-				title={`Menu de ajustes de ${user.name}`}
-				aria-label="Menu del usuario"
+				title={t("header.menuBtn.title", { name: user.name })}
+				aria-label={t("header.menuBtn.arialabel")}
 			>
 				<Avatar
 					name={user.name}
@@ -47,19 +47,19 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 						to="/profile"
 						className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 					>
-						{t("header.menu.profile", "Perfil")}
+						{t("header.menu.profile")}
 					</NavLink>
 					<NavLink
 						to="/boards"
 						className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 					>
-						{t("header.menu.boards", "Mis tableros")}
+						{t("header.menu.boards")}
 					</NavLink>
 					<Button
 						onClick={handleLogout}
 						className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
 					>
-						{t("header.menu.logout", "Cerrar sesión")}
+						{t("header.menu.logout")}
 					</Button>
 				</div>
 			)}

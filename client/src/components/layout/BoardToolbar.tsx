@@ -4,6 +4,7 @@ import { Avatar } from "../ui/Avatar";
 import { useUsersOnBoard } from "../../hooks/socket/useUsersOnBoard";
 import { ChatWindow } from "../ui/ChatWindow";
 import { getContrastColor } from "../../utils/contrastColor";
+import { useTranslation } from "react-i18next";
 
 interface BoardToolbarProps {
 	readonly boardId: string;
@@ -13,6 +14,7 @@ interface BoardToolbarProps {
 export function BoardToolbar({ boardId, image }: BoardToolbarProps) {
 	const [showShareForm, setShowShareForm] = useState(false);
 	const users = useUsersOnBoard(boardId);
+	const { t } = useTranslation();
 
 	const handleShowShareForm = (event: React.MouseEvent) => {
 		event.preventDefault();
@@ -56,7 +58,7 @@ export function BoardToolbar({ boardId, image }: BoardToolbarProps) {
 							onClick={handleShowShareForm}
 							className="bg-primary hover:bg-primary-hover rounded px-3 py-1 text-white"
 						>
-							Compartir
+							{t("toolbar.share")}
 						</button>
 					</div>
 				</div>

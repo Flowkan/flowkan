@@ -2,6 +2,7 @@ import { Draggable } from "@hello-pangea/dnd";
 import type { Task } from "../pages/boards/types";
 import { useBoardItemSocket } from "../pages/boards/board-socket/context";
 import DraggableTask from "./DraggableTask";
+import { truncateWordTitle } from "../utils/tools";
 
 interface Props {
 	task: Task;
@@ -30,7 +31,7 @@ const TaskCard = ({ task, index, columnId, onOpenTaskDetail }: Props) => {
 				<DraggableTask
 					provided={provided}
 					snapshot={snapshot}
-					task={task}
+					task={{ ...task, title: truncateWordTitle(task.title) }}
 					handleClick={handleClick}
 				/>
 			)}

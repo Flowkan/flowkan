@@ -1,6 +1,5 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { __ } from "../../../utils/i18nextHelper";
 import { Form } from "../Form";
 import { FormFields } from "../FormFields";
 import "./modal-boards.css";
@@ -59,9 +58,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 		<div className="modal-bg">
 			<article className="modal-card">
 				<CloseButton className="closebtn-form" onClick={handleHideMessage} />
-				<h3 className="modal-header">
-					{translation("editboard.form.header", "Editar tablero")}
-				</h3>
+				<h3 className="modal-header">{translation("editBoard.form.header")}</h3>
 				<Form
 					id="edittitleform"
 					className="modal-form"
@@ -72,7 +69,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 						<FormFields
 							id="boardtitle"
 							name="boardtitle"
-							label={translation("editboard.form.newtitle", "Nuevo título")}
+							label={translation("editBoard.form.newTitle")}
 							type="text"
 							labelClassName="form-label"
 							value={titleInput}
@@ -83,7 +80,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 					<div className="file-container">
 						<FormFields
 							labelClassName="upload-img-label"
-							label={translation("editboard.form.newimg", "Nuevo fondo")}
+							label={translation("editBoard.form.newImg")}
 							inputClassName="upload-img-container"
 							id="bg-img"
 							name="bg-img"
@@ -93,7 +90,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 						/>
 					</div>
 					<Button type="submit" className="form-btn" disabled={isDisabled}>
-						{translation("editboard.form.button", "EDITAR")}
+						{translation("editBoard.edit")}
 					</Button>
 				</Form>
 			</article>
