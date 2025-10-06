@@ -1,4 +1,7 @@
-import { ThumbnailCompletedPayload, ThumbnailErrorPayload } from "../../sockets/types";
+import {
+  ThumbnailCompletedPayload,
+  ThumbnailErrorPayload,
+} from "../../sockets/types";
 import { socketClientFromWorker } from "./connectionManager";
 
 type SocketClientType = typeof socketClientFromWorker;
@@ -11,7 +14,7 @@ export default class WorkerSocketEvents {
     }    
     emitThumbnailCompleted(payload:ThumbnailCompletedPayload){
         this.socketClient.emit("system:thumbnailCompleted",payload)
-        console.log(`[Worker Socket] Emitiendo --> system:thumbnailCompleted for`,payload);        
+        console.log(`[Worker Socket] Emitiendo --> system:thumbnailCompleted`,payload);        
     }
     emitThumbnailError(payload:ThumbnailErrorPayload){
 

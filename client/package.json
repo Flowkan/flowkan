@@ -21,6 +21,7 @@
 		"@tailwindcss/vite": "4.1.11",
 		"@tinymce/tinymce-react": "6.3.0",
 		"ai": "5.0.54",
+		"animejs": "4.2.1",
 		"axios": "1.12.1",
 		"clsx": "2.1.1",
 		"i18next": "25.4.2",
@@ -36,6 +37,7 @@
 		"redux-thunk": "3.1.0",
 		"socket.io-client": "4.8.1",
 		"tailwindcss": "4.1.11",
+		"tinymce": "8.1.2",
 		"zod": "4.1.11"
 	},
 	"devDependencies": {

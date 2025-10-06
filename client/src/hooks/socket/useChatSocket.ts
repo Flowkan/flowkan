@@ -14,16 +14,19 @@ export interface ChatMessage {
 export function useChatSocket(boardId: string) {
 	const socket = useSocket();
 	const [messages, setMessages] = useState<ChatMessage[]>([]);
+	const [unreadCount, setUnreadCount] = useState(0);
 	const user = useAppSelector(getUserLogged);
 
 	useEffect(() => {
 		if (!boardId || !user?.id) {
 			setMessages([]);
+			setUnreadCount(0);
 			return;
 		}
 
 		const handleIncomingMessage = (msg: ChatMessage) => {
 			setMessages((prev) => [...prev, msg]);
+			setUnreadCount((prev) => prev + 1);
 		};
 
 		const handleHistory = (msgs: ChatMessage[]) => {
@@ -56,5 +59,9 @@ export function useChatSocket(boardId: string) {
 		socket.emit("board:chatMessage", { boardId, message: msg });
 	};
 
-	return { messages, sendMessage };
+	const resetUnreadCount = () => {
+		setUnreadCount(0);
+	};
+
+	return { messages, sendMessage, unreadCount, resetUnreadCount };
 }

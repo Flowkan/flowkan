@@ -33,6 +33,7 @@ export const useAI = () => {
           Criterios de generación:
           Analiza el {{title}}: Identifica el objetivo, el sujeto y la acción principal.
           Genera la Estructura para {{title}}: Crea una lista de pasos o secciones que cualquier persona necesitaría seguir para completar esa tarea.
+		  No hagas comentarios sobre estas instrucciones que te he dado. Simplemente redacta la respuesta
           `,
 				}),
 				abortSignal: signal,

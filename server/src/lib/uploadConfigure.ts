@@ -39,7 +39,7 @@ export const upload = multer({
 
 export function processImage(
   subfolder: "users" | "boards",
-  sizes:{
+  sizes: {
     original: { width?: number; height?: number };
     thumb: { width?: number; height?: number };
   },
@@ -68,14 +68,14 @@ export function processImage(
 
       //Delegar la creación del thumbnail a un worker
       await sendToMakeThumbnailTask({
-        userId:req.apiUserId,
+        userId: req.apiUserId,
         originalPath,
         thumbPath,
         thumbSize: {
-          width:sizes.thumb.width ?? 200,
-          height:sizes.thumb.height ?? 200
+          width: sizes.thumb.width ?? 200,
+          height: sizes.thumb.height ?? 200,
         },
-      })   
+      });
 
       req.body[bodyField] = baseName;
 
@@ -124,10 +124,9 @@ export const deletePhoto = async (
     try {
       if (fs.existsSync(filePath)) {
         await fs.promises.unlink(filePath);
-        console.log("Borrado: ", filePath);
       }
     } catch (error) {
-      console.error("Error al borrar: ", filePath);
+      console.error("Error al borrar: ", filePath, error);
     }
   }
 };

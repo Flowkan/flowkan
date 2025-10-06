@@ -31,17 +31,19 @@ async function processThumbnailMessage(
     const payloadContent = payload.content.toString();
     thumbnailPayload = JSON.parse(payloadContent) as MakeThumbnailPayload;
     //Loaded Thumbnail
-    const socketEvent = new WorkerSocketEvents(socketClientFromWorker,thumbnailPayload.userId)
+    const socketEvent = new WorkerSocketEvents(
+      socketClientFromWorker,
+      thumbnailPayload.userId,
+    );
     // socketEvent.handleTest()
-    // Generación de thumbnail y guarado en base de datos        
-    await makeThumbnailService(thumbnailPayload)
+    // Generación de thumbnail y guarado en base de datos
+    await makeThumbnailService(thumbnailPayload);
     socketEvent.emitThumbnailCompleted({
       userId: thumbnailPayload.userId,
       originalPath: thumbnailPayload.originalPath,
       thumbPath: thumbnailPayload.thumbPath,
-    })
+    });
     channel.ack(payload);
-    console.log(`[Consume: Thumbnail] Tarea completada y ACK enviado`);
   } catch (error) {
     console.error(
       `[Consume: Thumbnail] Fallo de procesamineto. Enviado a DLQ`,

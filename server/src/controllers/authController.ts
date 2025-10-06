@@ -228,15 +228,6 @@ export class AuthController {
           );
         });
 
-        // const headerEmail = {
-        //   to: email,
-        //   subject: "Cambiar contraseña",
-        // };
-        // await sendChangePasswordEmail(headerEmail, {
-        //   url_frontend: process.env.FRONTEND_WEB_URL,
-        //   token,
-        // });
-
         const frontendUrl = process.env.FRONTEND_WEB_URL || 'http://localhost:5173'
         await sendEmailTask({
           to:email,

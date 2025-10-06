@@ -7,6 +7,7 @@ import {
 	useAddAssigneeAction,
 	useRemoveAssigneeAction,
 } from "../store/boards/hooks";
+import type { Editor as TinyMCEEditor } from "tinymce";
 import { Editor } from "@tinymce/tinymce-react";
 import { Icon } from "@iconify/react";
 import { Button } from "./ui/Button";
@@ -68,7 +69,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const contentInputRef = useRef<HTMLInputElement>(null);
 	const usersRef = useRef<HTMLDivElement>(null);
 	const addMenuRef = useRef<HTMLDivElement>(null);
-	const editorRef = useRef(null);
+	const editorRef = useRef<TinyMCEEditor | null>(null);
 	const { t } = useTranslation();
 
 	const {
@@ -296,6 +297,14 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		}
 	};
 
+	// Scroll automático al final del contenido del Editor de Tiny
+	useEffect(() => {
+		if (!isOpen) return;
+		editorRef.current?.iframeElement?.contentDocument?.body?.lastElementChild?.scrollIntoView(
+			{ behavior: "smooth" },
+		);
+	}, [editedDescription, isOpen]);
+
 	return (
 		<>
 			<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
@@ -510,7 +519,8 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								value={editedDescription}
 								init={{
 									height: 400,
-									content_css: "document",
+									content_css: "document, dark",
+									skin:"oxide",
 									menubar: false,
 									plugins: [
 										"advlist",
