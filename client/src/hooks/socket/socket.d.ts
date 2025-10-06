@@ -43,6 +43,15 @@ export interface ServerToClientEvents {
 	// Chat
 	"board:chatMessage": (msg: ChatMessage) => void;
 	"chat:history": (msgs: ChatMessage[]) => void;
+
+	// --- Notification ---
+	"user:thumbnailLoading": (data: { userId: number; originalPath: string }) => void;
+	"user:thumbnailCompleted": (data: {
+		userId: number;
+		originalPath: string;
+		thumbPath: string;
+	}) => void;
+	"user:thumbnailError": () => void;
 }
 
 export interface ClientToServerEvents {

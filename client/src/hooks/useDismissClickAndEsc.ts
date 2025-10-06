@@ -8,16 +8,24 @@ type UseToggleOutsideReturn<Dismiss extends HTMLElement> = {
 
 /**
  * Hook genérico para toggles, cierra al hacer click fuera o pulsar Esc
+ * Ignora clics dentro de otros modales marcados con data-modal
  */
 export function useDismiss<Dismiss extends HTMLElement = HTMLElement>(
-	initialOpen = false
+	initialOpen = false,
 ): UseToggleOutsideReturn<Dismiss> {
 	const [open, setOpen] = useState<boolean>(initialOpen);
 	const ref = useRef<Dismiss | null>(null);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			if (ref.current && !ref.current.contains(event.target as Node)) {
+			const target = event.target as HTMLElement;
+
+			// si el click ocurre dentro de otro modal, no cerrar
+			if (target.closest("[data-modal]")) {
+				return;
+			}
+
+			if (ref.current && !ref.current.contains(target)) {
 				setOpen(false);
 			}
 		};

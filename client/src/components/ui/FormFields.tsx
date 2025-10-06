@@ -75,6 +75,7 @@ export const FormFields = ({
 				{isPassword && (
 					<Button
 						type="button"
+						tabIndex={-1}
 						className={clsx(
 							"absolute top-1/2 right-3 z-10 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600",
 							hasError ? "text-red-400 hover:text-red-600" : "",

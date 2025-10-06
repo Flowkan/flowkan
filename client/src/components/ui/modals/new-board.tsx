@@ -48,7 +48,7 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 		} finally {
 			setIsSubmitting(false);
 		}
-	};
+	};	
 
 	return (
 		<div className="modal-bg">

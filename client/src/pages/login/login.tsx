@@ -45,20 +45,11 @@ export const LoginPage = () => {
 	const { email, password } = formData;
 	const disabled = !email || !password;
 
-	const LoginValidator = useCallback(
-		(
-			data: unknown,
-			fieldName?: keyof Omit<typeof formData, "turnstileResponse">,
-		) => {
-			return validationForm(LoginFormSchema, data, fieldName);
-		},
-		[],
-	);
+	const LoginValidator = useCallback((data: unknown, fieldName?:keyof Omit<typeof formData, "turnstileResponse">)=>{
+		return validationForm(LoginFormSchema,data,fieldName)
+	},[])
 
-	const { error, validate, checkField } =
-		useValidationForm<Omit<typeof formData, "turnstileResponse">>(
-			LoginValidator,
-		);
+	const { error, validate, checkField } = useValidationForm<Omit<typeof formData,"turnstileResponse">>(LoginValidator)	
 
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);

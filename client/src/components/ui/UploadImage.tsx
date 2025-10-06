@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent, type JSX } from "react";
+import { useRef, useState, type ChangeEvent, type JSX } from "react";
 import { Button } from "./Button";
 import { FormFields } from "./FormFields";
 import { IconCamera } from "../icons/IconCamera";
@@ -11,12 +11,13 @@ import { useTranslation } from "react-i18next";
 // import type { C } from "vitest/dist/chunks/environment.d.cL3nLXbE.js";
 
 interface UploadImageProps {
-	previewUrl?: string;
+	previewUrl: string;
 	onChange: (e: ChangeEvent<HTMLInputElement>, name: string) => void;
 	error?: boolean;
 	name: string;
 	icon?: JSX.Element;
 	onSubmit?: (field: keyof ProfileUpdateType) => void;
+	value?: string | File;
 }
 
 const UploadImage = ({
@@ -28,40 +29,40 @@ const UploadImage = ({
 	error = false,
 }: UploadImageProps) => {
 	const fileRef = useRef<HTMLInputElement>(null);
-	const [newImage, setNewImage] = useState(previewUrl || "");
+	const [newImage, setNewImage] = useState(previewUrl);
 	const [onEdit, setOnEdit] = useState(false);
 	const { t } = useTranslation();
+	const oldImage = useRef(previewUrl);
 	function handleChange(e: ChangeEvent<HTMLInputElement>) {
 		const file = fileRef.current?.files?.[0];
 		if (file) {
 			setNewImage(URL.createObjectURL(file));
 			onChange(e, name);
+
+			setOnEdit(true);
 		}
 	}
+
 	function handleCancel() {
-		setNewImage(previewUrl ?? "");
+		setOnEdit(false);
+
 		const e = {
 			target: { value: "", name, files: null, type: "file" },
 			currentTarget: { value: "", name, files: null, type: "file" },
 		} as ChangeEvent<HTMLInputElement>;
 		onChange(e, name);
+		setNewImage(oldImage.current);
+		fileRef.current!.value = "";
 	}
 	function handleSubmit() {
 		if (onSubmit) {
 			onSubmit(name as keyof ProfileUpdateType);
-			// setNewImage(previewUrl as string)
 			setOnEdit(false);
 		}
 	}
-	useEffect(() => {
-		if (previewUrl) {
-			setNewImage(previewUrl);
-		}
-	}, [previewUrl]);
 
 	function handleSelectImage() {
 		fileRef.current?.click();
-		setOnEdit(true);
 	}
 
 	return (

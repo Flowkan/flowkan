@@ -326,6 +326,7 @@ const Board = () => {
 			</DragDropContext>
 			{selectedTask && selectedColumnId && (
 				<TaskDetailModal
+					isOpen={!!selectedTask}
 					task={selectedTask}
 					boardId={boardData?.id}
 					columnId={selectedColumnId}
