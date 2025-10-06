@@ -84,11 +84,12 @@ export default function registerSockets(io: Server) {
   const workerNameSpace = io.of("/worker");
   workerNameSpace.use(async (socket, next) => {
     try {
-      const token = socket.handshake.auth.token;
-      if (token === "superdupersecretworker") {
-        const userId = socket.handshake.auth.userId;
-        socket.data.userId = userId;
-        return next();
+      const token = socket.handshake.auth.token
+      if(token === process.env.SOCKET_WORKER_SECRET_KEY){
+        console.log("[Worker] Autenticado  y listo.");
+        const userId = socket.handshake.auth.userId
+        socket.data.userId = userId
+        return next()
       }
     } catch (error) {
       next(createHttpError(500, `${error}`));

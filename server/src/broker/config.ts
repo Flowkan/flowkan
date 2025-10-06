@@ -1,13 +1,6 @@
 import "dotenv/config";
 
-// const rabbitHost = process.env.RABBITMQ_HOST || 'rabbitmq'
-
 export const RABBITMQ_URL = process.env.RABBITMQ_BROKER_URL || "amqp://guest:guest@rabbitmq:5672/";     
-//`amqp://guest:guest@${rabbitHost}:5672/`
-  //process.env.RABBITMQ_BROKER_URL || "amqp://guest:guest@localhost:5672/"
-
-  //"amqp://guest:guest@rabbitmq:5672/";
-
 
 export const Queues = {
   EMAIL_QUEUE: "email_tasks",
