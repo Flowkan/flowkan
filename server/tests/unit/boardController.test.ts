@@ -5,8 +5,9 @@ import BoardService from "../../src/services/BoardService";
 import { deleteImage } from "../../src/utils/fileUtils";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 
-const mockBoardService = {
+const mockBoardService: Partial<BoardService> = {
   getAllBoardsByUserId: jest.fn(),
+  getAllBoards: jest.fn(),
   getBoardCountByUserId: jest.fn(),
   get: jest.fn(),
   getBoardByTitle: jest.fn(),
@@ -17,20 +18,16 @@ const mockBoardService = {
   delete: jest.fn(),
   acceptInvitation: jest.fn(),
   getBoardUsers: jest.fn(),
-} as unknown as BoardService;
+};
 
-const mockAuthService = {
+const mockAuthService: Partial<AuthService> = {
   findById: jest.fn(),
-} as unknown as AuthService;
+};
 
 jest.mock("../../src/utils/fileUtils", () => ({
   deleteImage: jest.fn(),
 }));
 
-/* jest.mock("jsonwebtoken", () => ({
-  sign: jest.fn(),
-  verify: jest.fn(),
-})); */
 jest.mock("jsonwebtoken", () => {
   const actual = jest.requireActual("jsonwebtoken");
   return {
@@ -54,7 +51,10 @@ beforeEach(() => {
   jest.clearAllMocks();
   process.env.JWT_SECRET = "fake-secret";
 
-  boardController = new BoardController(mockBoardService, mockAuthService);
+  boardController = new BoardController(
+    mockBoardService as BoardService,
+    mockAuthService as AuthService,
+  );
 
   req = {
     apiUserId: 1,
