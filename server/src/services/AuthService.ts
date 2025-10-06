@@ -56,7 +56,8 @@ class AuthService {
   }
 
   async deactivateUser(userId: number) {
-    await this.authModel.deactivateUser(userId);
+    const userData = await this.authModel.deactivateUser(userId);
+    return userData;
   }
 }
 

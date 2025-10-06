@@ -2,9 +2,7 @@ import { PrismaClient, User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { SafeUser } from "./BoardModel";
 import { addMinutes } from "date-fns";
-import { profile } from "console";
-import { deletePhoto, upload } from "../lib/uploadConfigure";
-import { unlink } from "fs/promises";
+import { deletePhoto } from "../lib/uploadConfigure";
 
 export interface ValidateCredentialsParams {
   email: string;
@@ -198,13 +196,12 @@ class AuthModel {
       }
       await tx.board.deleteMany({ where: { ownerId: userId } });
       await tx.user.deleteMany({ where: { id: userId } });
-      
-      // Actualizar el status de email a false (img avatar rota)
-      // await tx.user.update({
-      //   where: { id: userId },
-      //   data: { status: false },
-      // });
+
     });
+    return {
+      email: user.email,
+      name: user.name,
+    };
   }
 }
 
