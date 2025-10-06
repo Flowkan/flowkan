@@ -105,13 +105,12 @@ export class BoardController {
       res.status(404).send("No hay tableros con este miembro");
     }
   };
-  
 
   add = async (req: Request, res: Response) => {
     try {
       const userId = req.apiUserId;
       const { title }: { title: string } = req.body;
-      const slug = slugify(title);      
+      const slug = slugify(title);
 
       const image: string | undefined = req.body.image
         ? `/uploads/boards/${req.body.image}`
@@ -150,8 +149,9 @@ export class BoardController {
       });
 
       if (currentBoard?.image) {
-        const originalToDelete = `/uploads/boards/${currentBoard.image}_o.webp`;
-        const thumbnailToDelete = `/uploads/boards/${currentBoard.image}_t.webp`;
+        const imageName = currentBoard.image.replace(".webp", "");
+        const originalToDelete = `/uploads/boards/${imageName}_o.webp`;
+        const thumbnailToDelete = `/uploads/boards/${imageName}_t.webp`;
         deleteImage({
           originalImagePath: originalToDelete,
           thumbnailImagePath: thumbnailToDelete,
@@ -173,8 +173,9 @@ export class BoardController {
       await this.boardService.delete({ userId, boardId });
 
       if (currentBoard?.image) {
-        const originalToDelete = `/uploads/boards/${currentBoard.image}_o.webp`;
-        const thumbnailToDelete = `/uploads/boards/${currentBoard.image}_t.webp`;
+        const imageName = currentBoard.image.replace(".webp", "");
+        const originalToDelete = `/uploads/boards/${imageName}_o.webp`;
+        const thumbnailToDelete = `/uploads/boards/${imageName}_t.webp`;
         deleteImage({
           originalImagePath: originalToDelete,
           thumbnailImagePath: thumbnailToDelete,

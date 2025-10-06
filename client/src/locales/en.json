@@ -167,7 +167,10 @@
 			"img": "Background",
 			"button": "CREATE"
 		},
-		"spinner": "Creating"
+		"spinner": "Creating",
+		"toast": {
+			"errorImage": "Imagen demasiado grande"
+		}
 	},
 	"editBoard": {
 		"form": {
@@ -175,7 +178,11 @@
 			"newTitle": "New Title",
 			"newImg": "New Background"
 		},
-		"edit": "EDIT"
+		"edit": "EDIT",
+		"toast": {
+			"errorImage": "File too big",
+			"error": "Error editing board"
+		}
 	},
 	"home": {
 		"banner": "Simplify your tasks, maximize your productivity",

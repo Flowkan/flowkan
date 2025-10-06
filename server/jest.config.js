@@ -10,4 +10,5 @@ module.exports = {
     ...tsJestTransformCfg,
   },
   roots: ["<rootDir>/tests"],
+  clearMocks: true,
 };

@@ -167,7 +167,10 @@
 			"img": "Fondo",
 			"button": "CREAR"
 		},
-		"spinner": "Creando"
+		"spinner": "Creando",
+		"toast": {
+			"errorImage": "Imagen demasiado grande"
+		}
 	},
 	"editBoard": {
 		"form": {
@@ -175,7 +178,11 @@
 			"newTitle": "Nuevo título",
 			"newImg": "Nuevo fondo"
 		},
-		"edit": "EDITAR"
+		"edit": "EDITAR",
+		"toast": {
+			"errorImage": "Imagen demasiado grande",
+			"error": "Error al editar el tablero"
+		}
 	},
 	"home": {
 		"banner": "Simplifica tus tareas, maximiza tu productividad",

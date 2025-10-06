@@ -8,13 +8,15 @@ import { Button } from "../Button";
 import { addBoard } from "../../../store/boards/actions";
 import { useAppDispatch } from "../../../store";
 import { SpinnerLoadingText } from "../Spinner";
+import toast from "react-hot-toast";
+import { CustomToast } from "../../CustomToast";
 
 interface NewBoardProps {
 	onClose: () => void;
 }
 
 const NewBoard = ({ onClose }: NewBoardProps) => {
-	const { t } = useTranslation();
+	const { t: translation } = useTranslation();
 	const [titleInput, setTitleInput] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const dispatch = useAppDispatch();
@@ -29,39 +31,53 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		const boardData = new FormData();
-		boardData.append("title", titleInput);
-		const file = fileRef.current?.files?.[0];
-
-		if (isSubmitting) return;
-		setIsSubmitting(true);
-
-		if (file) {
-			boardData.append("image", file);
-		}
-
 		try {
+			const boardData = new FormData();
+			boardData.append("title", titleInput);
+			const file = fileRef.current?.files?.[0];
+
+			if (isSubmitting) return;
+			setIsSubmitting(true);
+
+			if (file) {
+				const maxSizeMB = 5;
+
+				if (file.size > maxSizeMB * 1024 * 1024) {
+					toast.custom((t) => (
+						<CustomToast
+							message={translation("newBoard.toast.errorImage")}
+							t={t}
+							type="error"
+						/>
+					));
+
+					return;
+				}
+
+				boardData.append("image", file);
+			}
+
 			await dispatch(addBoard(boardData));
 			onClose(); // Cierra el modal solo si la creación fue exitosa
 		} catch (error) {
-			console.error(t("newBoard.error"), error);
+			console.error(translation("newBoard.error"), error);
 		} finally {
 			setIsSubmitting(false);
 		}
-	};	
+	};
 
 	return (
 		<div className="modal-bg">
 			<article className="modal-card">
 				<CloseButton className="closebtn-form" onClick={onClose} />
-				<h3 className="modal-header">{t("newBoard.form.header")}</h3>
+				<h3 className="modal-header">{translation("newBoard.form.header")}</h3>
 				<Form className="modal-form" method="POST" onSubmit={handleSubmit}>
 					<div className="form-element">
 						<FormFields
 							autoFocus
 							id="boardtitle"
 							name="boardtitle"
-							label={t("newBoard.form.title")}
+							label={translation("newBoard.form.title")}
 							type="text"
 							required
 							labelClassName="form-label"
@@ -72,7 +88,7 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 					<div className="file-container">
 						<FormFields
 							labelClassName="upload-img-label"
-							label={t("newBoard.form.img")}
+							label={translation("newBoard.form.img")}
 							inputClassName="upload-img-container"
 							id="bg-img"
 							name="bg-img"
@@ -87,11 +103,11 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 					>
 						{isSubmitting ? (
 							<SpinnerLoadingText
-								text={t("newBoard.spinner")}
+								text={translation("newBoard.spinner")}
 								className="text-white"
 							/>
 						) : (
-							t("newBoard.form.button")
+							translation("newBoard.form.button")
 						)}
 					</Button>
 				</Form>

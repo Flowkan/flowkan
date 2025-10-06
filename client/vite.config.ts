@@ -4,24 +4,25 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  server: {
-    proxy: {
-      "/api": {
-        target: "http://localhost:5173",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/,""),
-      },
-    },
-  },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./vitest.setup.ts"
-  },
-  css: {
-    modules: {
-      generateScopedName: "[name]__[local]___[hash:base64:5]",
-    },
-  },
+	plugins: [react(), tailwindcss()],
+	server: {
+		proxy: {
+			"/api": {
+				target: "http://localhost:5173",
+				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/api/, ""),
+			},
+		},
+	},
+	test: {
+		globals: true,
+		environment: "jsdom",
+		setupFiles: "./vitest.setup.ts",
+		// tsconfig: './tsconfig.app.json',
+	},
+	css: {
+		modules: {
+			generateScopedName: "[name]__[local]___[hash:base64:5]",
+		},
+	},
 });
