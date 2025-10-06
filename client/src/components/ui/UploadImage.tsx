@@ -70,14 +70,14 @@ const UploadImage = ({
 				{newImage ? (
 					<img
 						src={newImage}
-						alt={t("uploadimg.alt", "Foto de perfil")}
+						alt={t("uploadImg.alt")}
 						className={`shadow-primary size-40 rounded-full border border-gray-300 object-cover shadow-[3px_0px_8px] transition-transform group-hover:scale-105 ${error ? "border-2 border-red-400" : ""}`}
 					/>
 				) : (
 					<button
 						onClick={handleSelectImage}
 						className={`bg-primary/30 hover:bg-primary-hover/30 hover:border-primary shadow-primary flex size-40 cursor-pointer items-center justify-center rounded-full border border-gray-50 shadow-[5px_1px_10px] transition md:shadow-[5px_5px_15px] ${error ? "border-4 border-red-400" : ""}`}
-						aria-label={t("uploadimg.arialabel.upload", "Subir imagen")}
+						aria-label={t("uploadImg.arialabel.upload")}
 					>
 						<IconCamera className="group-hover:text-primary size-20 text-white transition-colors duration-300 ease-in" />
 					</button>
@@ -88,7 +88,7 @@ const UploadImage = ({
 						type="button"
 						onClick={handleSelectImage}
 						className="bg-primary hover:bg-primary-dark absolute right-2 bottom-0 flex size-10 items-center justify-center rounded-full p-2 text-white shadow transition"
-						aria-label={t("uploadimg.arialabel.edit", "Editar imagen")}
+						aria-label={t("uploadImg.arialabel.edit")}
 					>
 						{icon || <IconPlus />}
 					</Button>

@@ -40,7 +40,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 				onClick={toggleMenu}
 				aria-expanded={open}
 				aria-haspopup="true"
-				title="Opciones"
+				title={t("dropdownMenu.options")}
 			>
 				{buttonContent}
 			</button>
@@ -63,7 +63,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 								<Button
 									onClick={onClose}
 									className="text-text-placeholder hover:text-danger-dark text-xl leading-none"
-									title={t("dropdownmenu.closebtn", "Cerrar menú")}
+									title={t("dropdownMenu.closeBtn")}
 								>
 									&times;
 								</Button>

@@ -15,40 +15,28 @@ export const HomePage: React.FC = () => {
 						<div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between lg:flex-row">
 							<div className="mb-10 text-center lg:mb-0 lg:w-1/2 lg:text-left">
 								<h1 className="mb-4 text-3xl leading-tight font-extrabold sm:text-4xl md:text-5xl lg:text-6xl">
-									{t(
-										"home.banner",
-										"Simplifica tus tareas, maximiza tu productividad",
-									)}
+									{t("home.banner")}
 								</h1>
 
 								<p className="mb-6 text-base font-light sm:text-lg md:text-xl lg:text-2xl">
-									{t(
-										"home.description",
-										"Organiza tu trabajo y colabora en tiempo real",
-									)}
+									{t("home.description")}
 									<br />
-									{t(
-										"home.funtionality",
-										"Arrastra, comparte y recibe ayuda de IA",
-									)}
+									{t("home.funtionality")}
 								</p>
 
 								<Button
-									title={t("home.more", "Saber Más")}
-									aria-label={t(
-										"home.more_arialabel",
-										"Saber más sobre la aplicación",
-									)}
+									title={t("home.more")}
+									aria-label={t("home.moreArialabel")}
 									className="bg-primary text-text-on-accent hover:bg-primary-dark transform rounded-lg px-6 py-3 text-base font-semibold shadow-lg transition duration-300 hover:scale-105 sm:px-8 sm:py-4 sm:text-lg"
 								>
-									{t("home.more", "Saber Más")}
+									{t("home.more")}
 								</Button>
 							</div>
 
 							<div className="flex justify-center lg:w-1/2 lg:justify-end">
 								<img
 									src="https://imgs.search.brave.com/7WNY_QRUFxwivusSxIeNog9dVL2TneO5PYrt_2Vr_Cc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuYXNhbmEuYml6/L3RyYW5zZm9ybS9h/YzI1Nzg5NS1jZGY1/LTRmZTItOGEzNC0y/YmVmNmFhNDE2OGUv/aW5saW5lLWFnaWxl/LXNwcmludC1wbGFu/bmluZy0xLTJ4P2lv/PXRyYW5zZm9ybTpm/aWxsLHdpZHRoOjI1/NjAmZm9ybWF0PXdl/YnA"
-									alt={t("interface", "Kanban Board Interface")}
+									alt={t("home.interface")}
 									className="w-full max-w-lg scale-105 rotate-3 transform rounded-lg shadow-2xl"
 								/>
 							</div>
@@ -64,7 +52,7 @@ export const HomePage: React.FC = () => {
 					<section className="bg-background-light-grey px-6 py-20 md:px-12">
 						<div className="mx-auto max-w-7xl text-center">
 							<h2 className="text-text-heading mb-12 text-3xl font-bold md:text-4xl">
-								{t("home.features.title", "Características Destacadas")}
+								{t("home.features.title")}
 							</h2>
 							<div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
 								<div className="bg-background-card flex transform flex-col items-center rounded-lg p-8 shadow-lg transition-transform duration-300 hover:-translate-y-2">
@@ -83,14 +71,10 @@ export const HomePage: React.FC = () => {
 										</svg>
 									</div>
 									<h3 className="text-text-heading mb-2 text-xl font-semibold">
-										{t("home.features.board", "Kanban Board")}
+										{t("home.features.board")}
 									</h3>
 									<p className="text-text-body text-center">
-										{t(
-											"home.features.viewTask",
-											"Visualiza y gestiona tus tareas con facilidad",
-										)}
-										.
+										{t("home.features.viewTask")}.
 									</p>
 								</div>
 								<div className="bg-background-card flex transform flex-col items-center rounded-lg p-8 shadow-lg transition-transform duration-300 hover:-translate-y-2">
@@ -104,14 +88,10 @@ export const HomePage: React.FC = () => {
 										</svg>
 									</div>
 									<h3 className="text-text-heading mb-2 text-xl font-semibold">
-										{t("home.features.collaborations", "Colaboración")}
+										{t("home.features.collaborations")}
 									</h3>
 									<p className="text-text-body text-center">
-										{t(
-											"home.features.jobsTeam",
-											"Trabaja en equipo en tiempo real sin esfuerzo",
-										)}
-										.
+										{t("home.features.jobsTeam")}.
 									</p>
 								</div>
 								<div className="bg-background-card flex transform flex-col items-center rounded-lg p-8 shadow-lg transition-transform duration-300 hover:-translate-y-2">
@@ -129,14 +109,10 @@ export const HomePage: React.FC = () => {
 										</svg>
 									</div>
 									<h3 className="text-text-heading mb-2 text-xl font-semibold">
-										{t("home.features.follow", "Seguimiento de Progreso")}
+										{t("home.features.follow")}
 									</h3>
 									<p className="text-text-body text-center">
-										{t(
-											"home.features.upToDay",
-											"Mantente al tanto del avance de tus proyectos",
-										)}
-										.
+										{t("home.features.upToDay")}.
 									</p>
 								</div>
 								<div className="bg-background-card flex transform flex-col items-center rounded-lg p-8 shadow-lg transition-transform duration-300 hover:-translate-y-2">
@@ -155,14 +131,10 @@ export const HomePage: React.FC = () => {
 										</svg>
 									</div>
 									<h3 className="text-text-heading mb-2 text-xl font-semibold">
-										{t("home.features.files", "Adjuntar archivos")}
+										{t("home.features.files")}
 									</h3>
 									<p className="text-text-body text-center">
-										{t(
-											"home.features.filesDescription",
-											"Adjunta archivos y audios directamente a tus tareas",
-										)}
-										.
+										{t("home.features.filesDescription")}.
 									</p>
 								</div>
 							</div>
@@ -172,68 +144,47 @@ export const HomePage: React.FC = () => {
 					<section className="bg-background-page px-6 py-20 md:px-12">
 						<div className="mx-auto max-w-7xl text-center">
 							<h2 className="text-text-heading mb-12 text-3xl font-bold md:text-4xl">
-								{t("home.ourUsers.title", "Lo que dicen nuestros usuarios")}
+								{t("home.ourUsers.title")}
 							</h2>
 							<div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 								<div className="bg-background-light-grey flex flex-col items-center rounded-lg p-6 shadow-md">
 									<img
 										src="https://randomuser.me/api/portraits/women/68.jpg"
-										alt={t("home.ourUsers.testimony", "Avatar Testimonio")}
+										alt={t("home.ourUsers.testimony")}
 										className="border-accent-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 									/>
 									<p className="text-text-body mb-4 italic">
-										{t(
-											"home.ourUsers.feedbacks.first.text",
-											"Esta aplicación ha transformado la forma en que gestionamos nuestros proyectos. ¡Absolutamente indispensable!",
-										)}
+										{t("home.ourUsers.feedbacks.first.text")}
 									</p>
 									<p className="text-text-heading font-semibold">
-										-{" "}
-										{t(
-											"home.ourUsers.feedbacks.first.user",
-											"Ana García, CEO en Empresa X",
-										)}
+										- {t("home.ourUsers.feedbacks.first.user")}
 									</p>
 								</div>
 								<div className="bg-background-light-grey flex flex-col items-center rounded-lg p-6 shadow-md">
 									<img
 										src="https://randomuser.me/api/portraits/men/44.jpg"
-										alt={t("home.ourUsers.testimony", "Avatar Testimonio")}
+										alt={t("home.ourUsers.testimony")}
 										className="border-primary-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 									/>
 									<p className="text-text-body mb-4 italic">
 										{" "}
-										{t(
-											"home.ourUsers.feedbacks.second.text",
-											"La interfaz es increíblemente intuitiva y las funciones de	colaboración son de otro nivel.",
-										)}
+										{t("home.ourUsers.feedbacks.second.text")}
 									</p>
 									<p className="text-text-heading font-semibold">
-										-{" "}
-										{t(
-											"home.ourUsers.feedbacks.second.user",
-											"Juan Pérez, Product Manager",
-										)}
+										- {t("home.ourUsers.feedbacks.second.user")}
 									</p>
 								</div>
 								<div className="bg-background-light-grey flex flex-col items-center rounded-lg p-6 shadow-md">
 									<img
 										src="https://randomuser.me/api/portraits/women/79.jpg"
-										alt={t("home.ourUsers.testimony", "Avatar Testimonio")}
+										alt={t("home.ourUsers.testimony")}
 										className="border-primary-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 									/>
 									<p className="text-text-body mb-4 italic">
-										{t(
-											"home.ourUsers.feedbacks.third.text",
-											"Nunca pensé que la gestión de tareas pudiera ser tan sencilla y visualmente agradable.",
-										)}
+										{t("home.ourUsers.feedbacks.third.text")}
 									</p>
 									<p className="text-text-heading font-semibold">
-										-{" "}
-										{t(
-											"home.ourUsers.feedbacks.third.user",
-											"Sofía Castro, Diseñadora UX",
-										)}
+										- {t("home.ourUsers.feedbacks.third.user")}
 									</p>
 								</div>
 							</div>

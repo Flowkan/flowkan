@@ -17,7 +17,7 @@ const CloseButton = ({ onClick, className }: CloseButtonProps) => {
 			)}
 			onClick={onClick}
 		>
-			<span className="sr-only">{t("closebtn.title", "Cerrar menú")}</span>
+			<span className="sr-only">{t("closeBtn.title")}</span>
 			<svg
 				className="h-4 w-4"
 				xmlns="http://www.w3.org/2000/svg"

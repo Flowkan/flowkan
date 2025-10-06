@@ -118,10 +118,7 @@ export const LoginPage = () => {
 				}));
 				toast.custom((t) => (
 					<CustomToast
-						message={__(
-							"login.toast.message.error",
-							"Credenciales incorrectas",
-						)}
+						message={__("login.toast.message.error")}
 						t={t}
 						type="error"
 					/>
@@ -152,16 +149,16 @@ export const LoginPage = () => {
 					<div className="bg-background-card/95 w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-[1.01]">
 						<div>
 							<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
-								{t("login.loginForm.title", "Iniciar Sesión")}
+								{t("login.loginForm.title")}
 							</h1>
 							<p className="text-text-body mt-2 text-center text-sm">
-								{t("login.loginForm.question", "¿No tienes una cuenta?")}
+								{t("login.loginForm.question")}
 								<NavLink
 									to="/register"
 									className="text-text-link hover:text-accent-hover font-medium"
 								>
 									{" "}
-									{t("login.loginForm.signup", "Regístrate aquí")}
+									{t("login.loginForm.signup")}
 								</NavLink>
 							</p>
 						</div>
@@ -175,10 +172,7 @@ export const LoginPage = () => {
 							}}
 						>
 							<FormFields
-								label={t(
-									"login.loginForm.email.emailLabel",
-									"Dirección de Email",
-								)}
+								label={t("login.loginForm.email.emailLabel")}
 								labelClassName="sr-only"
 								id="email-address"
 								name="email"
@@ -186,10 +180,7 @@ export const LoginPage = () => {
 								autoComplete="email"
 								required
 								className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-								placeholder={t(
-									"login.loginForm.email.placeholder",
-									"Correo electrónico",
-								)}
+								placeholder={t("login.loginForm.email.placeholder")}
 								onChange={handleChange}
 								value={formData.email}
 								onBlur={handleBlur}
@@ -198,10 +189,7 @@ export const LoginPage = () => {
 							/>
 
 							<FormFields
-								label={t(
-									"login.loginForm.password.passwordLabel",
-									"Contraseña",
-								)}
+								label={t("login.loginForm.password.passwordLabel")}
 								labelClassName="sr-only"
 								id="password"
 								name="password"
@@ -209,10 +197,7 @@ export const LoginPage = () => {
 								autoComplete="current-password"
 								required
 								className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative mt-3 block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-								placeholder={t(
-									"login.loginForm.password.passwordPlaceholder",
-									"Contraseña",
-								)}
+								placeholder={t("login.loginForm.password.passwordPlaceholder")}
 								onChange={handleChange}
 								value={formData.password}
 								onBlur={handleBlur}
@@ -227,10 +212,7 @@ export const LoginPage = () => {
 										type="button"
 										className="text-text-link hover:text-accent-hover font-medium hover:cursor-pointer"
 									>
-										{t(
-											"login.loginForm.forgetPassword",
-											"¿Olvidaste tu contraseña?",
-										)}
+										{t("login.loginForm.forgetPassword")}
 									</button>
 								</div>
 							</div>
@@ -254,16 +236,10 @@ export const LoginPage = () => {
 								>
 									{status === "loading" ? (
 										<SpinnerLoadingText
-											text={t(
-												"login.loginForm.loginButton.spinner.loading",
-												"Cargando",
-											)}
+											text={t("login.loginForm.loginButton.spinner.loading")}
 										/>
 									) : (
-										t(
-											"login.loginForm.loginButton.spinner.default",
-											"Iniciar Sesión",
-										)
+										t("login.loginForm.loginButton.spinner.default")
 									)}{" "}
 								</Button>
 							</div>

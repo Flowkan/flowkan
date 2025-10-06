@@ -13,7 +13,7 @@ const EditButton = ({ showEditForm }: EditButtonProps) => {
 		<Button
 			className="edit-btn"
 			onClick={(ev) => showEditForm(ev)}
-			title={t("editbtn.title", "Editar")}
+			title={t("editBtn.title")}
 		>
 			<Icon
 				name="edit"

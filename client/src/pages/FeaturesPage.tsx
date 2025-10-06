@@ -167,22 +167,16 @@ export const FeaturesPage: React.FC = () => {
 				<section className="from-accent to-primary-dark text-shadow-text-body relative overflow-hidden bg-gradient-to-br px-6 py-20 md:px-12">
 					<div className="relative z-10 mx-auto max-w-7xl text-center">
 						<h1 className="mb-4 text-4xl leading-tight font-extrabold md:text-5xl">
-							{t(
-								"features.banner.title",
-								"Todo lo que Necesitas para Trabajar Mejor",
-							)}
+							{t("features.banner.title")}
 						</h1>
 						<p className="mb-8 text-xl font-light md:text-2xl">
-							{t(
-								"features.banner.subtitle",
-								"Desde la colaboración en tiempo real hasta la automatización, centralizamos tu flujo de trabajo.",
-							)}
+							{t("features.banner.subtitle")}
 						</p>
 						<Link
 							to="/register"
 							className="bg-primary text-text-on-accent hover:bg-primary-dark transform rounded-lg px-6 py-3 text-base font-semibold shadow-lg transition duration-300 hover:scale-105 md:px-8 md:py-4 md:text-lg"
 						>
-							{t("features.banner.cta", "Empezar a Organizar Ahora")} &rarr;
+							{t("features.banner.cta")} &rarr;
 						</Link>
 					</div>
 
@@ -194,7 +188,7 @@ export const FeaturesPage: React.FC = () => {
 				<section className="bg-background-light-grey px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-7xl">
 						<h2 className="text-text-heading mb-16 text-center text-3xl font-bold md:text-4xl">
-							{t("features.main.title", "Funcionalidades Clave de Flowkan")}
+							{t("features.main.title")}
 						</h2>
 
 						<div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
@@ -228,22 +222,16 @@ export const FeaturesPage: React.FC = () => {
 				<section className="bg-background-page px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-4xl max-w-7xl text-center">
 						<h2 className="text-text-heading mb-4 text-3xl font-bold md:text-4xl">
-							{t(
-								"features.cta.title",
-								"¿Listos para transformar tu productividad?",
-							)}
+							{t("features.cta.title")}
 						</h2>
 						<p className="text-text-body mb-8 text-lg">
-							{t(
-								"features.cta.subtitle",
-								"Crea tu primer tablero en solo unos minutos. Sin necesidad de tarjeta de crédito.",
-							)}
+							{t("features.cta.subtitle")}
 						</p>
 						<Link
 							to="/register"
 							className="bg-accent text-text-on-accent hover:bg-accent-dark transform rounded-lg px-6 py-3 text-base font-semibold shadow-lg transition duration-300 hover:scale-105 md:px-8 md:py-4 md:text-lg"
 						>
-							{t("features.cta.button", "Comenzar gratis hoy mismo")} &rarr;
+							{t("features.cta.button")} &rarr;
 						</Link>
 					</div>
 				</section>

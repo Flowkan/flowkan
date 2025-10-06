@@ -17,33 +17,27 @@ export const ConfirmPage = () => {
 	useEffect(() => {
 		if (!token) {
 			setStatus("error");
-			setMessage(t("registerconfirm.error.token", "Token no proporcionado"));
+			setMessage(t("registerConfirm.error.token"));
 			return;
 		}
 
 		confirmEmail(token)
 			.then(() => {
 				setStatus("success");
-				setMessage(t("registerconfirm.ok", "Cuenta confirmada correctamente!"));
+				setMessage(t("registerConfirm.ok"));
 				setTimeout(() => navigate("/login"), 3000);
 			})
 			.catch((err) => {
 				setStatus("error");
 				setMessage(
-					err.response?.data?.message ||
-						t(
-							"registerconfirm.error.confirm",
-							"Ocurrió un error al confirmar la cuenta",
-						),
+					err.response?.data?.message || t("registerConfirm.error.confirm"),
 				);
 			});
 	}, [navigate, token]);
 
 	return (
 		<div className="confirm-page">
-			{status === "loading" && (
-				<p>{t("registerconfirm.loading", "Confirmando cuenta...")}</p>
-			)}
+			{status === "loading" && <p>{t("registerConfirm.loading")}</p>}
 			{status === "success" && <p>{message}</p>}
 			{status === "error" && <p style={{ color: "red" }}>{message}</p>}
 		</div>

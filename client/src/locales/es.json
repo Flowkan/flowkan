@@ -22,15 +22,15 @@
 	"header": {
 		"menu": {
 			"profile": "Perfil",
-			"boards": "Mis tableros",
-			"logout": "Cerrar sesión"
+			"logout": "Cerrar sesión",
+			"boards": "Mis tableros"
 		},
 		"title": "Flowkan",
 		"navbar": {
 			"features": "Características",
 			"solutions": "Soluciones",
 			"prices": "Precios",
-			"boardslist": "Mis tableros"
+			"boardsList": "Mis tableros"
 		},
 		"login": "Login",
 		"signup": "Registro",
@@ -38,10 +38,11 @@
 			"open": "Abrir menú",
 			"close": "Cerrar menú"
 		},
-		"menubtn": {
+		"menuBtn": {
 			"title": "Menu de ajustes de {{name}}",
 			"arialabel": "Menu del usuario"
-		}
+		},
+		"welcome": "Bienvenido"
 	},
 	"footer": {
 		"description": "FlowKan te ayuda a organizar tu trabajo y a tu equipo de forma visual y eficiente. Simplifica la gestión de proyectos y alcanza tus objetivos.",
@@ -54,13 +55,13 @@
 		},
 		"address": {
 			"label": "Dirección",
-			"street": "Calle",
+			"full": "{{street}}, {{cp}} {{city}}, {{country}}",
 			"country": "España"
 		},
 		"clients": "Nuestros Clientes",
 		"copy": "Todos los derechos reservados"
 	},
-	"addbtn": "Nuevo tablero",
+	"addBtn": "Nuevo tablero",
 	"confirm": {
 		"yes": "SI",
 		"no": "NO"
@@ -70,14 +71,17 @@
 		"input": "Escribe un mensaje...",
 		"send": "Enviar"
 	},
-	"closebtn": {
+	"closeBtn": {
 		"title": "Cerrar menú"
 	},
-	"editbtn": {
+	"editBtn": {
 		"title": "Editar"
 	},
-	"trashbtn": {
+	"trashBtn": {
 		"title": "Eliminar"
+	},
+	"shareBtn": {
+		"title": "Compartir"
 	},
 	"arialabels": {
 		"component": {
@@ -87,21 +91,26 @@
 			},
 			"withOtherServices": {
 				"service": "Continuar con {{label}}"
+			},
+			"editableField": {
+				"edit": "Editar {{label}}",
+				"save": "Guardar {{label}}"
 			}
 		}
 	},
-	"uploadimg": {
+	"uploadImg": {
 		"alt": "Foto de perfil",
 		"arialabel": {
 			"upload": "Subir imagen",
 			"edit": "Editar imagen"
 		}
 	},
-	"customtoast": {
+	"customToast": {
 		"close": "Cerrar"
 	},
-	"dropdownmenu": {
-		"closebtn": "Cerrar menú"
+	"dropdownMenu": {
+		"options": "Opciones",
+		"closeBtn": "Cerrar menú"
 	},
 	"share": {
 		"error": {
@@ -113,6 +122,7 @@
 			"link": {
 				"text": "Genera un enlace de invitación que puedes compartir con quien quieras.",
 				"button": "Generar enlace de invitación",
+				"creating": "Creando enlace...",
 				"copy": "Copiar"
 			}
 		}
@@ -120,24 +130,36 @@
 	"boardModal": {
 		"AI": {
 			"prompt": "\n          Actúa como un asistente de gestión de proyectos y experto en la organización de tareas. Tu objetivo es generar una descripción completa y detallada para una nueva tarjeta de tarea, basándote únicamente en su título.\n          El estilo de la respuesta debe ser conciso, con un formato de lista de verificación y/o pasos detallados, emulando el formato de un boceto a lápiz para una planificación rápida. La descripción debe ser lo suficientemente detallada para guiar la ejecución de la tarea.\n\n          Criterios de generación:\n          Analiza el {{title}}: Identifica el objetivo, el sujeto y la acción principal.\n          Genera la Estructura para {{title}}: Crea una lista de pasos (- [ ]) o secciones que cualquier persona necesitaría seguir para completar esa tarea.\n          ",
-			"error": "Error al generar la descripción {{error}}"
+			"error": "Error al generar",
+			"maxPetitions": "Límite diario máximo de peticiones alcanzadas.",
+			"descriptionError": "Error al generar la descripción {{error}}",
+			"btnLoading-On": "Generando",
+			"btnLoading-Off": "Generar descripción"
 		}
 	},
-	"boardsitem": {
+	"boardsItem": {
 		"confirm": "¿Seguro que quieres borrar este tablero?"
 	},
-	"emptylist": {
+	"boardsList": {
+		"title": "Mis tableros",
+		"pagination": {
+			"loading": "Cargando más",
+			"endLoading": "No hay más resultados."
+		}
+	},
+	"emptyList": {
 		"p1": "Todavía no tienes ningún tablero.",
 		"p2": "¿Quieres crear uno?"
 	},
 	"invitation": {
 		"title": "Invitación a tablero",
-		"shared": "te ha compartido el tablero:",
+		"shared": "Te ha compartido el tablero:",
 		"collaborate": "Colabora en este tablero junto a",
-		"register_button": "Registrarse",
-		"login_button": "Iniciar sesión"
+		"viewBoard": "Ver tablero",
+		"registerButton": "Registrarse",
+		"loginButton": "Iniciar sesión"
 	},
-	"newboard": {
+	"newBoard": {
 		"error": "Error al crear el tablero",
 		"form": {
 			"header": "Crear tablero",
@@ -147,11 +169,11 @@
 		},
 		"spinner": "Creando"
 	},
-	"editboard": {
+	"editBoard": {
 		"form": {
 			"header": "Editar tablero",
-			"newtitle": "Nuevo título",
-			"newimg": "Nuevo fondo"
+			"newTitle": "Nuevo título",
+			"newImg": "Nuevo fondo"
 		},
 		"edit": "EDITAR"
 	},
@@ -160,7 +182,7 @@
 		"description": "Organiza tu trabajo y colabora en tiempo real",
 		"funtionality": "Arrastra, comparte y recibe ayuda de IA",
 		"more": "Saber Más",
-		"more_arialabel": "Saber más sobre la aplicación",
+		"moreArialabel": "Saber más sobre la aplicación",
 		"interface": "Kanban Board Interface",
 		"features": {
 			"title": "Características Destacadas",
@@ -317,7 +339,7 @@
 			}
 		}
 	},
-	"forgotpsw": {
+	"forgotPsw": {
 		"recover": "Recuperar Contraseña",
 		"email": "Correo electrónico",
 		"send": "Enviar",
@@ -364,7 +386,7 @@
 			"otherTypeRegister": "O continúa con"
 		}
 	},
-	"registerconfirm": {
+	"registerConfirm": {
 		"ok": "Cuenta confirmada correctamente!",
 		"error": {
 			"token": "Token no proporcionado",
@@ -383,15 +405,15 @@
 		"goToLogin": "Entendido, ir a Iniciar Sesión"
 	},
 	"board": {
-		"add_to_task": "Añadir a la tarjeta",
+		"addToTask": "Añadir a la tarjeta",
 		"add": "Añadir",
-		"attach_document": "Adjuntar documento",
-		"attach_voice": "Grabar nota de voz",
+		"attachDocument": "Adjuntar documento",
+		"attachVoice": "Grabar nota de voz",
 		"labels": "Etiquetas",
 		"members": "Miembros",
 		"dates": "Fechas",
 		"checklist": "Checklist",
-		"load_users": "Cargando usuarios...",
+		"loadUsers": "Cargando usuarios...",
 		"description": "Descripción",
 		"attatchments": {
 			"title": "Adjuntos",
@@ -410,22 +432,23 @@
 		"archive": "Archivar",
 		"delete": "Eliminar",
 		"add_column": "Añadir Columna",
-		"column_name": "Nombre de la columna",
-		"create_column": "Crear columna",
-		"delete_task": "¿Estás seguro de que quieres eliminar esta tarea?",
-		"delete_attachment": "¿Estás seguro de que quieres eliminar este adjunto?",
-		"mic_error": "Error al acceder al micrófono:",
-		"mic_alert": "No se pudo iniciar la grabación. Asegúrate de que el micrófono esté disponible.",
-		"lookfor_members": "Buscar miembros...",
-		"created_from": "Creado desde Flowkan\n"
+		"columnName": "Nombre de la columna",
+		"createColumn": "Crear columna",
+		"deleteTask": "¿Estás seguro de que quieres eliminar esta tarea?",
+		"deleteAttachment": "¿Estás seguro de que quieres eliminar este adjunto?",
+		"micError": "Error al acceder al micrófono:",
+		"micAlert": "No se pudo iniciar la grabación. Asegúrate de que el micrófono esté disponible.",
+		"lookforMembers": "Buscar miembros...",
+		"createdFrom": "Creado desde Flowkan\n",
+		"closeSaveBtn": "Cerrar y guardar"
 	},
 	"column": {
 		"deleteConfirm": "¿Estás seguro de que quieres eliminar la columna \"{{title}}\"? Todas las tareas dentro se perderán.",
 		"edit": "Haz clic para editar",
-		"dropdownmenu": {
+		"dropdownMenu": {
 			"title": "Enumerar acciones"
 		},
-		"addcard": "Añadir tarjeta",
+		"addCard": "Añadir tarjeta",
 		"copy": {
 			"alert": "Copiar lista (no implementado)",
 			"msg": "Copiar lista"
@@ -448,7 +471,7 @@
 			"alert": "Seguir (no implementado)",
 			"msg": "Seguir"
 		},
-		"changecolor": {
+		"changeColor": {
 			"alert": "Cambiar color de lista (no implementado)",
 			"msg": "Cambiar color de lista"
 		},
@@ -478,15 +501,15 @@
 			}
 		}
 	},
-	"deleteaccount": {
+	"deleteAccount": {
 		"error": "Hubo un error al eliminar la cuenta."
 	},
-	"recovery_password": {
+	"recoveryPassword": {
 		"form": {
 			"title": "Cambiar Contraseña",
 			"field": {
-				"new_password": "Nueva contraseña",
-				"confirm_password": "Repetir contraseña"
+				"newPassword": "Nueva contraseña",
+				"confirmPassword": "Repetir contraseña"
 			}
 		},
 		"save": "Guardar Cambios"
@@ -501,8 +524,8 @@
 		"birthdate": "Fec. Nacimiento",
 		"location": "Ubicación",
 		"bio": "Biografía",
-		"deleteaccount": "Eliminar cuenta",
-		"confirmdelete": "¿Estás seguro de eliminar su cuenta? Si lo haces se perderán todos sus datos, desea continuar?"
+		"deleteAccount": "Eliminar cuenta",
+		"confirmDelete": "¿Estás seguro de eliminar su cuenta? Si lo haces se perderán todos sus datos, desea continuar?"
 	},
 	"features": {
 		"banner": {
@@ -554,6 +577,7 @@
 		}
 	},
 	"spinner": {
+		"general": "Cargando",
 		"login": "Cargando Login",
 		"register": "Cargando Registro",
 		"generateLink": "Generando enlace",
@@ -625,5 +649,13 @@
 		"descriptionKey": "Colabora con tu equipo en un solo lugar. Con nuestros tableros Kanban, centraliza tareas, optimiza flujos de trabajo y aumenta la productividad.",
 		"imageAlt": "Flowkan - Tablero de gestión de proyectos.",
 		"lang": "es_ES"
+	},
+	"sesionExpired": "Tu sesión ha expirado, inicia sesión nuevamente.",
+	"errorBoundary": "Oooops!!!!",
+	"language": {
+		"alt": "Bandera de {{label}}",
+		"arialabel": "Bandera de {{label}}",
+		"title": "Bandera de {{label}}",
+		"span": "Bandera de {{label}}"
 	}
 }

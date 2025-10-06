@@ -44,7 +44,7 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 			await dispatch(addBoard(boardData));
 			onClose(); // Cierra el modal solo si la creación fue exitosa
 		} catch (error) {
-			console.error(t("newboard.error", "Error al crear el tablero"), error);
+			console.error(t("newBoard.error"), error);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -54,16 +54,14 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 		<div className="modal-bg">
 			<article className="modal-card">
 				<CloseButton className="closebtn-form" onClick={onClose} />
-				<h3 className="modal-header">
-					{t("newboard.form.header", "Crear tablero")}
-				</h3>
+				<h3 className="modal-header">{t("newBoard.form.header")}</h3>
 				<Form className="modal-form" method="POST" onSubmit={handleSubmit}>
 					<div className="form-element">
 						<FormFields
 							autoFocus
 							id="boardtitle"
 							name="boardtitle"
-							label={t("newboard.form.title", "Título del tablero")}
+							label={t("newBoard.form.title")}
 							type="text"
 							required
 							labelClassName="form-label"
@@ -74,7 +72,7 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 					<div className="file-container">
 						<FormFields
 							labelClassName="upload-img-label"
-							label={t("newboard.form.img", "Fondo")}
+							label={t("newBoard.form.img")}
 							inputClassName="upload-img-container"
 							id="bg-img"
 							name="bg-img"
@@ -89,11 +87,11 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 					>
 						{isSubmitting ? (
 							<SpinnerLoadingText
-								text={t("newboard.spinner", "Creando")}
+								text={t("newBoard.spinner")}
 								className="text-white"
 							/>
 						) : (
-							t("newboard.form.button", "CREAR")
+							t("newBoard.form.button")
 						)}
 					</Button>
 				</Form>

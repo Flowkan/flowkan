@@ -7,6 +7,7 @@ import {
 import { IconEdit } from "../icons/IconEdit";
 import { IconSave } from "../icons/IconSave";
 import type { ProfileUpdateType } from "../../pages/profile/types";
+import { useTranslation } from "react-i18next";
 
 const formatDate = (dateString: string) => {
 	if (!dateString) return "";
@@ -118,6 +119,7 @@ const EditableField = ({
 	onChange,
 }: EditableFieldProps) => {
 	const [enableEdit, setEnableEdit] = useState(false);
+	const { t } = useTranslation();
 
 	function handleEdit() {
 		setEnableEdit(!enableEdit);
@@ -159,7 +161,9 @@ const EditableField = ({
 							<Button
 								onClick={handleEdit}
 								className="text-primary hover:text-primary-hover absolute top-[50%] right-0 flex -translate-y-[50%] items-center justify-center p-1 transition duration-300 ease-in-out md:hidden group-hover:md:flex"
-								aria-label={`Editar ${label}`}
+								aria-label={t("arialabels.component.editableField.edit", {
+									label,
+								})}
 							>
 								<IconEdit className="size-5" />
 							</Button>
@@ -179,7 +183,9 @@ const EditableField = ({
 						<Button
 							onClick={handleSaveEdit}
 							className="bg-primary hover:bg-primary-hover rounded-r-lg px-4"
-							aria-label={`Guardar ${label}`}
+							aria-label={t("arialabels.component.editableField.save", {
+								label,
+							})}
 						>
 							<IconSave className="text-white" />
 						</Button>

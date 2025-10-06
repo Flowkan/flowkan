@@ -20,10 +20,7 @@ export const useDeleteAccount = () => {
 			navigate("/", { replace: true });
 			return true;
 		} catch (err: unknown) {
-			if (err instanceof Error)
-				console.error(
-					t("deleteaccount.error", "Hubo un error al eliminar la cuenta."),
-				);
+			if (err instanceof Error) console.error(t("deleteAccount.error"));
 			return false;
 		} finally {
 			setLoading(false);

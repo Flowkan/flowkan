@@ -23,7 +23,7 @@ export const VerifyPendingPage: React.FC = () => {
 					/>
 
 					<h1 className="mt-4 text-3xl font-extrabold tracking-tight text-gray-900">
-						{t("verifyPending.title", "Verifica tu Correo Electrónico")}
+						{t("verifyPending.title")}
 					</h1>
 				</div>
 
@@ -32,10 +32,7 @@ export const VerifyPendingPage: React.FC = () => {
 						{t("verifyPending.success", "¡Registro exitoso!")}
 					</p>
 					<p className="mt-2 text-xl font-medium text-blue-700">
-						{t(
-							"verifyPending.emailSent",
-							"Te hemos enviado un email para validar tu cuenta.",
-						)}
+						{t("verifyPending.emailSent")}
 					</p>
 				</div>
 
@@ -47,22 +44,14 @@ export const VerifyPendingPage: React.FC = () => {
 						/>
 						<div className="ml-3 text-left">
 							<p className="font-semibold">
-								{t("verifyPending.actionRequired", "Acción Requerida:")}
+								{t("verifyPending.actionRequired")}
 							</p>
 							<p className="mt-1">
-								{t(
-									"verifyPending.instruction1",
-									"Haz clic en el enlace de confirmación dentro del correo electrónico que enviamos a:",
-								)}
+								{t("verifyPending.instruction1")}
 								<br />
 								<strong className="break-all text-blue-800">{userEmail}</strong>
 							</p>
-							<p className="mt-2">
-								{t(
-									"verifyPending.instruction2",
-									"¿No lo encuentras? Revisa tu carpeta de spam o correo no deseado.",
-								)}
-							</p>
+							<p className="mt-2">{t("verifyPending.instruction2")}</p>
 						</div>
 					</div>
 				</div>
@@ -76,9 +65,7 @@ export const VerifyPendingPage: React.FC = () => {
 							icon="lucide:corner-down-right"
 							className="h-5 w-5 text-gray-300 transition-transform duration-150 ease-in-out group-hover:translate-x-1"
 						/>
-						<span className="ml-2">
-							{t("verifyPending.goToLogin", "Entendido, ir a Iniciar Sesión")}
-						</span>
+						<span className="ml-2">{t("verifyPending.goToLogin")}</span>
 					</NavLink>
 				</div>
 			</div>

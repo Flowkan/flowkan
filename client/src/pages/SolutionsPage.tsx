@@ -128,16 +128,10 @@ export const SolutionsPage: React.FC = () => {
 				<section className="from-accent to-primary-dark text-shadow-text-body relative overflow-hidden bg-gradient-to-br px-6 py-20 md:px-12">
 					<div className="relative z-10 mx-auto max-w-7xl text-center">
 						<h1 className="mb-4 text-4xl leading-tight font-extrabold md:text-5xl">
-							{t(
-								"solutions.banner.title",
-								"Flowkan se adapta a cualquier flujo de trabajo",
-							)}
+							{t("solutions.banner.title")}
 						</h1>
 						<p className="mb-8 text-xl font-light md:text-2xl">
-							{t(
-								"solutions.banner.subtitle",
-								"Descubre cómo miles de equipos en diferentes industrias usan nuestra plataforma.",
-							)}
+							{t("solutions.banner.subtitle")}
 						</p>
 					</div>
 
@@ -150,7 +144,7 @@ export const SolutionsPage: React.FC = () => {
 				<section className="bg-background-light-grey px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-7xl">
 						<h2 className="text-text-heading mb-16 text-center text-3xl font-bold md:text-4xl">
-							{t("solutions.main.title", "Encuentra tu Solución Perfecta")}
+							{t("solutions.main.title")}
 						</h2>
 
 						<div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
@@ -170,10 +164,7 @@ export const SolutionsPage: React.FC = () => {
 										{t(`solutions.list.${solution.key}.title`, solution.key)}
 									</h3>
 									<p className="text-text-body mb-4 text-center">
-										{t(
-											`solutions.list.${solution.key}.description`,
-											"Descripción detallada de cómo nuestra herramienta resuelve este caso de uso.",
-										)}
+										{t(`solutions.list.${solution.key}.description`)}
 									</p>
 									{/* LINKS TODAVIA NO VAN A NINGUNA PARTE
 									<Link
@@ -191,22 +182,16 @@ export const SolutionsPage: React.FC = () => {
 				<section className="bg-background-page px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-7xl text-center">
 						<h2 className="text-text-heading mb-4 text-3xl font-bold md:text-4xl">
-							{t(
-								"solutions.cta.title",
-								"¿Listo para Implementar tu Solución Kanban?",
-							)}
+							{t("solutions.cta.title")}
 						</h2>
 						<p className="text-text-body mb-8 text-lg">
-							{t(
-								"solutions.cta.subtitle",
-								"Crea tu espacio de trabajo y configura tu primer tablero en minutos para ver el potencial completo.",
-							)}
+							{t("solutions.cta.subtitle")}
 						</p>
 						<Link
 							to="/register"
 							className="bg-primary text-text-on-accent hover:bg-primary-dark transform rounded-lg px-8 py-4 text-lg font-semibold shadow-lg transition duration-300 hover:scale-105"
 						>
-							{t("solutions.cta.button", "Comenzar Ahora")} &rarr;
+							{t("solutions.cta.button")} &rarr;
 						</Link>
 					</div>
 				</section>

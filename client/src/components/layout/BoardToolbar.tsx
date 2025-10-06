@@ -58,7 +58,7 @@ export function BoardToolbar({ boardId, image }: BoardToolbarProps) {
 							onClick={handleShowShareForm}
 							className="bg-primary hover:bg-primary-hover rounded px-3 py-1 text-white"
 						>
-							{t("toolbar.share", "Compartir")}
+							{t("toolbar.share")}
 						</button>
 					</div>
 				</div>

@@ -26,10 +26,7 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 
 	const handleGenerateLink = async () => {
 		if (!boardId) {
-			const setErrorMsgId = t(
-				"share.error.id",
-				"No se puede generar el enlace: el ID del tablero no está definido.",
-			);
+			const setErrorMsgId = t("share.error.id");
 			setError(setErrorMsgId);
 			return;
 		}
@@ -48,10 +45,7 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 			setInvitationLink(fullInvitationUrl);
 			setStatus("succeeded");
 		} catch (err) {
-			const setErrorMsgLink = t(
-				"share.error.link",
-				"Error al generar el enlace de invitación.",
-			);
+			const setErrorMsgLink = t("share.error.link");
 			setStatus("failed");
 			setError(setErrorMsgLink);
 			console.error(err);
@@ -67,14 +61,11 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 			<article className="relative mx-auto w-full max-w-md rounded-lg bg-white p-8 shadow-xl dark:bg-gray-800">
 				<CloseButton onClick={handleClose} className="absolute top-4 right-4" />
 				<h3 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">
-					{t("share.board.title", "Compartir tablero")}
+					{t("share.board.title")}
 				</h3>
 				<div className="invitation-link-section mt-6 border-t border-gray-200 pt-4 dark:border-gray-700">
 					<p className="mb-2 text-gray-700 dark:text-gray-300">
-						{t(
-							"share.board.link.text",
-							"Genera un enlace de invitación que puedes compartir con quien quieras.",
-						)}
+						{t("share.board.link.text")}
 					</p>
 					{!invitationLink && (
 						<Button
@@ -84,8 +75,8 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 							disabled={status === "loading"}
 						>
 							{status === "loading"
-								? "Creando enlace..."
-								: t("share.board.link.button", "Generar enlace de invitación")}
+								? t("share.board.link.creating")
+								: t("share.board.link.button")}
 						</Button>
 					)}
 					{invitationLink && (
@@ -97,7 +88,7 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 								onClick={handleCopyLink}
 								className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-300 p-1 text-xs font-bold transition-colors hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
 							>
-								{t("shate.board.link.copy", "Copiar")}
+								{t("shate.board.link.copy")}
 							</Button>
 						</div>
 					)}

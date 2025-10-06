@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { t } from "i18next";
 
 interface ErrorBoundaryProps {
 	children: ReactNode;
@@ -33,7 +34,9 @@ class ErrorBoundary extends Component<
 
 		return (
 			<div className="rounded-md border border-red-200 bg-red-50 p-6 shadow-sm">
-				<h1 className="mb-4 text-2xl font-semibold text-red-700">Oooops!!!!</h1>
+				<h1 className="mb-4 text-2xl font-semibold text-red-700">
+					{t("errorBoundary", "Oooops!!!!")}
+				</h1>
 				<div className="mb-2">
 					<code className="block rounded bg-red-100 p-2 text-sm text-red-800">
 						{error.message}

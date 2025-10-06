@@ -65,7 +65,7 @@ export const WithOtherServices = () => {
 				</div>
 				<div className="relative flex justify-center text-sm">
 					<span className="bg-background-card text-text-placeholder px-2">
-						{t("register.withOtherService.otherTypeRegister", "O continúa con")}
+						{t("register.withOtherService.otherTypeRegister")}
 					</span>
 				</div>
 			</div>

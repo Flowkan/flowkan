@@ -149,7 +149,7 @@ const Profile = () => {
 					<Banner className="inline-block h-full w-full rounded-t-xl object-cover" />
 
 					<span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-2xl font-bold whitespace-nowrap text-gray-50 drop-shadow-lg md:text-4xl">
-						{t("profile.title", "Perfil de Usuario")}
+						{t("profile.title")}
 					</span>
 				</h2>
 				<div className="p-4 pt-0 md:p-8">
@@ -187,10 +187,7 @@ const Profile = () => {
 									</span>
 								</div>
 								<Switch
-									label={t(
-										"profile.switch.label",
-										"Permitir envío de notificaciones",
-									)}
+									label={t("profile.switch.label")}
 									name="allowNotifications"
 									onChange={handleChangeField}
 									checked={user.allowNotifications}
@@ -201,7 +198,7 @@ const Profile = () => {
 							<div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
 								<div>
 									<EditableField
-										label={t("profile.username", "Nombre de usuario")}
+										label={t("profile.username")}
 										name="username"
 										error={errors.username.error}
 										value={user.username ? user.username : ""}
@@ -216,7 +213,7 @@ const Profile = () => {
 								</div>
 								<div>
 									<EditableField
-										label={t("profile.email", "Email")}
+										label={t("profile.email")}
 										type="email"
 										name="email"
 										value={user.email}
@@ -230,7 +227,7 @@ const Profile = () => {
 
 								<div>
 									<EditableField
-										label={t("profile.birthdate", "Fec. Nacimiento")}
+										label={t("profile.birthdate")}
 										type="date"
 										name="dateBirth"
 										error={errors.dateBirth.error}
@@ -247,7 +244,7 @@ const Profile = () => {
 
 								<div>
 									<EditableField
-										label={t("profile.location", "Ubicación")}
+										label={t("profile.location")}
 										value={user.location ? user.location : ""}
 										type="text"
 										name="location"
@@ -265,7 +262,7 @@ const Profile = () => {
 
 							<div className="border-accent/30 border-t pt-4">
 								<EditableField
-									label={t("profile.bio", "Biografía")}
+									label={t("profile.bio")}
 									as="textarea"
 									name="bio"
 									error={errors.bio.error}
@@ -288,14 +285,11 @@ const Profile = () => {
 									disabled={loading}
 									className={`relative flex items-center justify-center gap-2 rounded-lg px-4 py-3 font-medium text-white ${loading ? "cursor-not-allowed bg-red-500 opacity-70" : "bg-red-600 hover:bg-red-700 active:scale-[0.98]"} shadow-md transition-all duration-200 hover:shadow-lg`}
 								>
-									{t("profile.deleteaccount", "Eliminar cuenta")}
+									{t("profile.deleteAccount")}
 								</Button>
 								{showModal && (
 									<ConfirmDelete
-										message={t(
-											"profile.confirmdelete",
-											"¿Estás seguro de eliminar su cuenta? Si lo haces se perderán todos sus datos, desea continuar?",
-										)}
+										message={t("profile.confirmDelete")}
 										handleDeleteBoard={async () => {
 											await handleDelete();
 											setShowModal(false);

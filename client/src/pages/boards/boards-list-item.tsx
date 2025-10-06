@@ -24,10 +24,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 				<ConfirmDelete
 					handleDeleteBoard={hooks.handleDeleteBoard}
 					handleHideMessage={hooks.handleHideMessage}
-					message={t(
-						"boardsitem.confirm",
-						"¿Seguro que quieres borrar este tablero?",
-					)}
+					message={t("boardsItem.confirm")}
 				/>
 			)}
 			{hooks.showEditForm && (

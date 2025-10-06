@@ -13,10 +13,10 @@ export const NotFound = () => {
 						404
 					</h1>
 					<p className="text-text-heading mt-4 text-3xl font-bold">
-						{t("notFound.title", "Página no encontrada")}
+						{t("notFound.title")}
 					</p>
 					<p className="text-text-body mt-2 text-lg">
-						{t("notFound.description", "Lo sentimos, no pudimos encontrar la página que buscas")}.
+						{t("notFound.description")}.
 					</p>
 
 					<div className="mt-8">
@@ -24,7 +24,7 @@ export const NotFound = () => {
 							to="/"
 							className="text-text-on-accent bg-accent hover:bg-accent-hover focus:ring-accent focus:ring-offset-background-card inline-flex transform items-center justify-center rounded-md border border-transparent px-6 py-3 text-lg font-semibold transition-all duration-300 hover:scale-[1.005] focus:ring-2 focus:ring-offset-2 focus:outline-none"
 						>
-							{t("notFound.backButton", "Volver a inicio")}
+							{t("notFound.backButton")}
 						</Link>
 					</div>
 				</div>

@@ -68,9 +68,7 @@ export const CustomToast: FC<CustomToastProps> = ({ message, t, type }) => {
 				onClick={() => toast.dismiss(t.id)}
 				className="ml-4 flex-shrink-0"
 			>
-				<span className="sr-only">
-					{translate("customtoast.close", "Cerrar")}
-				</span>
+				<span className="sr-only">{translate("customToast.close")}</span>
 				<svg
 					className="h-5 w-5 text-gray-400 hover:text-gray-500"
 					fill="none"

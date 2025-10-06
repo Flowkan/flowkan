@@ -46,20 +46,26 @@ const RegisterPage = () => {
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 	const fileRef = useRef<HTMLInputElement>(null);
 
-	const registerValidator = useCallback((data: unknown,fieldName?:keyof RegisterForm) => {
-		return validationForm(RegisterFormSchema, data,fieldName);
-	}, []);
+	const registerValidator = useCallback(
+		(data: unknown, fieldName?: keyof RegisterForm) => {
+			return validationForm(RegisterFormSchema, data, fieldName);
+		},
+		[],
+	);
 	const { error, validate } =
 		useValidationForm<RegisterForm>(registerValidator);
 
-	const handleBlur = (e: FocusEvent<HTMLInputElement, Element>) => {		
-		validate({
-			name: formData.name,
-			email: formData.email,
-			password: formData.password,
-			confirmPassword: formData.confirmPassword,
-			photo: formData.photo,
-		},e.target.name as keyof RegisterForm);
+	const handleBlur = (e: FocusEvent<HTMLInputElement, Element>) => {
+		validate(
+			{
+				name: formData.name,
+				email: formData.email,
+				password: formData.password,
+				confirmPassword: formData.confirmPassword,
+				photo: formData.photo,
+			},
+			e.target.name as keyof RegisterForm,
+		);
 	};
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, type, value, files } = e.target;
@@ -84,11 +90,11 @@ const RegisterPage = () => {
 				confirmPassword: formData.confirmPassword,
 				photo: formData.photo,
 			});
-			if (!isValid) {								
+			if (!isValid) {
 				setIsSubmitting(false);
 				return;
-			} 
-				
+			}
+
 			await register(formData);
 			navigate("/verify-pending", {
 				state: {
@@ -99,10 +105,7 @@ const RegisterPage = () => {
 			if (error instanceof Error) {
 				toast.custom((t) => (
 					<CustomToast
-						message={__(
-							"register.registerForm.message.error",
-							"Ha ocurrido un error inesperado durante el registro.",
-						)}
+						message={__("register.registerForm.message.error")}
 						t={t}
 						type="error"
 					/>
@@ -127,16 +130,16 @@ const RegisterPage = () => {
 				<div className="bg-background-card w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl transition-all duration-300 hover:scale-[1.01]">
 					<div>
 						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
-							{t("register.registerForm.title", "Crea tu Cuenta")}
+							{t("register.registerForm.title")}
 						</h1>
 						<p className="text-text-body mt-2 text-center text-sm">
-							{t("register.registerForm.question", "¿Ya tienes una cuenta?")}
+							{t("register.registerForm.question")}
 							<NavLink
 								to="/login"
 								className="text-text-link hover:text-accent-hover font-medium"
 							>
 								{" "}
-								{t("register.registerForm.login", "Inicia sesión aquí")}
+								{t("register.registerForm.login")}
 							</NavLink>
 						</p>
 					</div>
@@ -227,17 +230,14 @@ const RegisterPage = () => {
 							</div>
 
 							<FormFields
-								label={t("register.registerForm.name.label", "Nombre Completo")}
+								label={t("register.registerForm.name.label")}
 								labelClassName="sr-only"
 								id="full-name"
 								name="name"
 								autoComplete="name"
 								required
 								className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-								placeholder={t(
-									"register.registerForm.name.placeholder",
-									"Nombre completo",
-								)}
+								placeholder={t("register.registerForm.name.placeholder")}
 								onChange={handleChange}
 								value={name}
 								errors={error?.name}
@@ -245,10 +245,7 @@ const RegisterPage = () => {
 							/>
 
 							<FormFields
-								label={t(
-									"register.registerForm.email.label",
-									"Dirección de Email",
-								)}
+								label={t("register.registerForm.email.label")}
 								labelClassName="sr-only"
 								id="email-address"
 								name="email"
@@ -256,10 +253,7 @@ const RegisterPage = () => {
 								autoComplete="email"
 								required
 								className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-								placeholder={t(
-									"register.registerForm.email.placeholder",
-									"Correo electrónico",
-								)}
+								placeholder={t("register.registerForm.email.placeholder")}
 								onChange={handleChange}
 								value={email}
 								errors={error?.email}
@@ -267,7 +261,7 @@ const RegisterPage = () => {
 							/>
 
 							<FormFields
-								label={t("register.registerForm.password.label", "Contraseña")}
+								label={t("register.registerForm.password.label")}
 								labelClassName="sr-only"
 								id="password"
 								name="password"
@@ -275,10 +269,7 @@ const RegisterPage = () => {
 								autoComplete="new-password"
 								required
 								className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
-								placeholder={t(
-									"register.registerForm.password.placeholder",
-									"Contraseña",
-								)}
+								placeholder={t("register.registerForm.password.placeholder")}
 								onChange={handleChange}
 								value={password}
 								errors={error?.password}
@@ -286,10 +277,7 @@ const RegisterPage = () => {
 							/>
 
 							<FormFields
-								label={t(
-									"register.registerForm.confirmPassword.label",
-									"Confirmar Contraseña",
-								)}
+								label={t("register.registerForm.confirmPassword.label")}
 								labelClassName="sr-only"
 								id="confirm-password"
 								name="confirmPassword"
@@ -299,7 +287,6 @@ const RegisterPage = () => {
 								className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
 								placeholder={t(
 									"register.registerForm.confirmPassword.placeholder",
-									"Confirmar contraseña",
 								)}
 								onChange={handleChange}
 								value={confirmPassword}
@@ -330,14 +317,10 @@ const RegisterPage = () => {
 									<SpinnerLoadingText
 										text={t(
 											"register.registerForm.registerButton.spinner.loading",
-											"Registrando",
 										)}
 									/>
 								) : (
-									t(
-										"register.registerForm.registerButton.spinner.default",
-										"Registrarse",
-									)
+									t("register.registerForm.registerButton.spinner.default")
 								)}
 							</Button>
 						</div>

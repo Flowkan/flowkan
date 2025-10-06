@@ -7,37 +7,31 @@ export const PricingPage: React.FC = () => {
 	const { t } = useTranslation();
 
 	const features = [
-		t("pricing.feature1", "Tableros Ilimitados"),
-		t("pricing.feature2", "Colaboradores Ilimitados"),
-		t("pricing.feature3", "Arrastrar y Soltar"),
-		t("pricing.feature4", "Adjuntos Ilimitados"),
-		t("pricing.feature5", "Plantillas Personalizadas"),
-		t("pricing.feature6", "Soporte Prioritario 24/7"),
-		t("pricing.feature7", "Integraciones Avanzadas"),
+		t("pricing.feature1"),
+		t("pricing.feature2"),
+		t("pricing.feature3"),
+		t("pricing.feature4"),
+		t("pricing.feature5"),
+		t("pricing.feature6"),
+		t("pricing.feature7"),
 	];
 
 	const plans = [
 		{
-			name: t("pricing.plan.basic.title", "Básico"),
-			price: t("pricing.plan.basic.price", "Gratis"),
+			name: t("pricing.plan.basic.title"),
+			price: t("pricing.plan.basic.price"),
 			isFree: true,
-			description: t(
-				"pricing.plan.basic.description",
-				"Para uso personal y equipos pequeños que están comenzando.",
-			),
+			description: t("pricing.plan.basic.description"),
 			features: features.slice(0, 4),
 			theme: "text-accent border-accent",
 			bg: "bg-accent-lightest",
 			buttonClasses: "bg-accent hover:bg-accent-dark text-text-on-accent",
 		},
 		{
-			name: t("pricing.plan.pro.title", "Pro"),
-			price: t("pricing.plan.pro.price", "9.99€"),
+			name: t("pricing.plan.pro.title"),
+			price: t("pricing.plan.pro.price"),
 			isFree: false,
-			description: t(
-				"pricing.plan.pro.description",
-				"Gestión de proyectos avanzada para equipos en crecimiento.",
-			),
+			description: t("pricing.plan.pro.description"),
 			features: features.slice(0, 6),
 			theme: "text-primary border-primary",
 			bg: "bg-primary-lightest",
@@ -45,13 +39,10 @@ export const PricingPage: React.FC = () => {
 			buttonClasses: "bg-primary hover:bg-primary-dark text-text-on-accent",
 		},
 		{
-			name: t("pricing.plan.business.title", "Business"),
-			price: t("pricing.plan.business.price", "19.99 €"),
+			name: t("pricing.plan.business.title"),
+			price: t("pricing.plan.business.price"),
 			isFree: false,
-			description: t(
-				"pricing.plan.business.description",
-				"Solución completa para empresas que requieren alta escalabilidad.",
-			),
+			description: t("pricing.plan.business.description"),
 			features: features,
 			theme: "text-primary-dark border-primary-dark",
 			bg: "bg-background-light-grey",
@@ -65,20 +56,12 @@ export const PricingPage: React.FC = () => {
 				<section className="from-accent to-primary-dark text-shadow-text-body relative overflow-hidden bg-gradient-to-br px-6 py-20 md:px-12">
 					<div className="relative z-10 mx-auto max-w-7xl text-center">
 						<h1 className="mb-4 text-4xl leading-tight font-extrabold md:text-5xl">
-							{t("pricing.title", "Planes Simples y Transparentes")}
+							{t("pricing.title")}
 						</h1>
 						<p className="mb-8 text-xl font-light md:text-2xl">
-							{t(
-								"pricing.subtitle",
-								"Encuentra la solución perfecta para tu equipo o tus proyectos personales.",
-							)}
+							{t("pricing.subtitle")}
 						</p>
-						<p className="text-sm italic opacity-80">
-							{t(
-								"pricing.billing",
-								"Todos los precios son por usuario/mes, facturados mensualmente.",
-							)}
-						</p>
+						<p className="text-sm italic opacity-80">{t("pricing.billing")}</p>
 					</div>
 				</section>
 
@@ -92,7 +75,7 @@ export const PricingPage: React.FC = () => {
 								>
 									{plan.isPopular && (
 										<div className="text-text-on-accent bg-primary absolute -top-3 right-6 rounded-full px-3 py-1 text-xs font-bold tracking-wider uppercase">
-											{t("pricing.popular", "Más Popular")}
+											{t("pricing.popular")}
 										</div>
 									)}
 									<h2 className={`${plan.theme} mb-2 text-2xl font-bold`}>
@@ -110,7 +93,7 @@ export const PricingPage: React.FC = () => {
 										</span>
 										{!plan.isFree && (
 											<span className="text-text-body ml-1 text-lg font-medium">
-												{t("pricing.perMonth", "/mes")}
+												{t("pricing.perMonth")}
 											</span>
 										)}
 									</p>
@@ -120,13 +103,13 @@ export const PricingPage: React.FC = () => {
 										className={`transform rounded-lg px-8 py-3 text-center text-lg font-semibold shadow-lg transition duration-300 hover:scale-[1.02] ${plan.buttonClasses}`}
 									>
 										{plan.isFree
-											? t("pricing.getStarted", "Comenzar Gratis")
-											: t("pricing.subscribe", "Suscribirse")}
+											? t("pricing.getStarted")
+											: t("pricing.subscribe")}
 									</Link>
 
 									<div className="text-text-body border-border-medium mt-8 border-t pt-6">
 										<p className="text-text-heading mb-4 text-sm font-semibold uppercase">
-											{t("pricing.featuresList", "Incluye:")}
+											{t("pricing.featuresList")}
 										</p>
 										<ul className="space-y-3">
 											{plan.features.map((feature, index) => (
@@ -159,19 +142,16 @@ export const PricingPage: React.FC = () => {
 				<section className="bg-background-page px-6 py-20 md:px-12">
 					<div className="mx-auto max-w-7xl text-center">
 						<h2 className="text-text-heading mb-4 text-3xl font-bold md:text-4xl">
-							{t("pricing.faq.title", "¿Tienes Preguntas?")}
+							{t("pricing.faq.title")}
 						</h2>
 						<p className="text-text-body mb-8 text-lg">
-							{t(
-								"pricing.faq.subtitle",
-								"Consulta nuestra sección de preguntas frecuentes o contáctanos directamente.",
-							)}
+							{t("pricing.faq.subtitle")}
 						</p>
 						<Link
 							to="/contact"
 							className="bg-accent text-text-on-accent hover:bg-accent-dark transform rounded-lg px-8 py-4 text-lg font-semibold shadow-lg transition duration-300 hover:scale-105"
 						>
-							{t("pricing.contact", "Contactar con Soporte")}
+							{t("pricing.contact")}
 						</Link>
 					</div>
 				</section>

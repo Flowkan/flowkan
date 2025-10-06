@@ -74,16 +74,13 @@ const ChangePassword = () => {
 							<IconLogo width={120} height={40} className="h-auto w-24" />
 						</div>
 						<h2 className="text-lg font-semibold text-zinc-300 md:text-xl">
-							{t("recovery_password.form.title", "Cambiar Contraseña")}
+							{t("recoveryPassword.form.title")}
 						</h2>
 					</div>
 					<div className="flex flex-col gap-2">
 						<FormFields
 							value={password}
-							label={t(
-								"recovery_password.form.field.new_password",
-								"Nueva contraseña",
-							)}
+							label={t("recoveryPassword.form.field.newPassword")}
 							labelClassName="text-xs font-thin tracking-tight text-gray-100"
 							name="password"
 							onChange={handleChange}
@@ -98,10 +95,7 @@ const ChangePassword = () => {
 					</div>
 					<div className="flex flex-col gap-2">
 						<FormFields
-							label={t(
-								"recovery_password.form.field.confirm_password",
-								"Repetir contraseña",
-							)}
+							label={t("recoveryPassword.form.field.confirmPassword")}
 							labelClassName="text-xs font-thin tracking-tight text-gray-100"
 							value={confirmPassword}
 							name="confirmPassword"
@@ -121,7 +115,7 @@ const ChangePassword = () => {
 						<input
 							className="bg-primary hover:bg-primary-hover cursor-pointer rounded-2xl px-4 py-3 text-xs font-thin tracking-wide text-gray-100 transition-colors duration-300"
 							type="submit"
-							value={t("recovery_password.save", "Guardar Cambios")}
+							value={t("recoveryPassword.save")}
 						/>
 					</div>
 				</form>

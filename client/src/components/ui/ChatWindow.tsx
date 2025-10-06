@@ -49,9 +49,7 @@ export function ChatWindow({ boardId }: ChatWindowProps) {
 			{open && (
 				<div className="fixed right-0 bottom-0 z-50 flex h-[70vh] w-full flex-col rounded-t-lg border bg-white shadow-lg sm:right-4 sm:bottom-4 sm:h-96 sm:w-80 sm:rounded-lg">
 					<div className="flex items-center justify-between border-b p-2">
-						<span className="font-bold">
-							{t("chat.title", "Chat del tablero")}
-						</span>
+						<span className="font-bold">{t("chat.title")}</span>
 						<button onClick={() => setOpen(false)}>
 							<Icon
 								icon="mdi:close"
@@ -96,13 +94,13 @@ export function ChatWindow({ boardId }: ChatWindowProps) {
 							onChange={(e) => setText(e.target.value)}
 							onKeyDown={(e) => e.key === "Enter" && handleSend()}
 							className="flex-grow px-2 py-2 text-sm outline-none"
-							placeholder={t("chat.input", "Escribe un mensaje...")}
+							placeholder={t("chat.input")}
 						/>
 						<button
 							onClick={handleSend}
 							className="bg-primary hover:bg-primary/90 rounded-r px-4 text-white"
 						>
-							{t("chat.send", "Enviar")}
+							{t("chat.send")}
 						</button>
 					</div>
 				</div>

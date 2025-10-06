@@ -38,13 +38,13 @@ export const Header: React.FC = () => {
 
 				<nav className="text-text-body hidden space-x-6 md:flex">
 					<a href="/features" className="hover:border-accent hover:border-b-2">
-						{t("header.navbar.features", "Características")}
+						{t("header.navbar.features")}
 					</a>
 					<a href="/solutions" className="hover:border-accent hover:border-b-2">
-						{t("header.navbar.solutions", "Soluciones")}
+						{t("header.navbar.solutions")}
 					</a>
 					<a href="/prices" className="hover:border-accent hover:border-b-2">
-						{t("header.navbar.prices", "Precios")}
+						{t("header.navbar.prices")}
 					</a>
 					{isAuthenticated && user && (
 						<NavLink
@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
 								"text-primary hover:text-primary-hover rounded-lg px-4 text-center font-semibold"
 							}
 						>
-							{t("header.boardslist.title", "Mis tableros")}
+							{t("header.navbar.boardsList")}
 						</NavLink>
 					)}
 				</nav>
@@ -70,13 +70,13 @@ export const Header: React.FC = () => {
 					) : (
 						<div className="flex space-x-2">
 							<NavLink className="px-4 py-2" to="/login">
-								{t("header.login", "Login")}
+								{t("header.login")}
 							</NavLink>
 							<NavLink
 								className="bg-primary text-text-on-accent hover:bg-primary-dark rounded-lg px-4 py-2 text-center font-semibold"
 								to="/register"
 							>
-								{t("header.signup", "Registro")}
+								{t("header.signup")}
 							</NavLink>
 						</div>
 					)}
@@ -86,9 +86,7 @@ export const Header: React.FC = () => {
 					className="text-text-heading p-2 md:hidden"
 					onClick={() => setIsOpen(!isOpen)}
 					aria-label={
-						isOpen
-							? t("header.btnmenu.close", "Cerrar menú")
-							: t("header.btnmenu.open", "Abrir menú")
+						isOpen ? t("header.btnmenu.close") : t("header.btnmenu.open")
 					}
 				>
 					<Icon icon="lucide:menu" className="h-6 w-6" />
@@ -112,7 +110,7 @@ export const Header: React.FC = () => {
 						<button
 							className="text-text-heading p-2"
 							onClick={() => setIsOpen(false)}
-							aria-label={t("header.btnmenu.close", "Cerrar menú")}
+							aria-label={t("header.btnmenu.close")}
 						>
 							<Icon icon="lucide:x" className="h-6 w-6" />
 						</button>
@@ -123,21 +121,21 @@ export const Header: React.FC = () => {
 						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
 						onClick={() => setIsOpen(false)}
 					>
-						{t("header.navbar.features", "Características")}
+						{t("header.navbar.features")}
 					</NavLink>
 					<NavLink
 						to="/solutions"
 						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
 						onClick={() => setIsOpen(false)}
 					>
-						{t("header.navbar.solutions", "Soluciones")}
+						{t("header.navbar.solutions")}
 					</NavLink>
 					<NavLink
 						to="/prices"
 						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
 						onClick={() => setIsOpen(false)}
 					>
-						{t("header.navbar.prices", "Precios")}
+						{t("header.navbar.prices")}
 					</NavLink>
 
 					{isAuthenticated && user && (
@@ -146,7 +144,7 @@ export const Header: React.FC = () => {
 							className="text-primary block rounded-md px-3 py-2 font-medium transition-colors"
 							onClick={() => setIsOpen(false)}
 						>
-							{t("boardslist.title", "Mis tableros")}
+							{t("header.navbar.boardsList")}
 						</NavLink>
 					)}
 
@@ -157,14 +155,14 @@ export const Header: React.FC = () => {
 								className="text-text-body hover:bg-background-light-grey rounded-lg px-4 py-2 text-center font-semibold"
 								onClick={() => setIsOpen(false)}
 							>
-								{t("header.login", "Login")}
+								{t("header.login")}
 							</NavLink>
 							<NavLink
 								to="/register"
 								className="bg-primary text-text-on-accent hover:bg-primary-dark rounded-lg px-4 py-2 text-center font-semibold"
 								onClick={() => setIsOpen(false)}
 							>
-								{t("header.signup", "Registro")}
+								{t("header.signup")}
 							</NavLink>
 						</div>
 					)}
@@ -172,13 +170,13 @@ export const Header: React.FC = () => {
 					{isAuthenticated && user && (
 						<div className="border-t border-gray-100 pt-4">
 							<span className="text-text-body block px-3 py-2 font-medium">
-								{t("header.welcome", "Bienvenido")}, {user.name}
+								{t("header.welcome")}, {user.name}
 							</span>
 							<Button
 								onClick={handleLogout}
 								className="bg-primary text-text-on-accent hover:bg-error-dark mt-4 w-full rounded-lg px-4 py-2 text-center font-semibold"
 							>
-								{t("header.menu.logout", "Cerrar sesión")}
+								{t("header.menu.logout")}
 							</Button>
 						</div>
 					)}

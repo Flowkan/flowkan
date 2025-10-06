@@ -13,7 +13,7 @@ const TrashButton = ({ showConfirm }: TrashButtonProps) => {
 		<Button
 			className="trash-btn"
 			onClick={(ev) => showConfirm(ev)}
-			title={t("trashbtn.title", "Eliminar")}
+			title={t("trashBtn.title")}
 		>
 			<Icon
 				name="trash"
