@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent, type JSX } from "react";
+import { useRef, useState, type ChangeEvent, type JSX } from "react";
 import { Button } from "./Button";
 import { FormFields } from "./FormFields";
 import { IconCamera } from "../icons/IconCamera";
@@ -6,16 +6,15 @@ import { IconPlus } from "../icons/IconPlus";
 import { IconSave } from "../icons/IconSave";
 import { IconCancel } from "../icons/IconCancel";
 import type { ProfileUpdateType } from "../../pages/profile/types";
-// import type { ProfileUpdateType } from "../../pages/profile/types";
-// import type { C } from "vitest/dist/chunks/environment.d.cL3nLXbE.js";
 
 interface UploadImageProps {
-	previewUrl?: string;
+	previewUrl: string;
 	onChange: (e: ChangeEvent<HTMLInputElement>, name: string) => void;
 	error?: boolean;
 	name: string;
 	icon?: JSX.Element;
 	onSubmit?: (field: keyof ProfileUpdateType) => void;
+	value?: string | File;
 }
 
 const UploadImage = ({
@@ -24,42 +23,44 @@ const UploadImage = ({
 	icon,
 	name,
 	onSubmit,
-	error = false,
+	error = false,	
 }: UploadImageProps) => {
 	const fileRef = useRef<HTMLInputElement>(null);
-	const [newImage, setNewImage] = useState(previewUrl || "");
+	const [newImage, setNewImage] = useState(previewUrl);
 	const [onEdit, setOnEdit] = useState(false);
+	const oldImage = useRef(previewUrl);
 	function handleChange(e: ChangeEvent<HTMLInputElement>) {
+		console.log(name);
 		const file = fileRef.current?.files?.[0];
 		if (file) {
 			setNewImage(URL.createObjectURL(file));
-			onChange(e, name);
+			onChange(e, name);		
+			
+			setOnEdit(true);			
 		}
 	}
+	
 	function handleCancel() {
-		setNewImage(previewUrl ?? "");
+		setOnEdit(false);
+		
 		const e = {
 			target: { value: "", name, files: null, type: "file" },
 			currentTarget: { value: "", name, files: null, type: "file" },
 		} as ChangeEvent<HTMLInputElement>;
 		onChange(e, name);
+		setNewImage(oldImage.current)
+		fileRef.current!.value = ""
+		
 	}
 	function handleSubmit() {
 		if (onSubmit) {
-			onSubmit(name as keyof ProfileUpdateType);
-			// setNewImage(previewUrl as string)
+			onSubmit(name as keyof ProfileUpdateType);			
 			setOnEdit(false);
 		}
-	}
-	useEffect(() => {
-		if (previewUrl) {
-			setNewImage(previewUrl);
-		}
-	}, [previewUrl]);
+	}	
 
 	function handleSelectImage() {
 		fileRef.current?.click();
-		setOnEdit(true);
 	}
 
 	return (

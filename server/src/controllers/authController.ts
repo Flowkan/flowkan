@@ -59,17 +59,7 @@ export class AuthController {
           });
         },
       );    
-      
-      const frontendUrl = process.env.FRONTEND_WEB_URL || 'http://localhost:5173'
-
-      await sendEmailTask({
-        type:'WELCOME',
-        to:'jairom94@gmail.com',
-        data:{
-          name:user.name,
-          url:frontendUrl,
-        }        
-      })  
+                    
     } catch (err) {
       next(err);
     }
@@ -102,14 +92,7 @@ export class AuthController {
       const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET, {
         expiresIn: "1d",
       });
-
-      // await sendEmail(
-      //   newUser.email,
-      //   "Confirma tu cuenta",
-      //   `<h1>Bienvenido ${newUser.name}!</h1>
-      //         <p>Haz click <a href="${process.env.FRONTEND_WEB_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
-      // );
-
+      
       const frontendUrl = process.env.FRONTEND_WEB_URL || 'http://localhost:5173'
       
       await sendEmailTask({
