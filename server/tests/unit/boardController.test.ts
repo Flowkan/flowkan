@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import { BoardController } from "../../src/controllers/boardController";
 import AuthService from "../../src/services/AuthService";
 import BoardService from "../../src/services/BoardService";
@@ -39,9 +40,15 @@ jest.mock("jsonwebtoken", () => {
   };
 });
 
+type MockRequest = Partial<Request> & {
+  apiUserId?: number;
+  query: Record<string, any>;
+  params: Record<string, any>;
+};
+
 let boardController: BoardController;
-let req: any;
-let res: any;
+let req: MockRequest;
+let res: Partial<Response>;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -73,7 +80,7 @@ describe("boardController - happy path", () => {
       .fn()
       .mockResolvedValue(mockBoards);
 
-    await boardController.getAll(req, res);
+    await boardController.getAll(req as Request, res as Response);
 
     expect(mockBoardService.getAllBoardsByUserId).toHaveBeenCalledWith(
       1,
@@ -100,7 +107,7 @@ describe("boardController - happy path", () => {
 
     req.query.withCount = "true";
 
-    await boardController.getAll(req, res);
+    await boardController.getAll(req as Request, res as Response);
 
     expect(mockBoardService.getAllBoardsByUserId).toHaveBeenCalledWith(
       1,
@@ -128,7 +135,7 @@ describe("boardController - happy path", () => {
     const mockBoard = { userId: 1, title: "Board 1" };
     mockBoardService.get = jest.fn().mockResolvedValue(mockBoard);
 
-    await boardController.get(req, res);
+    await boardController.get(req as Request, res as Response);
 
     expect(mockBoardService.get).toHaveBeenCalledWith({
       userId: 1,
@@ -145,7 +152,7 @@ describe("boardController - happy path", () => {
     const mockBoards = [{ userId: 1, title: "Board 1", ownerId: 1 }];
     mockBoardService.getBoardByTitle = jest.fn().mockResolvedValue(mockBoards);
 
-    await boardController.getBoardByTitle(req, res);
+    await boardController.getBoardByTitle(req as Request, res as Response);
 
     expect(mockBoardService.getBoardByTitle).toHaveBeenCalledWith(1, "Board 1");
     expect(mockBoardService.getBoardByTitle).toHaveBeenCalledTimes(1);
@@ -162,7 +169,7 @@ describe("boardController - happy path", () => {
     ];
     mockBoardService.getBoardByMember = jest.fn().mockResolvedValue(mockBoards);
 
-    await boardController.getBoardByMember(req, res);
+    await boardController.getBoardByMember(req as Request, res as Response);
 
     expect(mockBoardService.getBoardByMember).toHaveBeenCalledWith(
       1,
@@ -179,7 +186,7 @@ describe("boardController - happy path", () => {
     const mockBoard = { id: 1, title: "Board 1", ownerId: 1 };
     mockBoardService.add = jest.fn().mockResolvedValue(mockBoard);
 
-    await boardController.add(req, res);
+    await boardController.add(req as Request, res as Response);
 
     expect(mockBoardService.add).toHaveBeenCalledWith({
       userId: 1,
@@ -200,7 +207,7 @@ describe("boardController - happy path", () => {
     const mockBoard = { id: 1, title: "New Title", ownerId: 1 };
     mockBoardService.update = jest.fn().mockResolvedValue(mockBoard);
 
-    await boardController.update(req, res);
+    await boardController.update(req as Request, res as Response);
 
     expect(mockBoardService.update).toHaveBeenCalledWith({
       userId: 1,
@@ -212,7 +219,7 @@ describe("boardController - happy path", () => {
   });
 
   test("should return an updated board with new image", async () => {
-    res.apiUserId = 1;
+    req.apiUserId = 1;
     req.params.id = "1";
     req.body = { image: "new-image.webp" };
 
@@ -235,7 +242,7 @@ describe("boardController - happy path", () => {
 
     mockBoardService.update = jest.fn().mockResolvedValue(mockUpdatedBoard);
 
-    await boardController.update(req, res);
+    await boardController.update(req as Request, res as Response);
 
     expect(mockBoardService.update).toHaveBeenCalledWith({
       userId: 1,
@@ -259,7 +266,7 @@ describe("boardController - happy path", () => {
       .mockResolvedValue({ id: 1, title: "Board 1" });
     mockBoardService.delete = jest.fn().mockResolvedValue(undefined);
 
-    await boardController.delete(req, res);
+    await boardController.delete(req as Request, res as Response);
 
     expect(mockBoardService.getById).toHaveBeenCalledWith({
       userId: 1,
@@ -287,7 +294,7 @@ describe("boardController - happy path", () => {
     mockBoardService.getById = jest.fn().mockResolvedValue(mockCurrentBoard);
     mockBoardService.delete = jest.fn().mockResolvedValue(undefined);
 
-    await boardController.delete(req, res);
+    await boardController.delete(req as Request, res as Response);
 
     expect(mockBoardService.getById).toHaveBeenCalledWith({
       userId: 1,
@@ -329,7 +336,7 @@ describe("boardController - happy path", () => {
     mockBoardService.getById = jest.fn().mockResolvedValue(mockBoard);
     mockAuthService.findById = jest.fn().mockResolvedValue(mockInviter);
 
-    await boardController.shareBoard(req, res);
+    await boardController.shareBoard(req as Request, res as Response);
 
     expect(mockBoardService.getById).toHaveBeenCalledWith({
       userId: 1,
@@ -368,7 +375,7 @@ describe("boardController - happy path", () => {
 
     mockBoardService.acceptInvitation = jest.fn().mockResolvedValue(undefined);
 
-    await boardController.acceptInvitation(req, res);
+    await boardController.acceptInvitation(req as Request, res as Response);
 
     expect(jwtMock.verify).toHaveBeenCalledWith(
       "fake-token",
@@ -396,7 +403,7 @@ describe("boardController - happy path", () => {
 
     mockBoardService.getBoardUsers = jest.fn().mockResolvedValue(mockUsers);
 
-    await boardController.boardUsers(req, res);
+    await boardController.boardUsers(req as Request, res as Response);
 
     expect(mockBoardService.getBoardUsers).toHaveBeenCalledWith({
       userId: 1,
@@ -423,7 +430,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("Database error"));
 
-    await boardController.getAll(req, res);
+    await boardController.getAll(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith("Error al obtener los tableros");
@@ -442,7 +449,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("Database error"));
 
-    await boardController.get(req, res);
+    await boardController.get(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith("Error al obtener el tablero");
@@ -460,7 +467,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("Database error"));
 
-    await boardController.getBoardByTitle(req, res);
+    await boardController.getBoardByTitle(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.send).toHaveBeenCalledWith(
@@ -477,7 +484,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("Database error"));
 
-    await boardController.getBoardByMember(req, res);
+    await boardController.getBoardByMember(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.send).toHaveBeenCalledWith("No hay tableros con este miembro");
@@ -492,7 +499,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("database error"));
 
-    await boardController.add(req, res);
+    await boardController.add(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith("Error al crear el tablero");
@@ -511,7 +518,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("database error"));
 
-    await boardController.add(req, res);
+    await boardController.add(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith("Error al crear el tablero");
@@ -535,7 +542,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("Database error"));
 
-    await boardController.update(req, res);
+    await boardController.update(req as Request, res as Response);
 
     expect(res.status).toHaveBeenLastCalledWith(500);
     expect(res.send).toHaveBeenCalledWith("Error al actualizar el tablero");
@@ -561,7 +568,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("Database error"));
 
-    await boardController.update(req, res);
+    await boardController.update(req as Request, res as Response);
 
     expect(res.status).toHaveBeenLastCalledWith(500);
     expect(res.send).toHaveBeenCalledWith("Error al actualizar el tablero");
@@ -583,7 +590,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("Database error"));
 
-    await boardController.delete(req, res);
+    await boardController.delete(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith("Error al eliminar el tablero");
@@ -601,7 +608,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("DB error"));
 
-    await boardController.shareBoard(req, res);
+    await boardController.shareBoard(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith(
@@ -624,7 +631,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("DB error"));
 
-    await boardController.shareBoard(req, res);
+    await boardController.shareBoard(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith(
@@ -655,7 +662,7 @@ describe("boardController - error path", () => {
       throw new Error("Token generation failed");
     });
 
-    await boardController.shareBoard(req, res);
+    await boardController.shareBoard(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith(
@@ -669,9 +676,9 @@ describe("boardController - error path", () => {
     req.apiUserId = 1;
     req.params.id = "1";
 
-    await expect(boardController.shareBoard(req, res)).rejects.toThrow(
-      "JWT_SECRET is not defined in environment variables",
-    );
+    await expect(
+      boardController.shareBoard(req as Request, res as Response),
+    ).rejects.toThrow("JWT_SECRET is not defined in environment variables");
   });
 
   test("should throw an error if boardService.acceptInvitation fails", async () => {
@@ -685,7 +692,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("Database error"));
 
-    await boardController.acceptInvitation(req, res);
+    await boardController.acceptInvitation(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith("Error al aceptar la invitación");
@@ -704,7 +711,7 @@ describe("boardController - error path", () => {
       throw new JsonWebTokenError("invalid token");
     });
 
-    await boardController.acceptInvitation(req, res);
+    await boardController.acceptInvitation(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.send).toHaveBeenCalledWith(
@@ -718,9 +725,9 @@ describe("boardController - error path", () => {
     req.apiUserId = 1;
     req.body = { token: "fake-token" };
 
-    await expect(boardController.acceptInvitation(req, res)).rejects.toThrow(
-      "JWT_SECRET no está en las variables de entorno",
-    );
+    await expect(
+      boardController.acceptInvitation(req as Request, res as Response),
+    ).rejects.toThrow("JWT_SECRET no está en las variables de entorno");
   });
 
   test("should return 500 if boardService.getBoardUsers fails", async () => {
@@ -731,7 +738,7 @@ describe("boardController - error path", () => {
       .fn()
       .mockRejectedValue(new Error("Database error"));
 
-    await boardController.boardUsers(req, res);
+    await boardController.boardUsers(req as Request, res as Response);
 
     expect(mockBoardService.getBoardUsers).toHaveBeenCalledWith({
       userId: 1,
