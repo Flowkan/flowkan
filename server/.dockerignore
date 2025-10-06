@@ -2,3 +2,5 @@ pgdata/
 node_modules/
 *.log
 .env
+
+react-email-starter/node_modules

@@ -76,5 +76,5 @@ router.get(
   }),
   controller.handleOAuthCallback,
 );
-
+router.delete("/remove", jwtAuth.guard, controller.deactivateUser);
 export default router;

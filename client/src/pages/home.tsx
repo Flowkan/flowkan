@@ -1,17 +1,47 @@
 import { useTranslation } from "react-i18next";
 import { Page } from "../components/layout/page";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Button } from "../components/ui/Button";
+import { createTimeline, stagger, splitText } from "animejs";
 
 export const HomePage: React.FC = () => {
 	const { t } = useTranslation();
+	const h1Ref = useRef<HTMLHeadingElement>(null);
+
+	useEffect(() => {
+		if (!h1Ref.current) return;
+
+		const { words } = splitText(h1Ref.current, {
+			words: { wrap: "clip" },
+			chars: true,
+		});
+
+		createTimeline({
+			loop: false,
+			defaults: { ease: "easeOutExpo", duration: 600 },
+		})
+			.add(
+				words,
+				{
+					y: ["100%", "0%"],
+					opacity: [0, 1],
+				},
+				stagger(100),
+			)
+
+			.init();
+	}, []);
+
 	return (
 		<Page>
 			<main className="bg-background-page text-text-heading flex-grow">
 				<section className="from-accent to-primary-dark text-text-on-accent relative overflow-hidden bg-gradient-to-br px-6 py-20 md:px-12">
 					<div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between lg:flex-row">
 						<div className="mb-10 text-center lg:mb-0 lg:w-1/2 lg:text-left">
-							<h1 className="mb-4 text-3xl leading-tight font-extrabold sm:text-4xl md:text-5xl lg:text-6xl">
+							<h1
+								ref={h1Ref}
+								className="mb-4 text-3xl leading-tight font-extrabold sm:text-4xl md:text-5xl lg:text-6xl"
+							>
 								{t(
 									"home.banner",
 									"Simplifica tus tareas, maximiza tu productividad",

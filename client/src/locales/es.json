@@ -250,6 +250,8 @@
 		"delete": "Eliminar",
 		"add_column": "Añadir Columna",
 		"column_name": "Nombre de la columna",
-		"create_column": "Crear columna"
+		"create_column": "Crear columna",
+		"delete_task": "¿Estás seguro de que quieres eliminar esta tarea?",
+		"delete_attachment": "¿Estás seguro de que quieres eliminar este adjunto?"
 	}
 }

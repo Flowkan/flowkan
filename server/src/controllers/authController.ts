@@ -5,8 +5,8 @@ import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
 import { Prisma, User } from "@prisma/client";
 import passport from "passport";
-import { sendChangePasswordEmail, sendEmail } from "../lib/emailService";
 import "../config/passport";
+import { sendEmailTask } from "../broker/producers/emailProducer";
 
 type UniqueConstraintError = Prisma.PrismaClientKnownRequestError & {
   code: "P2002";
@@ -47,7 +47,7 @@ export class AuthController {
         (err, tokenJWT) => {
           if (err) {
             return next(err);
-          }
+          }                    
           res.json({
             accessToken: tokenJWT,
             user: {
@@ -58,7 +58,8 @@ export class AuthController {
             },
           });
         },
-      );
+      );    
+                    
     } catch (err) {
       next(err);
     }
@@ -91,13 +92,26 @@ export class AuthController {
       const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET, {
         expiresIn: "1d",
       });
-
-      await sendEmail(
-        newUser.email,
-        "Confirma tu cuenta",
-        `<h1>Bienvenido ${newUser.name}!</h1>
-              <p>Haz click <a href="${process.env.FRONTEND_WEB_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
-      );
+      
+      const frontendUrl = process.env.FRONTEND_WEB_URL || 'http://localhost:5173'
+      
+      await sendEmailTask({
+        type:'WELCOME',
+        to:newUser.email,
+        data:{
+          name:newUser.name,
+          url:frontendUrl,
+        }        
+      })
+      await sendEmailTask({
+        to:newUser.email,
+        type:'CONFIRMATION',
+        data:{
+          name:newUser.name,
+          url:frontendUrl,
+          token
+        }
+      })
 
       res.status(201).json({ success: true, user: safeUser });
     } catch (err: unknown) {
@@ -214,14 +228,24 @@ export class AuthController {
           );
         });
 
-        const headerEmail = {
-          to: email,
-          subject: "Cambiar contraseña",
-        };
-        await sendChangePasswordEmail(headerEmail, {
-          url_frontend: process.env.FRONTEND_WEB_URL,
-          token,
-        });
+        // const headerEmail = {
+        //   to: email,
+        //   subject: "Cambiar contraseña",
+        // };
+        // await sendChangePasswordEmail(headerEmail, {
+        //   url_frontend: process.env.FRONTEND_WEB_URL,
+        //   token,
+        // });
+
+        const frontendUrl = process.env.FRONTEND_WEB_URL || 'http://localhost:5173'
+        await sendEmailTask({
+          to:email,
+          type:'PASSWORD_RESET',
+          data:{
+            url:frontendUrl,
+            token
+          }
+        })
 
         await this.authService.generatedToken(user.id, token);
 
@@ -294,5 +318,25 @@ export class AuthController {
     res.redirect(
       `${process.env.FRONTEND_WEB_URL}/login?token=${accessToken}&user=${encodedUser}`,
     );
+  };
+
+  deactivateUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.apiUserId;
+      if (!userId) {
+        return res.status(401).json({ error: "No estas autorizado" });
+      }
+      const result = await this.authService.deactivateUser(userId);
+      res.clearCookie("auth", {
+        httpOnly: true,
+        path: "/",
+      });
+      res.json(result);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      next(error);
+    }
   };
 }

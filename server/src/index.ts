@@ -3,6 +3,7 @@ import app from "./app";
 import http from "node:http";
 import { Server } from "socket.io";
 import registerSockets from "./sockets/index";
+import { setupBroker } from "./broker/connection";
 
 const PORT: string | number = process.env.PORT || 3000;
 
@@ -17,6 +18,11 @@ const io = new Server(server, {
 });
 
 registerSockets(io);
+
+setupBroker()
+.then(()=>{
+  console.log("Broker de Mensajes conectado y listo.");
+})
 
 server.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);

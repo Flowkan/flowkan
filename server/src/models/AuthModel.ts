@@ -2,6 +2,9 @@ import { PrismaClient, User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { SafeUser } from "./BoardModel";
 import { addMinutes } from "date-fns";
+import { profile } from "console";
+import { deletePhoto, upload } from "../lib/uploadConfigure";
+import { unlink } from "fs/promises";
 
 export interface ValidateCredentialsParams {
   email: string;
@@ -77,9 +80,7 @@ class AuthModel {
     });
   }
 
-  async findById(
-    id: number,
-  ): Promise<{
+  async findById(id: number): Promise<{
     id: number;
     email: string;
     name: string;
@@ -155,6 +156,54 @@ class AuthModel {
       orderBy: {
         expiresAt: "asc",
       },
+    });
+  }
+
+  async deactivateUser(userId: number) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new Error(
+        "Usuario no encontrado o no tienes permiso para eliminar este usuario",
+      );
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      // Borrar relaciones del usuario
+      await tx.cardAssignee.deleteMany({ where: { userId } });
+      await tx.comment.deleteMany({ where: { userId } });
+      await tx.boardMember.deleteMany({ where: { userId } });
+      await tx.media.deleteMany({ where: { id: userId } });
+      await tx.profile.deleteMany({ where: { userId } });
+
+      if (user.photo) await deletePhoto("users", user.photo);
+
+      // Borrar boards propios
+      const boards = await tx.board.findMany({ where: { ownerId: userId } });
+      for (const board of boards) {
+        await Promise.all(
+          boards
+            .filter((b) => b.image)
+            .map((b) => deletePhoto("boards", b.image!)),
+        );
+        await tx.cardAssignee.deleteMany({
+          where: { card: { id: board.id } },
+        });
+        await tx.comment.deleteMany({ where: { card: { id: board.id } } });
+        await tx.cardLabel.deleteMany({
+          where: { card: { id: board.id } },
+        });
+        await tx.card.deleteMany({ where: { id: board.id } });
+        await tx.label.deleteMany({ where: { boardId: board.id } });
+        await tx.boardMember.deleteMany({ where: { boardId: board.id } });
+      }
+      await tx.board.deleteMany({ where: { ownerId: userId } });
+      await tx.user.deleteMany({ where: { id: userId } });
+      
+      // Actualizar el status de email a false (img avatar rota)
+      // await tx.user.update({
+      //   where: { id: userId },
+      //   data: { status: false },
+      // });
     });
   }
 }

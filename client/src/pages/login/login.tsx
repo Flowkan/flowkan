@@ -44,11 +44,11 @@ export const LoginPage = () => {
 	const { email, password } = formData;
 	const disabled = !email || !password;
 
-	const LoginValidator = useCallback((data:unknown,fieldName?:keyof Omit<typeof formData, "turnstileResponse">)=>{
+	const LoginValidator = useCallback((data: unknown, fieldName?:keyof Omit<typeof formData, "turnstileResponse">)=>{
 		return validationForm(LoginFormSchema,data,fieldName)
 	},[])
 
-	const { error,validate,checkField } = useValidationForm<Omit<typeof formData,"turnstileResponse">>(LoginValidator)	
+	const { error, validate, checkField } = useValidationForm<Omit<typeof formData,"turnstileResponse">>(LoginValidator)	
 
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
@@ -67,7 +67,7 @@ export const LoginPage = () => {
 			}
 			dispatch(loginWithOAuth({ token, user }));
 		}
-	}, [dispatch]);	
+	}, [dispatch]);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -77,26 +77,26 @@ export const LoginPage = () => {
 		}));
 	};
 
-	const handleBlur = (e: FocusEvent<HTMLInputElement, Element>) => {		
-		const { name } = e.target
-		validate({
-			email,
-			password
-		},name as keyof Omit<typeof formData, "turnstileResponse">)	
-		
+	const handleBlur = (e: FocusEvent<HTMLInputElement, Element>) => {
+		const { name } = e.target;
+		validate(
+			{
+				email,
+				password,
+			},
+			name as keyof Omit<typeof formData, "turnstileResponse">,
+		);
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		try {			
-			
+		try {
 			//Validaciones con zod
-			const isValidForm = validate({email,password})
-			if(isValidForm){
+			const isValidForm = validate({ email, password });
+			if (isValidForm) {
 				await loginAction(formData);
 				await profileLoadedAction();
 			}
-
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				setFormData((prevData) => ({
@@ -169,6 +169,8 @@ export const LoginPage = () => {
 							id="email-address"
 							name="email"
 							type="email"
+							autoFocus
+							aria-label="Email"
 							autoComplete="email"
 							required
 							className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
@@ -189,6 +191,7 @@ export const LoginPage = () => {
 							id="password"
 							name="password"
 							type="password"
+							aria-label="Password"
 							autoComplete="current-password"
 							required
 							className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative mt-3 block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
@@ -205,7 +208,7 @@ export const LoginPage = () => {
 
 						<div className="flex items-center justify-between">
 							<div className="text-sm">
-								<button
+								<Button
 									onClick={handleShowModal}
 									type="button"
 									className="text-text-link hover:text-accent-hover font-medium hover:cursor-pointer"
@@ -214,7 +217,7 @@ export const LoginPage = () => {
 										"login.loginForm.forgetPassword",
 										"¿Olvidaste tu contraseña?",
 									)}
-								</button>
+								</Button>
 							</div>
 						</div>
 						<div className="relative flex w-full justify-center">

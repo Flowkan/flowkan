@@ -10,14 +10,14 @@ import { randomColor } from "../../lib/randomColor";
 import ShareButton from "../../components/ui/share-button";
 import { useBoardsItem } from "../../hooks/boards/useBoardsItem";
 import type { Board } from "./types";
+
 interface BoardsItemProps {
 	board: Board;
 }
 
 const BoardsItem = ({ board }: BoardsItemProps) => {
 	const { t } = useTranslation();
-	const hooks = useBoardsItem(board);
-
+	const hooks = useBoardsItem(board);	
 	return (
 		<>
 			{hooks.showConfirm && (
