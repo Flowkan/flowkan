@@ -1,7 +1,7 @@
 export interface EmailPayload {
   to: string;
   subject?: string;
-  type: "CONFIRMATION" | "PASSWORD_RESET" | "WELCOME" | "GENERIC";
+  type: "CONFIRMATION" | "PASSWORD_RESET" | "WELCOME" | "GENERIC" | "GOODBYE";
   data?: dataUser;
 }
 

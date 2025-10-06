@@ -130,12 +130,22 @@ const EditableField = ({
 	const [errorsLocal,setErrorsLocal] = useState<string[]>(errors);
 	const initialValue = useRef("");
 	const [localValue,setLocalValue] = useState(value);
+	const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+	const [toRenderInput,setToRenderInput] = useState(false)
+
 	function handleEdit() {
 		setEnableEdit(!enableEdit);
 	}
 	useEffect(()=>{
 		if(enableEdit){
 			initialValue.current = value
+			inputRef.current?.focus()
+			setToRenderInput(true)
+		}else{
+			const timer = setTimeout(()=>{
+				setToRenderInput(false)
+			},500)
+			return () => clearTimeout(timer)
 		}
 	},[enableEdit])
 	useEffect(()=>{
@@ -177,10 +187,14 @@ const EditableField = ({
 				{label}
 			</p>
 			<div className="relative flex">
-				{!enableEdit && errorsLocal.length === 0 ? (
-					<>
+				{!toRenderInput && errorsLocal.length === 0 ? (
+					<div className={clsx(
+						"flex-1",
+						!toRenderInput && "transition-opacity duration-200",
+						enableEdit && "animate-el-out"
+					)}>
 						<p
-							className={`flex-1 py-1 ${classNameValue} ${readonly ? "cursor-not-allowed" : ""}`}
+							className={`py-1 ${classNameValue} ${readonly ? "cursor-not-allowed" : ""}`}
 						>
 							{handleToValue() || "..."}
 						</p>
@@ -195,13 +209,16 @@ const EditableField = ({
 								<IconEdit className="size-5" />
 							</Button>
 						)}
-					</>
+					</div>
 				) : (
 					<div className={clsx(
 						"ring-accent hover:shadow-accent flex flex-1 rounded-lg transition-all duration-300 hover:shadow-md hover:ring",
-						error ? "ring-red-500 hover:shadow-red-500" : ""
+						error ? "ring-red-500 hover:shadow-red-500" : "",
+						toRenderInput && "animate-bounce-in",
+						!enableEdit && "animate-el-out"
 					)}>
 						<Field
+							ref={inputRef}
 							type={type}
 							name={name}
 							value={value}

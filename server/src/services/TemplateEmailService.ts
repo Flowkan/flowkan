@@ -27,3 +27,10 @@ export async function generateWelcomeEmailTemplate(
   const html = await render(Welcome({name,url}));    
     return html  
 }
+
+export async function generateGoodbyeEmailTemplate(         
+    name:string,
+) {  
+  const html = await render(Goodbye({name}));    
+    return html  
+}
