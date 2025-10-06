@@ -66,6 +66,7 @@ export function processImage(
       }
       await original.toFile(originalPath);
 
+      //Delegar la creación del thumbnail a un worker
       await sendToMakeThumbnailTask({
         userId:req.apiUserId,
         originalPath,
@@ -74,13 +75,7 @@ export function processImage(
           width:sizes.thumb.width ?? 200,
           height:sizes.thumb.height ?? 200
         },
-      })
-
-      // thumbnail
-      // await sharp(req.file.buffer)
-      //   .resize(sizes.thumb)
-      //   .webp({ quality: 80 })
-      //   .toFile(thumbPath);
+      })   
 
       req.body[bodyField] = baseName;
 

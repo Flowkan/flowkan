@@ -65,7 +65,25 @@ export const ProfileUpdateSchema = z.object({
 	allowNotifications: z.boolean(),
 	bio: z
 		.string()
-		.max(300, { error: ERRORS.max(300) })
+		.trim()
+		.check(({ value, issues }) => {
+			if (value.length < 1) {
+				issues.push({
+					code: "custom",
+					message: "Biografía debe ser mayor a 1 caracter",
+					input: value,
+				});
+				return;
+			}
+			if (value.length < 10) {
+				issues.push({
+					code: "custom",
+					message: "Debe tener mínimo 10 caracteres",
+					input: value,
+				});
+			}
+		})
+        .max(500, { error: ERRORS.max(500) })
 		.optional(),
 });
 
@@ -73,7 +91,7 @@ export const ProfileUpdatedSchema = ProfileUpdateSchema.omit({
 	photo: true,
 	email: true,
 }).extend({
-	photo: z.string(),
+	photo: z.file({error:"No es un archivo válido"}),
 });
 
 export const ProfileSchema = z.object({

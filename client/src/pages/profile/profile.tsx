@@ -141,6 +141,7 @@ const Profile = () => {
 							<UploadImage
 								name="photo"
 								previewUrl={previewImage}
+								value={user.photo}
 								onChange={handleChangeField as EventInput}
 								onSubmit={handleSubmitEditField}
 								error={!!error?.photo}
@@ -176,7 +177,7 @@ const Profile = () => {
 								/>
 							</div>
 
-							<div className="grid grid-cols-2 gap-5 bg-gray-100/50 shadow-md p-2 rounded-md">
+							<div className="grid grid-cols-2 gap-5 bg-gray-100/50 shadow-md p-2 md:p-4 rounded-md">
 								<div>
 									<EditableField
 										label="Username"

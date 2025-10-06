@@ -184,7 +184,7 @@ const EditableField = ({
 						{!readonly && (
 							<Button
 								onClick={handleEdit}
-								className="text-primary hover:text-primary-hover absolute top-[50%] right-0 flex -translate-y-[50%] items-center justify-center p-1 transition duration-300 ease-in-out md:hidden group-hover:md:flex"
+								className="cursor-pointer text-primary hover:text-primary-hover absolute top-[50%] right-0 flex -translate-y-[50%] items-center justify-center p-1 transition duration-300 ease-in-out md:hidden group-hover:md:flex"
 								aria-label={`Editar ${label}`}
 							>
 								<IconEdit className="size-5" />
