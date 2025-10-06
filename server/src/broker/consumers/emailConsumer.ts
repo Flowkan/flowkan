@@ -2,6 +2,7 @@ import * as amqplib from "amqplib";
 import { Queues } from "../config";
 import {
   generateConfirmationEmailTemplate,
+  generateGoodbyeEmailTemplate,
   generatePasswordResetEmailTemplate,
   generateWelcomeEmailTemplate,
 } from "../../services/TemplateEmailService";
@@ -64,6 +65,15 @@ export async function sendMailService(payload: EmailPayload): Promise<void> {
       };
       break;
     }
+    case "GOODBYE":{
+      const { name,url } = payload.data as dataUser;
+      emailContent = {
+        subject: "Lamentamos verte partir",
+        html: await generateGoodbyeEmailTemplate(name!,url!),
+      }
+    }
+      
+      break;
     case "WELCOME":
     default:
       const { name, url } = payload.data as dataUser;

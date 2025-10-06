@@ -42,7 +42,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			</Button>
 
 			{open && (
-				<div className="ring-opacity-5 absolute right-0 z-90 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black">
+				<div className="ring-opacity-5 absolute right-0 z-90 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black overflow-hidden">
 					<NavLink
 						to="/profile"
 						className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
