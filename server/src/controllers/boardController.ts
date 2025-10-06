@@ -132,7 +132,7 @@ export class BoardController {
       const { title, image }: { title?: string; image?: string } = req.body;
       const currentBoard = await this.boardService.getById({ userId, boardId });
 
-      const data: Prisma.BoardUpdateArgs["data"] = {};
+      const data: Prisma.BoardUpdateInput = {};
 
       if (title) {
         data.title = title;
