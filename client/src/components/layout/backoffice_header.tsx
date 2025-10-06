@@ -20,7 +20,7 @@ export const BackofficeHeader: React.FC = () => {
 				</div>
 			</NavLink>
 
-			<div className="flex items-center space-x-4">
+			<div className="flex items-center space-x-4 text-black">
 				<LanguageToggle />
 
 				<UserMenu user={user} avatarSize={40} />
