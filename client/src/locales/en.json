@@ -268,5 +268,394 @@
 			"subtitle": "Check our FAQ section or contact us directly."
 		},
 		"contact": "Contact Support"
+	},
+	"solutions": {
+		"banner": {
+			"title": "Flowkan adapts to any workflow",
+			"subtitle": "Discover how thousands of teams across different industries use our platform."
+		},
+		"main": {
+			"title": "Find Your Perfect Solution"
+		},
+		"list": {
+			"realTimeCollaboration": {
+				"title": "Real-Time Collaboration",
+				"description": "All changes to boards and tasks are instantly updated for all collaborators."
+			},
+			"visualProjectManagement": {
+				"title": "Visual Project Management",
+				"description": "Organize your projects with boards and columns to see progress at a glance."
+			},
+			"aiTaskDescriptions": {
+				"title": "AI Task Descriptions",
+				"description": "AI automatically generates the description for each task based on its title."
+			},
+			"integratedChat": {
+				"title": "Integrated Chat",
+				"description": "Communicate with your team directly within the board without relying on emails or external apps."
+			},
+			"fileAndVoiceSharing": {
+				"title": "File and Voice Note Sharing",
+				"description": "Attach files and voice notes directly to tasks to centralize information."
+			},
+			"taskAssignmentTracking": {
+				"title": "Task Assignment and Tracking",
+				"description": "Assign tasks to collaborators and follow the progress of each task in real time."
+			}
+		},
+		"cta": {
+			"title": "Ready to Implement Your Kanban Solution?",
+			"subtitle": "Create your workspace and set up your first board in minutes to see its full potential.",
+			"button": "Get Started Now"
+		}
+	},
+	"login": {
+		"error": "Error processing user information.",
+		"toast": {
+			"message": {
+				"errorEmptyPassword": "Password cannot be empty.",
+				"success": "Form submitted successfully!",
+				"error": "Incorrect credentials"
+			}
+		},
+		"loginForm": {
+			"title": "Log In",
+			"question": "Don't have an account?",
+			"signup": "Sign up here",
+			"email": {
+				"emailLabel": "Email Address",
+				"placeholder": "Email address"
+			},
+			"password": {
+				"passwordLabel": "Password",
+				"passwordPlaceholder": "Password"
+			},
+			"forgetPassword": "Forgot your password?",
+			"loginButton": {
+				"spinner": {
+					"loading": "Loading...",
+					"default": "Log In"
+				}
+			}
+		}
+	},
+	"forgotPsw": {
+		"recover": "Recover Password",
+		"email": "Email address",
+		"send": "Send",
+		"cancel": "Cancel"
+	},
+	"notFound": {
+		"title": "Page Not Found",
+		"description": "Sorry, we couldn't find the page you are looking for",
+		"backButton": "Go back home"
+	},
+	"register": {
+		"registerForm": {
+			"message": {
+				"success": "Registration successful! We've sent you an email to validate your account.",
+				"error": "An unexpected error occurred during registration."
+			},
+			"title": "Create Your Account",
+			"question": "Already have an account?",
+			"login": "Log in here",
+			"name": {
+				"label": "Full Name",
+				"placeholder": "Full name"
+			},
+			"email": {
+				"label": "Email Address",
+				"placeholder": "Email address"
+			},
+			"password": {
+				"label": "Password",
+				"placeholder": "Password"
+			},
+			"confirmPassword": {
+				"label": "Confirm Password",
+				"placeholder": "Confirm password"
+			},
+			"registerButton": {
+				"spinner": {
+					"loading": "Registering...",
+					"default": "Sign Up"
+				}
+			}
+		},
+		"withOtherService": {
+			"otherTypeRegister": "Or continue with"
+		}
+	},
+	"registerConfirm": {
+		"ok": "Account confirmed successfully!",
+		"error": {
+			"token": "Token not provided",
+			"confirm": "An error occurred while confirming the account"
+		},
+		"loading": "Confirming account..."
+	},
+	"verifyPending": {
+		"noEmailFound": "info@example.com",
+		"title": "Verify Your Email",
+		"success": "Registration Successful!",
+		"emailSent": "We have sent you an email to validate your account.",
+		"actionRequires": "Action Required:",
+		"instruction1": "Click on the confirmation link inside the email we sent to:",
+		"instruction2": "Can't find it? Check your spam or junk folder.",
+		"goToLogin": "Understood, go to Log In"
+	},
+	"board": {
+		"addToTask": "Add to card",
+		"add": "Add",
+		"attachDocument": "Attach document",
+		"attachVoice": "Record voice note",
+		"labels": "Labels",
+		"members": "Members",
+		"dates": "Dates",
+		"checklist": "Checklist",
+		"loadUsers": "Loading users...",
+		"description": "Description",
+		"attatchments": {
+			"title": "Attachments",
+			"audio": {
+				"label": "Transcription",
+				"msg": "Your browser does not support audio playback."
+			},
+			"media": "View {{fileName}}",
+			"delete": "Delete file"
+		},
+		"recording": "Recording...",
+		"stop": "Stop",
+		"options": "Options",
+		"move": "Move",
+		"copy": "Copy",
+		"archive": "Archive",
+		"delete": "Delete",
+		"add_column": "Add Column",
+		"columnName": "Column name",
+		"createColumn": "Create column",
+		"deleteTask": "Are you sure you want to delete this task?",
+		"deleteAttachment": "Are you sure you want to delete this attachment?",
+		"micError": "Error accessing microphone:",
+		"micAlert": "Could not start recording. Ensure the microphone is available.",
+		"lookforMembers": "Look for members...",
+		"createdFrom": "Created from Flowkan\n",
+		"closeSaveBtn": "Close and save"
+	},
+	"column": {
+		"deleteConfirm": "Are you sure you want to delete the column \"{{title}}\"? All tasks inside will be lost.",
+		"edit": "Click to edit",
+		"dropdownMenu": {
+			"title": "List actions"
+		},
+		"addCard": "Add card",
+		"copy": {
+			"alert": "Copy list (not implemented)",
+			"msg": "Copy list"
+		},
+		"move": {
+			"list": {
+				"alert": "Move list (not implemented)",
+				"msg": "Move list"
+			},
+			"cards": {
+				"alert": "Move all cards (not implemented)",
+				"msg": "Move all cards in this list"
+			}
+		},
+		"sort": {
+			"alert": "Sort by... (not implemented)",
+			"msg": "Sort by..."
+		},
+		"follow": {
+			"alert": "Follow (not implemented)",
+			"msg": "Follow"
+		},
+		"changeColor": {
+			"alert": "Change list color (not implemented)",
+			"msg": "Change list color"
+		},
+		"auto": {
+			"alert": "Automation (not implemented)",
+			"msg": "Automation"
+		},
+		"archive": {
+			"list": {
+				"confirm": "Are you sure you want to archive this list \"{{title}}\"?",
+				"alert": "Archive this list (not implemented)",
+				"msg": "Archive this list"
+			},
+			"cards": {
+				"confirm": "Are you sure you want to archive all cards in \"{{title}}\"?",
+				"alert": "Archive all cards (not implemented)",
+				"msg": "Archive all cards in this list"
+			}
+		},
+		"delete": "Delete Column",
+		"add": {
+			"btn": "+ Add a card",
+			"action": {
+				"placeholder": "Card title...",
+				"btn": "Add card",
+				"cancel": "Cancel"
+			}
+		}
+	},
+	"deleteAccount": {
+		"error": "There was an error deleting the account."
+	},
+	"recoveryPassword": {
+		"form": {
+			"title": "Change Password",
+			"field": {
+				"newPassword": "New password",
+				"confirmPassword": "Repeat password"
+			}
+		},
+		"save": "Save Changes"
+	},
+	"profile": {
+		"title": "User Profile",
+		"switch": {
+			"label": "Allow sending notifications"
+		},
+		"username": "Username",
+		"email": "Email",
+		"birthdate": "Birthdate",
+		"location": "Location",
+		"bio": "Biography",
+		"deleteAccount": "Delete account",
+		"confirmDelete": "Are you sure you want to delete your account? If you do, all your data will be lost. Do you wish to continue?"
+	},
+	"features": {
+		"banner": {
+			"title": "Everything you need to work better",
+			"subtitle": "From real-time collaboration to AI assistance, we centralize your workflow.",
+			"cta": "Start organizing now"
+		},
+		"main": {
+			"title": "Flowkan Key Features"
+		},
+		"list": {
+			"kanban": {
+				"title": "Visual management with Kanban boards",
+				"description": "Easily organize your tasks by dragging and dropping them between columns."
+			},
+			"realTime": {
+				"title": "Real-time collaboration",
+				"description": "Edit and manage projects together with your team without interruption."
+			},
+			"progress": {
+				"title": "Progress tracking",
+				"description": "Check the status of your tasks and measure your team's progress."
+			},
+			"ia": {
+				"title": "Artificial intelligence assistance",
+				"description": "Let the AI help you write clear and complete descriptions for your tasks."
+			},
+			"chat": {
+				"title": "Real-time chat",
+				"description": "Communicate instantly with your team without leaving the board."
+			},
+			"mobile": {
+				"title": "Access from any device",
+				"description": "Work from your mobile, tablet, or desktop without losing functionality."
+			},
+			"audio": {
+				"title": "Voice notes",
+				"description": "Attach voice messages to your tasks to quickly explain details."
+			},
+			"files": {
+				"title": "File management",
+				"description": "Upload, organize, and share documents directly from your boards."
+			}
+		},
+		"cta": {
+			"title": "Ready to transform your productivity?",
+			"subtitle": "Create your first board in just minutes. No credit card required.",
+			"button": "Start for free today"
+		}
+	},
+	"spinner": {
+		"general": "Loading",
+		"login": "Loading Login",
+		"register": "Loading Sign Up",
+		"generateLink": "Generating link",
+		"pendingVerification": "Pending verification",
+		"boardsList": "Boards List",
+		"loadBoard": "Loading Board"
+	},
+	"zod": {
+		"errors": {
+			"invalidEmail": "Not a valid email",
+			"mandatoryEmail": "Email must be provided",
+			"psw": {
+				"min": "Password must be at least 8 characters",
+				"confirm": {
+					"min": "Must be at least 8 characters"
+				},
+				"notMatch": "Passwords do not match"
+			},
+			"loginForm": {
+				"requiredEmail": "Email is required",
+				"validEmail": "Must be a valid email",
+				"requiredPsw": "Password is required",
+				"minPsw": "Must be at least 8 characters"
+			},
+			"registerForm": {
+				"requiredName": "Name is required",
+				"minName": "Must be at least 4 characters",
+				"formatName": "Your name should only contain letters, spaces, and accents",
+				"requiredEmail": "Email is required",
+				"validEmail": "Must be a valid email",
+				"requiredPsw": "Password is required",
+				"minPsw": "Must be at least 8 characters",
+				"confirmPsw": "Password confirmation is required",
+				"notMatchPsw": "Passwords do not match"
+			}
+		},
+		"validations": {
+			"email": "email",
+			"url": "link",
+			"uuid": "uuid",
+			"cuid": "cuid",
+			"regex": "regular expression",
+			"datetime": "date"
+		},
+		"types": {
+			"function": "function",
+			"number": "number",
+			"string": "string",
+			"nan": "not a number value",
+			"integer": "integer",
+			"float": "float",
+			"boolean": "boolean",
+			"date": "date",
+			"bigint": "bigint",
+			"undefined": "undefined",
+			"symbol": "symbol",
+			"null": "null",
+			"array": "list",
+			"object": "object",
+			"unknown": "unknown",
+			"promise": "promise",
+			"void": "void",
+			"never": "never",
+			"map": "map",
+			"set": "set"
+		}
+	},
+	"html": {
+		"descriptionKey": "Collaborate with your team in one place. With our Kanban boards, centralize tasks, streamline workflows, and boost productivity.",
+		"imageAlt": "Flowkan - Project management board.",
+		"lang": "en_US"
+	},
+	"sesionExpired": "Your session has expired, please log in again.",
+	"errorBoundary": "Oooops!!!!",
+	"language": {
+		"alt": "Flag of {{label}}",
+		"arialabel": "Flag of {{label}}",
+		"title": "Flag of {{label}}",
+		"span": "Flag of {{label}}"
 	}
 }

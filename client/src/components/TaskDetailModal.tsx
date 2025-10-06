@@ -69,7 +69,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const contentInputRef = useRef<HTMLInputElement>(null);
 	const usersRef = useRef<HTMLDivElement>(null);
 	const addMenuRef = useRef<HTMLDivElement>(null);
-	const editorRef = useRef(null);
 	const { t: translate } = useTranslation();
 	const editorRef = useRef<TinyMCEEditor | null>(null);
 
@@ -509,7 +508,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								init={{
 									height: 400,
 									content_css: "document, dark",
-									skin:"oxide",
+									skin: "oxide",
 									menubar: false,
 									plugins: [
 										"advlist",
