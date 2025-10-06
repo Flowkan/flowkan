@@ -44,11 +44,20 @@ export const LoginPage = () => {
 	const { email, password } = formData;
 	const disabled = !email || !password;
 
-	const LoginValidator = useCallback((data: unknown, fieldName?:keyof Omit<typeof formData, "turnstileResponse">)=>{
-		return validationForm(LoginFormSchema,data,fieldName)
-	},[])
+	const LoginValidator = useCallback(
+		(
+			data: unknown,
+			fieldName?: keyof Omit<typeof formData, "turnstileResponse">,
+		) => {
+			return validationForm(LoginFormSchema, data, fieldName);
+		},
+		[],
+	);
 
-	const { error, validate, checkField } = useValidationForm<Omit<typeof formData,"turnstileResponse">>(LoginValidator)	
+	const { error, validate, checkField } =
+		useValidationForm<Omit<typeof formData, "turnstileResponse">>(
+			LoginValidator,
+		);
 
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
@@ -135,9 +144,10 @@ export const LoginPage = () => {
 					backgroundPosition: "center",
 				}}
 			>
-				<div className="bg-background-card/95 w-full max-w-md transform space-y-8 rounded-xl p-10 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-[1.01]">
+				{/* Ajustes aquí ↓↓↓ */}
+				<div className="bg-background-card/95 w-full max-w-sm transform space-y-8 rounded-xl p-6 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-[1.01] sm:max-w-md sm:p-10">
 					<div>
-						<h1 className="text-text-heading mt-6 text-center text-4xl font-extrabold">
+						<h1 className="text-text-heading mt-4 text-center text-3xl font-extrabold sm:text-4xl">
 							{t("login.loginForm.title", "Iniciar Sesión")}
 						</h1>
 						<p className="text-text-body mt-2 text-center text-sm">
@@ -152,7 +162,7 @@ export const LoginPage = () => {
 						</p>
 					</div>
 					<Form
-						className="mt-8 space-y-6"
+						className="mt-6 space-y-5"
 						onSubmit={handleSubmit}
 						method="POST"
 						initialValue={{
@@ -173,7 +183,7 @@ export const LoginPage = () => {
 							aria-label="Email"
 							autoComplete="email"
 							required
-							className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
+							className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-md border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
 							placeholder={t(
 								"login.loginForm.email.placeholder",
 								"Correo electrónico",
@@ -194,7 +204,7 @@ export const LoginPage = () => {
 							aria-label="Password"
 							autoComplete="current-password"
 							required
-							className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative mt-3 block w-full appearance-none rounded-none border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
+							className="border-border-light placeholder-text-placeholder text-text-heading focus:ring-accent focus:border-accent relative block w-full appearance-none rounded-md border px-4 py-3 focus:z-10 focus:outline-none sm:text-sm"
 							placeholder={t(
 								"login.loginForm.password.passwordPlaceholder",
 								"Contraseña",
@@ -220,17 +230,20 @@ export const LoginPage = () => {
 								</Button>
 							</div>
 						</div>
-						<div className="relative flex w-full justify-center">
-							<Turnstile
-								sitekey={import.meta.env.VITE_TURNSTILE_API_KEY}
-								theme="light"
-								onVerify={(token) =>
-									setFormData((prev) => ({
-										...prev,
-										turnstileResponse: token,
-									}))
-								}
-							/>
+						{/* Escala Turnstile ↓↓↓ */}
+						<div className="relative flex w-full justify-center overflow-hidden">
+							<div className="scale-90 sm:scale-100">
+								<Turnstile
+									sitekey={import.meta.env.VITE_TURNSTILE_API_KEY}
+									theme="light"
+									onVerify={(token) =>
+										setFormData((prev) => ({
+											...prev,
+											turnstileResponse: token,
+										}))
+									}
+								/>
+							</div>
 						</div>
 						<div>
 							<Button
@@ -254,7 +267,10 @@ export const LoginPage = () => {
 							</Button>
 						</div>
 					</Form>
-					<ForgotPassword show={showModal} onClose={handleCloseModal} />
+					{/* Ajuste modal responsive ↓↓↓ */}
+					<div className="overflow-y-auto">
+						<ForgotPassword show={showModal} onClose={handleCloseModal} />
+					</div>
 					<WithOtherServices />
 				</div>
 			</div>
