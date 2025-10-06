@@ -107,3 +107,15 @@ export const applyDragResult = (
 
 	return newBoardData;
 };
+
+export const truncateWordTitle = (title: string, maxLength?: number) => {
+	const MAX_LENGTH = maxLength ?? 40;
+	if (!title) return "";
+	if (title.length <= MAX_LENGTH) return title;
+	const truncated = title.slice(0, MAX_LENGTH);
+	const wordSpace = truncated.lastIndexOf(" ");
+	if (wordSpace > 0) {
+		return truncated.slice(0, wordSpace) + "...";
+	}
+	return truncated + "...";
+};
