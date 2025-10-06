@@ -19,7 +19,7 @@ interface GoodByeProps {
   url?: string;
 }
 
-export const GoodBye = ({
+export const Goodbye = ({
   name = "Usuario",
   url = "http://localhost:5173",
 }: GoodByeProps) => {
@@ -94,4 +94,4 @@ export const GoodBye = ({
   );
 };
 
-export default GoodBye;
+export default Goodbye;
