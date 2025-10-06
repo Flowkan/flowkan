@@ -111,6 +111,9 @@ export function ChatWindow({ boardId }: ChatWindowProps) {
 									}`}
 								>
 									{msg.text}
+									<span className="mt-1 block text-right text-[10px] opacity-70">
+										{new Date(msg.timestamp).toLocaleTimeString()}
+									</span>
 								</div>
 							</div>
 						))}
