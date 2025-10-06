@@ -1,4 +1,6 @@
 import {
+	useEffect,
+	useRef,
 	useState,
 	type ChangeEvent,
 	type HTMLAttributes,
@@ -8,6 +10,7 @@ import { IconEdit } from "../icons/IconEdit";
 import { IconSave } from "../icons/IconSave";
 import type { ProfileUpdateType } from "../../pages/profile/types";
 import { IconCancel } from "../icons/IconCancel";
+import clsx from "clsx";
 
 const formatDate = (dateString: string) => {
 	if (!dateString) return "";
@@ -96,6 +99,7 @@ interface EditableFieldProps {
 	className?: string;
 	rows?: number;
 	error?: boolean;
+	errors?:string[];
 	readonly?: boolean;
 	onEdit: (field: keyof ProfileUpdateType) => void;
 	onChange: (
@@ -110,6 +114,7 @@ const EditableField = ({
 	classNameValue,
 	className = "",
 	error = false,
+	errors=[],
 	readonly = false,
 	rows = 0,
 	type = "text",
@@ -119,31 +124,48 @@ const EditableField = ({
 	onChange,
 }: EditableFieldProps) => {
 	const [enableEdit, setEnableEdit] = useState(false);
-
+	const [errorsLocal,setErrorsLocal] = useState<string[]>(errors);
+	const initialValue = useRef("");
+	const [localValue,setLocalValue] = useState(value);
 	function handleEdit() {
 		setEnableEdit(!enableEdit);
 	}
-
+	useEffect(()=>{
+		if(enableEdit){
+			initialValue.current = value
+		}
+	},[enableEdit])
+	useEffect(()=>{
+		setLocalValue(value)
+	},[value])
+	useEffect(()=>{
+		if(errors.length > 0){
+			setErrorsLocal(errors)
+		}
+	},[errors])
+	
 	function handleSaveEdit() {
 		onEdit(name);
 		setEnableEdit(false);
 	}
 	function handleCancelEdit() {
 		setEnableEdit(false);
+		setErrorsLocal([])
+		setLocalValue(initialValue.current)
 	}
-
+	
 	function handleToValue() {
 		if (type === "date") {
 			return formatDate(value);
 		}
-		if (name === "username") {
-			return value ? `@${value}` : "...";
+		if (name === "username") {			
+			return localValue ? `@${localValue}` : "...";
 		}
 		if (name === "bio") {
-			return value ? `"${value}"` : "...";
+			return localValue ? `"${localValue}"` : "...";
 		}
 
-		return value;
+		return localValue || "...";
 	}
 
 	return (
@@ -152,7 +174,7 @@ const EditableField = ({
 				{label}
 			</p>
 			<div className="relative flex">
-				{!enableEdit && !error ? (
+				{!enableEdit && errorsLocal.length === 0 ? (
 					<>
 						<p
 							className={`flex-1 py-1 ${classNameValue} ${readonly ? "cursor-not-allowed" : ""}`}
@@ -162,7 +184,7 @@ const EditableField = ({
 						{!readonly && (
 							<Button
 								onClick={handleEdit}
-								className="text-primary bg-amber-400 hover:text-primary-hover absolute top-[50%] right-0 flex -translate-y-[50%] items-center justify-center p-1 transition duration-300 ease-in-out md:hidden group-hover:md:flex"
+								className="text-primary hover:text-primary-hover absolute top-[50%] right-0 flex -translate-y-[50%] items-center justify-center p-1 transition duration-300 ease-in-out md:hidden group-hover:md:flex"
 								aria-label={`Editar ${label}`}
 							>
 								<IconEdit className="size-5" />
@@ -170,7 +192,10 @@ const EditableField = ({
 						)}
 					</>
 				) : (
-					<div className="ring-accent hover:shadow-accent flex flex-1 rounded-lg transition-all duration-300 hover:shadow-md hover:ring">
+					<div className={clsx(
+						"ring-accent hover:shadow-accent flex flex-1 rounded-lg transition-all duration-300 hover:shadow-md hover:ring",
+						error ? "ring-red-500 hover:shadow-red-500" : ""
+					)}>
 						<Field
 							type={type}
 							name={name}
@@ -182,21 +207,40 @@ const EditableField = ({
 						/>
 						<Button
 							onClick={handleSaveEdit}
-							className="bg-primary hover:bg-primary-hover px-2 cursor-pointer transition-colors duration-300"
+							className={clsx(
+								"bg-primary hover:bg-primary-hover px-2 cursor-pointer transition-colors duration-300",
+								name === "name" ? "px-4" : "",
+								name == "bio" ? "px-6" :""
+							)}
 							aria-label={`Guardar ${label}`}
 						>
-							<IconSave className="text-white" />
+							<IconSave className={clsx(
+								"text-white size-3",
+								name === "bio" ? "size-5" : ""
+							)}/>
 						</Button>
 						<Button
 							onClick={handleCancelEdit}
-							className="bg-accent hover:bg-accent-hover rounded-r-lg px-2 cursor-pointer transition-colors duration-300"
+							className={clsx(
+								"bg-accent hover:bg-accent-hover rounded-r-lg px-2 cursor-pointer transition-colors duration-300",
+								name === "name" ? "px-4" : "",
+								name == "bio" ? "px-6" :""
+							)}
 							aria-label={`Guardar ${label}`}
 						>
-							<IconCancel className="text-white size-3"/>
+							<IconCancel className={clsx(
+								"text-white size-3",
+								name === "bio" ? "size-5" : ""
+							)}/>
 						</Button>
 					</div>
 				)}
 			</div>
+			<ul className="text-xs text-red-500 pt-1">
+				{ errorsLocal.map(err=>(
+					<li>{err}</li>
+				)) }
+			</ul>	
 		</div>
 	);
 };
