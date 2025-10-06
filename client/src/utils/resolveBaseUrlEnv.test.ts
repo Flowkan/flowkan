@@ -1,50 +1,28 @@
 import { resolveBaseURLFromEnv } from "./resolveBaseUrlEnv";
 
 describe("resolveBaseURLFromEnv", () => {
-	const OLD_ENV = import.meta.env;
-
 	afterEach(() => {
 		// Restaurar las variables originales después de cada test
-		Object.defineProperty(import.meta, "env", {
-			value: OLD_ENV,
-			writable: true,
-		});
+		vi.unstubAllEnvs();
 	});
 
 	test("retorna la URL definida en VITE_BASE_URL", () => {
-		Object.defineProperty(import.meta, "env", {
-			value: {
-				...OLD_ENV,
-				MODE: "development",
-				VITE_BASE_URL: "http://localhost:3000",
-			},
-			writable: true,
-		});
+		vi.stubEnv("MODE", "development");
+		vi.stubEnv("VITE_BASE_URL", "http://localhost:3000");
 
 		expect(resolveBaseURLFromEnv()).toBe("http://localhost:3000");
 	});
 
 	test("retorna la URL de producción", () => {
-		Object.defineProperty(import.meta, "env", {
-			value: {
-				...OLD_ENV,
-				MODE: "production",
-				VITE_BASE_URL: "https://flowkan.duckdns.org",
-			},
-			writable: true,
-		});
+		vi.stubEnv("MODE", "production");
+		vi.stubEnv("VITE_BASE_URL", "https://flowkan.es");
 
-		expect(resolveBaseURLFromEnv()).toBe("https://flowkan.duckdns.org");
+		expect(resolveBaseURLFromEnv()).toBe("https://flowkan.es");
 	});
 
 	test("lanza error si falta VITE_BASE_URL", () => {
-		Object.defineProperty(import.meta, "env", {
-			value: {
-				...OLD_ENV,
-				MODE: "production",
-			},
-			writable: true,
-		});
+		vi.stubEnv("MODE", "production");
+		vi.stubEnv("VITE_BASE_URL", undefined);
 
 		expect(() => resolveBaseURLFromEnv()).toThrow(/VITE_BASE_URL not defined/);
 	});
