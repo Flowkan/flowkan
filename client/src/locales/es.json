@@ -167,7 +167,10 @@
 			"img": "Fondo",
 			"button": "CREAR"
 		},
-		"spinner": "Creando"
+		"spinner": "Creando",
+		"toast": {
+			"errorImage": "Imagen demasiado grande"
+		}
 	},
 	"editBoard": {
 		"form": {
@@ -177,7 +180,8 @@
 		},
 		"edit": "EDITAR",
 		"toast": {
-			"error": "Imagen demasiado grande"
+			"errorImage": "Imagen demasiado grande",
+			"error": "Error al editar el tablero"
 		}
 	},
 	"home": {

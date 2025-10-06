@@ -44,14 +44,27 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 			const maxSizeMB = 5;
 
 			if (file.size > maxSizeMB * 1024 * 1024) {
-				toast.custom((t) => <CustomToast message={translation("")} />);
+				toast.custom((t) => (
+					<CustomToast
+						message={translation("editBoard.toast.errorImage")}
+						t={t}
+						type="error"
+					/>
+				));
+				return;
 			}
 
 			newData.image = file;
 		}
 
-		handleEditForm(newData);
-		handleHideMessage();
+		try {
+			handleEditForm(newData);
+			handleHideMessage();
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error);
+			}
+		}
 	};
 
 	return (
