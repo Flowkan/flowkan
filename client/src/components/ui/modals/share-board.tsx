@@ -4,6 +4,7 @@ import { Button } from "../Button";
 import CloseButton from "../close-button";
 import { createInvitationLink } from "../../../pages/boards/service";
 import "./modal-boards.css";
+import { Icon } from "@iconify/react";
 
 interface ShareBoardProps {
 	boardId: string;
@@ -84,9 +85,17 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 							</span>
 							<Button
 								onClick={handleCopyLink}
+								title={t("share.board.link.copy")}
 								className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-300 p-1 text-xs font-bold transition-colors hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
 							>
-								{t("share.board.link.copy")}
+								<Icon
+									name="copy-share"
+									icon="flowbite:file-copy-alt-solid"
+									width="20"
+									height="20"
+									style={{ color: "#fff" }}
+									xlinkTitle="copiar"
+								/>
 							</Button>
 						</div>
 					)}
