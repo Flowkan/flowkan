@@ -76,5 +76,6 @@ Flowkan es una aplicación de gestión de proyectos estilo Kanban que te ayuda a
 
 - **Oscar Cañas** - [GitHub](https://github.com/virgulilla)
 - **Hector Lozano** - [GitHub](https://github.com/HLozano87)
+- **Paula Barrionuevo** - [GitHub](https://github.com/PaulaBCdev)
 
 ---
