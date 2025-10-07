@@ -3,6 +3,7 @@ export interface EmailPayload {
   subject?: string;
   type: "CONFIRMATION" | "PASSWORD_RESET" | "WELCOME" | "GENERIC" | "GOODBYE";
   data?: dataUser;
+  language?: string;
 }
 
 export interface dataUser {

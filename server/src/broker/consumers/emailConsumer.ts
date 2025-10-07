@@ -47,13 +47,13 @@ async function processEmailMessage(
 
 export async function sendMailService(payload: EmailPayload): Promise<void> {
   let emailContent: { subject: string; html: string };
-
+  const language = payload.language || "es";
   switch (payload.type) {
     case "CONFIRMATION": {
       const { name, url, token } = payload.data as dataUser;
       emailContent = {
         subject: "Confirma tu dirección de correo electrónico",
-        html: await generateConfirmationEmailTemplate(name!, url!, token!),
+        html: await generateConfirmationEmailTemplate(name!, url!, token!,language),
       };
       break;
     }
@@ -61,7 +61,7 @@ export async function sendMailService(payload: EmailPayload): Promise<void> {
       const { url, token } = payload.data as dataUser;
       emailContent = {
         subject: "Restablece tu Contraseña",
-        html: await generatePasswordResetEmailTemplate(url!, token!),
+        html: await generatePasswordResetEmailTemplate(url!, token!,language),
       };
       break;
     }
@@ -69,7 +69,7 @@ export async function sendMailService(payload: EmailPayload): Promise<void> {
       const { name,url } = payload.data as dataUser;
       emailContent = {
         subject: "Lamentamos verte partir",
-        html: await generateGoodbyeEmailTemplate(name!,url!),
+        html: await generateGoodbyeEmailTemplate(name!,url!,language),
       }
     }
       
@@ -79,7 +79,7 @@ export async function sendMailService(payload: EmailPayload): Promise<void> {
       const { name, url } = payload.data as dataUser;
       emailContent = {
         subject: "Bienvenido a nuestra plataforma",
-        html: await generateWelcomeEmailTemplate(url!, name),
+        html: await generateWelcomeEmailTemplate(url!, name,language),
       };
       break;
   }
