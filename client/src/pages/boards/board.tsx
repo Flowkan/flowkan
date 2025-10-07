@@ -227,6 +227,9 @@ const Board = () => {
 			backgroundImg={boardData?.image}
 			boardId={boardData?.id}
 			onAddTask={handleAddTask}
+			columns={
+				boardData?.lists?.map((c) => ({ id: c.id!, title: c.title })) ?? []
+			}
 		>
 			<DragDropContext
 				onDragStart={handleDragStart}

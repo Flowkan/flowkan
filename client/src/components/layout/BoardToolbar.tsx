@@ -6,6 +6,10 @@ import { ChatWindow } from "../ui/ChatWindow";
 import { getContrastColor } from "../../utils/contrastColor";
 import { useTranslation } from "react-i18next";
 
+interface ColumnMin {
+	id: number | string;
+	title: string;
+}
 interface BoardToolbarProps {
 	readonly boardId: string;
 	readonly image: string | undefined;
@@ -14,9 +18,15 @@ interface BoardToolbarProps {
 		title: string,
 		description: string,
 	) => void;
+	readonly columns?: ColumnMin[];
 }
 
-export function BoardToolbar({ boardId, image, onAddTask }: BoardToolbarProps) {
+export function BoardToolbar({
+	boardId,
+	image,
+	onAddTask,
+	columns,
+}: BoardToolbarProps) {
 	const [showShareForm, setShowShareForm] = useState(false);
 	const users = useUsersOnBoard(boardId);
 	const { t } = useTranslation();
@@ -54,7 +64,13 @@ export function BoardToolbar({ boardId, image, onAddTask }: BoardToolbarProps) {
 					</div>
 
 					<div className="pr-4 pl-4">
-						{boardId && <ChatWindow boardId={boardId} onAddTask={onAddTask} />}
+						{boardId && (
+							<ChatWindow
+								boardId={boardId}
+								onAddTask={onAddTask}
+								columns={columns}
+							/>
+						)}
 					</div>
 
 					{/* Botón Compartir */}
