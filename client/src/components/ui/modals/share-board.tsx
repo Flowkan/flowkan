@@ -57,8 +57,8 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 	};
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-			<article className="relative mx-auto w-full max-w-md rounded-lg bg-white p-8 shadow-xl dark:bg-gray-800">
+		<div className="modal-bg fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+			<article className="modal-card relative mx-auto w-full max-w-md rounded-lg bg-white p-8 shadow-xl dark:bg-gray-800">
 				<CloseButton onClick={handleClose} className="absolute top-4 right-4" />
 				<h3 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">
 					{t("share.board.title")}

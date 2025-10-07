@@ -19,22 +19,21 @@ const ConfirmDelete = ({
 		<div data-modal className="modal-bg">
 			<article className="modal-card">
 				<header className="flex justify-end pb-3">
-					<button 
-					onClick={handleHideMessage}
-					className="cursor-pointer p-2 rounded-md transition-colors duration-300 hover:bg-accent hover:text-white">
+					<button
+						onClick={handleHideMessage}
+						className="hover:bg-accent cursor-pointer rounded-md p-2 transition-colors duration-300 hover:text-white"
+					>
 						<IconCancel />
 					</button>
 				</header>
 				<h3 className="modal-header confirm">{message}</h3>
 				<div className="modal-btns-container">
-					<div className="flex justify-center gap-2">
-						<button className="modal-btn yes" onClick={handleDeleteBoard}>
-							{t("confirm.yes")}
-						</button>
-						<button className="modal-btn" onClick={handleHideMessage}>
-							{t("confirm.no")}
-						</button>
-					</div>
+					<button className="modal-btn yes" onClick={handleDeleteBoard}>
+						{t("confirm.yes")}
+					</button>
+					<button className="modal-btn" onClick={handleHideMessage}>
+						{t("confirm.no")}
+					</button>
 				</div>
 			</article>
 		</div>
