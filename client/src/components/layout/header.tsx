@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../store";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageToggle from "../ui/LangToggle";
 import { UserMenu } from "../ui/UserMenu";
@@ -12,6 +12,7 @@ import { useSocket } from "../../hooks/socket/context";
 
 export const Header: React.FC = () => {
 	const { t } = useTranslation();
+	const location = useLocation();
 	const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 	const [isOpen, setIsOpen] = useState(false);
 	const logoutAction = useLogoutAction();
@@ -21,6 +22,14 @@ export const Header: React.FC = () => {
 		logoutAction();
 		setIsOpen(false);
 		socket.disconnect(); //Desconecta el socket
+	};
+
+	const getNavLinkClass = (path: string) => {
+		const isActive = location.pathname.startsWith(path);
+
+		return `hover:border-accent hover:border-b-2 ${
+			isActive ? "border-accent border-b-2" : ""
+		}`;
 	};
 
 	return (
@@ -37,13 +46,13 @@ export const Header: React.FC = () => {
 				</NavLink>
 
 				<nav className="text-text-body hidden space-x-6 md:flex">
-					<a href="/features" className="hover:border-accent hover:border-b-2">
+					<a href="/features" className={getNavLinkClass("/features")}>
 						{t("header.navbar.features")}
 					</a>
-					<a href="/solutions" className="hover:border-accent hover:border-b-2">
+					<a href="/solutions" className={getNavLinkClass("/solutions")}>
 						{t("header.navbar.solutions")}
 					</a>
-					<a href="/prices" className="hover:border-accent hover:border-b-2">
+					<a href="/prices" className={getNavLinkClass("/prices")}>
 						{t("header.navbar.prices")}
 					</a>
 					{isAuthenticated && user && (
@@ -118,21 +127,33 @@ export const Header: React.FC = () => {
 
 					<NavLink
 						to="/features"
-						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
+						className={({ isActive }) =>
+							`block rounded-md px-3 py-2 font-medium ${
+								isActive ? "text-accent" : "text-text-body"
+							}`
+						}
 						onClick={() => setIsOpen(false)}
 					>
 						{t("header.navbar.features")}
 					</NavLink>
 					<NavLink
 						to="/solutions"
-						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
+						className={({ isActive }) =>
+							`block rounded-md px-3 py-2 font-medium ${
+								isActive ? "text-accent" : "text-text-body"
+							}`
+						}
 						onClick={() => setIsOpen(false)}
 					>
 						{t("header.navbar.solutions")}
 					</NavLink>
 					<NavLink
 						to="/prices"
-						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
+						className={({ isActive }) =>
+							`block rounded-md px-3 py-2 font-medium ${
+								isActive ? "text-accent" : "text-text-body"
+							}`
+						}
 						onClick={() => setIsOpen(false)}
 					>
 						{t("header.navbar.prices")}
