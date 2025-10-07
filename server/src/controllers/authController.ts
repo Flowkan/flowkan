@@ -92,13 +92,6 @@ export class AuthController {
           throw new Error("JWT_SECRET no definido");
         }
 
-        const token = jwt.sign(
-          { userId: reactivatedUser.id },
-          process.env.JWT_SECRET,
-          {
-            expiresIn: "1d",
-          },
-        );
         // enviar correo de bienvenida otra vez
         await Promise.all([
           sendEmailTask({
@@ -109,24 +102,14 @@ export class AuthController {
               url: frontendUrl,
             },
           }),
-          sendEmailTask({
-            to: reactivatedUser.email,
-            type: "CONFIRMATION",
-            data: {
-              name: reactivatedUser.name,
-              url: frontendUrl,
-              token,
-            },
-          }),
         ]);
         res.status(200).json({
           success: true,
           user: reactivatedUser,
           message: "Usuario reactivado correctamente",
+          reactivate: true,
         });
         return;
-      } else {
-        res.status(400).json({ message: "Usuario ya registrado" });
       }
 
       const newUser = await this.authService.register(userData);

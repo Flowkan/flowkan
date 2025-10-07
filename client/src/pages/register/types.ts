@@ -5,4 +5,5 @@ export interface UserRegister {
 	confirmPassword: string;
 	photo: File | null;
 	turnstileResponse: string;
+	reactivate: boolean;
 }

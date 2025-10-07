@@ -37,6 +37,7 @@ const RegisterPage = () => {
 		confirmPassword: "",
 		photo: null,
 		turnstileResponse: "",
+		reactivate: false,
 	});
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -95,12 +96,16 @@ const RegisterPage = () => {
 				return;
 			}
 
-			await register(formData);
-			navigate("/verify-pending", {
-				state: {
-					email: formData.email,
-				},
-			});
+			const result = await register(formData);
+			if (result.reactivate) {
+				navigate("/login");
+			} else {
+				navigate("/verify-pending", {
+					state: {
+						email: formData.email,
+					},
+				});
+			}
 		} catch (error) {
 			if (error instanceof Error) {
 				toast.custom((t) => (

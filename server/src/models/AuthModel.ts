@@ -116,12 +116,6 @@ class AuthModel {
     return user;
   }
 
-  // async updateUser(userId: number, data: { status: boolean }) {
-  //   return this.prisma.user.update({
-  //     where: { id: userId },
-  //     data,
-  //   });
-  // }
   async updateUser(
     userId: number,
     data: Partial<Pick<User, "status" | "password" | "name" | "photo">>,
@@ -131,7 +125,7 @@ class AuthModel {
     }
     return this.prisma.user.update({
       where: { id: userId },
-      data: {photo: null},
+      data: { ...data, photo: null },
     });
   }
 
@@ -217,7 +211,6 @@ class AuthModel {
         where: { id: userId },
         data: { photo: null, status: false },
       });
-
     });
     return {
       email: user.email,

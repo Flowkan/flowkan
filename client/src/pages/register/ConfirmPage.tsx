@@ -33,7 +33,7 @@ export const ConfirmPage = () => {
 					err.response?.data?.message || t("registerConfirm.error.confirm"),
 				);
 			});
-	}, [navigate, token]);
+	}, [navigate, t, token]);
 
 	return (
 		<div className="confirm-page">
