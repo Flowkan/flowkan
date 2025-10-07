@@ -178,7 +178,7 @@
 			"newTitle": "New Title",
 			"newImg": "New Background"
 		},
-		"edit": "EDIT",
+		"edit": "SAVE",
 		"toast": {
 			"errorImage": "File too big",
 			"error": "Error editing board"
