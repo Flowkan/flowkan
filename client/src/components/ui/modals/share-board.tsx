@@ -80,7 +80,7 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 					)}
 					{invitationLink && (
 						<div className="invitation-link-display mt-4 flex items-center justify-between space-x-2 rounded-md border border-gray-300 bg-gray-100 p-2 dark:border-gray-600 dark:bg-gray-700">
-							<span className="truncate text-sm text-gray-700">
+							<span className="truncate text-sm text-gray-100">
 								{invitationLink}
 							</span>
 							<Button
