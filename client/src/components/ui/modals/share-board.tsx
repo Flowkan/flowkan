@@ -64,9 +64,7 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 					{t("share.board.title")}
 				</h3>
 				<div className="invitation-link-section mt-6 border-t border-gray-200 pt-4 dark:border-gray-700">
-					<p className="mb-2 text-gray-700 dark:text-gray-300">
-						{t("share.board.link.text")}
-					</p>
+					<p className="mb-2 text-gray-700">{t("share.board.link.text")}</p>
 					{!invitationLink && (
 						<Button
 							type="button"
@@ -81,7 +79,7 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 					)}
 					{invitationLink && (
 						<div className="invitation-link-display mt-4 flex items-center justify-between space-x-2 rounded-md border border-gray-300 bg-gray-100 p-2 dark:border-gray-600 dark:bg-gray-700">
-							<span className="truncate text-sm text-gray-700 dark:text-gray-300">
+							<span className="truncate text-sm text-gray-700">
 								{invitationLink}
 							</span>
 							<Button
