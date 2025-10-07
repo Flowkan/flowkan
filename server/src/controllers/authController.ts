@@ -26,7 +26,7 @@ export class AuthController {
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
-    try {
+    try {            
       const user = await this.authService.validateCredentials(req.body);
 
       if (!user) {
@@ -79,6 +79,8 @@ export class AuthController {
       };
       const userVerification = await this.authService.findByEmail(email);
 
+      const language = req.headers['accept-language'] || "es";
+
       if (userVerification && !userVerification.status) {
         const frontendUrl =
           process.env.FRONTEND_WEB_URL || "http://localhost:5173";
@@ -93,16 +95,16 @@ export class AuthController {
         }
 
         // enviar correo de bienvenida otra vez
-        await Promise.all([
-          sendEmailTask({
+        await sendEmailTask({
             type: "WELCOME",
             to: reactivatedUser.email,
             data: {
               name: reactivatedUser.name,
               url: frontendUrl,
             },
-          }),
-        ]);
+            language
+        })
+
         res.status(200).json({
           success: true,
           user: reactivatedUser,
@@ -128,16 +130,8 @@ export class AuthController {
       });
 
       const frontendUrl =
-        process.env.FRONTEND_WEB_URL || "http://localhost:5173";
+        process.env.FRONTEND_WEB_URL || "http://localhost:5173";      
 
-      await sendEmailTask({
-        type: "WELCOME",
-        to: newUser.email,
-        data: {
-          name: newUser.name,
-          url: frontendUrl,
-        },
-      });
       await sendEmailTask({
         to: newUser.email,
         type: "CONFIRMATION",
@@ -146,6 +140,7 @@ export class AuthController {
           url: frontendUrl,
           token,
         },
+        language
       });
 
       res.status(201).json({ success: true, user: safeUser });
@@ -262,7 +257,7 @@ export class AuthController {
             },
           );
         });
-
+        const language = req.headers['accept-language'] || "es";
         const frontendUrl =
           process.env.FRONTEND_WEB_URL || "http://localhost:5173";
         await sendEmailTask({
@@ -272,6 +267,7 @@ export class AuthController {
             url: frontendUrl,
             token,
           },
+          language
         });
 
         await this.authService.generatedToken(user.id, token);
@@ -360,6 +356,7 @@ export class AuthController {
         path: "/",
       });
 
+      const language = req.headers['accept-language'] || "es";
       const frontendUrl =
         process.env.FRONTEND_WEB_URL || "http://localhost:5173";
 
@@ -370,6 +367,7 @@ export class AuthController {
           name: userData.name,
           url: frontendUrl,
         },
+        language
       });
 
       res.json(userData);
@@ -379,5 +377,7 @@ export class AuthController {
       }
       next(error);
     }
-  };
+  };  
 }
+
+

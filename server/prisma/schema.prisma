@@ -25,7 +25,7 @@ model User {
   comments Comment[]
   assignedCards CardAssignee[]   @relation("CardAssignees")
   profile     Profile?
-  passwordResetTokens  PasswordResetToken[] 
+  passwordResetTokens  PasswordResetToken[]  
 }
 
 model Board {
@@ -140,3 +140,5 @@ model Media {
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 }
+
+

@@ -5,23 +5,27 @@ import {
   Section,
 } from "@react-email/components";
 
-const FooterEmail = () => {
+const FooterEmail = ({language="es"}:{language?:string}) => {
+  const rightsText = language === "es" ? "Todos los derechos reservados" : "All rights reserved";
+  const emailText = language === "es" ? "Email" : "Email";
+  const phoneText = language === "es" ? "Teléfono" : "Phone";
+  const addressText = language === "es" ? "Dirección" : "Address";
   return (
     <Container className="bg-gray-100 rounded-lg py-2 px-3">
       <Section className="pt-2 text-gray-500 text-sm flex justify-center">
-        &copy; Flowkan {new Date().getFullYear()} Todos los derechos reservados
+        &copy; Flowkan {new Date().getFullYear()} {rightsText}
       </Section>           
       <Section>
         <ul className="text-sm list-none p-0 text-gray-500">
           <li>
-            Email: <Link
+            {emailText}: <Link
               href="mailto:info@flowkan.com"              
             >
               info@flowkan.com
             </Link>            
           </li>
-          <li>Teléfono: +34 123 45 67 89</li>
-          <li>Dirección Calle Ficticia 123, 28001 Madrid, España</li>
+          <li>{phoneText}: +34 123 45 67 89</li>
+          <li>{addressText}: Calle Ficticia 123, 28001 Madrid, España</li>
         </ul>   
       </Section>
     </Container>
