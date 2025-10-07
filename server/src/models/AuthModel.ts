@@ -131,7 +131,7 @@ class AuthModel {
     }
     return this.prisma.user.update({
       where: { id: userId },
-      data,
+      data: {photo: null},
     });
   }
 
@@ -215,8 +215,9 @@ class AuthModel {
       // Desactivar cuenta
       await tx.user.update({
         where: { id: userId },
-        data: { status: false },
+        data: { photo: null, status: false },
       });
+
     });
     return {
       email: user.email,
