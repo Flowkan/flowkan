@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { DragDropContext, Droppable, type DropResult } from "@hello-pangea/dnd";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Column from "../../components/Column";
 import TaskDetailModal from "../../components/TaskDetailModal";
 import type { Column as ColumnType } from "./types";
@@ -8,7 +8,6 @@ import {
 	useFetchBoardByIdAction,
 	useAddTaskAction,
 	useUpdateTaskAction,
-	useBoardsError,
 	useAddColumnAction,
 	useDeleteColumnAction,
 	useDeleteTaskction,
@@ -37,8 +36,6 @@ const Board = () => {
 	const removeColumnAction = useDeleteColumnAction();
 	const updateBoardRemoteMode = useUpdateBoardRemote();
 	const { slug } = useParams<{ slug: string }>();
-	const navigate = useNavigate();
-	const error = useBoardsError();
 	const socket = useSocket();
 	const dispatch = useAppDispatch();
 
@@ -66,12 +63,6 @@ const Board = () => {
 		if (!slug) return;
 		fetchBoardAction(slug);
 	}, [slug, fetchBoardAction]);
-
-	useEffect(() => {
-		if (error === "Error al cargar tablero") {
-			navigate("/404");
-		}
-	}, [error, navigate]);
 
 	useEffect(() => {
 		if (!socket) return;
@@ -229,8 +220,6 @@ const Board = () => {
 		},
 		[boardData, removeColumnAction],
 	);
-
-	if (error) return <div>Error al cargar el tablero: {error}</div>;
 
 	return (
 		<BackofficePage

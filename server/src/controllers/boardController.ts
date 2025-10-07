@@ -72,6 +72,12 @@ export class BoardController {
       const userId = req.apiUserId;
       const boardSlug = req.params.slug;
       const board = await this.boardService.get({ userId, boardSlug });
+      if (!board) {
+        return res.status(404).send({
+          message: "Tablero no encontrado o acceso denegado.",
+          status: 404,
+        });
+      }
       res.json(board);
     } catch (err) {
       res.status(500).send("Error al obtener el tablero");
