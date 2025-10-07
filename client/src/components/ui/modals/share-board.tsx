@@ -4,6 +4,7 @@ import { Button } from "../Button";
 import CloseButton from "../close-button";
 import { createInvitationLink } from "../../../pages/boards/service";
 import "./modal-boards.css";
+import { Icon } from "@iconify/react";
 
 interface ShareBoardProps {
 	boardId: string;
@@ -60,7 +61,7 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 		<div className="modal-bg fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
 			<article className="modal-card relative mx-auto w-full max-w-md rounded-lg bg-white p-8 shadow-xl dark:bg-gray-800">
 				<CloseButton onClick={handleClose} className="absolute top-4 right-4" />
-				<h3 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">
+				<h3 className="mb-4 text-xl font-bold text-gray-900">
 					{t("share.board.title")}
 				</h3>
 				<div className="invitation-link-section mt-6 border-t border-gray-200 pt-4 dark:border-gray-700">
@@ -79,14 +80,22 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 					)}
 					{invitationLink && (
 						<div className="invitation-link-display mt-4 flex items-center justify-between space-x-2 rounded-md border border-gray-300 bg-gray-100 p-2 dark:border-gray-600 dark:bg-gray-700">
-							<span className="truncate text-sm text-gray-700">
+							<span className="truncate text-sm text-gray-100">
 								{invitationLink}
 							</span>
 							<Button
 								onClick={handleCopyLink}
+								title={t("share.board.link.copy")}
 								className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-300 p-1 text-xs font-bold transition-colors hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
 							>
-								{t("share.board.link.copy")}
+								<Icon
+									name="copy-share"
+									icon="flowbite:file-copy-alt-solid"
+									width="20"
+									height="20"
+									style={{ color: "#fff" }}
+									xlinkTitle="copiar"
+								/>
 							</Button>
 						</div>
 					)}
