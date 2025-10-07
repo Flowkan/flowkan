@@ -9,9 +9,14 @@ import { useTranslation } from "react-i18next";
 interface BoardToolbarProps {
 	readonly boardId: string;
 	readonly image: string | undefined;
+	readonly onAddTask?: (
+		columnId: number,
+		title: string,
+		description: string,
+	) => void;
 }
 
-export function BoardToolbar({ boardId, image }: BoardToolbarProps) {
+export function BoardToolbar({ boardId, image, onAddTask }: BoardToolbarProps) {
 	const [showShareForm, setShowShareForm] = useState(false);
 	const users = useUsersOnBoard(boardId);
 	const { t } = useTranslation();
@@ -49,7 +54,7 @@ export function BoardToolbar({ boardId, image }: BoardToolbarProps) {
 					</div>
 
 					<div className="pr-4 pl-4">
-						{boardId && <ChatWindow boardId={boardId} />}
+						{boardId && <ChatWindow boardId={boardId} onAddTask={onAddTask} />}
 					</div>
 
 					{/* Botón Compartir */}

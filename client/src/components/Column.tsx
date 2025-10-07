@@ -103,7 +103,7 @@ const Column = ({
 		) {
 			onDeleteColumn(column.id);
 		}
-	}, [column.id, column.title, onDeleteColumn]);
+	}, [column.id, column.title, onDeleteColumn, t]);
 
 	const handleStartAddingTask = useCallback(() => {
 		setIsAddingTask(true);

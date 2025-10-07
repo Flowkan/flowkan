@@ -144,15 +144,15 @@ const Board = () => {
 	);
 
 	const handleAddTask = useCallback(
-		(columnId: number, content: string) => {
+		(columnId: number, title: string, description: string = "") => {
 			if (!boardData) return;
 			const currentColumn = boardData.lists.find(
 				(c) => c.id?.toString() === columnId.toString(),
 			);
 			if (!currentColumn) return;
 			const newTask = {
-				title: content,
-				description: "",
+				title: title,
+				description: description,
 				position: (currentColumn.cards ?? []).length,
 			};
 			addTaskAction(Number(columnId), newTask);
@@ -226,6 +226,7 @@ const Board = () => {
 			title={boardData?.title}
 			backgroundImg={boardData?.image}
 			boardId={boardData?.id}
+			onAddTask={handleAddTask}
 		>
 			<DragDropContext
 				onDragStart={handleDragStart}

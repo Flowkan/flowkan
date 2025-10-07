@@ -10,20 +10,29 @@ import { useDismiss } from "../../hooks/useDismissClickAndEsc";
 import { useAppSelector } from "../../store";
 import { getUserLogged } from "../../store/profile/selectors";
 import { useTranslation } from "react-i18next";
+import { useAI } from "../../hooks/useAI";
+import { formattedToHTML } from "../../utils/formatted";
 
 interface ChatWindowProps {
 	readonly boardId: string;
+	readonly onAddTask?: (
+		columnId: number,
+		title: string,
+		description: string,
+	) => void;
 }
 
 const notificationSound = new Audio("/notification.mp3");
 
-export function ChatWindow({ boardId }: ChatWindowProps) {
+export function ChatWindow({ boardId, onAddTask }: ChatWindowProps) {
 	const { messages, sendMessage, unreadCount, resetUnreadCount } =
 		useChatSocket(boardId);
 	const [text, setText] = useState("");
 	const { open, setOpen, ref } = useDismiss<HTMLDivElement>();
 	const user = useAppSelector(getUserLogged);
 	const { t } = useTranslation();
+	const [isAgentMode, setIsAgentMode] = useState(false);
+	const { generateDescriptionFromTitle, loading, error } = useAI();
 
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -54,8 +63,18 @@ export function ChatWindow({ boardId }: ChatWindowProps) {
 		}
 	}, [messages, open, resetUnreadCount]);
 
-	const handleSend = () => {
-		if (text.trim()) {
+	const handleSend = async () => {
+		if (!text.trim()) return;
+		if (isAgentMode && onAddTask) {
+			try {
+				const generated = await generateDescriptionFromTitle(text);
+				const formattedText = formattedToHTML(generated || "");
+				onAddTask(5, text.trim(), formattedText);
+				setText("");
+			} catch (err) {
+				console.error("Error generando tarea con IA:", err);
+			}
+		} else {
 			sendMessage(text.trim());
 			setText("");
 		}
@@ -85,6 +104,28 @@ export function ChatWindow({ boardId }: ChatWindowProps) {
 								className="h-5 w-5 text-gray-600 hover:text-gray-800"
 							/>
 						</button>
+					</div>
+
+					<div className="flex items-center justify-between border-b px-3 py-2 text-sm">
+						{" "}
+						<span>Modo agente</span>{" "}
+						<label className="inline-flex cursor-pointer items-center">
+							{" "}
+							<input
+								type="checkbox"
+								className="sr-only"
+								checked={isAgentMode}
+								onChange={() => setIsAgentMode((prev) => !prev)}
+							/>{" "}
+							<div
+								className={`h-5 w-10 rounded-full ${isAgentMode ? "bg-blue-600" : "bg-gray-300"} relative transition`}
+							>
+								{" "}
+								<div
+									className={`absolute top-[2px] left-[2px] h-4 w-4 rounded-full bg-white transition-transform ${isAgentMode ? "translate-x-5" : "translate-x-0"}`}
+								></div>{" "}
+							</div>{" "}
+						</label>{" "}
 					</div>
 
 					<div className="flex flex-1 flex-col gap-2 overflow-y-auto p-2">
@@ -132,9 +173,10 @@ export function ChatWindow({ boardId }: ChatWindowProps) {
 							onClick={handleSend}
 							className="bg-primary hover:bg-primary/90 rounded-r px-4 text-white"
 						>
-							{t("chat.send")}
+							{loading ? "IA..." : t("chat.send")}
 						</button>
 					</div>
+					{error && <p className="px-3 py-1 text-xs text-red-500">{error}</p>}
 				</div>
 			)}
 		</div>

@@ -9,6 +9,7 @@ interface BackofficePageProps {
 	className?: string;
 	backgroundImg?: string;
 	boardId?: string | null;
+	onAddTask?: (columnId: number, title: string, description: string) => void;
 }
 
 export const BackofficePage = ({
@@ -17,6 +18,7 @@ export const BackofficePage = ({
 	className,
 	backgroundImg,
 	boardId,
+	onAddTask,
 }: BackofficePageProps) => {
 	let generatedBg;
 	if (boardId) {
@@ -52,7 +54,11 @@ export const BackofficePage = ({
 		>
 			{boardId && (
 				<div className="flex w-full bg-white/45">
-					<BoardToolbar boardId={boardId} image={backgroundImg} />
+					<BoardToolbar
+						boardId={boardId}
+						image={backgroundImg}
+						onAddTask={onAddTask}
+					/>
 				</div>
 			)}
 			{title && (
