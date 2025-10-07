@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "..";
 import type { Credentials } from "../../pages/login/types";
-import { resetError, uiResetError } from "../boards/actions";
+import { uiResetError } from "../boards/actions";
 import { login, logout } from "./actions";
 import { getAuthError, isAuthenticated } from "./selectors";
 
