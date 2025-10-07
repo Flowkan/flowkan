@@ -51,6 +51,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 									className="board-img"
 									src={`${import.meta.env.VITE_BASE_URL}${board.image}_t.webp`}
 									alt={`board-img-${board.title}`}
+									loading="lazy"
 								/>
 							</div>
 						</div>

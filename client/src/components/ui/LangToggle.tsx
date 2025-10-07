@@ -26,6 +26,7 @@ export default function LanguageToggleButton() {
 						src={selectedLanguage.flag}
 						alt={t("language.alt", { label: selectedLanguage.label })}
 						width={32}
+						loading="lazy"
 						aria-label={t("language.arialabel", {
 							label: selectedLanguage.label,
 						})}
@@ -50,6 +51,7 @@ export default function LanguageToggleButton() {
 									<img
 										src={flag}
 										alt={t("language.span", { label })}
+										loading="lazy"
 										width={24}
 										className="shrink-0"
 									/>

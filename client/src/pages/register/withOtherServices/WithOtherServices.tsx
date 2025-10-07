@@ -51,6 +51,7 @@ export const WithOtherServices = () => {
 			<img
 				src={`${services.icon}`}
 				alt="Google Logo"
+				loading="lazy"
 				className="mr-2 h-5 w-5"
 			/>
 			{`${services.label}`}

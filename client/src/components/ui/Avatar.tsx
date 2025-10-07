@@ -80,6 +80,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 				<img
 					src={`${baseUrl}/uploads/users/${thumbCurrent ? thumbCurrent : cleanThumb}`}
 					alt={name}
+					loading="lazy"
 					title={name}
 					className={`${className} rounded-full size-full object-cover`}
 					// style={{

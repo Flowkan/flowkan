@@ -126,6 +126,7 @@ export const Footer: React.FC = () => {
 								<img
 									src={logo.src}
 									alt={logo.alt}
+									loading="lazy"
 									className="h-10 w-auto max-w-full object-contain grayscale transition-all duration-300 hover:grayscale-0"
 								/>
 							</div>

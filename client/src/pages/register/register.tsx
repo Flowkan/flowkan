@@ -168,6 +168,7 @@ const RegisterPage = () => {
 										<img
 											src={previewUrl}
 											alt="preview"
+											loading="lazy"
 											className="h-24 w-24 rounded-full border border-gray-300 object-cover shadow-md"
 										/>
 									) : (

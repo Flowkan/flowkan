@@ -64,6 +64,7 @@ export const HomePage: React.FC = () => {
 								<img
 									src="https://imgs.search.brave.com/7WNY_QRUFxwivusSxIeNog9dVL2TneO5PYrt_2Vr_Cc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuYXNhbmEuYml6/L3RyYW5zZm9ybS9h/YzI1Nzg5NS1jZGY1/LTRmZTItOGEzNC0y/YmVmNmFhNDE2OGUv/aW5saW5lLWFnaWxl/LXNwcmludC1wbGFu/bmluZy0xLTJ4P2lv/PXRyYW5zZm9ybTpm/aWxsLHdpZHRoOjI1/NjAmZm9ybWF0PXdl/YnA"
 									alt={t("home.interface")}
+									loading="lazy"
 									className="w-full max-w-lg scale-105 rotate-3 transform rounded-lg shadow-2xl"
 								/>
 							</div>
@@ -178,6 +179,7 @@ export const HomePage: React.FC = () => {
 									<img
 										src="https://randomuser.me/api/portraits/women/68.jpg"
 										alt={t("home.ourUsers.testimony")}
+										loading="lazy"
 										className="border-accent-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 									/>
 									<p className="text-text-body mb-4 italic">
@@ -191,6 +193,7 @@ export const HomePage: React.FC = () => {
 									<img
 										src="https://randomuser.me/api/portraits/men/44.jpg"
 										alt={t("home.ourUsers.testimony")}
+										loading="lazy"
 										className="border-primary-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 									/>
 									<p className="text-text-body mb-4 italic">
@@ -205,6 +208,7 @@ export const HomePage: React.FC = () => {
 									<img
 										src="https://randomuser.me/api/portraits/women/79.jpg"
 										alt={t("home.ourUsers.testimony")}
+										loading="lazy"
 										className="border-primary-light mb-4 h-20 w-20 rounded-full border-4 object-cover"
 									/>
 									<p className="text-text-body mb-4 italic">

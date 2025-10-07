@@ -72,6 +72,7 @@ const UploadImage = ({
 					<img
 						src={newImage}
 						alt={t("uploadImg.alt")}
+						loading="lazy"
 						className={`shadow-primary size-40 rounded-full border border-gray-300 object-cover shadow-[3px_0px_8px] transition-transform group-hover:scale-105 ${error ? "border-2 border-red-400" : ""}`}
 					/>
 				) : (
