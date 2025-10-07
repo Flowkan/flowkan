@@ -47,7 +47,7 @@ export class AuthController {
         (err, tokenJWT) => {
           if (err) {
             return next(err);
-          }                    
+          }
           res.json({
             accessToken: tokenJWT,
             user: {
@@ -58,8 +58,7 @@ export class AuthController {
             },
           });
         },
-      );    
-                    
+      );
     } catch (err) {
       next(err);
     }
@@ -78,6 +77,58 @@ export class AuthController {
         password,
         photo: req.body.photo || null,
       };
+      const userVerification = await this.authService.findByEmail(email);
+
+      if (userVerification && !userVerification.status) {
+        const frontendUrl =
+          process.env.FRONTEND_WEB_URL || "http://localhost:5173";
+        // si usuario inactivo reactivar
+        const reactivatedUser = await this.authService.activateUser(
+          userVerification.id,
+          { name, password, photo: req.body.photo || null },
+        );
+
+        if (!process.env.JWT_SECRET) {
+          throw new Error("JWT_SECRET no definido");
+        }
+
+        const token = jwt.sign(
+          { userId: reactivatedUser.id },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "1d",
+          },
+        );
+        // enviar correo de bienvenida otra vez
+        await Promise.all([
+          sendEmailTask({
+            type: "WELCOME",
+            to: reactivatedUser.email,
+            data: {
+              name: reactivatedUser.name,
+              url: frontendUrl,
+            },
+          }),
+          sendEmailTask({
+            to: reactivatedUser.email,
+            type: "CONFIRMATION",
+            data: {
+              name: reactivatedUser.name,
+              url: frontendUrl,
+              token,
+            },
+          }),
+        ]);
+        res.status(200).json({
+          success: true,
+          user: reactivatedUser,
+          message: "Usuario reactivado correctamente",
+        });
+        return;
+      } else {
+        res.status(400).json({ message: "Usuario ya registrado" });
+      }
+
       const newUser = await this.authService.register(userData);
       let photoUrl = null;
       if (req.body.photo) {
@@ -92,26 +143,27 @@ export class AuthController {
       const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET, {
         expiresIn: "1d",
       });
-      
-      const frontendUrl = process.env.FRONTEND_WEB_URL || 'http://localhost:5173'
-      
+
+      const frontendUrl =
+        process.env.FRONTEND_WEB_URL || "http://localhost:5173";
+
       await sendEmailTask({
-        type:'WELCOME',
-        to:newUser.email,
-        data:{
-          name:newUser.name,
-          url:frontendUrl,
-        }        
-      })
+        type: "WELCOME",
+        to: newUser.email,
+        data: {
+          name: newUser.name,
+          url: frontendUrl,
+        },
+      });
       await sendEmailTask({
-        to:newUser.email,
-        type:'CONFIRMATION',
-        data:{
-          name:newUser.name,
-          url:frontendUrl,
-          token
-        }
-      })
+        to: newUser.email,
+        type: "CONFIRMATION",
+        data: {
+          name: newUser.name,
+          url: frontendUrl,
+          token,
+        },
+      });
 
       res.status(201).json({ success: true, user: safeUser });
     } catch (err: unknown) {
@@ -228,15 +280,16 @@ export class AuthController {
           );
         });
 
-        const frontendUrl = process.env.FRONTEND_WEB_URL || 'http://localhost:5173'
+        const frontendUrl =
+          process.env.FRONTEND_WEB_URL || "http://localhost:5173";
         await sendEmailTask({
-          to:email,
-          type:'PASSWORD_RESET',
-          data:{
-            url:frontendUrl,
-            token
-          }
-        })
+          to: email,
+          type: "PASSWORD_RESET",
+          data: {
+            url: frontendUrl,
+            token,
+          },
+        });
 
         await this.authService.generatedToken(user.id, token);
 
@@ -317,12 +370,26 @@ export class AuthController {
       if (!userId) {
         return res.status(401).json({ error: "No estas autorizado" });
       }
-      const result = await this.authService.deactivateUser(userId);
+      const userData = await this.authService.deactivateUser(userId);
+
       res.clearCookie("auth", {
         httpOnly: true,
         path: "/",
       });
-      res.json(result);
+
+      const frontendUrl =
+        process.env.FRONTEND_WEB_URL || "http://localhost:5173";
+
+      await sendEmailTask({
+        to: userData.email,
+        type: "GOODBYE",
+        data: {
+          name: userData.name,
+          url: frontendUrl,
+        },
+      });
+
+      res.json(userData);
     } catch (error: unknown) {
       if (error instanceof Error) {
         return res.status(500).json({ error: error.message });
