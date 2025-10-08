@@ -65,13 +65,12 @@
 /* Filtro desplegable hacia arriba */
 .filters-form {
 	position: absolute;
-	bottom: -100%;
+	bottom: 10%;
 	left: 0;
 	right: 0;
 	width: 100%;
 	z-index: 50;
-	background: rgba(255, 255, 255, 0.45);
-	backdrop-filter: blur(15px) saturate(80%);
+	background: rgba(255, 255, 255, 0.95);
 	border: 1px solid #ddd;
 	padding: 10px;
 	box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);

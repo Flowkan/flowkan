@@ -10,8 +10,8 @@
 			"title": "Filter Boards",
 			"filterBoardLabel": "Board Name",
 			"filterBoardPlaceholder": "Search boards",
-			"filterMemberLabel": "Everyone",
-			"filterMemberPlaceholder": "Filter by member",
+			"filterMemberLabel": "Member or email",
+			"filterMemberPlaceholder": "Filter by member or email",
 			"clearFilters": "Clear"
 		},
 		"title": "Backoffice"

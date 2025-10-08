@@ -10,8 +10,8 @@
 			"title": "Filtrar tableros",
 			"filterBoardLabel": "Nombre del tablero",
 			"filterBoardPlaceholder": "Buscar tableros",
-			"filterMemberLabel": "Miembro de tablero",
-			"filterMemberPlaceholder": "Todos",
+			"filterMemberLabel": "Miembro o email",
+			"filterMemberPlaceholder": "Filtrar por miembro o email",
 			"clearFilters": "Borrar"
 		},
 		"title": "Backoffice"
