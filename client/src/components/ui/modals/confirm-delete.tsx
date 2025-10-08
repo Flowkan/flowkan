@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-/* import "./confirm-delete.css"; */
 import "./modal-boards.css";
 import { IconCancel } from "../../icons/IconCancel";
 

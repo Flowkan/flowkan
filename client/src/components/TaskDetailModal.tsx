@@ -293,6 +293,31 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		);
 	}, [editedDescription, isOpen]);
 
+	useEffect(() => {
+		if (!showUsers) return;
+
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				usersRef.current &&
+				!usersRef.current.contains(event.target as Node)
+			) {
+				setShowUsers(false);
+			}
+		};
+
+		const handleEsc = (event: KeyboardEvent) => {
+			if (event.key === "Escape") setShowUsers(false);
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+		document.addEventListener("keydown", handleEsc);
+
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+			document.removeEventListener("keydown", handleEsc);
+		};
+	}, [showUsers]);
+
 	return (
 		<>
 			<div className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
