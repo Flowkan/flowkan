@@ -26,7 +26,10 @@ export const Welcome = ({
   url = "http://localhost:5173",
   language = "es",
 }: WelcomeProps) => {
-  const previewText = `¡Bienvenido a Flowkan, ${name}! Empieza a organizar tus proyectos.`;
+  const previewText =
+    language === "es"
+      ? `¡Bienvenido a Flowkan, ${name}! Empieza a organizar tus proyectos.`
+      : `Welcome to Flowkan, ${name}! Start organizing your projects.`;
   return (
     <Html>
       <Head />

@@ -26,7 +26,10 @@ export const Goodbye = ({
   url = "http://localhost:5173",
   language = "es",
 }: GoodByeProps) => {
-  const previewText = `¡Hasta pronto, ${name}! Esperamos verte pronto de vuelta.`;
+  const previewText =
+    language === "es"
+      ? `¡Hasta pronto, ${name}! Esperamos verte pronto de vuelta.`
+      : `See you soon, ${name}! We hope to see you back soon.`;
 
   return (
     <Html>
