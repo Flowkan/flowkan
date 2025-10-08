@@ -93,7 +93,6 @@ const BoardsList = () => {
 										{t("boardsList.pagination.endLoading")}
 									</p>
 								)}
-								{/* </div> */}
 							</div>
 						</div>
 					)}

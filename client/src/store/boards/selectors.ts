@@ -12,23 +12,34 @@ export const getBoardsPagination = (state: RootState) => ({
 });
 
 export const getBoardsByTitle = (state: RootState, seachTitle: string) =>
-	state.boards.boards.filter((b) =>
-		b.title.toLowerCase().includes(seachTitle.toLowerCase()),
+	state.boards.boards.filter((board) =>
+		board.title.toLowerCase().includes(seachTitle.toLowerCase()),
 	);
+export const getAllMembers = (state: RootState) => {
+	const boards = state.boards.boards ?? [];
+	const members: { name: string; photo: string }[] = [];
+
+	boards.forEach((board) => {
+		board.members?.forEach((member) => {
+			const name = member.user?.name;
+			if (!name) return;
+
+			const photo = member.user?.photo ?? "";
+
+			const exists = members.find((m) => m.name === name);
+			if (!exists) {
+				members.push({ name, photo });
+			}
+		});
+	});
+
+	return members;
+};
 
 export const getBoardByMember = (state: RootState, searchMember: string) => {
-	if (searchMember.includes("@")) {
-		return state.boards.boards.filter((b) =>
-			b.members.some((m) =>
-				m.user.email.toLowerCase().includes(searchMember.toLowerCase()),
-			),
-		);
-	}
-	return state.boards.boards.filter((b) =>
-		b.members.some(
-			(m) =>
-				m.user.name.toLowerCase().includes(searchMember.toLowerCase()) ||
-				m.user.email.toLowerCase().includes(searchMember.toLowerCase()),
+	return state.boards.boards.filter((board) =>
+		board.members.some((member) =>
+			member.user.name.toLowerCase().includes(searchMember.toLowerCase()),
 		),
 	);
 };
