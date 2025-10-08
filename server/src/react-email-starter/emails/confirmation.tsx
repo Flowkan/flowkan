@@ -69,7 +69,6 @@ export const Confirmation = ({
         }}
       >
         <Body className="p-2 bg-gray-200">
-          <Heading as="h2">{title}</Heading>
           <Container className="bg-white p-4 rounded-lg">
             <HeaderEmail />
 
@@ -83,7 +82,8 @@ export const Confirmation = ({
               <Text className="text-slate-700 leading-relaxed">{bodyText}</Text>
             </Section>
             <Section className="px-10">
-              <Heading as="h3" className="text-lg text-slate-800">
+              {/* <Heading as="h2">{title}</Heading> */}
+              <Heading as="h2" className="text-md text-slate-800">
                 {actionText}
               </Heading>
               <Text className="text-slate-700 leading-relaxed">
