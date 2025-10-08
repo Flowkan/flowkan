@@ -14,6 +14,7 @@ interface ShareBoardProps {
 const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 	const { t } = useTranslation();
 	const [invitationLink, setInvitationLink] = useState<string | null>(null);
+	const [copy, setCopy] = useState<boolean>(false);
 	const [status, setStatus] = useState<
 		"idle" | "loading" | "succeeded" | "failed"
 	>("idle");
@@ -22,6 +23,7 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 	const handleCopyLink = () => {
 		if (invitationLink) {
 			navigator.clipboard.writeText(invitationLink);
+			setCopy(true);
 		}
 	};
 
@@ -89,12 +91,10 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 								className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-300 p-1 text-xs font-bold transition-colors hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
 							>
 								<Icon
-									name="copy-share"
-									icon="flowbite:file-copy-alt-solid"
+									icon={copy ? "lucide:check" : "flowbite:file-copy-alt-solid"}
 									width="20"
 									height="20"
-									style={{ color: "#fff" }}
-									xlinkTitle="copiar"
+									style={{ color: copy ? "var(--color-success)" : "#fff" }}
 								/>
 							</Button>
 						</div>
