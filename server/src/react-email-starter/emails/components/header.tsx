@@ -19,14 +19,13 @@ const HeaderEmail = () => {
           as="h1"
           className="flex items-center justify-center text-3xl font-normal p-2 m-1"
         >
-          <Img
-            src="http://localhost:3001/static/favicon.ico"
+          {/* <Img
+            src="" url del png publico
             alt="Flowkan-icon"
             width={32}
             height={32}
-          />
-          <span className="text-white pt-2 pb-2 mt-2">lowkan</span>
-          {/* lowkan */}
+          /> */}
+          <span className="text-white pt-2 pb-2 mt-2">Flowkan</span>
         </Heading>
       </Section>
     </Tailwind>
