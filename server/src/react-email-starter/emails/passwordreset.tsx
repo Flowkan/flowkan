@@ -35,7 +35,7 @@ const PasswordReset = ({ url, token, language = "es" }: PasswordResetProps) => {
         }}
       >
         <Body>
-          <Container className="bg-white p-4 rounded-lg">
+          <Container className="bg-white max-w-xl py-4 rounded-lg shadow-lg overflow-hidden">
             <HeaderEmail />
             <Section className="flex-grow flex items-center justify-center">
               <Section className="mx-auto px-4">

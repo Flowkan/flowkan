@@ -46,7 +46,7 @@ export const Welcome = ({
         }}
       >
         <Body className="bg-slate-50 font-sans">
-          <Container className="bg-white max-w-xl my-12 rounded-lg shadow-lg overflow-hidden">
+          <Container className="bg-white max-w-xl py-4 rounded-lg shadow-lg overflow-hidden">
             <HeaderEmail />
             <Section className="px-10 py-8">
               <Heading as="h2" className="text-2xl font-bold text-slate-800">
