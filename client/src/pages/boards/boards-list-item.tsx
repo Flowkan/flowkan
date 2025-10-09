@@ -17,7 +17,7 @@ interface BoardsItemProps {
 
 const BoardsItem = ({ board }: BoardsItemProps) => {
 	const { t } = useTranslation();
-	const hooks = useBoardsItem(board);	
+	const hooks = useBoardsItem(board);
 	return (
 		<>
 			{hooks.showConfirm && (
@@ -31,6 +31,7 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 				<EditBoard
 					handleEditForm={hooks.handleEditForm}
 					handleHideMessage={hooks.handleHideEdit}
+					oldTitle={board.title}
 				/>
 			)}
 			{hooks.showShareForm && (

@@ -178,7 +178,7 @@
 			"newTitle": "Nuevo título",
 			"newImg": "Nuevo fondo"
 		},
-		"edit": "EDITAR",
+		"edit": "GUARDAR",
 		"toast": {
 			"errorImage": "Imagen demasiado grande",
 			"error": "Error al editar el tablero"

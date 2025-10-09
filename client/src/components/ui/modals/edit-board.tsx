@@ -12,9 +12,14 @@ import { CustomToast } from "../../CustomToast";
 interface EditFormProps {
 	handleEditForm: (newData: EditBoardsData) => void;
 	handleHideMessage: () => void;
+	oldTitle: string;
 }
 
-const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
+const EditBoard = ({
+	handleEditForm,
+	handleHideMessage,
+	oldTitle,
+}: EditFormProps) => {
 	const [titleInput, setTitleInput] = useState("");
 	const fileRef = useRef<HTMLInputElement>(null);
 	const [fileChanged, setFileChanged] = useState(false);
@@ -84,6 +89,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 							name="boardtitle"
 							label={translation("editBoard.form.newTitle")}
 							type="text"
+							placeholder={oldTitle}
 							labelClassName="form-label"
 							value={titleInput}
 							onChange={handleTitleChange}
