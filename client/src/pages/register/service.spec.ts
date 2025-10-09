@@ -28,6 +28,8 @@ describe("register", () => {
 	it("should call apiClient.post with the correct parameters when photo is null", async () => {
 		const mockUser: UserRegister = { ...baseUser, photo: null };
 
+		(apiClient.post as Mock).mockResolvedValueOnce({ data: mockUser });
+
 		await register(mockUser);
 
 		expect(apiClient.post).toHaveBeenCalledWith(
@@ -44,6 +46,8 @@ describe("register", () => {
 	it("should call apiClient.post with the correct parameters when photo is a File", async () => {
 		const file = new File(["contenido"], "foto.png", { type: "image/png" });
 		const mockUser: UserRegister = { ...baseUser, photo: file };
+
+		(apiClient.post as Mock).mockResolvedValueOnce({ data: mockUser });
 
 		await register(mockUser);
 
