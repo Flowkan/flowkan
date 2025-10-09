@@ -65,6 +65,7 @@ describe("EditBoard", () => {
 				<EditBoard
 					handleEditForm={handleEditForm}
 					handleHideMessage={handleHideMessage}
+					oldTitle=""
 				/>
 			</Provider>,
 		);
