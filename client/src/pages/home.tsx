@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Page } from "../components/layout/page";
 import React, { useEffect, useRef } from "react";
 import { Button } from "../components/ui/Button";
-import { SEO } from "../components/layout/seo";
+import { Seo } from "../components/layout/seo";
 import { createTimeline, stagger, splitText } from "animejs";
 
 export const HomePage: React.FC = () => {
@@ -35,13 +35,16 @@ export const HomePage: React.FC = () => {
 
 	return (
 		<>
-			<SEO />
+			<Seo />
 			<Page>
 				<main className="bg-background-page text-text-heading flex-grow">
 					<section className="from-accent to-primary-dark text-text-on-accent relative overflow-hidden bg-gradient-to-br px-6 py-20 md:px-12">
 						<div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between lg:flex-row">
 							<div className="mb-10 text-center lg:mb-0 lg:w-1/2 lg:text-left">
-								<h1 ref={h1Ref} className="mb-4 text-3xl leading-tight font-extrabold sm:text-4xl md:text-5xl lg:text-6xl">
+								<h1
+									ref={h1Ref}
+									className="mb-4 text-3xl leading-tight font-extrabold sm:text-4xl md:text-5xl lg:text-6xl"
+								>
 									{t("home.banner")}
 								</h1>
 

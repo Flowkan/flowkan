@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
-export const SEO: React.FC = () => {
+export const Seo: React.FC = () => {
 	const { t } = useTranslation();
 
 	return (

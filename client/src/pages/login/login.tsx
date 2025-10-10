@@ -1,5 +1,5 @@
 import { Page } from "../../components/layout/page";
-import { NavLink } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 import {
 	useCallback,
 	useEffect,
@@ -27,7 +27,8 @@ import Turnstile from "react-turnstile";
 import { validationForm } from "../../utils/validations";
 import { LoginFormSchema } from "../../utils/auth.schema";
 import { useValidationForm } from "../../hooks/useValidationForm";
-import { SEO } from "../../components/layout/seo";
+import { Seo } from "../../components/layout/seo";
+import { confirmEmail } from "../register/service";
 
 export const LoginPage = () => {
 	const { t } = useTranslation();
@@ -35,6 +36,7 @@ export const LoginPage = () => {
 	const profileLoadedAction = useLoadedProfile();
 	const dispatch = useAppDispatch();
 	const [showModal, setShowModal] = useState(false);
+	const [searchParams] = useSearchParams();
 
 	const [formData, setFormData] = useState<Credentials>({
 		email: "",
@@ -61,8 +63,33 @@ export const LoginPage = () => {
 		);
 
 	useEffect(() => {
+		const confirmationToken = searchParams.get("confirmation-token");
+		if (confirmationToken) {
+			confirmEmail(confirmationToken)
+				.then(() => {
+					toast.custom((t) => (
+						<CustomToast
+							message={__("registerConfirm.ok")}
+							t={t}
+							type="success"
+						/>
+					));
+				})
+				.catch(() => {
+					toast.custom((t) => (
+						<CustomToast
+							message={__("registerConfirm.error.confirm")}
+							t={t}
+							type="error"
+						/>
+					));
+				});
+		}
+	}, [searchParams]);
+
+	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
-		const token = params.get("token");
+		const token = searchParams.get("token");
 		const userEncoded = params.get("user");
 		if (token) {
 			let user = null;
@@ -79,7 +106,7 @@ export const LoginPage = () => {
 			}
 			dispatch(loginWithOAuth({ token, user }));
 		}
-	}, [dispatch, t]);
+	}, [dispatch, searchParams, t]);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -136,7 +163,7 @@ export const LoginPage = () => {
 	}
 	return (
 		<>
-			<SEO />
+			<Seo />
 			<Page>
 				<div
 					className="bg-background-page flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 sm:px-6 lg:px-8"

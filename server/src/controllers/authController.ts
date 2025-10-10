@@ -39,7 +39,7 @@ export class AuthController {
       }
 
       jwt.sign(
-        { userId: user.id } satisfies JwtPayload,
+        { userId: user.id, type: "access" } satisfies JwtPayload,
         process.env.JWT_SECRET,
         {
           expiresIn: "1d",
@@ -125,9 +125,13 @@ export class AuthController {
       if (!process.env.JWT_SECRET) {
         throw new Error("No se puede registrar usuario. Contacte con flowkan");
       }
-      const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-      });
+      const token = jwt.sign(
+        { userId: newUser.id, type: "confirmation" },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1d",
+        },
+      );
 
       const frontendUrl =
         process.env.FRONTEND_WEB_URL || "http://localhost:5173";
@@ -163,13 +167,17 @@ export class AuthController {
       if (!token) throw createHttpError(400, "Token no proporcionado");
       if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET no definido");
 
-      let payload: { userId: number };
+      let payload: { userId: number; type?: string };
       try {
         payload = jwt.verify(token, process.env.JWT_SECRET) as {
           userId: number;
+          type?: string;
         };
       } catch (err) {
         throw createHttpError(400, "Token inválido o expirado");
+      }
+      if (payload.type !== "confirmation") {
+        throw createHttpError(403, "Token no es para confirmación de email.");
       }
 
       await this.authService.activateUser(payload.userId);
@@ -235,7 +243,7 @@ export class AuthController {
             );
           }
           jwt.sign(
-            { userId: user.id } satisfies JwtPayload,
+            { userId: user.id, type: "access" } satisfies JwtPayload,
             process.env.JWT_SECRET,
             {
               expiresIn: "15m",
@@ -322,7 +330,7 @@ export class AuthController {
     }
 
     const accessToken = jwt.sign(
-      { userId: user.id } satisfies JwtPayload,
+      { userId: user.id, type: "oauth" } satisfies JwtPayload,
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",

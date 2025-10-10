@@ -6,7 +6,6 @@ import { HomePage } from "./pages/home";
 import { NotFound } from "./pages/not-found";
 import Profile from "./pages/profile/profile";
 import { useAppSelector } from "./store";
-import { ConfirmPage } from "./pages/register/ConfirmPage";
 import ChangePassword from "./pages/login/change_password";
 import { VerifyPendingPage } from "./pages/register/VerifyPendingPage";
 import { PricingPage } from "./pages/PricingPage";
@@ -118,14 +117,6 @@ function App() {
 						>
 							<InvitationPage />
 						</Suspense>
-					}
-				/>
-				<Route
-					path="confirm"
-					element={
-						<AuthRoute requireAuth={false} redirectTo="/boards">
-							<ConfirmPage />
-						</AuthRoute>
 					}
 				/>
 				<Route

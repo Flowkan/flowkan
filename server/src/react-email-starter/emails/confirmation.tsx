@@ -88,7 +88,7 @@ export const Confirmation = ({
                     Haz click{" "}
                     <Link
                       className="text-brand"
-                      href={`${url}/confirm?token=${token}`}
+                      href={`${url}/login?confirmation-token=${token}`}
                     >
                       aqui
                     </Link>{" "}
@@ -99,7 +99,7 @@ export const Confirmation = ({
                     Click{" "}
                     <Link
                       className="text-brand"
-                      href={`${url}/confirm?token=${token}`}
+                      href={`${url}/login?confirmation-token=${token}`}
                     >
                       here
                     </Link>{" "}
