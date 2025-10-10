@@ -40,6 +40,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Install Dependencies (Mail starter)
+        working-directory: server/src/react-email-starter
+        run: npm install
+
       - name: Install Dependencies (Server)
         working-directory: server
         run: npm install

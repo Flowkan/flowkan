@@ -38,8 +38,14 @@ class AuthService {
     return this.authModel.findByEmail(email);
   }
 
-  async activateUser(userId: number) {
-    return this.authModel.updateUser(userId, { status: true });
+  async activateUser(
+    userId: number,
+    data?: { password?: string; name?: string; photo?: string },
+  ) {
+    return this.authModel.updateUser(userId, {
+      status: true,
+      ...data,
+    });
   }
   async generatedToken(userId: number, token: string) {
     return this.authModel.createToken(userId, token);
@@ -53,6 +59,11 @@ class AuthService {
 
   async hasTokenRecently(userId: number) {
     return this.authModel.hasTokenRecently(userId);
+  }
+
+  async deactivateUser(userId: number) {
+    const userData = await this.authModel.deactivateUser(userId);
+    return userData;
   }
 }
 

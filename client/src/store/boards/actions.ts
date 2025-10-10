@@ -242,22 +242,6 @@ type RemoveAssigneeFulfilled = {
 	payload: { cardId: number; userId: number };
 };
 
-export const addAssigneeFulfilled = (
-	cardId: number,
-	user: User,
-): AddAssigneeFulfilled => ({
-	type: "cards/addAssignee/fulfilled",
-	payload: { cardId, user },
-});
-
-export const removeAssigneeFulfilled = (
-	cardId: number,
-	userId: number,
-): RemoveAssigneeFulfilled => ({
-	type: "cards/removeAssignee/fulfilled",
-	payload: { cardId, userId },
-});
-
 // --- LABELS
 
 export const addLabelFulfilled = (
@@ -274,6 +258,31 @@ export const removeLabelFulfilled = (
 ): RemoveLabelFulfilled => ({
 	type: "tasks/removeLabel/fulfilled",
 	payload: { taskId, labelId },
+});
+
+export const addAssigneeFulfilled = (
+	cardId: number,
+	user: User,
+): AddAssigneeFulfilled => ({
+	type: "cards/addAssignee/fulfilled",
+	payload: { cardId, user },
+});
+
+export const removeAssigneeFulfilled = (
+	cardId: number,
+	userId: number,
+): RemoveAssigneeFulfilled => ({
+	type: "cards/removeAssignee/fulfilled",
+	payload: { cardId, userId },
+});
+
+// ─── UI ──────────────────────────────────────────────
+type UIResetError = {
+	type: "ui/reset-error";
+};
+
+export const uiResetError = (): UIResetError => ({
+	type: "ui/reset-error",
 });
 
 // ─── Thunks ─────────────────────────────

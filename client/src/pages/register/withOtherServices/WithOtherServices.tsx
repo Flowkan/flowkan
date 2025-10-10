@@ -43,15 +43,15 @@ export const WithOtherServices = () => {
 			onClick={() => {
 				window.location.href = getOAuthUrl(services.label);
 			}}
-			aria-label={t(
-				"arialabels.component.WithOtherServices.service",
-				`Continuar con {{${services.label}}}`,
-			)}
+			aria-label={t("arialabels.component.WithOtherServices.service", {
+				label: services.label,
+			})}
 			className="border-border-light bg-background-card text-text-body hover:bg-background-light-grey inline-flex w-full justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors duration-200"
 		>
 			<img
 				src={`${services.icon}`}
 				alt="Google Logo"
+				loading="lazy"
 				className="mr-2 h-5 w-5"
 			/>
 			{`${services.label}`}
@@ -66,7 +66,7 @@ export const WithOtherServices = () => {
 				</div>
 				<div className="relative flex justify-center text-sm">
 					<span className="bg-background-card text-text-placeholder px-2">
-						{t("register.withOtherService.otherTypeRegister", "O continúa con")}
+						{t("register.withOtherService.otherTypeRegister")}
 					</span>
 				</div>
 			</div>

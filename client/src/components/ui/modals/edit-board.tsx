@@ -6,17 +6,24 @@ import "./modal-boards.css";
 import CloseButton from "../close-button";
 import { Button } from "../Button";
 import type { EditBoardsData } from "../../../pages/boards/types";
+import toast from "react-hot-toast";
+import { CustomToast } from "../../CustomToast";
 
 interface EditFormProps {
 	handleEditForm: (newData: EditBoardsData) => void;
 	handleHideMessage: () => void;
+	oldTitle: string;
 }
 
-const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
+const EditBoard = ({
+	handleEditForm,
+	handleHideMessage,
+	oldTitle,
+}: EditFormProps) => {
 	const [titleInput, setTitleInput] = useState("");
 	const fileRef = useRef<HTMLInputElement>(null);
 	const [fileChanged, setFileChanged] = useState(false);
-	const { t } = useTranslation();
+	const { t: translation } = useTranslation();
 
 	const isDisabled = !titleInput && !fileChanged;
 
@@ -32,24 +39,44 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 		event.preventDefault();
 
 		const newData: EditBoardsData = {};
+
 		if (titleInput) {
 			newData.title = titleInput;
 		}
-		if (fileRef.current?.files?.[0]) {
-			newData.image = fileRef.current?.files?.[0];
+
+		const file = fileRef.current?.files?.[0];
+		if (file) {
+			const maxSizeMB = 5;
+
+			if (file.size > maxSizeMB * 1024 * 1024) {
+				toast.custom((t) => (
+					<CustomToast
+						message={translation("editBoard.toast.errorImage")}
+						t={t}
+						type="error"
+					/>
+				));
+				return;
+			}
+
+			newData.image = file;
 		}
 
-		handleEditForm(newData);
-		handleHideMessage();
+		try {
+			handleEditForm(newData);
+			handleHideMessage();
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error);
+			}
+		}
 	};
 
 	return (
 		<div className="modal-bg">
 			<article className="modal-card">
 				<CloseButton className="closebtn-form" onClick={handleHideMessage} />
-				<h3 className="modal-header">
-					{t("editboard.form.header", "Editar tablero")}
-				</h3>
+				<h3 className="modal-header">{translation("editBoard.form.header")}</h3>
 				<Form
 					id="edittitleform"
 					className="modal-form"
@@ -60,8 +87,9 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 						<FormFields
 							id="boardtitle"
 							name="boardtitle"
-							label={t("editboard.form.newtitle", "Nuevo título")}
+							label={translation("editBoard.form.newTitle")}
 							type="text"
+							placeholder={oldTitle}
 							labelClassName="form-label"
 							value={titleInput}
 							onChange={handleTitleChange}
@@ -71,7 +99,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 					<div className="file-container">
 						<FormFields
 							labelClassName="upload-img-label"
-							label={t("editboard.form.newimg", "Nuevo fondo")}
+							label={translation("editBoard.form.newImg")}
 							inputClassName="upload-img-container"
 							id="bg-img"
 							name="bg-img"
@@ -81,7 +109,7 @@ const EditBoard = ({ handleEditForm, handleHideMessage }: EditFormProps) => {
 						/>
 					</div>
 					<Button type="submit" className="form-btn" disabled={isDisabled}>
-						{t("editboard.form.button", "EDITAR")}
+						{translation("editBoard.edit")}
 					</Button>
 				</Form>
 			</article>

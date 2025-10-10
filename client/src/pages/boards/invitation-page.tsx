@@ -38,11 +38,10 @@ const InvitationPage = () => {
 	};
 
 	return (
-		<Page title={t("invitation.title", "Invitación a tablero")}>
+		<Page title={t("invitation.title")}>
 			<div className="flex flex-col items-center justify-center rounded-lg bg-white p-8 text-center shadow-xl dark:bg-gray-800">
 				<h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-gray-100">
-					{invitatorName}{" "}
-					{t("invitation.shared", "te ha compartido el tablero:")} {boardTitle}
+					{invitatorName} {t("invitation.shared")} {boardTitle}
 				</h1>
 				<div className="my-6 flex flex-col items-center">
 					{invitatorPhoto !== null ? (
@@ -68,8 +67,7 @@ const InvitationPage = () => {
 						</div>
 					)}
 					<p className="text-gray-700 dark:text-gray-300">
-						{t("invitation.collaborate", "Colabora en este tablero junto a")}{" "}
-						{invitatorName}
+						{t("invitation.collaborate")} {invitatorName}
 					</p>
 				</div>
 				<div className="mt-8 flex space-x-4">
@@ -78,7 +76,7 @@ const InvitationPage = () => {
 							onClick={() => navigate(`/board/${boardSlug}`)}
 							className="rounded-lg bg-gray-200 px-4 py-2 font-bold text-gray-800 hover:bg-gray-300"
 						>
-							{t("invitation.view_board", "Ver tablero")}
+							{t("invitation.viewBoard")}
 						</Button>
 					) : (
 						<>
@@ -86,13 +84,13 @@ const InvitationPage = () => {
 								onClick={handleRegister}
 								className="bg-primary hover:bg-primary-hover rounded-lg px-4 py-2 font-bold text-white"
 							>
-								{t("invitation.register_button", "Registrarse")}
+								{t("invitation.registerButton")}
 							</Button>
 							<Button
 								onClick={handleLogin}
 								className="rounded-lg bg-gray-200 px-4 py-2 font-bold text-gray-800 hover:bg-gray-300"
 							>
-								{t("invitation.login_button", "Iniciar sesión")}
+								{t("invitation.loginButton")}
 							</Button>
 						</>
 					)}

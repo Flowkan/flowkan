@@ -10,6 +10,7 @@ import { randomColor } from "../../lib/randomColor";
 import ShareButton from "../../components/ui/share-button";
 import { useBoardsItem } from "../../hooks/boards/useBoardsItem";
 import type { Board } from "./types";
+
 interface BoardsItemProps {
 	board: Board;
 }
@@ -17,23 +18,20 @@ interface BoardsItemProps {
 const BoardsItem = ({ board }: BoardsItemProps) => {
 	const { t } = useTranslation();
 	const hooks = useBoardsItem(board);
-
 	return (
 		<>
 			{hooks.showConfirm && (
 				<ConfirmDelete
 					handleDeleteBoard={hooks.handleDeleteBoard}
 					handleHideMessage={hooks.handleHideMessage}
-					message={t(
-						"boardsitem.confirm",
-						"¿Seguro que quieres borrar este tablero?",
-					)}
+					message={t("boardsItem.confirm")}
 				/>
 			)}
 			{hooks.showEditForm && (
 				<EditBoard
 					handleEditForm={hooks.handleEditForm}
 					handleHideMessage={hooks.handleHideEdit}
+					oldTitle={board.title}
 				/>
 			)}
 			{hooks.showShareForm && (
@@ -45,12 +43,18 @@ const BoardsItem = ({ board }: BoardsItemProps) => {
 			<li className="board-item">
 				<Link to={`/boards/${board.slug}`} className="board-link">
 					{board.image ? (
-						<div className="img-container">
-							<img
-								className="board-img"
-								src={`${import.meta.env.VITE_BASE_URL}${board.image}_t.webp`}
-								alt="board-img"
-							/>
+						<div
+							className="img-container"
+							style={{ background: randomColor(board.title, true) }}
+						>
+							<div>
+								<img
+									className="board-img"
+									src={`${import.meta.env.VITE_BASE_URL}${board.image}_t.webp`}
+									alt={`board-img-${board.title}`}
+									loading="lazy"
+								/>
+							</div>
 						</div>
 					) : (
 						<div className="img-container">

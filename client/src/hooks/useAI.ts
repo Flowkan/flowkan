@@ -22,18 +22,10 @@ export const useAI = () => {
 		let description = "";
 
 		try {
-			const { textStream } = await streamText({
-				model: openrouter("x-ai/grok-4-fast:free"),
+			const { textStream } = streamText({
+				model: openrouter("google/gemma-3n-e2b-it:free"),
 				prompt: t("boardModal.AI.prompt", {
 					title,
-					defaultValue: `
-          Actúa como un asistente de gestión de proyectos y experto en la organización de tareas. Tu objetivo es generar una descripción completa y detallada para una nueva tarjeta de tarea, basándote únicamente en su título.
-          El estilo de la respuesta debe ser conciso, con un formato de lista de verificación y/o pasos detallados, emulando el formato de un boceto a lápiz para una planificación rápida. La descripción debe ser lo suficientemente detallada para guiar la ejecución de la tarea.
-
-          Criterios de generación:
-          Analiza el {{title}}: Identifica el objetivo, el sujeto y la acción principal.
-          Genera la Estructura para {{title}}: Crea una lista de pasos o secciones que cualquier persona necesitaría seguir para completar esa tarea.
-          `,
 				}),
 				abortSignal: signal,
 			});
@@ -43,21 +35,21 @@ export const useAI = () => {
 				description += chunk;
 				buffer += chunk;
 				if (buffer.length >= 30) {
-					let formatted = formattedToHTML(description);
+					const formatted = formattedToHTML(description);
 					onChunk?.(formatted); // descripcion en tiempo real
 					buffer = "";
 				}
 			}
 			if (buffer) {
-				let formatted = formattedToHTML(description);
+				const formatted = formattedToHTML(description);
 				onChunk?.(formatted);
 			}
 			return description;
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				setError(err.message || "Error al generar");
-				if(err.message.includes("limit") || err.message.includes("quota")) {
-					setError(err.message || "Límite dario máximo de peticiones alcanzadas.")
+				setError(err.message || t("boardModal.AI.error"));
+				if (err.message.includes("limit") || err.message.includes("quota")) {
+					setError(err.message || t("boardModal.AI.maxPetitions"));
 				}
 			}
 			return null;

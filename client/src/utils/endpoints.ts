@@ -17,6 +17,7 @@ export const USER_ENDPOINTS = {
 	LOGIN: `/api/${VERSION}/auth/login`,
 	ME: `/api/${VERSION}/auth/me`,
 	AUTH: `/api/${VERSION}/auth/me`,
+	DELETE_USER: `/api/${VERSION}/auth/remove`,
 	PROFILE: `/api/${VERSION}/auth/profile`,
 	CONFIRM: `/api/${VERSION}/auth/confirm`,
 	BY_ID: byId("profile"),

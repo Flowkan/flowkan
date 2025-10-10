@@ -15,7 +15,6 @@ export async function sendEmail(to: string, subject: string, html: string) {
       subject,
       html,
     });
-    console.log("Email enviado:", data);
     return data;
   } catch (err) {
     console.error("Error enviando email:", err);
@@ -24,13 +23,17 @@ export async function sendEmail(to: string, subject: string, html: string) {
 }
 
 interface dataEmail {
-  url_frontend:string;
-  token:string;
+  url_frontend: string;
+  token: string;
 }
-export async function templateChangePasswordEmail(data:dataEmail) {
-  const templatePath = path.join(__dirname,"..","views","email.change.password.ejs")
-  console.log(templatePath,__dirname);  
-  return await ejs.renderFile(templatePath,data)
+export async function templateChangePasswordEmail(data: dataEmail) {
+  const templatePath = path.join(
+    __dirname,
+    "..",
+    "views",
+    "email.change.password.ejs",
+  );
+  return await ejs.renderFile(templatePath, data);
 }
 
 interface headerEmail {
@@ -38,10 +41,12 @@ interface headerEmail {
   subject: string;
   // html: string;
 }
-export async function sendChangePasswordEmail(header:headerEmail,data:dataEmail) {
-  const {to,subject} = header
-  // console.log(to,subject);
-  const html = await templateChangePasswordEmail(data)
+export async function sendChangePasswordEmail(
+  header: headerEmail,
+  data: dataEmail,
+) {
+  const { to, subject } = header;
+  const html = await templateChangePasswordEmail(data);
 
-  await sendEmail(to,subject,html)
+  await sendEmail(to, subject, html);
 }

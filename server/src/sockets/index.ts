@@ -16,6 +16,8 @@ import jwt from "jsonwebtoken";
 import AuthService from "../services/AuthService";
 import AuthModel from "../models/AuthModel";
 import prisma from "../config/db";
+import SystemEmitterHandler from "./handlers/systemEmitter";
+import NotificationThumbnailHandler from "./handlers/notificationThumbnail";
 
 export interface JwtPayload {
   userId: number;
@@ -67,11 +69,35 @@ export default function registerSockets(io: Server) {
   const userHandler = new UserHandler(io as ServerUser);
   const boardHandler = new BoardHandler(io as ServerBoard);
   const chatHandler = new ChatHandler(io as ServerChat);
+
+  const notificationThumbnailHandler = new NotificationThumbnailHandler(
+    io as ServerUser,
+  );
   io.on("connection", (socket) => {
     userHandler.initialize(socket as SocketUser);
     boardHandler.initialize(socket as SocketBoard);
     chatHandler.initialize(socket as SocketChat);
 
-    console.log("Nuevo cliente conectado:", socket.id);
+    notificationThumbnailHandler.initialize(socket as SocketUser);
+  });
+
+  const workerNameSpace = io.of("/worker");
+  workerNameSpace.use(async (socket, next) => {
+    try {
+      const token = socket.handshake.auth.token
+      if(token === process.env.SOCKET_WORKER_SECRET_KEY){
+        console.log("[Worker] Autenticado  y listo.");
+        const userId = socket.handshake.auth.userId
+        socket.data.userId = userId
+        return next()
+      }
+    } catch (error) {
+      next(createHttpError(500, `${error}`));
+    }
+  });
+  // systemHandler
+  const systemHandler = new SystemEmitterHandler();
+  workerNameSpace.on("connection", (socket) => {
+    systemHandler.initialize(socket as SocketUser);
   });
 }

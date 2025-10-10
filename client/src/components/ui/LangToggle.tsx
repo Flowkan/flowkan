@@ -1,8 +1,10 @@
 import { Button } from "./Button";
 import { LangSwitch } from "../../hooks/useLangSwitch";
 import { useDismiss } from "../../hooks/useDismissClickAndEsc";
+import { useTranslation } from "react-i18next";
 
 export default function LanguageToggleButton() {
+	const { t } = useTranslation();
 	const { LANGUAGES, changeLanguage, selectedLanguage, selectedLangCode } =
 		LangSwitch();
 	const { open, setOpen, ref } = useDismiss<HTMLDivElement>();
@@ -22,10 +24,13 @@ export default function LanguageToggleButton() {
 				{selectedLanguage && (
 					<img
 						src={selectedLanguage.flag}
-						alt={`Bandera de ${selectedLanguage.label}`}
+						alt={t("language.alt", { label: selectedLanguage.label })}
 						width={32}
-						aria-label={`Bandera de ${selectedLanguage.label}`}
-						title={`Bandera de ${selectedLanguage.label}`}
+						loading="lazy"
+						aria-label={t("language.arialabel", {
+							label: selectedLanguage.label,
+						})}
+						title={t("language.title", { label: selectedLanguage.label })}
 					/>
 				)}
 			</Button>
@@ -45,7 +50,8 @@ export default function LanguageToggleButton() {
 								<span className="flex items-center gap-2">
 									<img
 										src={flag}
-										alt={`Bandera de ${label}`}
+										alt={t("language.span", { label })}
+										loading="lazy"
 										width={24}
 										className="shrink-0"
 									/>

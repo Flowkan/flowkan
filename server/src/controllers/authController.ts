@@ -5,8 +5,8 @@ import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "../middlewares/jwtAuthMiddleware";
 import { Prisma, User } from "@prisma/client";
 import passport from "passport";
-import { sendChangePasswordEmail, sendEmail } from "../lib/emailService";
 import "../config/passport";
+import { sendEmailTask } from "../broker/producers/emailProducer";
 
 type UniqueConstraintError = Prisma.PrismaClientKnownRequestError & {
   code: "P2002";
@@ -39,7 +39,7 @@ export class AuthController {
       }
 
       jwt.sign(
-        { userId: user.id } satisfies JwtPayload,
+        { userId: user.id, type: "access" } satisfies JwtPayload,
         process.env.JWT_SECRET,
         {
           expiresIn: "1d",
@@ -77,6 +77,43 @@ export class AuthController {
         password,
         photo: req.body.photo || null,
       };
+      const userVerification = await this.authService.findByEmail(email);
+
+      const language = this.getLanguage(req);
+
+      if (userVerification && !userVerification.status) {
+        const frontendUrl =
+          process.env.FRONTEND_WEB_URL || "http://localhost:5173";
+        // si usuario inactivo reactivar
+        const reactivatedUser = await this.authService.activateUser(
+          userVerification.id,
+          { name, password, photo: req.body.photo || null },
+        );
+
+        if (!process.env.JWT_SECRET) {
+          throw new Error("JWT_SECRET no definido");
+        }
+
+        // enviar correo de bienvenida otra vez
+        await sendEmailTask({
+          type: "WELCOME",
+          to: reactivatedUser.email,
+          data: {
+            name: reactivatedUser.name,
+            url: frontendUrl,
+          },
+          language,
+        });
+
+        res.status(200).json({
+          success: true,
+          user: reactivatedUser,
+          message: "Usuario reactivado correctamente",
+          reactivate: true,
+        });
+        return;
+      }
+
       const newUser = await this.authService.register(userData);
       let photoUrl = null;
       if (req.body.photo) {
@@ -88,16 +125,27 @@ export class AuthController {
       if (!process.env.JWT_SECRET) {
         throw new Error("No se puede registrar usuario. Contacte con flowkan");
       }
-      const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-      });
-
-      await sendEmail(
-        newUser.email,
-        "Confirma tu cuenta",
-        `<h1>Bienvenido ${newUser.name}!</h1>
-              <p>Haz click <a href="${process.env.FRONTEND_WEB_URL}/confirm?token=${token}">aquí</a> para confirmar tu cuenta.</p>`,
+      const token = jwt.sign(
+        { userId: newUser.id, type: "confirmation" },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1d",
+        },
       );
+
+      const frontendUrl =
+        process.env.FRONTEND_WEB_URL || "http://localhost:5173";
+
+      await sendEmailTask({
+        to: newUser.email,
+        type: "CONFIRMATION",
+        data: {
+          name: newUser.name,
+          url: frontendUrl,
+          token,
+        },
+        language,
+      });
 
       res.status(201).json({ success: true, user: safeUser });
     } catch (err: unknown) {
@@ -119,13 +167,17 @@ export class AuthController {
       if (!token) throw createHttpError(400, "Token no proporcionado");
       if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET no definido");
 
-      let payload: { userId: number };
+      let payload: { userId: number; type?: string };
       try {
         payload = jwt.verify(token, process.env.JWT_SECRET) as {
           userId: number;
+          type?: string;
         };
       } catch (err) {
         throw createHttpError(400, "Token inválido o expirado");
+      }
+      if (payload.type !== "confirmation") {
+        throw createHttpError(403, "Token no es para confirmación de email.");
       }
 
       await this.authService.activateUser(payload.userId);
@@ -191,7 +243,7 @@ export class AuthController {
             );
           }
           jwt.sign(
-            { userId: user.id } satisfies JwtPayload,
+            { userId: user.id, type: "access" } satisfies JwtPayload,
             process.env.JWT_SECRET,
             {
               expiresIn: "15m",
@@ -213,14 +265,17 @@ export class AuthController {
             },
           );
         });
-
-        const headerEmail = {
+        const language = this.getLanguage(req);
+        const frontendUrl =
+          process.env.FRONTEND_WEB_URL || "http://localhost:5173";
+        await sendEmailTask({
           to: email,
-          subject: "Cambiar contraseña",
-        };
-        await sendChangePasswordEmail(headerEmail, {
-          url_frontend: process.env.FRONTEND_WEB_URL,
-          token,
+          type: "PASSWORD_RESET",
+          data: {
+            url: frontendUrl,
+            token,
+          },
+          language,
         });
 
         await this.authService.generatedToken(user.id, token);
@@ -275,7 +330,7 @@ export class AuthController {
     }
 
     const accessToken = jwt.sign(
-      { userId: user.id } satisfies JwtPayload,
+      { userId: user.id, type: "oauth" } satisfies JwtPayload,
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
@@ -294,5 +349,56 @@ export class AuthController {
     res.redirect(
       `${process.env.FRONTEND_WEB_URL}/login?token=${accessToken}&user=${encodedUser}`,
     );
+  };
+
+  deactivateUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.apiUserId;
+      if (!userId) {
+        return res.status(401).json({ error: "No estas autorizado" });
+      }
+      const userData = await this.authService.deactivateUser(userId);
+
+      res.clearCookie("auth", {
+        httpOnly: true,
+        path: "/",
+      });
+
+      const language = this.getLanguage(req);
+      const frontendUrl =
+        process.env.FRONTEND_WEB_URL || "http://localhost:5173";
+
+      await sendEmailTask({
+        to: userData.email,
+        type: "GOODBYE",
+        data: {
+          name: userData.name,
+          url: frontendUrl,
+        },
+        language,
+      });
+
+      res.json(userData);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      next(error);
+    }
+  };
+
+  getLanguage = (req: Request) => {
+    const acceptLanguageHeader = req.headers["accept-language"];
+    const primaryLanguageCode = acceptLanguageHeader
+      ? acceptLanguageHeader.split(",")[0].toLowerCase()
+      : "es";
+
+    let language = primaryLanguageCode.split("-")[0];
+
+    if (language !== "es" && language !== "en") {
+      language = "es";
+    }
+
+    return language;
   };
 }

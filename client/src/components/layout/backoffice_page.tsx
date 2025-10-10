@@ -3,12 +3,18 @@ import { randomColor } from "../../lib/randomColor";
 import { BoardToolbar } from "./BoardToolbar";
 import { getContrastColor } from "../../utils/contrastColor";
 
+interface ColumnMin {
+	id: number | string;
+	title: string;
+}
 interface BackofficePageProps {
 	title?: string;
 	children: ReactNode;
 	className?: string;
 	backgroundImg?: string;
 	boardId?: string | null;
+	onAddTask?: (columnId: number, title: string, description: string) => void;
+	columns?: ColumnMin[];
 }
 
 export const BackofficePage = ({
@@ -17,6 +23,8 @@ export const BackofficePage = ({
 	className,
 	backgroundImg,
 	boardId,
+	onAddTask,
+	columns,
 }: BackofficePageProps) => {
 	let generatedBg;
 	if (boardId) {
@@ -52,7 +60,12 @@ export const BackofficePage = ({
 		>
 			{boardId && (
 				<div className="flex w-full bg-white/45">
-					<BoardToolbar boardId={boardId} image={backgroundImg} />
+					<BoardToolbar
+						boardId={boardId}
+						image={backgroundImg}
+						onAddTask={onAddTask}
+						columns={columns}
+					/>
 				</div>
 			)}
 			{title && (

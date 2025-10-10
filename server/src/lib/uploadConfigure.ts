@@ -3,6 +3,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import sharp from "sharp";
+import { sendToMakeThumbnailTask } from "../broker/producers/thumbnailProducer";
 
 const rootUploadPath = path.join(process.cwd(), "public", "uploads");
 if (!fs.existsSync(rootUploadPath)) {
@@ -65,11 +66,16 @@ export function processImage(
       }
       await original.toFile(originalPath);
 
-      // thumbnail
-      await sharp(req.file.buffer)
-        .resize(sizes.thumb)
-        .webp({ quality: 80 })
-        .toFile(thumbPath);
+      //Delegar la creación del thumbnail a un worker
+      await sendToMakeThumbnailTask({
+        userId: req.apiUserId,
+        originalPath,
+        thumbPath,
+        thumbSize: {
+          width: sizes.thumb.width ?? 200,
+          height: sizes.thumb.height ?? 200,
+        },
+      });
 
       req.body[bodyField] = baseName;
 
@@ -100,3 +106,27 @@ export const uploadMedia = multer({
   storage: mediaStorage,
   limits: { fileSize: 20 * 1024 * 1024 }, // Límite de 20MB
 });
+
+export const deletePhoto = async (
+  subfolder: "users" | "boards",
+  fileName: string,
+) => {
+  if (!fileName) return;
+
+  const originalPath = path.join(
+    rootUploadPath,
+    subfolder,
+    `${fileName}_o.webp`,
+  );
+  const thumbPath = path.join(rootUploadPath, subfolder, `${fileName}_t.webp`);
+
+  for (const filePath of [originalPath, thumbPath]) {
+    try {
+      if (fs.existsSync(filePath)) {
+        await fs.promises.unlink(filePath);
+      }
+    } catch (error) {
+      console.error("Error al borrar: ", filePath, error);
+    }
+  }
+};

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import "../../pages/boards/boards-list-item.css";
 import { Button } from "./Button";
 import { Icon } from "@iconify/react";
@@ -7,8 +8,13 @@ interface ShareButtonProps {
 }
 
 const ShareButton = ({ showShareForm }: ShareButtonProps) => {
+	const { t } = useTranslation();
 	return (
-		<Button className="share-btn" onClick={showShareForm} title="Compartir">
+		<Button
+			className="share-btn"
+			onClick={showShareForm}
+			title={t("shareBtn.title")}
+		>
 			<Icon
 				name="share"
 				icon="bi:share-fill"

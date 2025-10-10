@@ -51,6 +51,36 @@
 	); /* Naranja/Rojo para peligro (tus valores originales) */
 
 	--font-sans: "Inter", sans-serif;
+
+	--animate-bounce-in: bounce-in .7s ease-in forwards;
+
+	@keyframes bounce-in {
+		0%{
+			transform: scale(1.02);
+			opacity: 0;
+		}
+		50%{
+			transform: scale(1);			
+		}
+		75%{
+			transform: scale(1.001);
+			opacity: 1;
+		}
+		100%{
+			transform: scale(1);
+		}
+	}
+
+	--animate-el-out: input-out .5s ease-out forwards;
+
+	@keyframes el-out {
+		0%{			
+			opacity: 1;
+		}		
+		100%{			
+			opacity: 0;
+		}
+	}
 }
 
 body {

@@ -16,6 +16,7 @@ import {
 	updateRemoteBoard,
 	addLabel,
 	removeLabel,
+	uiResetError,
 } from "./actions";
 import {
 	getBoards,
@@ -160,4 +161,11 @@ export function useUiPending() {
 
 export function useUiError() {
 	return useAppSelector(getUiError);
+}
+
+export function useUiResetError() {
+	const dispatch = useAppDispatch();
+	return function () {
+		return dispatch(uiResetError());
+	};
 }

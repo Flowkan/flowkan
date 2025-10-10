@@ -5,18 +5,18 @@ import AuthService from "../services/AuthService";
 import AuthModel from "../models/AuthModel";
 import prisma from "../config/db.js";
 
-
 export interface JwtPayload {
   userId: number;
+  type: string;
 }
 
 export interface tokenPayload {
-  token:string;
+  token: string;
 }
 
 export function guard(req: Request, res: Response, next: NextFunction) {
   let tokenJWT: string | undefined =
-    req.get("Authorization") || req.body.jwt || req.query.jwt;
+    req.get("Authorization") || (req.body && req.body.jwt) || req.query.jwt;
 
   if (!tokenJWT) {
     return next(createHttpError(401, "Token JWT is required"));
@@ -32,7 +32,13 @@ export function guard(req: Request, res: Response, next: NextFunction) {
   }
 
   try {
-    const payload = jwt.verify(tokenJWT, JWT_SECRET);
+    const payload = jwt.verify(tokenJWT, JWT_SECRET) as JwtPayload & {
+      type?: string;
+    };
+
+    if (payload.type && !["access", "oauth"].includes(payload.type)) {
+      return next(createHttpError(403, "Token no válido para autenticación"));
+    }
 
     let data: JwtPayload;
     if (typeof payload === "string") {
@@ -59,27 +65,32 @@ export function guard(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function verifyTokenEnabled(req: Request, res: Response, next: NextFunction) {
+export async function verifyTokenEnabled(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   try {
-    let tokenJWT: string | undefined = req.get("Authorization") || req.body.jwt || req.query.jwt;
+    let tokenJWT: string | undefined =
+      req.get("Authorization") || req.body.jwt || req.query.jwt;
     tokenJWT = tokenJWT?.startsWith("Bearer ")
-    ? tokenJWT.slice(7).trim()
-    : tokenJWT;
+      ? tokenJWT.slice(7).trim()
+      : tokenJWT;
 
     if (!tokenJWT) {
       return next(createHttpError(401, "Token JWT is required"));
     }
-    const JWT_SECRET = process.env.JWT_SECRET    
+    const JWT_SECRET = process.env.JWT_SECRET;
     if (!JWT_SECRET) {
-      throw new Error("JWT_SECRET is not defined in environment variables")
+      throw new Error("JWT_SECRET is not defined in environment variables");
     }
 
-    const authModel = new AuthModel(prisma)
-    const authService = new AuthService(authModel)
+    const authModel = new AuthModel(prisma);
+    const authService = new AuthService(authModel);
 
-    const existToken = await authService.existToken(tokenJWT)
+    const existToken = await authService.existToken(tokenJWT);
 
-    if(!existToken || existToken.used || existToken.expiresAt < new Date()){
+    if (!existToken || existToken.used || existToken.expiresAt < new Date()) {
       return next(createHttpError(401, "Token inválido o expirado"));
     }
 
@@ -88,16 +99,18 @@ export async function verifyTokenEnabled(req: Request, res: Response, next: Next
         return next(createHttpError(401, "Invalid token JWT"));
       }
 
-      if (typeof payload !== "object" || payload === null || !("userId" in payload)) {
+      if (
+        typeof payload !== "object" ||
+        payload === null ||
+        !("userId" in payload)
+      ) {
         return next(createHttpError(401, "Invalid token payload"));
       }
-      req.apiUserId = (payload as JwtPayload).userId
+      req.apiUserId = (payload as JwtPayload).userId;
       req.tokenToChangePassword = tokenJWT;
       next();
     });
-
-
   } catch (error) {
-    next(error)
+    next(error);
   }
 }

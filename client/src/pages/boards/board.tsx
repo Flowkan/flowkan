@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { DragDropContext, Droppable, type DropResult } from "@hello-pangea/dnd";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Column from "../../components/Column";
 import TaskDetailModal from "../../components/TaskDetailModal";
 import type { Column as ColumnType } from "./types";
@@ -8,7 +8,6 @@ import {
 	useFetchBoardByIdAction,
 	useAddTaskAction,
 	useUpdateTaskAction,
-	useBoardsError,
 	useAddColumnAction,
 	useDeleteColumnAction,
 	useDeleteTaskction,
@@ -37,8 +36,6 @@ const Board = () => {
 	const removeColumnAction = useDeleteColumnAction();
 	const updateBoardRemoteMode = useUpdateBoardRemote();
 	const { slug } = useParams<{ slug: string }>();
-	const navigate = useNavigate();
-	const error = useBoardsError();
 	const socket = useSocket();
 	const dispatch = useAppDispatch();
 
@@ -66,12 +63,6 @@ const Board = () => {
 		if (!slug) return;
 		fetchBoardAction(slug);
 	}, [slug, fetchBoardAction]);
-
-	useEffect(() => {
-		if (error === "Error al cargar tablero") {
-			navigate("/404");
-		}
-	}, [error, navigate]);
 
 	useEffect(() => {
 		if (!socket) return;
@@ -153,15 +144,15 @@ const Board = () => {
 	);
 
 	const handleAddTask = useCallback(
-		(columnId: number, content: string) => {
+		(columnId: number, title: string, description: string = "") => {
 			if (!boardData) return;
 			const currentColumn = boardData.lists.find(
 				(c) => c.id?.toString() === columnId.toString(),
 			);
 			if (!currentColumn) return;
 			const newTask = {
-				title: content,
-				description: "",
+				title: title,
+				description: description,
 				position: (currentColumn.cards ?? []).length,
 			};
 			addTaskAction(Number(columnId), newTask);
@@ -230,13 +221,15 @@ const Board = () => {
 		[boardData, removeColumnAction],
 	);
 
-	if (error) return <div>Error al cargar el tablero: {error}</div>;
-
 	return (
 		<BackofficePage
 			title={boardData?.title}
 			backgroundImg={boardData?.image}
 			boardId={boardData?.id}
+			onAddTask={handleAddTask}
+			columns={
+				boardData?.lists?.map((c) => ({ id: c.id!, title: c.title })) ?? []
+			}
 		>
 			<DragDropContext
 				onDragStart={handleDragStart}
@@ -303,10 +296,7 @@ const Board = () => {
 										<div className="mb-4">
 											<FormFields
 												type="text"
-												placeholder={t(
-													"board.column_name",
-													"Nombre de la columna",
-												)}
+												placeholder={t("board.columnName")}
 												value={newColumnName}
 												onChange={(e) => setNewColumnName(e.target.value)}
 												className="w-full rounded border bg-gray-100 p-2 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
@@ -317,7 +307,7 @@ const Board = () => {
 												onClick={handleCreateColumn}
 												className="mt-2 w-full rounded bg-blue-500 p-2 text-white transition-colors duration-200 hover:bg-blue-600"
 											>
-												{t("board.create_column", "Crear columna")}
+												{t("board.createColumn")}
 											</Button>
 										</div>
 									</div>
@@ -329,6 +319,7 @@ const Board = () => {
 			</DragDropContext>
 			{selectedTask && selectedColumnId && (
 				<TaskDetailModal
+					isOpen={!!selectedTask}
 					task={selectedTask}
 					boardId={boardData?.id}
 					columnId={selectedColumnId}

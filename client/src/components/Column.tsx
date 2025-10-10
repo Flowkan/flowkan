@@ -3,6 +3,7 @@ import { Droppable } from "@hello-pangea/dnd";
 import type { Column as ColumnType, Task } from "../pages/boards/types";
 import DropdownMenu from "./DropdownMenu";
 import WrapColumn from "./WrapColumn";
+import { useTranslation } from "react-i18next";
 
 interface Props {
 	column: ColumnType;
@@ -40,6 +41,8 @@ const Column = ({
 			setIsAddingTask(false);
 		}
 	}, [newTaskContent, onAddTask]);
+
+	const { t } = useTranslation();
 
 	const handleTitleClick = useCallback(() => {
 		setIsEditingTitle(true);
@@ -95,14 +98,12 @@ const Column = ({
 
 	const handleDeleteColumnClick = useCallback(() => {
 		if (
-			window.confirm(
-				`¿Estás seguro de que quieres eliminar la columna "${column.title}"? Todas las tareas dentro se perderán.`,
-			) &&
+			window.confirm(t("column.deleteConfirm", { title: column.title })) &&
 			column.id
 		) {
 			onDeleteColumn(column.id);
 		}
-	}, [column.id, column.title, onDeleteColumn]);
+	}, [column.id, column.title, onDeleteColumn, t]);
 
 	const handleStartAddingTask = useCallback(() => {
 		setIsAddingTask(true);
@@ -174,7 +175,7 @@ const Column = ({
 							className="text-text-heading w-full border border-blue-500 bg-transparent px-2 py-1 text-xl font-bold outline-none"
 						/>
 					) : (
-						column.title || "Haz clic para editar"
+						column.title || t("column.edit")
 					)}
 					<span className="bg-dark-footer ml-1 rounded-full px-2 py-1 text-sm font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-200">
 						{column.cards?.length ?? 0}
@@ -185,7 +186,7 @@ const Column = ({
 					buttonContent={
 						<span className="-mt-1 text-3xl leading-none">&#x22EE;</span>
 					}
-					title="Enumerar acciones"
+					title={t("column.dropdownMenu.title")}
 					closeButton
 				>
 					<button
@@ -195,59 +196,59 @@ const Column = ({
 						className="text-background-card block w-full rounded-md px-4 py-2 text-left text-sm hover:bg-gray-700"
 						role="menuitem"
 					>
-						Añadir tarjeta
+						{t("column.addCard")}
 					</button>
 					<button
-						onClick={() => alert("Copiar lista (no implementado)")}
+						onClick={() => alert(t("column.copy.alert"))}
 						className="text-background-card block w-full rounded-md px-4 py-2 text-left text-sm hover:bg-gray-700"
 						role="menuitem"
 					>
-						Copiar lista
+						{t("column.copy.msg")}
 					</button>
 					<button
-						onClick={() => alert("Mover lista (no implementado)")}
+						onClick={() => alert(t("column.move.list.alert"))}
 						className="text-background-card block w-full rounded-md px-4 py-2 text-left text-sm hover:bg-gray-700"
 						role="menuitem"
 					>
-						Mover lista
+						{t("column.move.list.msg")}
 					</button>
 					<button
-						onClick={() => alert("Mover todas las tarjetas (no implementado)")}
+						onClick={() => alert(t("column.move.cards.alert"))}
 						className="text-background-card block w-full rounded-md px-4 py-2 text-left text-sm hover:bg-gray-700"
 						role="menuitem"
 					>
-						Mover todas las tarjetas de esta lista
+						{t("column.move.cards.msg")}
 					</button>
 					<button
-						onClick={() => alert("Ordenar por... (no implementado)")}
+						onClick={() => alert(t("column.sort.alert"))}
 						className="text-background-card block w-full rounded-md px-4 py-2 text-left text-sm hover:bg-gray-700"
 						role="menuitem"
 					>
-						Ordenar por...
+						{t("column.sort.msg")}
 					</button>
 					<button
-						onClick={() => alert("Seguir (no implementado)")}
+						onClick={() => alert(t("column.follow.alert"))}
 						className="text-background-card block w-full rounded-md px-4 py-2 text-left text-sm hover:bg-gray-700"
 						role="menuitem"
 					>
-						Seguir
+						{t("column.follow.msg")}
 					</button>
 
 					<div className="border-border-light my-2 border-t"></div>
 
 					<button
-						onClick={() => alert("Cambiar color de lista (no implementado)")}
+						onClick={() => alert(t("column.changeColor.alert"))}
 						className="text-background-card block w-full rounded-md px-4 py-2 text-left text-sm hover:bg-gray-700"
 						role="menuitem"
 					>
-						Cambiar color de lista
+						{t("column.changeColor.msg")}
 					</button>
 					<button
-						onClick={() => alert("Automatización (no implementado)")}
+						onClick={() => alert(t("column.auto.alert"))}
 						className="text-background-card block w-full rounded-md px-4 py-2 text-left text-sm hover:bg-gray-700"
 						role="menuitem"
 					>
-						Automatización
+						{t("column.auto.msg")}
 					</button>
 
 					<div className="border-border-light my-2 border-t"></div>
@@ -256,31 +257,31 @@ const Column = ({
 						onClick={() => {
 							if (
 								window.confirm(
-									`¿Estás seguro de que quieres archivar esta lista "${column.title}"?`,
+									t("column.archive.list.confirm", { title: column.title }),
 								)
 							) {
-								alert("Archivar esta lista (no implementado)");
+								alert(t("column.archive.list.alert"));
 							}
 						}}
 						className="text-background-card block w-full rounded-md px-4 py-2 text-left text-sm hover:bg-gray-700"
 						role="menuitem"
 					>
-						Archivar esta lista
+						{t("column.archive.list.msg")}
 					</button>
 					<button
 						onClick={() => {
 							if (
 								window.confirm(
-									`¿Estás seguro de que quieres archivar todas las tarjetas de "${column.title}"?`,
+									t("column.archive.cards.confirm", { title: column.title }),
 								)
 							) {
-								alert("Archivar todas las tarjetas (no implementado)");
+								alert(t("column.archive.cards.alert"));
 							}
 						}}
 						className="text-background-card block w-full rounded-md px-4 py-2 text-left text-sm hover:bg-gray-700"
 						role="menuitem"
 					>
-						Archivar todas las tarjetas de esta lista
+						{t("column.archive.cards.msg")}
 					</button>
 
 					<div className="border-border-light my-2 border-t"></div>
@@ -290,7 +291,7 @@ const Column = ({
 						className="text-danger-dark hover:bg-danger-light block w-full px-4 py-2 text-left text-sm hover:bg-red-500"
 						role="menuitem"
 					>
-						Eliminar Columna
+						{t("column.delete")}
 					</button>
 				</DropdownMenu>
 			</div>
@@ -316,14 +317,14 @@ const Column = ({
 						onClick={handleStartAddingTask}
 						className="bg-background-input hover:bg-background-hover-card flex w-full items-center justify-center rounded-md py-2 font-semibold text-black/95 transition-colors duration-200"
 					>
-						+ Añadir tarjeta
+						{t("column.add.btn")}
 					</button>
 				) : (
 					<>
 						<input
 							ref={addTaskInputRef}
 							type="text"
-							placeholder="Título de la tarjeta..."
+							placeholder={t("column.add.action.placeholder")}
 							value={newTaskContent}
 							onChange={(e) => setNewTaskContent(e.target.value)}
 							onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
@@ -334,12 +335,12 @@ const Column = ({
 								onClick={handleAddTask}
 								className="bg-primary text-text-on-accent hover:bg-accent-dark hover:bg-primary-hover flex-grow rounded-md py-2 font-semibold transition-colors duration-200"
 							>
-								Añadir tarjeta
+								{t("column.add.action.btn")}
 							</button>
 							<button
 								onClick={handleCancelAddTask}
 								className="text-text-placeholder hover:text-danger-dark px-2 text-3xl leading-none transition-colors duration-200"
-								title="Cancelar"
+								title={t("column.add.action.cancel")}
 							>
 								&times;
 							</button>

@@ -1,0 +1,169 @@
+import * as React from "react";
+import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Heading,
+  Hr,
+  Html,
+  Preview,
+  Section,
+  Text,
+  Tailwind,
+  Link,
+} from "@react-email/components";
+import HeaderEmail from "./components/header";
+
+interface GoodByeProps {
+  name?: string;
+  url?: string;
+  language?: string;
+}
+
+export const Goodbye = ({
+  name = "Usuario",
+  url = "http://localhost:5173",
+  language = "es",
+}: GoodByeProps) => {
+  const previewText =
+    language === "es"
+      ? `¡Hasta pronto, ${name}! Esperamos verte pronto de vuelta.`
+      : `See you soon, ${name}! We hope to see you back soon.`;
+
+  return (
+    <Html>
+      <Head />
+      <Preview>{previewText}</Preview>
+      <Tailwind
+        config={{
+          theme: {
+            extend: {
+              colors: {
+                brand: "#df539f",
+              },
+            },
+          },
+        }}
+      >
+        <Body className="bg-slate-50 font-sans">
+          <Container className="bg-white max-w-xl py-4 rounded-lg shadow-lg overflow-hidden">
+            <HeaderEmail />
+            <Section className="px-10 py-8">
+              <Heading as="h2" className="text-2xl font-bold text-slate-800">
+                {language === "es"
+                  ? `${name}, tu cuenta en Flowkan ha sido eliminada.`
+                  : `${name}, your Flowkan account has been deleted.`}
+              </Heading>
+              <Text className="text-slate-700 leading-relaxed mt-4">
+                {language === "es" ? (
+                  <>
+                    Sabemos que despedirse no siempre es fácil. En Flowkan, cada
+                    tablero fue una idea en movimiento, cada tarea un paso hacia
+                    algo grande. Pero las buenas ideas siempre vuelven.
+                  </>
+                ) : (
+                  <>
+                    We know saying goodbye isn't always easy. At Flowkan, every
+                    board was an idea in motion, every task a step toward
+                    something great. But good ideas always come back.
+                  </>
+                )}
+              </Text>
+
+              <Text className="text-slate-700 leading-relaxed mt-4">
+                {language === "es" ? (
+                  <>
+                    Cuando estés listo para crear algo nuevo, Flowkan seguirá
+                    aquí para ayudarte a planificar, colaborar y dar vida a tus
+                    proyectos con la ayuda de la IA.
+                  </>
+                ) : (
+                  <>
+                    When you're ready to create something new, Flowkan will
+                    still be here to help you plan, collaborate, and bring your
+                    projects to life—with the help of AI.
+                  </>
+                )}
+              </Text>
+
+              <Text className="text-slate-700 leading-relaxed mt-4 flex flw-row">
+                {language === "es"
+                  ? "¡Tu espacio en Flowkan te espera cuando quieras volver!"
+                  : "Your space in Flowkan will be waiting whenever you’re ready to return!"}
+              </Text>
+              <Text>
+                {language === "es"
+                  ? `Hasta pronto, ${name}.`
+                  : `See you soon, ${name}.`}
+              </Text>
+
+              <Section className="text-center mt-6">
+                <Text>
+                  {language === "es" ? (
+                    <>
+                      ¿Deseas volver a{" "}
+                      <Link
+                        className="text-brand underline"
+                        href={`${url}/register`}
+                      >
+                        registrarte
+                      </Link>
+                      ?
+                    </>
+                  ) : (
+                    <>
+                      Would you like to{" "}
+                      <Link
+                        className="text-brand underline"
+                        href={`${url}/register`}
+                      >
+                        sign up again
+                      </Link>
+                      ?
+                    </>
+                  )}
+                </Text>
+              </Section>
+            </Section>
+            <Section className="text-center p-6 bg-slate-100">
+              <Text className="text-sm text-slate-500">
+                {language === "es" ? (
+                  <>
+                    Si tienes alguna pregunta, visita nuestra{" "}
+                    <Link
+                      className="text-brand underline"
+                      href={`${url}/ayuda`}
+                    >
+                      sección de ayuda
+                    </Link>
+                    .
+                  </>
+                ) : (
+                  <>
+                    If you have any questions, visit our{" "}
+                    <Link
+                      className="text-brand underline"
+                      href={`${url}/ayuda`}
+                    >
+                      help section
+                    </Link>
+                    .
+                  </>
+                )}
+              </Text>
+              <Text className="text-xs text-slate-400 mt-2">
+                © {new Date().getFullYear()} Flowkan.es –{" "}
+                {language === "es"
+                  ? "Todos los derechos reservados."
+                  : "All rights reserved."}
+              </Text>
+            </Section>
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
+  );
+};
+
+export default Goodbye;

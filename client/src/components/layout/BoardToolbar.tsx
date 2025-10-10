@@ -4,15 +4,32 @@ import { Avatar } from "../ui/Avatar";
 import { useUsersOnBoard } from "../../hooks/socket/useUsersOnBoard";
 import { ChatWindow } from "../ui/ChatWindow";
 import { getContrastColor } from "../../utils/contrastColor";
+import { useTranslation } from "react-i18next";
 
+interface ColumnMin {
+	id: number | string;
+	title: string;
+}
 interface BoardToolbarProps {
 	readonly boardId: string;
 	readonly image: string | undefined;
+	readonly onAddTask?: (
+		columnId: number,
+		title: string,
+		description: string,
+	) => void;
+	readonly columns?: ColumnMin[];
 }
 
-export function BoardToolbar({ boardId, image }: BoardToolbarProps) {
+export function BoardToolbar({
+	boardId,
+	image,
+	onAddTask,
+	columns,
+}: BoardToolbarProps) {
 	const [showShareForm, setShowShareForm] = useState(false);
 	const users = useUsersOnBoard(boardId);
+	const { t } = useTranslation();
 
 	const handleShowShareForm = (event: React.MouseEvent) => {
 		event.preventDefault();
@@ -47,7 +64,13 @@ export function BoardToolbar({ boardId, image }: BoardToolbarProps) {
 					</div>
 
 					<div className="pr-4 pl-4">
-						{boardId && <ChatWindow boardId={boardId} />}
+						{boardId && (
+							<ChatWindow
+								boardId={boardId}
+								onAddTask={onAddTask}
+								columns={columns}
+							/>
+						)}
 					</div>
 
 					{/* Botón Compartir */}
@@ -56,7 +79,7 @@ export function BoardToolbar({ boardId, image }: BoardToolbarProps) {
 							onClick={handleShowShareForm}
 							className="bg-primary hover:bg-primary-hover rounded px-3 py-1 text-white"
 						>
-							Compartir
+							{t("toolbar.share")}
 						</button>
 					</div>
 				</div>

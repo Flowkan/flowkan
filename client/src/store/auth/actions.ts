@@ -1,5 +1,8 @@
 import type { AppThunk } from "..";
-import { setAuthorizationHeader } from "../../api/client";
+import {
+	removeAuthorizationHeader,
+	setAuthorizationHeader,
+} from "../../api/client";
 import type { Credentials, User } from "../../pages/login/types";
 
 //
@@ -42,10 +45,15 @@ export function login(credentials: Credentials): AppThunk<Promise<void>> {
 		dispatch(authLoginPending());
 		try {
 			const user = await api.auth.login(credentials);
-			dispatch(authLoginFulfilled(user));
-			const to = router.state.location.state?.from ?? "/boards";
-			router.navigate(to, { replace: true });
+			if (user) {
+				dispatch(authLoginFulfilled(user));
+				const to = router.state.location.state?.from ?? "/boards";
+				router.navigate(to, { replace: true });
+			}
 		} catch (error) {
+			localStorage.removeItem("auth");
+			localStorage.removeItem("user");
+			removeAuthorizationHeader();
 			if (error instanceof Error) {
 				dispatch(authLoginRejected(error));
 			}
@@ -71,11 +79,19 @@ export function loginWithOAuth(
 			localStorage.setItem("user", JSON.stringify(userObj));
 
 			const user = await api.auth.me();
-
-			dispatch(authLoginFulfilled(user));
-			const to = router.state.location.state?.from ?? "/boards";
-			router.navigate(to, { replace: true });
+			if (!user) {
+				localStorage.removeItem("auth");
+				localStorage.removeItem("user");
+				removeAuthorizationHeader();
+			} else {
+				dispatch(authLoginFulfilled(user));
+				const to = router.state.location.state?.from ?? "/boards";
+				router.navigate(to, { replace: true });
+			}
 		} catch (error) {
+			localStorage.removeItem("auth");
+			localStorage.removeItem("user");
+			removeAuthorizationHeader();
 			if (error instanceof Error) {
 				dispatch(authLoginRejected(error));
 			}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../store";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageToggle from "../ui/LangToggle";
 import { UserMenu } from "../ui/UserMenu";
@@ -12,15 +12,24 @@ import { useSocket } from "../../hooks/socket/context";
 
 export const Header: React.FC = () => {
 	const { t } = useTranslation();
+	const location = useLocation();
 	const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 	const [isOpen, setIsOpen] = useState(false);
 	const logoutAction = useLogoutAction();
-	const socket = useSocket()
+	const socket = useSocket();
 
 	const handleLogout = () => {
 		logoutAction();
 		setIsOpen(false);
-		socket.disconnect()//Desconecta el socket
+		socket.disconnect(); //Desconecta el socket
+	};
+
+	const getNavLinkClass = (path: string) => {
+		const isActive = location.pathname.startsWith(path);
+
+		return `hover:border-accent hover:border-b-2 ${
+			isActive ? "border-accent border-b-2" : ""
+		}`;
 	};
 
 	return (
@@ -37,14 +46,14 @@ export const Header: React.FC = () => {
 				</NavLink>
 
 				<nav className="text-text-body hidden space-x-6 md:flex">
-					<a href="/features" className="hover:border-accent hover:border-b-2">
-						{t("header.navbar.features", "Características")}
+					<a href="/features" className={getNavLinkClass("/features")}>
+						{t("header.navbar.features")}
 					</a>
-					<a href="/solutions" className="hover:border-accent hover:border-b-2">
-						{t("header.navbar.solutions", "Soluciones")}
+					<a href="/solutions" className={getNavLinkClass("/solutions")}>
+						{t("header.navbar.solutions")}
 					</a>
-					<a href="/prices" className="hover:border-accent hover:border-b-2">
-						{t("header.navbar.prices", "Precios")}
+					<a href="/prices" className={getNavLinkClass("/prices")}>
+						{t("header.navbar.prices")}
 					</a>
 					{isAuthenticated && user && (
 						<NavLink
@@ -53,7 +62,7 @@ export const Header: React.FC = () => {
 								"text-primary hover:text-primary-hover rounded-lg px-4 text-center font-semibold"
 							}
 						>
-							{t("boardslist.title", "Mis tableros")}
+							{t("header.navbar.boardsList")}
 						</NavLink>
 					)}
 				</nav>
@@ -70,13 +79,13 @@ export const Header: React.FC = () => {
 					) : (
 						<div className="flex space-x-2">
 							<NavLink className="px-4 py-2" to="/login">
-								{t("header.login", "Login")}
+								{t("header.login")}
 							</NavLink>
 							<NavLink
 								className="bg-primary text-text-on-accent hover:bg-primary-dark rounded-lg px-4 py-2 text-center font-semibold"
 								to="/register"
 							>
-								{t("header.signup", "Registro")}
+								{t("header.signup")}
 							</NavLink>
 						</div>
 					)}
@@ -85,7 +94,9 @@ export const Header: React.FC = () => {
 				<button
 					className="text-text-heading p-2 md:hidden"
 					onClick={() => setIsOpen(!isOpen)}
-					aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
+					aria-label={
+						isOpen ? t("header.btnmenu.close") : t("header.btnmenu.open")
+					}
 				>
 					<Icon icon="lucide:menu" className="h-6 w-6" />
 				</button>
@@ -108,7 +119,7 @@ export const Header: React.FC = () => {
 						<button
 							className="text-text-heading p-2"
 							onClick={() => setIsOpen(false)}
-							aria-label="Cerrar menú"
+							aria-label={t("header.btnmenu.close")}
 						>
 							<Icon icon="lucide:x" className="h-6 w-6" />
 						</button>
@@ -116,24 +127,36 @@ export const Header: React.FC = () => {
 
 					<NavLink
 						to="/features"
-						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
+						className={({ isActive }) =>
+							`block rounded-md px-3 py-2 font-medium ${
+								isActive ? "text-accent" : "text-text-body"
+							}`
+						}
 						onClick={() => setIsOpen(false)}
 					>
-						{t("header.navbar.features", "Características")}
+						{t("header.navbar.features")}
 					</NavLink>
 					<NavLink
 						to="/solutions"
-						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
+						className={({ isActive }) =>
+							`block rounded-md px-3 py-2 font-medium ${
+								isActive ? "text-accent" : "text-text-body"
+							}`
+						}
 						onClick={() => setIsOpen(false)}
 					>
-						{t("header.navbar.solutions", "Soluciones")}
+						{t("header.navbar.solutions")}
 					</NavLink>
 					<NavLink
 						to="/prices"
-						className="text-text-body hover:text-accent block rounded-md px-3 py-2 font-medium transition-colors hover:bg-gray-100"
+						className={({ isActive }) =>
+							`block rounded-md px-3 py-2 font-medium ${
+								isActive ? "text-accent" : "text-text-body"
+							}`
+						}
 						onClick={() => setIsOpen(false)}
 					>
-						{t("header.navbar.prices", "Precios")}
+						{t("header.navbar.prices")}
 					</NavLink>
 
 					{isAuthenticated && user && (
@@ -142,7 +165,7 @@ export const Header: React.FC = () => {
 							className="text-primary block rounded-md px-3 py-2 font-medium transition-colors"
 							onClick={() => setIsOpen(false)}
 						>
-							{t("boardslist.title", "Mis tableros")}
+							{t("header.navbar.boardsList")}
 						</NavLink>
 					)}
 
@@ -153,14 +176,14 @@ export const Header: React.FC = () => {
 								className="text-text-body hover:bg-background-light-grey rounded-lg px-4 py-2 text-center font-semibold"
 								onClick={() => setIsOpen(false)}
 							>
-								{t("header.login", "Login")}
+								{t("header.login")}
 							</NavLink>
 							<NavLink
 								to="/register"
 								className="bg-primary text-text-on-accent hover:bg-primary-dark rounded-lg px-4 py-2 text-center font-semibold"
 								onClick={() => setIsOpen(false)}
 							>
-								{t("header.signup", "Registro")}
+								{t("header.signup")}
 							</NavLink>
 						</div>
 					)}
@@ -168,13 +191,13 @@ export const Header: React.FC = () => {
 					{isAuthenticated && user && (
 						<div className="border-t border-gray-100 pt-4">
 							<span className="text-text-body block px-3 py-2 font-medium">
-								{t("header.welcome", "Bienvenido")}, {user.name}
+								{t("header.welcome")}, {user.name}
 							</span>
 							<Button
 								onClick={handleLogout}
 								className="bg-primary text-text-on-accent hover:bg-error-dark mt-4 w-full rounded-lg px-4 py-2 text-center font-semibold"
 							>
-								{t("header.menu.logout", "Cerrar sesión")}
+								{t("header.menu.logout")}
 							</Button>
 						</div>
 					)}

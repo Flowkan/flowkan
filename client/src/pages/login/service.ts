@@ -6,6 +6,7 @@ import {
 import type { Credentials, ResponseChangePassword } from "./types";
 import storage from "../../utils/storage";
 import { USER_ENDPOINTS } from "../../utils/endpoints";
+import { resolveBaseURLFromEnv } from "../../utils/resolveBaseUrlEnv";
 
 export const login = async (credentials: Credentials) => {
 	const response = await apiClient.post<{
@@ -14,13 +15,16 @@ export const login = async (credentials: Credentials) => {
 	}>(USER_ENDPOINTS.LOGIN, credentials);
 
 	const { accessToken, user } = response.data;
+	if (user) {
+		storage.set("auth", accessToken);
+		setAuthorizationHeader(accessToken);
 
-	storage.set("auth", accessToken);
-	setAuthorizationHeader(accessToken);
+		storage.set("user", user);
 
-	storage.set("user", user);
-
-	return user;
+		return user;
+	} else {
+		return null;
+	}
 };
 
 export const me = async () => {
@@ -37,22 +41,30 @@ export const logout = async () => {
 	removeAuthorizationHeader();
 };
 
+export const resetPassword = async (email: string) => {
+	const response = await apiClient.post<{ message: string }>(
+		USER_ENDPOINTS.RESET_PASSWORD,
+		{
+			email,
+		},
+	);
+	return response.data;
+};
 
-export const resetPassword = async (email:string) => {
-	const response = await apiClient.post<{message:string}>(
-		USER_ENDPOINTS.RESET_PASSWORD,{
-			email
-		}
-	)
-	return response.data
-}
-
-export const changePassword = async (password:string,token:string) => {
-	setAuthorizationHeader(token)
+export const changePassword = async (password: string, token: string) => {
+	setAuthorizationHeader(token);
 	const response = await apiClient.post<ResponseChangePassword>(
-		USER_ENDPOINTS.CHANGE_PASSWORD,{
-			password
-		}
-	)	
-	return response.data
+		USER_ENDPOINTS.CHANGE_PASSWORD,
+		{
+			password,
+		},
+	);
+	return response.data;
+};
+
+export async function deactivateUser(): Promise<void> {
+	const response = await apiClient.delete(
+		`${resolveBaseURLFromEnv()}${USER_ENDPOINTS.DELETE_USER}`,
+	);
+	return response.data;
 }

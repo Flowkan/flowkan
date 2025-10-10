@@ -19,7 +19,7 @@ const AddButton = ({ showAddForm }: AddButtonProps) => {
 				height="20"
 				style={{ color: "#bdb5c4" }}
 			/>
-			<p className="p-add">{t("addbtn", "Nuevo tablero")}</p>
+			<p className="p-add">{t("addBtn")}</p>
 		</Button>
 	);
 };

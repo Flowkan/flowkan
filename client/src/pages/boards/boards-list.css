@@ -65,27 +65,49 @@
 /* Filtro desplegable hacia arriba */
 .filters-form {
 	position: absolute;
-	bottom: 10%;
+	bottom: -100%;
 	left: 0;
 	right: 0;
 	width: 100%;
-	z-index: 5;
-	background: rgba(255, 255, 255, 0.95);
+	z-index: 50;
+	background: rgba(255, 255, 255, 0.45);
+	backdrop-filter: blur(15px) saturate(80%);
 	border: 1px solid #ddd;
 	padding: 10px;
 	box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
 	border-radius: 6px;
+	max-height: 80vh;
+	overflow-y: auto;
+
+	&.animate-slide {
+		animation: slideUpDown 0.3s ease-out;
+	}
 }
 
-.boards-toolbar.open-filters {
-	margin-bottom: 20px;
+/* Mobile: fixed y responsive */
+@media (max-width: 640px) {
+	.filters-form {
+		position: fixed;
+		top: 80px;
+		bottom: auto;
+		left: 5px;
+		right: 5px;
+		width: auto;
+		max-width: calc(85% - 10px);
+		border-radius: 8px;
+	}
 }
 
-.add-board-btn {
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	margin-bottom: 20px;
+/* Animación */
+@keyframes slideUpDown {
+	from {
+		transform: translateY(30px);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
 }
 
 @media screen and (width > 768px) {
@@ -97,7 +119,7 @@
 			.boards-wrapper {
 				.boards-list-content {
 					.boards-list {
-						grid-template-columns: 1fr 1fr 1fr;
+						grid-template-columns: repeat(3, 1fr);
 					}
 				}
 			}
