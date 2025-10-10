@@ -29,10 +29,6 @@ export const Confirmation = ({
   token,
   language = "es",
 }: ConfirmationProps) => {
-  const title =
-    language === "es"
-      ? "Confirma tu dirección de correo electrónico"
-      : "Confirm your email address";
   const greeting =
     language === "es"
       ? `¡Hola, ${name}! Te damos la bienvenida.`

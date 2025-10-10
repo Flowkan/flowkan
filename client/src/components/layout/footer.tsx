@@ -67,10 +67,10 @@ export const Footer: React.FC = () => {
 						<li>
 							{t("footer.contact.email")}:{" "}
 							<Link
-								to="mailto:info@flowkan.com"
+								to="mailto:info@flowkan.es"
 								className="hover:text-accent-hover transition-colors"
 							>
-								info@flowkan.com
+								info@flowkan.es
 							</Link>
 						</li>
 						<li>{t("footer.contact.phone")}: +34 123 45 67 89</li>

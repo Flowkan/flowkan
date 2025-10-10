@@ -7,7 +7,7 @@ import {
   generateWelcomeEmailTemplate,
 } from "../../services/TemplateEmailService";
 import { sendEmail } from "../../lib/emailService";
-import { dataUser, EmailPayload } from "../types";
+import { DataUser, EmailPayload } from "../types";
 
 export async function startEmailConsumer(channel: amqplib.Channel) {
   const queueName = Queues.EMAIL_QUEUE;
@@ -45,43 +45,58 @@ async function processEmailMessage(
   }
 }
 
+const EMAIL_CONFIGS = {
+  CONFIRMATION: {
+    es: "Confirma tu dirección de correo electrónico",
+    en: "Confirm your email address",
+    getData: (data: DataUser) => ({
+      name: data.name!,
+      url: data.url!,
+      token: data.token!,
+    }),
+    getHtml: (data: DataUser, lang: string) =>
+      generateConfirmationEmailTemplate(
+        data.name!,
+        data.url!,
+        data.token!,
+        lang,
+      ),
+  },
+  PASSWORD_RESET: {
+    es: "Restablece tu Contraseña",
+    en: "Reset Your Password",
+    getData: (data: DataUser) => ({ url: data.url!, token: data.token! }),
+    getHtml: (data: DataUser, lang: string) =>
+      generatePasswordResetEmailTemplate(data.url!, data.token!, lang),
+  },
+  GOODBYE: {
+    es: "Lamentamos verte partir",
+    en: "We're sorry to see you go",
+    getData: (data: DataUser) => ({ name: data.name!, url: data.url! }),
+    getHtml: (data: DataUser, lang: string) =>
+      generateGoodbyeEmailTemplate(data.name!, data.url!, lang),
+  },
+  WELCOME: {
+    es: "Bienvenido a nuestra plataforma",
+    en: "Welcome to our platform",
+    getData: (data: DataUser) => ({ name: data.name!, url: data.url! }),
+    getHtml: (data: DataUser, lang: string) =>
+      generateWelcomeEmailTemplate(data.url!, data.name, lang),
+  },
+  GENERIC: {
+    es: "Bienvenido a nuestra plataforma",
+    en: "Welcome to our platform",
+    getData: (data: DataUser) => ({ name: data.name! }),
+    getHtml: (data: DataUser, lang: string) =>
+      generateWelcomeEmailTemplate(data.url!, data.name, lang),
+  },
+};
+
 export async function sendMailService(payload: EmailPayload): Promise<void> {
-  let emailContent: { subject: string; html: string };
-  const language = payload.language || "es";
-  switch (payload.type) {
-    case "CONFIRMATION": {
-      const { name, url, token } = payload.data as dataUser;
-      emailContent = {
-        subject: "Confirma tu dirección de correo electrónico",
-        html: await generateConfirmationEmailTemplate(name!, url!, token!,language),
-      };
-      break;
-    }
-    case "PASSWORD_RESET": {
-      const { url, token } = payload.data as dataUser;
-      emailContent = {
-        subject: "Restablece tu Contraseña",
-        html: await generatePasswordResetEmailTemplate(url!, token!,language),
-      };
-      break;
-    }
-    case "GOODBYE":{
-      const { name,url } = payload.data as dataUser;
-      emailContent = {
-        subject: "Lamentamos verte partir",
-        html: await generateGoodbyeEmailTemplate(name!,url!,language),
-      }
-    }
-      
-      break;
-    case "WELCOME":
-    default:
-      const { name, url } = payload.data as dataUser;
-      emailContent = {
-        subject: "Bienvenido a nuestra plataforma",
-        html: await generateWelcomeEmailTemplate(url!, name,language),
-      };
-      break;
-  }
-  await sendEmail(payload.to, emailContent.subject, emailContent.html);
+  const { type, data, language: lang = "es" } = payload;
+  const config = EMAIL_CONFIGS[type] || EMAIL_CONFIGS.WELCOME;
+  const emailData = config.getData(data!);
+  const subject = lang === "es" ? config.es : config.en;
+  const html = await config.getHtml(emailData, lang);
+  await sendEmail(payload.to, subject, html);
 }
