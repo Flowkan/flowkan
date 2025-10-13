@@ -1,4 +1,5 @@
 import BoardModel from "../../src/models/BoardModel";
+import CardModel from "../../src/models/CardModel";
 import BoardService from "../../src/services/BoardService";
 
 const mockBoardModel = {
@@ -16,11 +17,13 @@ const mockBoardModel = {
   getBoardUsers: jest.fn(),
 } as unknown as BoardModel;
 
+const mockCardModel = {} as unknown as CardModel;
+
 let boardService: BoardService;
 
 beforeEach(() => {
   jest.clearAllMocks();
-  boardService = new BoardService(mockBoardModel);
+  boardService = new BoardService(mockBoardModel, mockCardModel);
 });
 
 describe("BoardService - happy path", () => {

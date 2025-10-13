@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import BoardService from "../services/BoardService";
 import { Prisma } from "@prisma/client";
 import { BoardWithRelations } from "../models/BoardModel";
@@ -262,6 +262,36 @@ export class BoardController {
     } catch (err) {
       console.log("error", err);
       res.status(500).send("Error al obtener usuarios del tablero");
+    }
+  };
+
+  getBoardLabels = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.apiUserId;
+      const { boardId } = req.params;
+
+      const labels = await this.boardService.getLabels(userId, Number(boardId));
+      res.json(labels);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  createLabel = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.apiUserId;
+      const { boardId } = req.params;
+      const { name, color } = req.body;
+
+      const label = await this.boardService.createLabel(
+        userId,
+        Number(boardId),
+        name,
+        color,
+      );
+      res.status(201).json(label);
+    } catch (err) {
+      next(err);
     }
   };
 }

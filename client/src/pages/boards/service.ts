@@ -3,10 +3,11 @@ import {
 	AI_ENDPOINT,
 	BOARD_ENDPOINTS,
 	CARD_ENDPOINT,
+	LABEL_ENDPOINTS,
 	LIST_ENDPOINT,
 } from "../../utils/endpoints";
 import type { User } from "../login/types";
-import type { Board, BoardsResponse, Column, Task } from "./types";
+import type { Board, BoardsResponse, Label, Column, Task } from "./types";
 
 export const getBoards = async (
 	page: number,
@@ -157,4 +158,38 @@ export const generateDescription = async (
 		{ signal },
 	);
 	return response.data.description;
+};
+
+export const getBoardLabels = async (
+	boardId: string | number,
+): Promise<Label[]> => {
+	const { data } = await apiClient.get<Label[]>(
+		LABEL_ENDPOINTS.BY_BOARD(boardId),
+	);
+	return data;
+};
+
+export const createLabel = async (
+	boardId: string | number,
+	label: Pick<Label, "name" | "color">,
+): Promise<Label> => {
+	const { data } = await apiClient.post<Label>(
+		LABEL_ENDPOINTS.BY_BOARD(boardId),
+		label,
+	);
+	return data;
+};
+
+export const addLabelToCard = async (cardId: number, labelId: number) => {
+	const { data } = await apiClient.post(
+		LABEL_ENDPOINTS.BY_CARD(cardId, labelId),
+	);
+	return data;
+};
+
+export const removeLabelFromCard = async (
+	cardId: number,
+	labelId: number,
+): Promise<void> => {
+	await apiClient.delete(LABEL_ENDPOINTS.BY_CARD(cardId, labelId));
 };

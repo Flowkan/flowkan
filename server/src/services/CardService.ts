@@ -111,4 +111,24 @@ export default class CardService {
     }
     return this.cardModel.removeAssignee(cardId, assigneeId);
   }
+
+  async addLabelToCard(userId: number, cardId: number, labelId: number) {
+    const isMember = await this.cardModel.isUserBoardMember(userId, cardId);
+    if (!isMember) {
+      throw new Error(
+        "No tienes permiso para asignar etiquetas en esta tarjeta",
+      );
+    }
+    return this.cardModel.addLabelToCard(cardId, labelId);
+  }
+
+  async removeLabelFromCard(userId: number, cardId: number, labelId: number) {
+    const isMember = await this.cardModel.isUserBoardMember(userId, cardId);
+    if (!isMember) {
+      throw new Error(
+        "No tienes permiso para eliminar etiquetas en esta tarjeta",
+      );
+    }
+    return this.cardModel.removeLabelFromCard(cardId, labelId);
+  }
 }

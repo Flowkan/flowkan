@@ -40,6 +40,23 @@ const DraggableTask = ({
 			} ${task.id && remoteDrag?.draggableId === task.id.toString() ? "hidden" : ""} `}
 			style={{ ...provided.draggableProps.style }}
 		>
+			{task.labels && task.labels.length > 0 && (
+				<div className="mb-2 flex flex-wrap gap-2">
+					{task.labels.map((labelWrapper) => (
+						<div
+							key={labelWrapper.label.id}
+							className="truncate rounded-md px-3 py-0.5"
+							style={{
+								backgroundColor: labelWrapper.label.color,
+								border: "1px solid #333333",
+								boxShadow: `1px 1px 2px ${labelWrapper.label.color}`,
+								minWidth: "60px",
+							}}
+							title={labelWrapper.label.name}
+						></div>
+					))}
+				</div>
+			)}
 			<div className="flex w-full items-center justify-between">
 				<span className="text-text-heading flex-grow p-1 font-medium break-words">
 					{task.title}

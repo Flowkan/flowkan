@@ -50,6 +50,7 @@ describe("boardsReducer", () => {
 			lists: [],
 			members: [],
 			image: "image.jpg",
+			boardLabels: [],
 		};
 		const initialState = {
 			...boardsDefaultstateBoards,
@@ -97,6 +98,7 @@ describe("boardsReducer", () => {
 					title: "board 1",
 					lists: [],
 					members: [],
+					boardLabel: [],
 					image: "image.jpg",
 				},
 			],
@@ -130,6 +132,7 @@ describe("boardsReducer", () => {
 			title: "board 1",
 			lists: [],
 			members: [],
+			boardLabels: [],
 			image: "image.jpg",
 		};
 		const result = boardsReducer(boardsDefaultstateBoards, {
@@ -165,6 +168,7 @@ describe("boardsReducer", () => {
 			title: "board 1",
 			lists: [],
 			members: [],
+			boardLabels: [],
 			image: "image.jpg",
 		};
 		const result = boardsReducer(boardsDefaultstateBoards, {
@@ -221,6 +225,7 @@ describe("boardsReducer", () => {
 					title: "Board 1",
 					lists: [],
 					members: [],
+					boardLabels: [],
 					image: "img1.jpg",
 				},
 				{
@@ -229,6 +234,7 @@ describe("boardsReducer", () => {
 					title: "Board 2",
 					lists: [],
 					members: [],
+					boardLabels: [],
 					image: "img2.jpg",
 				},
 			],
@@ -244,6 +250,7 @@ describe("boardsReducer", () => {
 					title: "Updated Board",
 					lists: [],
 					members: [],
+					boardLabels: [],
 					image: "updated.jpg",
 				},
 			},
@@ -295,6 +302,7 @@ describe("boardsReducer", () => {
 			title: "Board 1",
 			lists: [],
 			members: [],
+			boardLabels: [],
 			image: "img1.jpg",
 		},
 		loading: false,
@@ -312,7 +320,7 @@ describe("boardsReducer", () => {
 			cards: [],
 			position: 1,
 		};
-		const initialCurrentBoard = boardsDefaultstateColumns.currentBoard!;
+		const initialCurrentBoard = boardsDefaultstateColumns.currentBoard;
 		const result = boardsReducer(boardsDefaultstateColumns, {
 			type: "boards/addColumn/fulfilled",
 			payload: columnPayload,
@@ -429,6 +437,7 @@ describe("boardsReducer", () => {
 				slug: "board-1",
 				title: "Board 1",
 				members: [],
+				boardLabels: [],
 				image: "img1.jpg",
 				lists: [
 					{
@@ -486,6 +495,7 @@ describe("boardsReducer", () => {
 				title: "Board 1",
 				lists: [],
 				members: [],
+				boardLabels: [],
 				image: "img1.jpg",
 			},
 			{
@@ -763,6 +773,7 @@ describe("boardsReducer", () => {
 			title: "Board 1",
 			image: "img1.jpg",
 			members: [],
+			boardLabels: [],
 			lists: [
 				{
 					id: "1",
