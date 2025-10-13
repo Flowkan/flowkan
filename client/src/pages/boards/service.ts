@@ -1,5 +1,6 @@
 import { apiClient } from "../../api/client";
 import {
+	AI_ENDPOINT,
 	BOARD_ENDPOINTS,
 	CARD_ENDPOINT,
 	LIST_ENDPOINT,
@@ -144,4 +145,16 @@ export const removeAssignee = async (
 	await apiClient.delete(
 		`${CARD_ENDPOINT.CARDS}/removeAssignee/${cardId}/${assigneeId}`,
 	);
+};
+
+export const generateDescription = async (
+	title: string,
+	signal?: AbortSignal,
+) => {
+	const response = await apiClient.post<{ description: string }>(
+		AI_ENDPOINT.GENERATE,
+		{ title },
+		{ signal },
+	);
+	return response.data.description;
 };
