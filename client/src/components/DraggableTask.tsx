@@ -45,13 +45,12 @@ const DraggableTask = ({
 					{task.labels.map((labelWrapper) => (
 						<div
 							key={labelWrapper.label.id}
-							className="truncate rounded-md px-3 py-1 text-sm font-bold text-white shadow-sm"
+							className="truncate rounded-md px-3 py-0.5"
 							style={{
 								backgroundColor: labelWrapper.label.color,
 								border: "1px solid #333333",
-								boxShadow: `1px 1px 2px ${labelWrapper.label.color}aa`,
+								boxShadow: `1px 1px 2px ${labelWrapper.label.color}`,
 								minWidth: "60px",
-								textAlign: "center",
 							}}
 							title={labelWrapper.label.name}
 						></div>
