@@ -1,6 +1,6 @@
 import type { AppThunk } from "..";
 import type { User } from "../../pages/login/types";
-import type { Board, Column, Task } from "../../pages/boards/types";
+import type { Board, Column, Label, Task } from "../../pages/boards/types";
 import type { DropResult } from "@hello-pangea/dnd";
 import type { AuthActions, AuthActionsRejected } from "../auth/actions";
 import type {
@@ -108,6 +108,21 @@ type EditTaskRejected = { type: "boards/editTask/rejected"; payload: Error };
 type DeleteTaskFulfilled = {
 	type: "boards/deleteTask/fulfilled";
 	payload: { columnId: string; taskId: string };
+};
+
+type AddLabelToCardFulfilled = {
+	type: "tasks/addLabelToCard/fulfilled";
+	payload: { taskId: string; labelId: number };
+};
+
+type AddLabelFulfilled = {
+	type: "tasks/addLabel/fulfilled";
+	payload: { boardId: number; label: Label };
+};
+
+type RemoveLabelFromCardFulfilled = {
+	type: "tasks/removeLabelFromCard/fulfilled";
+	payload: { taskId: string; labelId: string };
 };
 
 export const fetchBoardsPending = (): FetchBoardsPending => ({
@@ -231,6 +246,32 @@ type RemoveAssigneeFulfilled = {
 	type: "cards/removeAssignee/fulfilled";
 	payload: { cardId: number; userId: number };
 };
+
+// --- LABELS
+
+export const addLabelToCardFulfilled = (
+	taskId: string,
+	labelId: number,
+): AddLabelToCardFulfilled => ({
+	type: "tasks/addLabelToCard/fulfilled",
+	payload: { taskId, labelId },
+});
+
+export const addLabelFulfilled = (
+	boardId: number,
+	label: Label,
+): AddLabelFulfilled => ({
+	type: "tasks/addLabel/fulfilled",
+	payload: { boardId, label },
+});
+
+export const removeLabelFromCardFulfilled = (
+	taskId: string,
+	labelId: string,
+): RemoveLabelFromCardFulfilled => ({
+	type: "tasks/removeLabelFromCard/fulfilled",
+	payload: { taskId, labelId },
+});
 
 export const addAssigneeFulfilled = (
 	cardId: number,
@@ -433,6 +474,45 @@ export function removeAssignee(
 	};
 }
 
+export function addLabel(
+	boardId: number,
+	label: Label,
+): AppThunk<Promise<void>> {
+	return async (dispatch, _getState, { api }) => {
+		const data = await api.boards.createLabel(boardId, {
+			name: label.name,
+			color: label.color,
+		});
+		dispatch(addLabelFulfilled(boardId, data));
+	};
+}
+
+export function addLabelToCard(
+	taskId: string,
+	labelId: string,
+): AppThunk<Promise<void>> {
+	return async (dispatch, _getState, { api }) => {
+		const task = await api.boards.addLabelToCard(
+			Number(taskId),
+			Number(labelId),
+		);
+		if (!task) {
+			return;
+		}
+		dispatch(addLabelToCardFulfilled(taskId, task.labelId));
+	};
+}
+
+export function removeLabelFromCard(
+	taskId: string,
+	labelId: string,
+): AppThunk<Promise<void>> {
+	return async (dispatch, _getState, { api }) => {
+		await api.boards.removeLabelFromCard(Number(taskId), Number(labelId));
+		dispatch(removeLabelFromCardFulfilled(taskId, labelId));
+	};
+}
+
 //
 // ─── UI ──────────────────────────────────────────────
 //
@@ -470,6 +550,9 @@ export type Actions =
 	| GetBoardUsersRejected
 	| AddAssigneeFulfilled
 	| RemoveAssigneeFulfilled
+	| AddLabelToCardFulfilled
+	| AddLabelFulfilled
+	| RemoveLabelFromCardFulfilled
 	| UiResetError;
 
 export type ActionsRejected =

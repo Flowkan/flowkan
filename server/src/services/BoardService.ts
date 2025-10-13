@@ -1,11 +1,14 @@
 import { Board, Prisma } from "@prisma/client";
 import BoardModel, { BoardWithRelations, SafeUser } from "../models/BoardModel";
+import CardModel from "../models/CardModel";
 
 class BoardService {
   private readonly boardModel: BoardModel;
+  private readonly cardModal: CardModel;
 
-  constructor(boardModel: BoardModel) {
+  constructor(boardModel: BoardModel, cardModel: CardModel) {
     this.boardModel = boardModel;
+    this.cardModal = cardModel;
   }
   async getAllBoardsByUserId(
     userId: number,
@@ -111,6 +114,27 @@ class BoardService {
     boardId: string;
   }): Promise<SafeUser[]> {
     return this.boardModel.getBoardUsers(data);
+  }
+
+  async getLabels(userId: number, boardId: number) {
+    const isMember = await this.cardModal._isUserBoardMember(userId, boardId);
+    if (!isMember) {
+      throw new Error("No tienes permiso para ver etiquetas de este board");
+    }
+    return this.boardModel.getLabels(boardId);
+  }
+
+  async createLabel(
+    userId: number,
+    boardId: number,
+    name: string,
+    color: string,
+  ) {
+    const isMember = await this.cardModal._isUserBoardMember(userId, boardId);
+    if (!isMember) {
+      throw new Error("No tienes permiso para crear etiquetas en este board");
+    }
+    return this.boardModel.createLabel(boardId, name, color);
   }
 }
 

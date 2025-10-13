@@ -28,6 +28,11 @@ export default class CardModel {
       where: { listId },
       include: {
         media: true,
+        labels: {
+          include: {
+            label: true,
+          },
+        },
       },
     });
   }
@@ -40,6 +45,11 @@ export default class CardModel {
           select: { boardId: true },
         },
         media: true,
+        labels: {
+          include: {
+            label: true,
+          },
+        },
       },
     });
 
@@ -148,6 +158,18 @@ export default class CardModel {
           userId,
         },
       },
+    });
+  }
+
+  async addLabelToCard(cardId: number, labelId: number) {
+    return this.prisma.cardLabel.create({
+      data: { cardId, labelId },
+    });
+  }
+
+  async removeLabelFromCard(cardId: number, labelId: number) {
+    return this.prisma.cardLabel.delete({
+      where: { cardId_labelId: { cardId, labelId } },
     });
   }
 }

@@ -237,6 +237,87 @@ export function boardsReducer(
 					})),
 				},
 			};
+		case "tasks/addLabelToCard/fulfilled": {
+			if (!state.currentBoard) return state;
+
+			const labelToAdd = state.currentBoard.labels.find(
+				(l) => l.id.toString() === action.payload.labelId.toString(),
+			);
+			if (!labelToAdd) return state;
+
+			return {
+				...state,
+				currentBoard: {
+					...state.currentBoard,
+					lists: state.currentBoard.lists.map((col) => ({
+						...col,
+						cards: col.cards.map((task) => {
+							if (task.id?.toString() !== action.payload.taskId.toString()) {
+								return task;
+							}
+
+							const alreadyHasLabel = task.labels?.some(
+								(l) => l.label.id === labelToAdd.id,
+							);
+
+							if (alreadyHasLabel) return task;
+
+							const newLabelRelation = {
+								cardId: task.id,
+								labelId: labelToAdd.id,
+								label: labelToAdd,
+							};
+
+							return {
+								...task,
+								labels: [...(task.labels ?? []), newLabelRelation],
+							};
+						}),
+					})),
+				},
+			};
+		}
+
+		case "tasks/addLabel/fulfilled":
+			if (!state.currentBoard) return state;
+			if (
+				state.currentBoard.labels.some(
+					(label) => label.id === action.payload.label.id,
+				)
+			) {
+				return state;
+			}
+			return {
+				...state,
+				currentBoard: {
+					...state.currentBoard,
+					labels: [...state.currentBoard.labels, action.payload.label],
+				},
+			};
+
+		case "tasks/removeLabelFromCard/fulfilled":
+			if (!state.currentBoard) return state;
+			return {
+				...state,
+				currentBoard: {
+					...state.currentBoard,
+					lists: state.currentBoard.lists.map((col) => ({
+						...col,
+						cards: col.cards.map((task) =>
+							task.id?.toString() === action.payload.taskId
+								? {
+										...task,
+										labels: task.labels?.filter(
+											(label) =>
+												label.label.id.toString() !==
+												action.payload.labelId.toString(),
+										),
+									}
+								: task,
+						),
+					})),
+				},
+			};
 
 		default:
 			return state;

@@ -7,12 +7,14 @@ import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
 import AuthService from "../services/AuthService";
 import AuthModel from "../models/AuthModel";
 import { processImage, upload } from "../lib/uploadConfigure";
+import CardModel from "../models/CardModel";
 
 const router = Router();
 
 // Inyección de dependencias
 const model = new BoardModel(prisma);
-const service = new BoardService(model);
+const cardModel = new CardModel(prisma);
+const service = new BoardService(model, cardModel);
 const authModel = new AuthModel(prisma);
 const authService = new AuthService(authModel);
 const controller = new BoardController(service, authService);
@@ -47,5 +49,8 @@ router.get("/:id/share", jwtAuth.guard, controller.shareBoard);
 router.post("/:id/invite", jwtAuth.guard, controller.acceptInvitation);
 
 router.get("/:id/users", jwtAuth.guard, controller.boardUsers);
+
+router.get("/:boardId/labels", jwtAuth.guard, controller.getBoardLabels);
+router.post("/:boardId/labels", jwtAuth.guard, controller.createLabel);
 
 export default router;

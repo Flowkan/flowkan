@@ -38,4 +38,15 @@ router.delete(
   controller.removeAssignee,
 );
 
+router.post(
+  "/:cardId/labels/:labelId",
+  jwtAuth.guard,
+  controller.addLabelToCard,
+);
+router.delete(
+  "/:cardId/labels/:labelId",
+  jwtAuth.guard,
+  controller.removeLabelFromCard,
+);
+
 export default router;

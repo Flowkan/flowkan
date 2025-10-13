@@ -195,4 +195,41 @@ export class CardController {
       );
     }
   };
+
+  addLabelToCard = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.apiUserId;
+      const { cardId, labelId } = req.params;
+
+      const updatedCard = await this.cardService.addLabelToCard(
+        userId,
+        Number(cardId),
+        Number(labelId),
+      );
+
+      res.status(200).json(updatedCard);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  removeLabelFromCard = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.apiUserId;
+      const { cardId, labelId } = req.params;
+
+      await this.cardService.removeLabelFromCard(
+        userId,
+        Number(cardId),
+        Number(labelId),
+      );
+      res.status(204).send();
+    } catch (err) {
+      next(err);
+    }
+  };
 }

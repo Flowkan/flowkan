@@ -2,10 +2,14 @@ import { BoardUser, ServerUser, SocketUser } from "../types";
 import BoardService from "../../services/BoardService";
 import BoardModel from "../../models/BoardModel";
 import prisma from "../../config/db";
+import CardModel from "../../models/CardModel";
 
 export default class UserHandler {
   private readonly connectedUsers: Map<string, BoardUser> = new Map();
-  private readonly boardService = new BoardService(new BoardModel(prisma));
+  private readonly boardService = new BoardService(
+    new BoardModel(prisma),
+    new CardModel(prisma),
+  );
   constructor(private readonly io: ServerUser) {}
 
   initialize(socket: SocketUser) {
