@@ -110,13 +110,18 @@ type DeleteTaskFulfilled = {
 	payload: { columnId: string; taskId: string };
 };
 
-type AddLabelFulfilled = {
-	type: "tasks/addLabel/fulfilled";
-	payload: { taskId: string; label: Label };
+type AddLabelToCardFulfilled = {
+	type: "tasks/addLabelToCard/fulfilled";
+	payload: { taskId: string; labelId: number };
 };
 
-type RemoveLabelFulfilled = {
-	type: "tasks/removeLabel/fulfilled";
+type AddLabelFulfilled = {
+	type: "tasks/addLabel/fulfilled";
+	payload: { boardId: number; label: Label };
+};
+
+type RemoveLabelFromCardFulfilled = {
+	type: "tasks/removeLabelFromCard/fulfilled";
 	payload: { taskId: string; labelId: string };
 };
 
@@ -244,19 +249,27 @@ type RemoveAssigneeFulfilled = {
 
 // --- LABELS
 
-export const addLabelFulfilled = (
+export const addLabelToCardFulfilled = (
 	taskId: string,
+	labelId: number,
+): AddLabelToCardFulfilled => ({
+	type: "tasks/addLabelToCard/fulfilled",
+	payload: { taskId, labelId },
+});
+
+export const addLabelFulfilled = (
+	boardId: number,
 	label: Label,
 ): AddLabelFulfilled => ({
 	type: "tasks/addLabel/fulfilled",
-	payload: { taskId, label },
+	payload: { boardId, label },
 });
 
-export const removeLabelFulfilled = (
+export const removeLabelFromCardFulfilled = (
 	taskId: string,
 	labelId: string,
-): RemoveLabelFulfilled => ({
-	type: "tasks/removeLabel/fulfilled",
+): RemoveLabelFromCardFulfilled => ({
+	type: "tasks/removeLabelFromCard/fulfilled",
 	payload: { taskId, labelId },
 });
 
@@ -462,6 +475,19 @@ export function removeAssignee(
 }
 
 export function addLabel(
+	boardId: number,
+	label: Label,
+): AppThunk<Promise<void>> {
+	return async (dispatch, _getState, { api }) => {
+		const data = await api.boards.createLabel(boardId, {
+			name: label.name,
+			color: label.color,
+		});
+		dispatch(addLabelFulfilled(boardId, data));
+	};
+}
+
+export function addLabelToCard(
 	taskId: string,
 	labelId: string,
 ): AppThunk<Promise<void>> {
@@ -470,18 +496,20 @@ export function addLabel(
 			Number(taskId),
 			Number(labelId),
 		);
-		const label = task.labels.find((l) => l.id === Number(labelId))!;
-		dispatch(addLabelFulfilled(taskId, label));
+		if (!task) {
+			return;
+		}
+		dispatch(addLabelToCardFulfilled(taskId, task.labelId));
 	};
 }
 
-export function removeLabel(
+export function removeLabelFromCard(
 	taskId: string,
 	labelId: string,
 ): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
 		await api.boards.removeLabelFromCard(Number(taskId), Number(labelId));
-		dispatch(removeLabelFulfilled(taskId, labelId));
+		dispatch(removeLabelFromCardFulfilled(taskId, labelId));
 	};
 }
 
@@ -522,8 +550,9 @@ export type Actions =
 	| GetBoardUsersRejected
 	| AddAssigneeFulfilled
 	| RemoveAssigneeFulfilled
+	| AddLabelToCardFulfilled
 	| AddLabelFulfilled
-	| RemoveLabelFulfilled
+	| RemoveLabelFromCardFulfilled
 	| UiResetError;
 
 export type ActionsRejected =

@@ -28,6 +28,11 @@ export default class CardModel {
       where: { listId },
       include: {
         media: true,
+        labels: {
+          include: {
+            label: true,
+          },
+        },
       },
     });
   }
@@ -40,6 +45,11 @@ export default class CardModel {
           select: { boardId: true },
         },
         media: true,
+        labels: {
+          include: {
+            label: true,
+          },
+        },
       },
     });
 

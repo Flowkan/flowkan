@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import type { Label, Task } from "../pages/boards/types";
 import type { User } from "../pages/login/types";
-import { createLabel, getBoardUsers } from "../pages/boards/service";
+import { getBoardUsers } from "../pages/boards/service";
 import { Avatar } from "./ui/Avatar";
 import {
 	useAddAssigneeAction,
@@ -21,10 +21,13 @@ import { SpinnerLoadingText } from "./ui/Spinner";
 import { getContrastColor } from "../lib/colorUtils";
 import ConfirmDelete from "./ui/modals/confirm-delete";
 import { useDismiss } from "../hooks/useDismissClickAndEsc";
+import { useAppDispatch } from "../../src/store";
+import { addLabel } from "../store/boards/actions";
 
 interface TaskDetailModalProps {
 	isOpen: boolean;
 	task: Task;
+	boardLabels?: Label[];
 	columnId: string;
 	boardId?: string;
 	onClose: () => void;
@@ -36,15 +39,21 @@ interface TaskDetailModalProps {
 
 const NewLabelForm: React.FC<{
 	boardId: string;
-	onCreated: (label: Label) => void;
-}> = ({ boardId, onCreated }) => {
+}> = ({ boardId }) => {
 	const [name, setName] = useState("");
 	const [color, setColor] = useState("#cccccc");
+	const dispatch = useAppDispatch();
 
 	const handleCreate = async () => {
-		const newLabel = await createLabel(boardId, { name, color });
-		onCreated(newLabel);
-		setName("");
+		if (!name.trim()) return;
+		try {
+			await dispatch(addLabel(Number(boardId), { name, color } as Label));
+
+			setName("");
+			setColor("#cccccc");
+		} catch (error) {
+			console.error("Error creating label:", error);
+		}
 	};
 
 	return (
@@ -62,7 +71,7 @@ const NewLabelForm: React.FC<{
 				onChange={(e) => setName(e.target.value)}
 				className="flex-grow rounded border px-2"
 			/>
-			<Button onClick={handleCreate}>
+			<Button onClick={handleCreate} disabled={!name.trim()}>
 				<Icon icon="mdi:plus" />
 			</Button>
 		</div>
@@ -71,6 +80,7 @@ const NewLabelForm: React.FC<{
 
 const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	task,
+	boardLabels,
 	columnId,
 	boardId,
 	isOpen,
@@ -106,11 +116,11 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 	const contentInputRef = useRef<HTMLInputElement>(null);
 	const usersRef = useRef<HTMLDivElement>(null);
+	const labelsRef = useRef<HTMLDivElement>(null);
 	const addMenuRef = useRef<HTMLDivElement>(null);
 	const { t: translate } = useTranslation();
 	const editorRef = useRef<TinyMCEEditor | null>(null);
 	const [showLabels, setShowLabels] = useState(false);
-	const [labels, setLabels] = useState<Label[]>([]);
 	const addLabelAction = useAddLabelAction();
 	const removeLabelAction = useRemoveLabelAction();
 
@@ -444,10 +454,97 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									/>
 								</div>
 
-								<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
+								<Button
+									onClick={() => setShowLabels(true)}
+									className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200"
+								>
 									<Icon icon="mdi:tag-outline" className="text-lg" />{" "}
 									{translate("board.labels")}
 								</Button>
+								{showLabels && (
+									<div
+										ref={labelsRef}
+										className="border-border-medium bg-background-light-grey absolute top-full left-1/2 z-50 mt-2 max-h-60 -translate-x-1/2 overflow-y-auto rounded-md border p-2 shadow-lg"
+									>
+										<div className="mb-2 flex items-center justify-between">
+											<h3 className="text-text-heading text-sm font-semibold">
+												{translate("board.labels", "Etiquetas")}
+											</h3>
+											<Button
+												variant="primary"
+												onClick={() => setShowLabels(false)}
+												title={translate("board.close", "Cerrar")}
+											>
+												<Icon icon="mdi:close" className="text-lg" />
+											</Button>
+										</div>
+
+										{/* Lista de etiquetas */}
+										<div className="mb-2 space-y-1">
+											{boardLabels!.map((label) => {
+												const isAssigned = task.labels?.some(
+													(l) => l.label.id === label.id,
+												);
+												const contrastColor = getContrastColor(label.color);
+
+												return (
+													<div
+														key={label.id}
+														onClick={() => {
+															if (isAssigned && task.id && label.id) {
+																removeLabelAction(
+																	task.id.toString(),
+																	label.id.toString(),
+																);
+															} else if (task.id && label.id) {
+																addLabelAction(
+																	task.id.toString(),
+																	label.id.toString(),
+																);
+															}
+														}}
+														className={`flex cursor-pointer items-center justify-between rounded-md px-2 py-1 text-sm font-medium transition-colors duration-150 ${
+															isAssigned
+																? "ring-accent ring-1"
+																: "hover:bg-background-hover-column"
+														}`}
+														style={{
+															backgroundColor: isAssigned ? label.color : "",
+															color: isAssigned ? contrastColor : "inherit",
+														}}
+													>
+														<div
+															className="flex w-full items-center justify-center border"
+															style={{
+																backgroundColor: label.color,
+															}}
+														>
+															<span
+																className="truncate"
+																style={{ color: contrastColor }}
+															>
+																{label.name}
+															</span>
+														</div>
+
+														{isAssigned && (
+															<Icon
+																icon="mdi:check"
+																className="ml-2 shrink-0 text-xs"
+																style={{ color: contrastColor }}
+															/>
+														)}
+													</div>
+												);
+											})}
+										</div>
+
+										{/* Crear nueva etiqueta */}
+										<div className="border-border-medium border-t pt-2">
+											<NewLabelForm boardId={boardId!} />
+										</div>
+									</div>
+								)}
 								<Button className="bg-background-light-grey text-text-body hover:bg-background-hover-column flex items-center gap-1 rounded-md px-3 py-2 text-sm transition-colors duration-200">
 									<Icon icon="mdi:calendar-month-outline" className="text-lg" />{" "}
 									{translate("board.dates")}
@@ -693,80 +790,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								>
 									{translate("board.stop")}
 								</Button>
-							</div>
-						)}
-
-						{showLabels && (
-							<div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
-								<div className="w-80 rounded-lg bg-white p-4 shadow-lg">
-									<h3 className="mb-2 font-semibold">
-										{translate("board.labels", "Etiquetas")}
-									</h3>
-
-									<div className="mb-4 space-y-2">
-										{labels.map((label) => {
-											const isAssigned = task.labels?.some(
-												(l) => l.id === label.id,
-											);
-											return (
-												<button
-													type="button"
-													key={label.id}
-													onClick={() => {
-														if (isAssigned && task.id && label.id) {
-															removeLabelAction(
-																task.id?.toString(),
-																label.id.toString(),
-															);
-														} else if (task.id && label.id) {
-															addLabelAction(
-																task.id.toString(),
-																label.id.toString(),
-															);
-														}
-													}}
-													className={`relative flex items-center justify-center rounded-md p-2 transition-colors duration-200 focus:outline-none ${
-														isAssigned
-															? "ring-2 ring-black"
-															: "hover:opacity-80"
-													}`}
-													style={{
-														backgroundColor: label.color,
-														cursor: "pointer",
-													}}
-													aria-pressed={isAssigned}
-												>
-													<span
-														className="font-medium"
-														style={{ color: getContrastColor(label.color) }}
-													>
-														{label.name}
-													</span>
-
-													{isAssigned && (
-														<Icon
-															icon="mdi:check"
-															className={`absolute top-1/2 right-2 -translate-y-1/2 text-xl`}
-															style={{ color: getContrastColor(label.color) }}
-														/>
-													)}
-												</button>
-											);
-										})}
-									</div>
-
-									<NewLabelForm
-										boardId={boardId!}
-										onCreated={(l) => setLabels((prev) => [...prev, l])}
-									/>
-
-									<Button
-										onClick={() => setShowLabels(false)}
-										className="mt-4 w-full"
-									>
-										{translate("board.close", "Cerrar")}
-									</Button>
-								</div>
 							</div>
 						)}
 					</div>

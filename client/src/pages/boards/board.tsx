@@ -321,6 +321,7 @@ const Board = () => {
 				<TaskDetailModal
 					isOpen={!!selectedTask}
 					task={selectedTask}
+					boardLabels={boardData?.labels}
 					boardId={boardData?.id}
 					columnId={selectedColumnId}
 					onClose={closeTaskDetail}

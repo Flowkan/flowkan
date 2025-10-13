@@ -31,7 +31,7 @@ export type Task = {
 	position: number;
 	assignees: CardAssignee[];
 	media?: Media[];
-	labels: Label[];
+	labels: TaskLabel[];
 };
 
 export interface TaskWithMedia extends Task {
@@ -53,6 +53,7 @@ export type Board = {
 	lists: Column[];
 	members: BoardMember[];
 	image: string;
+	labels: Label[];
 };
 
 export type BoardsResponse = {
@@ -77,4 +78,10 @@ export interface Label {
 	name: string;
 	color: string;
 	boardId: number;
+}
+
+export interface TaskLabel {
+	cardId: number;
+	labelId: number;
+	label: Label;
 }

@@ -167,11 +167,11 @@ export const createLabel = async (
 	return data;
 };
 
-export const addLabelToCard = async (
-	cardId: number,
-	labelId: number,
-): Promise<Task> => {
-	return await apiClient.post(LABEL_ENDPOINTS.BY_CARD(cardId, labelId));
+export const addLabelToCard = async (cardId: number, labelId: number) => {
+	const { data } = await apiClient.post(
+		LABEL_ENDPOINTS.BY_CARD(cardId, labelId),
+	);
+	return data;
 };
 
 export const removeLabelFromCard = async (

@@ -25,6 +25,11 @@ const boardWithRelationsData = Prisma.validator<Prisma.BoardFindManyArgs>()({
               },
             },
             media: true,
+            labels: {
+              include: {
+                label: true,
+              },
+            },
           },
         },
       },

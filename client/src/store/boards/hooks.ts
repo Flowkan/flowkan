@@ -14,9 +14,9 @@ import {
 	addAssignee,
 	removeAssignee,
 	updateRemoteBoard,
-	addLabel,
-	removeLabel,
 	uiResetError,
+	removeLabelFromCard,
+	addLabelToCard,
 } from "./actions";
 import {
 	getBoards,
@@ -143,13 +143,13 @@ export function useRemoveAssigneeAction() {
 export function useAddLabelAction() {
 	const dispatch = useAppDispatch();
 	return (taskId: string, labelId: string) =>
-		dispatch(addLabel(taskId, labelId));
+		dispatch(addLabelToCard(taskId, labelId));
 }
 
 export function useRemoveLabelAction() {
 	const dispatch = useAppDispatch();
 	return (taskId: string, labelId: string) =>
-		dispatch(removeLabel(taskId, labelId));
+		dispatch(removeLabelFromCard(taskId, labelId));
 }
 
 //
