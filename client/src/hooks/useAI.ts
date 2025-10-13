@@ -37,7 +37,6 @@ export const useAI = () => {
 			// 			}
 			// 			return description;
 			onChunk?.(formattedToHTML(description));
-			console.log("DESCRIPCION: ", description);
 			return description;
 		} catch (err: unknown) {
 			if (axios.isCancel(err)) {
