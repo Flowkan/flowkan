@@ -24,6 +24,7 @@ model User {
   members  BoardMember[]
   comments Comment[]
   assignedCards CardAssignee[]   @relation("CardAssignees")
+  subscription      UserSubscription?
   profile     Profile?
   passwordResetTokens  PasswordResetToken[]  
 }
@@ -139,6 +140,35 @@ model Media {
     cardId      Int
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
+}
+
+model SubscriptionPlan {
+  id                     Int      @id @default(autoincrement())
+  name                   String   @unique // "Free", "Pro", "Business"
+  maxBoards              Int?     // NULL = ilimitado
+  maxTasks               Int?
+  maxMembersPerBoard     Int?
+  aiDescriptionLimit     Int?
+  aiAgentEnabled         Boolean  @default(false)
+  storageLimitMB         Int?     // NULL = ilimitado
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  users UserSubscription[]
+}
+
+model UserSubscription {
+  id                       Int      @id @default(autoincrement())
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                   Int      @unique
+  plan                     SubscriptionPlan @relation(fields: [planId], references: [id])
+  planId                   Int
+  aiDescriptionCount        Int      @default(0) // contador mensual
+  currentStorageUsedMB      Int      @default(0)
+  startDate                 DateTime @default(now())
+  endDate                   DateTime?
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
 }
 
 
