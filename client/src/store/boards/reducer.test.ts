@@ -50,7 +50,7 @@ describe("boardsReducer", () => {
 			lists: [],
 			members: [],
 			image: "image.jpg",
-			boardLabels: [],
+			labels: [],
 		};
 		const initialState = {
 			...boardsDefaultstateBoards,
@@ -60,6 +60,7 @@ describe("boardsReducer", () => {
 		vi.spyOn(toolsModule, "applyDragResult").mockReturnValue({
 			...initialBoard,
 			title: "board 1 updated",
+			labels: [],
 		});
 
 		const result = boardsReducer(initialState, {
@@ -98,7 +99,7 @@ describe("boardsReducer", () => {
 					title: "board 1",
 					lists: [],
 					members: [],
-					boardLabel: [],
+					labels: [],
 					image: "image.jpg",
 				},
 			],
@@ -132,7 +133,7 @@ describe("boardsReducer", () => {
 			title: "board 1",
 			lists: [],
 			members: [],
-			boardLabels: [],
+			labels: [],
 			image: "image.jpg",
 		};
 		const result = boardsReducer(boardsDefaultstateBoards, {
@@ -168,7 +169,7 @@ describe("boardsReducer", () => {
 			title: "board 1",
 			lists: [],
 			members: [],
-			boardLabels: [],
+			labels: [],
 			image: "image.jpg",
 		};
 		const result = boardsReducer(boardsDefaultstateBoards, {
@@ -193,6 +194,7 @@ describe("boardsReducer", () => {
 					lists: [],
 					members: [],
 					image: "img1.jpg",
+					labels: [],
 				},
 				{
 					id: "2",
@@ -201,6 +203,7 @@ describe("boardsReducer", () => {
 					lists: [],
 					members: [],
 					image: "img2.jpg",
+					labels: [],
 				},
 			],
 		};
@@ -225,7 +228,7 @@ describe("boardsReducer", () => {
 					title: "Board 1",
 					lists: [],
 					members: [],
-					boardLabels: [],
+					labels: [],
 					image: "img1.jpg",
 				},
 				{
@@ -234,7 +237,7 @@ describe("boardsReducer", () => {
 					title: "Board 2",
 					lists: [],
 					members: [],
-					boardLabels: [],
+					labels: [],
 					image: "img2.jpg",
 				},
 			],
@@ -250,7 +253,7 @@ describe("boardsReducer", () => {
 					title: "Updated Board",
 					lists: [],
 					members: [],
-					boardLabels: [],
+					labels: [],
 					image: "updated.jpg",
 				},
 			},
@@ -286,6 +289,7 @@ describe("boardsReducer", () => {
 				lists: [],
 				members: [],
 				image: "img1.jpg",
+				labels: [],
 			},
 			{
 				id: "2",
@@ -294,6 +298,7 @@ describe("boardsReducer", () => {
 				lists: [],
 				members: [],
 				image: "img2.jpg",
+				labels: [],
 			},
 		],
 		currentBoard: {
@@ -302,7 +307,7 @@ describe("boardsReducer", () => {
 			title: "Board 1",
 			lists: [],
 			members: [],
-			boardLabels: [],
+			labels: [],
 			image: "img1.jpg",
 		},
 		loading: false,
@@ -437,7 +442,7 @@ describe("boardsReducer", () => {
 				slug: "board-1",
 				title: "Board 1",
 				members: [],
-				boardLabels: [],
+				labels: [],
 				image: "img1.jpg",
 				lists: [
 					{
@@ -495,7 +500,7 @@ describe("boardsReducer", () => {
 				title: "Board 1",
 				lists: [],
 				members: [],
-				boardLabels: [],
+				labels: [],
 				image: "img1.jpg",
 			},
 			{
@@ -504,6 +509,7 @@ describe("boardsReducer", () => {
 				title: "Board 2",
 				lists: [],
 				members: [],
+				labels: [],
 				image: "img2.jpg",
 			},
 		],
@@ -522,6 +528,7 @@ describe("boardsReducer", () => {
 			],
 			members: [],
 			image: "img1.jpg",
+			labels: [],
 		},
 		loading: false,
 		error: null,
@@ -538,6 +545,7 @@ describe("boardsReducer", () => {
 			description: "Task description",
 			position: 1,
 			assignees: [],
+			labels: [],
 		};
 		const initialState = { ...boardsDefaultstateTasks };
 		const result = boardsReducer(initialState, {
@@ -552,6 +560,7 @@ describe("boardsReducer", () => {
 				isVisible: true,
 				position: 1,
 				cards: [taskPayload],
+				labels: [],
 			},
 		]);
 	});
@@ -565,6 +574,7 @@ describe("boardsReducer", () => {
 			description: "Task description",
 			position: 1,
 			assignees: [],
+			labels: [],
 		};
 		const result = boardsReducer(stateWithNoBoard, {
 			type: "boards/addTask/fulfilled",
@@ -583,6 +593,7 @@ describe("boardsReducer", () => {
 			description: "Task description",
 			position: 1,
 			assignees: [],
+			labels: [],
 		};
 		const result = boardsReducer(stateWithNoBoard, {
 			type: "boards/addTask/fulfilled",
@@ -604,11 +615,26 @@ describe("boardsReducer", () => {
 						isVisible: true,
 						position: 1,
 						cards: [
-							{ id: 1, title: "Task 1", listId: 1, position: 1, assignees: [] },
-							{ id: 2, title: "Task 2", listId: 1, position: 2, assignees: [] },
+							{
+								id: 1,
+								title: "Task 1",
+								listId: 1,
+								position: 1,
+								assignees: [],
+								labels: [],
+							},
+							{
+								id: 2,
+								title: "Task 2",
+								listId: 1,
+								position: 2,
+								assignees: [],
+								labels: [],
+							},
 						],
 					},
 				],
+				labels: [],
 			},
 		};
 		const updatedTask: Task = {
@@ -617,6 +643,7 @@ describe("boardsReducer", () => {
 			listId: 1,
 			position: 1,
 			assignees: [],
+			labels: [],
 		};
 		const result = boardsReducer(initialState, {
 			type: "boards/editTask/fulfilled",
@@ -630,6 +657,7 @@ describe("boardsReducer", () => {
 				listId: 1,
 				position: 1,
 				assignees: [],
+				labels: [],
 			},
 			{ id: 2, title: "Task 2", listId: 1, position: 2, assignees: [] },
 		]);
@@ -639,7 +667,7 @@ describe("boardsReducer", () => {
 		const initialState = {
 			...boardsDefaultstateTasks,
 			currentBoard: {
-				...boardsDefaultstateTasks.currentBoard!,
+				...boardsDefaultstateTasks.currentBoard,
 				lists: [
 					{
 						id: "1",
@@ -647,7 +675,14 @@ describe("boardsReducer", () => {
 						isVisible: true,
 						position: 1,
 						cards: [
-							{ id: 1, title: "Task 1", listId: 1, position: 1, assignees: [] },
+							{
+								id: 1,
+								title: "Task 1",
+								listId: 1,
+								position: 1,
+								assignees: [],
+								labels: [],
+							},
 						],
 					},
 					{
@@ -666,6 +701,7 @@ describe("boardsReducer", () => {
 			listId: 2,
 			position: 1,
 			assignees: [],
+			labels: [],
 		};
 		const result = boardsReducer(initialState, {
 			type: "boards/editTask/fulfilled",
@@ -688,6 +724,7 @@ describe("boardsReducer", () => {
 			listId: 1,
 			position: 1,
 			assignees: [],
+			labels: [],
 		};
 		const result = boardsReducer(stateWithNoBoard, {
 			type: "boards/editTask/fulfilled",
@@ -701,7 +738,7 @@ describe("boardsReducer", () => {
 		const initialState = {
 			...boardsDefaultstateTasks,
 			currentBoard: {
-				...boardsDefaultstateTasks.currentBoard!,
+				...boardsDefaultstateTasks.currentBoard,
 				lists: [
 					{
 						id: "1",
@@ -709,11 +746,26 @@ describe("boardsReducer", () => {
 						isVisible: true,
 						position: 1,
 						cards: [
-							{ id: 1, title: "Task 1", listId: 1, position: 1, assignees: [] },
-							{ id: 2, title: "Task 2", listId: 1, position: 2, assignees: [] },
+							{
+								id: 1,
+								title: "Task 1",
+								listId: 1,
+								position: 1,
+								assignees: [],
+								labels: [],
+							},
+							{
+								id: 2,
+								title: "Task 2",
+								listId: 1,
+								position: 2,
+								assignees: [],
+								labels: [],
+							},
 						],
 					},
 				],
+				labels: [],
 			},
 		};
 
@@ -731,7 +783,7 @@ describe("boardsReducer", () => {
 		const initialState = {
 			...boardsDefaultstateTasks,
 			currentBoard: {
-				...boardsDefaultstateTasks.currentBoard!,
+				...boardsDefaultstateTasks.currentBoard,
 				lists: [
 					{
 						id: "1",
@@ -739,10 +791,18 @@ describe("boardsReducer", () => {
 						isVisible: true,
 						position: 1,
 						cards: [
-							{ id: 1, title: "Task 1", listId: 1, position: 1, assignees: [] },
+							{
+								id: 1,
+								title: "Task 1",
+								listId: 1,
+								position: 1,
+								assignees: [],
+								labels: [],
+							},
 						],
 					},
 				],
+				labels: [],
 			},
 		};
 
@@ -773,7 +833,7 @@ describe("boardsReducer", () => {
 			title: "Board 1",
 			image: "img1.jpg",
 			members: [],
-			boardLabels: [],
+			labels: [],
 			lists: [
 				{
 					id: "1",
@@ -789,6 +849,7 @@ describe("boardsReducer", () => {
 							position: 1,
 							assignees: [],
 							media: [],
+							labels: [],
 						},
 					],
 				},
@@ -862,7 +923,7 @@ describe("boardsReducer", () => {
 		const initialState = {
 			...boardsDefaultstateCards,
 			currentBoard: {
-				...boardsDefaultstateCards.currentBoard!,
+				...boardsDefaultstateCards.currentBoard,
 				lists: [
 					{
 						id: "1",
@@ -889,10 +950,12 @@ describe("boardsReducer", () => {
 									},
 								],
 								media: [],
+								labels: [],
 							},
 						],
 					},
 				],
+				labels: [],
 			},
 		};
 		const result = boardsReducer(initialState, {
@@ -924,7 +987,7 @@ describe("boardsReducer", () => {
 
 	// -------------------- DEFAULT --------------------
 	test("should return the initial state for unknown action", () => {
-		const unknownAction = { type: "unknown/action" } as any;
+		const unknownAction = { type: "unknown/action" } as never;
 		const result = boardsReducer(boardsDefaultstateBoards, unknownAction);
 
 		expect(result).toEqual(boardsDefaultstateBoards);
