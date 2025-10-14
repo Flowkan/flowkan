@@ -9,6 +9,7 @@ import logger from "morgan";
 import path from "node:path";
 
 import profileRoutes from "./routes/profile.routes";
+import aiRoutes from "./routes/ai.routes";
 
 import {
   ApiValidationError,
@@ -35,6 +36,8 @@ app.use("/api/v1/lists", listRoutes);
 app.use("/api/v1/cards", cardRoutes);
 //Profile...
 app.use("/api/v1/profile", profileRoutes);
+// AI
+app.use("/api/v1/ai", aiRoutes)
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   if (!req.url.startsWith("/api")) {

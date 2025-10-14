@@ -23,6 +23,7 @@ export const USER_ENDPOINTS = {
 	BY_ID: byId("profile"),
 	RESET_PASSWORD: `/api/${VERSION}/auth/reset_password`,
 	CHANGE_PASSWORD: `/api/${VERSION}/auth/change_password`,
+	AI_GENERATE: `/api/${VERSION}/ai/generate-description`,
 };
 
 export const BOARD_ENDPOINTS = {
@@ -38,6 +39,10 @@ export const LIST_ENDPOINT = {
 export const CARD_ENDPOINT = {
 	CARDS: `/api/${VERSION}/cards`,
 	BY_ID: byId("cards"),
+};
+
+export const AI_ENDPOINT = {
+	GENERATE: `${USER_ENDPOINTS.AI_GENERATE}`,
 };
 
 export const getAccountEndpoint = (typeAccount: TypeAccount): string | null => {
