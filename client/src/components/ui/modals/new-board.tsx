@@ -10,6 +10,9 @@ import { useAppDispatch } from "../../../store";
 import { SpinnerLoadingText } from "../Spinner";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../CustomToast";
+import type { AxiosError } from "axios";
+import UpgradeModal from "./UpgradeModal";
+import type { LimitErrorData } from "../../../pages/boards/types";
 
 interface NewBoardProps {
 	onClose: () => void;
@@ -19,6 +22,10 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 	const { t: translation } = useTranslation();
 	const [titleInput, setTitleInput] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [showLimitModal, setShowLimitModal] = useState(false);
+	const [limitErrorData, setLimitErrorData] = useState<LimitErrorData | null>(
+		null,
+	);
 	const dispatch = useAppDispatch();
 	const fileRef = useRef<HTMLInputElement>(null);
 
@@ -61,10 +68,31 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 			onClose(); // Cierra el modal solo si la creación fue exitosa
 		} catch (error) {
 			console.error(translation("newBoard.error"), error);
+			const apiError = error as AxiosError;
+			const status = apiError.response?.status;
+			const errorData = apiError.response?.data;
+
+			if (status === 403 && errorData) {
+				const limitData = errorData as LimitErrorData;
+				setLimitErrorData(limitData);
+				setShowLimitModal(true);
+			}
 		} finally {
 			setIsSubmitting(false);
 		}
 	};
+
+	if (showLimitModal && limitErrorData) {
+		return (
+			<UpgradeModal
+				onClose={() => {
+					setShowLimitModal(false);
+					onClose();
+				}}
+				message={limitErrorData.message}
+			/>
+		);
+	}
 
 	return (
 		<div className="modal-bg">

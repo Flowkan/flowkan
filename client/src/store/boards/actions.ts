@@ -353,8 +353,12 @@ export function getBoardUsers(id: string): AppThunk<Promise<void>> {
 
 export function addBoard(data: FormData): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
-		const board = await api.boards.createBoard(data);
-		dispatch(addBoardFulfilled(board));
+		try {
+			const board = await api.boards.createBoard(data);
+			dispatch(addBoardFulfilled(board));
+		} catch (error) {
+			throw error as Error;
+		}
 	};
 }
 

@@ -24,10 +24,13 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 	const buttonRef = useRef<HTMLButtonElement>(null);
 	const { t } = useTranslation();
 
-	const toggleMenu = useCallback((e: React.MouseEvent) => {
-		e.stopPropagation();
-		setOpen((prev) => !prev);
-	}, []);
+	const toggleMenu = useCallback(
+		(e: React.MouseEvent) => {
+			e.stopPropagation();
+			setOpen((prev) => !prev);
+		},
+		[setOpen],
+	);
 
 	const menuClasses = position === "right" ? "right-0" : "left-0";
 
