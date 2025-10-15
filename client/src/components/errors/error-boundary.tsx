@@ -1,17 +1,17 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { t } from "i18next";
+import * as Sentry from "@sentry/react";
 
 interface ErrorBoundaryProps {
 	children: ReactNode;
 }
 
-class ErrorBoundary extends Component<
-	ErrorBoundaryProps,
-	{
-		error: null | Error;
-		info: unknown;
-	}
-> {
+interface ErrorBoundaryState {
+	error: Error | null;
+	info: ErrorInfo | null;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 	constructor(props: ErrorBoundaryProps) {
 		super(props);
 		this.state = {
@@ -21,6 +21,11 @@ class ErrorBoundary extends Component<
 	}
 	componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
 		console.error("Error caught by ErrorBoundary:", error, errorInfo);
+
+		Sentry.captureException(error, {
+			extra: { componentStack: errorInfo.componentStack },
+		});
+
 		this.setState({
 			error,
 			info: errorInfo,

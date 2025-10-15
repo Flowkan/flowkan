@@ -15,9 +15,17 @@ import i18n from "../src/lib/i18nextHandlers.ts";
 import configureStore from "./store/index.ts";
 import SocketProvider from "./hooks/socket/socket-provider.tsx";
 import { responseJwtInterceptors } from "./api/client.ts";
+import * as Sentry from "@sentry/react";
 
 // import { store } from "./store/store.ts";
 
+Sentry.init({
+	dsn: import.meta.env.VITE_SENTRY_DSN,
+	integrations: [Sentry.browserTracingIntegration({})],
+	tracePropagationTargets: ["localhost", /^https:\/\/flowkan\.es\/api\/v1/],
+	tracesSampleRate: 1.0,
+	environment: import.meta.env.VITE_BASE_URL,
+});
 
 const accessToken = storage.get("auth");
 if (accessToken) {
@@ -27,6 +35,13 @@ if (accessToken) {
 const storedUser = localStorage.getItem("user");
 
 const user = storedUser ? (JSON.parse(storedUser) as User) : null;
+if (user) {
+	Sentry.setUser({
+		id: user.id.toString(),
+		username: user.name,
+		email: user.email,
+	});
+}
 
 const router = createBrowserRouter([{ path: "*", element: <App /> }]);
 const store = configureStore(
