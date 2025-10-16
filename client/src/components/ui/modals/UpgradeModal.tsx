@@ -62,7 +62,7 @@ const UpgradeModal = ({ onClose, message }: UpgradeModalProps) => {
 
 					<div className="mt-8 space-y-4">
 						<Button
-							className="bg-primary hover:bg-primary-hover w-full text-white shadow-lg transition duration-200"
+							className="bg-primary hover:bg-primary-hover w-full py-1 text-white shadow-lg transition duration-200"
 							onClick={onClose}
 						>
 							{t("upgradeModal.buttonUpgrade")}

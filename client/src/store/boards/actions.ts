@@ -408,6 +408,36 @@ export function editBoard(
 	};
 }
 
+export function shareBoard(
+	boardId: string,
+): AppThunk<Promise<string | undefined>> {
+	return async (dispatch, _getState, { api }) => {
+		try {
+			const response = await api.boards.createInvitationLink(boardId);
+
+			const token = response.token;
+			const FE_BASE_URL = globalThis.location.origin;
+
+			let fullInvitationUrl = `${FE_BASE_URL}/invitacion?token=${token}&username=${response.inviterName}&title=${response.boardTitle}&boardId=${response.boardId}&boardSlug=${response.slug}`;
+
+			if (response.inviterPhoto) {
+				fullInvitationUrl += `&photo=${response.inviterPhoto}`;
+			}
+
+			return fullInvitationUrl;
+		} catch (error) {
+			if (error instanceof AxiosError && error.response?.status === 403) {
+				const errorData = error.response.data as LimitErrorData;
+
+				if (errorData.errorCode === "LIMIT_MEMBERS_REACHED") {
+					dispatch(boardLimitReached(errorData));
+				}
+			}
+			return undefined;
+		}
+	};
+}
+
 export function addColumn(
 	boardId: string,
 	data: Column,

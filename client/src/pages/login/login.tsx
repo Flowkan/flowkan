@@ -88,7 +88,7 @@ export const LoginPage = () => {
 	}, [searchParams]);
 
 	useEffect(() => {
-		const params = new URLSearchParams(window.location.search);
+		const params = new URLSearchParams(globalThis.location.search);
 		const token = searchParams.get("token");
 		const userEncoded = params.get("user");
 		if (token) {

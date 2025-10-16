@@ -57,7 +57,7 @@ const BoardsList = () => {
 			<BackofficePage className="page-container" title={t("boardsList.title")}>
 				<section className="boards-list-container">
 					<h2 className="sr-only">Lista de tableros</h2>
-					{!boards.length ? (
+					{boards.length == 0 ? (
 						<div className="empty-list">
 							<div className="p-empty-list">
 								<p>{t("emptyList.p1")}</p>
