@@ -1,4 +1,4 @@
-import type { Board } from "../../pages/boards/types";
+import type { Board, LimitErrorData } from "../../pages/boards/types";
 import type { User } from "../../pages/login/types";
 import type { ProfileType } from "../../pages/profile/types";
 
@@ -28,6 +28,7 @@ export type ProfileState = {
 	};
 };
 
+type UIError = Error | LimitErrorData | null;
 export type BoardsState = {
 	auth: {
 		user: User | null;
@@ -46,6 +47,6 @@ export type BoardsState = {
 	};
 	ui: {
 		pending: boolean;
-		error: Error | null;
+		error: UIError;
 	};
 };

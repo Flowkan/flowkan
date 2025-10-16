@@ -1,6 +1,12 @@
 import type { AppThunk } from "..";
 import type { User } from "../../pages/login/types";
-import type { Board, Column, Label, Task } from "../../pages/boards/types";
+import type {
+	Board,
+	Column,
+	Label,
+	LimitErrorData,
+	Task,
+} from "../../pages/boards/types";
 import type { DropResult } from "@hello-pangea/dnd";
 import type { AuthActions, AuthActionsRejected } from "../auth/actions";
 import type {
@@ -9,6 +15,7 @@ import type {
 	UserActions,
 	UserActionsRejected,
 } from "../profile/actions";
+import { AxiosError } from "axios";
 
 //
 // ─── BOARDS ──────────────────────────────────────────────
@@ -125,6 +132,11 @@ type RemoveLabelFromCardFulfilled = {
 	payload: { taskId: string; labelId: string };
 };
 
+type BoardLimitReached = {
+	type: "boards/limitReached";
+	payload: LimitErrorData;
+};
+
 export const fetchBoardsPending = (): FetchBoardsPending => ({
 	type: "boards/fetchBoards/pending",
 });
@@ -233,6 +245,11 @@ export const deleteTaskFulfilled = (
 ): DeleteTaskFulfilled => ({
 	type: "boards/deleteTask/fulfilled",
 	payload: { columnId, taskId },
+});
+
+export const boardLimitReached = (data: LimitErrorData): BoardLimitReached => ({
+	type: "boards/limitReached",
+	payload: data,
 });
 
 // ─── ASSIGNEES ──────────────────────────────────────────────
@@ -351,13 +368,24 @@ export function getBoardUsers(id: string): AppThunk<Promise<void>> {
 	};
 }
 
-export function addBoard(data: FormData): AppThunk<Promise<void>> {
+export function addBoard(
+	data: FormData,
+): AppThunk<Promise<boolean | undefined>> {
 	return async (dispatch, _getState, { api }) => {
 		try {
 			const board = await api.boards.createBoard(data);
 			dispatch(addBoardFulfilled(board));
+			return true;
 		} catch (error) {
-			throw error as Error;
+			if (error instanceof AxiosError && error.response?.status === 403) {
+				const errorData = error.response.data as LimitErrorData;
+
+				if (errorData.errorCode === "LIMIT_BOARD_REACHED") {
+					dispatch(boardLimitReached(errorData));
+
+					return false;
+				}
+			}
 		}
 	};
 }
@@ -557,6 +585,7 @@ export type Actions =
 	| AddLabelToCardFulfilled
 	| AddLabelFulfilled
 	| RemoveLabelFromCardFulfilled
+	| BoardLimitReached
 	| UiResetError;
 
 export type ActionsRejected =
@@ -567,4 +596,5 @@ export type ActionsRejected =
 	| FetchBoardRejected
 	| EditColumnRejected
 	| EditTaskRejected
-	| GetBoardUsersRejected;
+	| GetBoardUsersRejected
+	| BoardLimitReached;

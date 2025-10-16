@@ -6,13 +6,13 @@ import CloseButton from "../close-button";
 import "./modal-boards.css";
 import { Button } from "../Button";
 import { addBoard } from "../../../store/boards/actions";
-import { useAppDispatch } from "../../../store";
+import { useAppDispatch, useAppSelector } from "../../../store";
 import { SpinnerLoadingText } from "../Spinner";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../CustomToast";
-import type { AxiosError } from "axios";
 import UpgradeModal from "./UpgradeModal";
 import type { LimitErrorData } from "../../../pages/boards/types";
+import { useUiResetError } from "../../../store/boards/hooks";
 
 interface NewBoardProps {
 	onClose: () => void;
@@ -22,14 +22,18 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 	const { t: translation } = useTranslation();
 	const [titleInput, setTitleInput] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [showLimitModal, setShowLimitModal] = useState(false);
-	const [limitErrorData, setLimitErrorData] = useState<LimitErrorData | null>(
-		null,
-	);
 	const dispatch = useAppDispatch();
 	const fileRef = useRef<HTMLInputElement>(null);
+	const resetError = useUiResetError();
 
-	const isDisabled = !titleInput && isSubmitting;
+	const limitErrorData = useAppSelector(
+		(state) => state.ui.error as LimitErrorData | null,
+	);
+
+	const handleClose = () => {
+		resetError();
+		onClose();
+	};
 
 	const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setTitleInput(event.target.value);
@@ -38,66 +42,47 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		try {
-			const boardData = new FormData();
-			boardData.append("title", titleInput);
-			const file = fileRef.current?.files?.[0];
+		if (isSubmitting) return;
+		setIsSubmitting(true);
+		resetError();
 
-			if (isSubmitting) return;
-			setIsSubmitting(true);
+		const boardData = new FormData();
+		boardData.append("title", titleInput);
 
-			if (file) {
-				const maxSizeMB = 5;
-
-				if (file.size > maxSizeMB * 1024 * 1024) {
-					toast.custom((t) => (
-						<CustomToast
-							message={translation("newBoard.toast.errorImage")}
-							t={t}
-							type="error"
-						/>
-					));
-
-					return;
-				}
-
-				boardData.append("image", file);
+		const file = fileRef.current?.files?.[0];
+		if (file) {
+			const maxSizeMB = 5;
+			if (file.size > maxSizeMB * 1024 * 1024) {
+				toast.custom((t) => (
+					<CustomToast
+						message={translation("newBoard.toast.errorImage")}
+						t={t}
+						type="error"
+					/>
+				));
+				setIsSubmitting(false);
+				return;
 			}
-
-			await dispatch(addBoard(boardData));
-			onClose(); // Cierra el modal solo si la creación fue exitosa
-		} catch (error) {
-			console.error(translation("newBoard.error"), error);
-			const apiError = error as AxiosError;
-			const status = apiError.response?.status;
-			const errorData = apiError.response?.data;
-
-			if (status === 403 && errorData) {
-				const limitData = errorData as LimitErrorData;
-				setLimitErrorData(limitData);
-				setShowLimitModal(true);
-			}
-		} finally {
-			setIsSubmitting(false);
+			boardData.append("image", file);
 		}
+
+		const success = await dispatch(addBoard(boardData));
+		if (success) {
+			onClose();
+		}
+		setIsSubmitting(false);
 	};
 
-	if (showLimitModal && limitErrorData) {
+	if (limitErrorData?.errorCode === "LIMIT_BOARD_REACHED") {
 		return (
-			<UpgradeModal
-				onClose={() => {
-					setShowLimitModal(false);
-					onClose();
-				}}
-				message={limitErrorData.message}
-			/>
+			<UpgradeModal onClose={handleClose} message={limitErrorData.message} />
 		);
 	}
 
 	return (
 		<div className="modal-bg">
 			<article className="modal-card">
-				<CloseButton className="closebtn-form" onClick={onClose} />
+				<CloseButton className="closebtn-form" onClick={handleClose} />
 				<h3 className="modal-header">{translation("newBoard.form.header")}</h3>
 				<Form className="modal-form" method="POST" onSubmit={handleSubmit}>
 					<div className="form-element">
@@ -113,6 +98,7 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 							onChange={handleTitleChange}
 						/>
 					</div>
+
 					<div className="file-container">
 						<FormFields
 							labelClassName="upload-img-label"
@@ -124,10 +110,11 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 							ref={fileRef}
 						/>
 					</div>
+
 					<Button
 						type="submit"
 						className="form-btn"
-						disabled={isDisabled || isSubmitting}
+						disabled={!titleInput || isSubmitting}
 					>
 						{isSubmitting ? (
 							<SpinnerLoadingText

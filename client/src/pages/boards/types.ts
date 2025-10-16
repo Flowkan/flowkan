@@ -88,4 +88,5 @@ export interface TaskLabel {
 
 export interface LimitErrorData {
 	message: string;
+	errorCode: string;
 }
