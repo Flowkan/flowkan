@@ -7,6 +7,7 @@ import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
 import { validateCard } from "../validators/cardValidators";
 import { cardCreateSchema, cardUpdateSchema } from "../validators/cardSchema";
 import { uploadMedia } from "../lib/uploadConfigure";
+import { checkTaskLimit } from "../middlewares/checkResourceLimit";
 
 const router = Router();
 
@@ -19,6 +20,7 @@ router.get("/:id", jwtAuth.guard, controller.getCard);
 router.post(
   "/",
   jwtAuth.guard,
+  checkTaskLimit,
   validateCard(cardCreateSchema),
   controller.addCard,
 );

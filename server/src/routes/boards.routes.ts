@@ -8,7 +8,7 @@ import AuthService from "../services/AuthService";
 import AuthModel from "../models/AuthModel";
 import { processImage, upload } from "../lib/uploadConfigure";
 import CardModel from "../models/CardModel";
-import { checkResourceQuantityLimit } from "../middlewares/checkResourceQuantityLimit";
+import { checkBoardLimit } from "../middlewares/checkResourceLimit";
 
 const router = Router();
 
@@ -25,7 +25,7 @@ router.get("/:slug", jwtAuth.guard, controller.get);
 router.post(
   "/",
   jwtAuth.guard,
-  checkResourceQuantityLimit("board", "maxBoards"),
+  checkBoardLimit,
   upload.single("image"),
   processImage(
     "boards",

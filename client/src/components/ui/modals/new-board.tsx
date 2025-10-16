@@ -6,12 +6,10 @@ import CloseButton from "../close-button";
 import "./modal-boards.css";
 import { Button } from "../Button";
 import { addBoard } from "../../../store/boards/actions";
-import { useAppDispatch, useAppSelector } from "../../../store";
+import { useAppDispatch } from "../../../store";
 import { SpinnerLoadingText } from "../Spinner";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../CustomToast";
-import UpgradeModal from "./UpgradeModal";
-import type { LimitErrorData } from "../../../pages/boards/types";
 import { useUiResetError } from "../../../store/boards/hooks";
 
 interface NewBoardProps {
@@ -25,10 +23,6 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 	const dispatch = useAppDispatch();
 	const fileRef = useRef<HTMLInputElement>(null);
 	const resetError = useUiResetError();
-
-	const limitErrorData = useAppSelector(
-		(state) => state.ui.error as LimitErrorData | null,
-	);
 
 	const handleClose = () => {
 		resetError();
@@ -66,18 +60,10 @@ const NewBoard = ({ onClose }: NewBoardProps) => {
 			boardData.append("image", file);
 		}
 
-		const success = await dispatch(addBoard(boardData));
-		if (success) {
-			onClose();
-		}
+		await dispatch(addBoard(boardData));
 		setIsSubmitting(false);
+		onClose();
 	};
-
-	if (limitErrorData?.errorCode === "LIMIT_BOARD_REACHED") {
-		return (
-			<UpgradeModal onClose={handleClose} message={limitErrorData.message} />
-		);
-	}
 
 	return (
 		<div className="modal-bg">

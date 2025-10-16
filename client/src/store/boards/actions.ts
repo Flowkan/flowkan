@@ -368,22 +368,17 @@ export function getBoardUsers(id: string): AppThunk<Promise<void>> {
 	};
 }
 
-export function addBoard(
-	data: FormData,
-): AppThunk<Promise<boolean | undefined>> {
+export function addBoard(data: FormData): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
 		try {
 			const board = await api.boards.createBoard(data);
 			dispatch(addBoardFulfilled(board));
-			return true;
 		} catch (error) {
 			if (error instanceof AxiosError && error.response?.status === 403) {
 				const errorData = error.response.data as LimitErrorData;
 
 				if (errorData.errorCode === "LIMIT_BOARD_REACHED") {
 					dispatch(boardLimitReached(errorData));
-
-					return false;
 				}
 			}
 		}
@@ -454,8 +449,18 @@ export function addTask(
 	data: Partial<Task>,
 ): AppThunk<Promise<void>> {
 	return async (dispatch, _getState, { api }) => {
-		const task = await api.boards.createTask(columnId, data);
-		dispatch(addTaskFulfilled(columnId, task));
+		try {
+			const task = await api.boards.createTask(columnId, data);
+			dispatch(addTaskFulfilled(columnId, task));
+		} catch (error) {
+			if (error instanceof AxiosError && error.response?.status === 403) {
+				const errorData = error.response.data as LimitErrorData;
+
+				if (errorData.errorCode === "LIMIT_TASK_REACHED") {
+					dispatch(boardLimitReached(errorData));
+				}
+			}
+		}
 	};
 }
 
