@@ -54,39 +54,69 @@ export const checkTaskLimit = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.apiUserId;
-    if (!userId)
+    const currentUserId = req.apiUserId;
+    if (!currentUserId)
       return res.status(401).json({ message: "Usuario no autenticado." });
 
+    let boardId: number | undefined;
+
+    if (req.params.boardId) {
+      boardId = Number(req.params.boardId);
+    } else if (req.body.listId) {
+      const listId = Number(req.body.listId);
+      const list = await prisma.list.findUnique({
+        where: { id: listId },
+        select: { boardId: true },
+      });
+      if (list) boardId = list.boardId;
+    }
+
+    if (!boardId) {
+      return res
+        .status(400)
+        .json({ message: "No se pudo determinar el ID del tablero." });
+    }
+
+    const board = await prisma.board.findUnique({
+      where: { id: boardId },
+      select: { ownerId: true, title: true },
+    });
+
+    if (!board) {
+      return res.status(404).json({ message: "Tablero no encontrado." });
+    }
+
     const subscription = await prisma.userSubscription.findUnique({
-      where: { userId },
+      where: { userId: board.ownerId },
       include: { plan: true },
     });
 
     if (!subscription?.plan) {
       return res.status(403).json({
-        message: "No tienes un plan activo. Es necesario un plan base.",
+        message: "El propietario de este tablero no tiene un plan activo.",
         errorCode: "NO_ACTIVE_PLAN",
       });
     }
 
     const limit = subscription.plan.maxTasks;
+    const planName = subscription.plan.name;
+
     if (limit === null || limit === undefined) return next();
 
     const count = await prisma.card.count({
       where: {
         list: {
-          board: { ownerId: userId },
+          boardId: boardId,
         },
       },
     });
 
     if (count >= limit) {
       return res.status(403).json({
-        message: `Has alcanzado el límite de ${limit} tareas para tu plan (${subscription.plan.name}).`,
+        message: `El tablero "${board.title}" ha alcanzado el límite de ${limit} tareas permitido por el plan (${planName}) del propietario.`,
         errorCode: "LIMIT_TASK_REACHED",
-        limit,
-        planName: subscription.plan.name,
+        limit: limit,
+        planName: planName,
       });
     }
 
