@@ -22,6 +22,7 @@ const HeaderEmail = () => {
             width={32}
             height={32}
             className="inline-block align-middle"
+            loading="lazy"
           />
           <span className="inline-block align-middle">lowkan</span>
         </Heading>
