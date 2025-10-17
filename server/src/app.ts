@@ -14,8 +14,12 @@ import {
   ApiValidationError,
   ValidationError,
 } from "./validators/validationError";
+import initSentry from "./lib/initSentry";
+import * as Sentry from "@sentry/node";
 
 const app = express();
+initSentry(app);
+
 app.disable("x-powered-by");
 
 app.use(cors());
@@ -43,6 +47,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next(createError(404));
 });
 
+// app.use(Sentry.expressErrorHandler());
+
 type FlowKanError = ValidationError | HttpError | Error;
 type ApiResponse =
   | { error: string; details?: ApiValidationError[] }
@@ -55,6 +61,28 @@ app.use(
 
     if (res.headersSent) {
       return next(err);
+    }
+    const clientIp =
+      req.headers["x-forwarded-for"]?.toString().split(",")[0] ||
+      req.socket.remoteAddress;
+
+    // Capturar IP y enviar a Sentry en produccion
+    if (process.env.SENTRY_DSN) {
+      Sentry.withScope((scope) => {
+        scope.setExtra("clientIp", clientIp);
+        scope.setExtra("route", req.route?.path || req.originalUrl);
+        scope.setExtra("method", req.method);
+        scope.setExtra("queryString", req.query);
+
+        if (req.apiUserId) {
+          scope.setUser({ id: req.apiUserId.toString() });
+          scope.setExtra("apiUserId", req.apiUserId.toString());
+        }
+
+        Sentry.captureException(err);
+      });
+    } else {
+      console.error(err);
     }
 
     if (err instanceof ValidationError) {
