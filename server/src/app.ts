@@ -50,7 +50,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next(createError(404));
 });
 
-// app.use(Sentry.expressErrorHandler());
 
 type FlowKanError = ValidationError | HttpError | Error;
 type ApiResponse =
@@ -70,7 +69,7 @@ app.use(
       req.socket.remoteAddress;
 
     // Capturar IP y enviar a Sentry en produccion
-    if (process.env.SENTRY_DSN) {
+    if (process.env.NODE_ENV === "production" && process.env.SENTRY_DSN) {
       Sentry.withScope((scope) => {
         scope.setExtra("clientIp", clientIp);
         scope.setExtra("route", req.route?.path || req.originalUrl);

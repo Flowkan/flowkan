@@ -3,13 +3,16 @@ import * as SentryProfiling from "@sentry/profiling-node";
 import express from "express";
 
 export default function initSentry(app: express.Express) {
-
-  if (!process.env.SENTRY_DSN) {
-    console.log("Sentry no está habilitado en desarrollo o falta SENTRY_DSN");
+  const ENV = process.env.NODE_ENV;
+  const DSN = process.env.SENTRY_DSN;
+  const isProduction = ENV === "production" && !!DSN;
+  
+  if (!isProduction) {
+    console.log("Sentry deshabilitado en desarrollo o falta DSN");
     return;
   }
   Sentry.init({
-    dsn: process.env.SENTRY_DSN,
+    dsn: DSN,
     integrations: [
       // Habilita trazas automáticas HTTP y Express
       Sentry.httpIntegration(),
@@ -21,22 +24,18 @@ export default function initSentry(app: express.Express) {
 
       SentryProfiling.nodeProfilingIntegration(),
       Sentry.consoleLoggingIntegration({
-        levels: ["log", "warn", "error", "info"],
+        levels: ["error"],
       }),
     ],
-    tracesSampleRate: 0.1, // 1.0 = 100% de las transacciones (bajar en producción)
-    tracePropagationTargets: ["localhost"],
+    environment: ENV,
+    tracesSampleRate: ENV === "production" ? 0.1 : 1.0, // 1.0 = 100% de las transacciones (bajar en producción)
     profilesSampleRate: 0.1,
-    enableLogs: true,
-
+    enabled: isProduction,
+    enableLogs: false,
   });
   app.use(Sentry.expressErrorHandler());
 
   // Errores no capturados
-  // process.on("uncaughtException", (err) => {
-  //   Sentry.captureException(err);
-  //   console.error("Uncaught Exception:", err);
-  // });
 
   process.on("unhandledRejection", (reason) => {
     Sentry.captureException(reason);
