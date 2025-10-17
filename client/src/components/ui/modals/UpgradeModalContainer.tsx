@@ -9,7 +9,9 @@ export default function UpgradeModalContainer() {
 	);
 	const resetError = useUiResetError();
 
-	if (!limitErrorData) return null;
+	if (!limitErrorData || (limitErrorData && !limitErrorData.errorCode)) {
+		return null;
+	}
 
 	const handleClose = () => resetError();
 

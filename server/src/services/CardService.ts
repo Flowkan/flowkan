@@ -42,6 +42,7 @@ export default class CardService {
       url: string;
       fileName: string;
       fileType: "document" | "audio";
+      sizeMB: number;
     }[],
   ) {
     const dataToCreate = mediaList.map((media) => ({
@@ -130,5 +131,18 @@ export default class CardService {
       );
     }
     return this.cardModel.removeLabelFromCard(cardId, labelId);
+  }
+
+  async getMediaAttachmentDetails(mediaId: number) {
+    return this.cardModel.getMediaDetails(mediaId);
+  }
+
+  async updateStorageUsedMB(userId: number, deltaSize: number) {
+    try {
+      const result = await this.cardModel.updateUserStorage(userId, deltaSize);
+      return result;
+    } catch (e) {
+      console.error(e);
+    }
   }
 }

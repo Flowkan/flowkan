@@ -138,6 +138,7 @@ model Media {
     fileType    String 
     card        Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
     cardId      Int
+    sizeMB      Float    @default(0.00)
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 }
@@ -150,7 +151,7 @@ model SubscriptionPlan {
   maxMembersPerBoard     Int?
   aiDescriptionLimit     Int?
   aiAgentEnabled         Boolean  @default(false)
-  storageLimitMB         Int?     // NULL = ilimitado
+  storageLimitMB         Float?     // NULL = ilimitado
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
 
@@ -164,7 +165,7 @@ model UserSubscription {
   plan                     SubscriptionPlan @relation(fields: [planId], references: [id])
   planId                   Int
   aiDescriptionCount        Int      @default(0) // contador mensual
-  currentStorageUsedMB      Int      @default(0)
+  currentStorageUsedMB      Float      @default(0.00)
   startDate                 DateTime @default(now())
   endDate                   DateTime?
   autoRenew                Boolean  @default(false)

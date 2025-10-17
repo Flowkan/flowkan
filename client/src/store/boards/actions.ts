@@ -504,7 +504,13 @@ export function editTask(
 			const updatedTask = await api.boards.updateTask(taskId, data);
 			dispatch(editTaskFulfilled(columnId, updatedTask));
 		} catch (error) {
-			if (error instanceof Error) {
+			if (error instanceof AxiosError && error.response?.status === 403) {
+				const errorData = error.response.data as LimitErrorData;
+
+				if (errorData.errorCode === "LIMIT_STORAGE_REACHED") {
+					dispatch(boardLimitReached(errorData));
+				}
+			} else if (error instanceof Error) {
 				dispatch(editTaskRejected(error));
 			}
 		}

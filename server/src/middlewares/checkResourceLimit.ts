@@ -211,3 +211,55 @@ export const checkBoardMembersLimit = async (
     });
   }
 };
+
+export const checkStorageLimit = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const userId = req.apiUserId;
+    if (!userId)
+      return res.status(401).json({ message: "Usuario no autenticado." });
+
+    const isMultipart = req.headers["content-type"]?.includes(
+      "multipart/form-data",
+    );
+    if (!isMultipart) return next();
+
+    const subscription = await prisma.userSubscription.findUnique({
+      where: { userId },
+      include: { plan: true },
+    });
+
+    if (!subscription?.plan) {
+      return res.status(403).json({
+        message: "No tienes un plan activo. Es necesario un plan base.",
+        errorCode: "NO_ACTIVE_PLAN",
+      });
+    }
+
+    const limit = subscription.plan.storageLimitMB;
+
+    const currentUsage = subscription.currentStorageUsedMB;
+
+    if (limit === null || limit === undefined) return next();
+
+    if (currentUsage >= limit) {
+      return res.status(403).json({
+        message: `Has alcanzado el límite de almacenamiento de ${limit} MB para tu plan (${subscription.plan.name}).`,
+        errorCode: "LIMIT_STORAGE_REACHED",
+        limit,
+        planName: subscription.plan.name,
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error("Error en checkStorageLimit:", error);
+    res.status(500).json({
+      message: "Error verificando límite de almacenamiento.",
+      errorCode: "INTERNAL_SERVER_ERROR",
+    });
+  }
+};

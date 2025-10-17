@@ -7,7 +7,10 @@ import * as jwtAuth from "../middlewares/jwtAuthMiddleware";
 import { validateCard } from "../validators/cardValidators";
 import { cardCreateSchema, cardUpdateSchema } from "../validators/cardSchema";
 import { uploadMedia } from "../lib/uploadConfigure";
-import { checkTaskLimit } from "../middlewares/checkResourceLimit";
+import {
+  checkStorageLimit,
+  checkTaskLimit,
+} from "../middlewares/checkResourceLimit";
 
 const router = Router();
 
@@ -27,6 +30,7 @@ router.post(
 router.put(
   "/:id",
   jwtAuth.guard,
+  checkStorageLimit,
   uploadMedia.array("attachments"),
   validateCard(cardUpdateSchema),
   controller.updateCard,

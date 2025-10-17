@@ -172,4 +172,22 @@ export default class CardModel {
       where: { cardId_labelId: { cardId, labelId } },
     });
   }
+
+  async getMediaDetails(mediaId: number) {
+    return this.prisma.media.findUnique({
+      where: { id: mediaId },
+      select: { fileName: true, sizeMB: true },
+    });
+  }
+
+  async updateUserStorage(userId: number, deltaSize: number) {
+    return this.prisma.userSubscription.update({
+      where: { userId },
+      data: {
+        currentStorageUsedMB: {
+          increment: deltaSize,
+        },
+      },
+    });
+  }
 }
