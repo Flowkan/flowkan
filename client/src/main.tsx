@@ -16,24 +16,13 @@ import configureStore from "./store/index.ts";
 import SocketProvider from "./hooks/socket/socket-provider.tsx";
 import { responseJwtInterceptors } from "./api/client.ts";
 import * as Sentry from "@sentry/react";
-import { resolveBaseURLFromEnv } from "./utils/resolveBaseUrlEnv.ts";
+// import { resolveBaseURLFromEnv } from "./utils/resolveBaseUrlEnv.ts";
+import initSentry from "./lib/sentryHandler.ts";
 
 // import { store } from "./store/store.ts";
 
-Sentry.init({
-	dsn: import.meta.env.VITE_SENTRY_DSN,
-	integrations: [
-		Sentry.browserTracingIntegration({}),
-		Sentry.consoleLoggingIntegration({
-			levels: ["log", "warn", "error", "info"],
-		}),
-	],
-	tracePropagationTargets: ["localhost", /^https:\/\/flowkan\.es/],
-	environment: resolveBaseURLFromEnv(),
-	// 10% para sentry (no saturar) en produccion y el 100% en desarrollo
-	tracesSampleRate: resolveBaseURLFromEnv() === "production" ? 0.1 : 1,
-	enableLogs: import.meta.env.MODE === "development",
-});
+// Inicializo Sentry
+initSentry();
 
 const accessToken = storage.get("auth");
 if (accessToken) {
