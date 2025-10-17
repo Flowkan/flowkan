@@ -71,7 +71,7 @@ export const PricingPage: React.FC = () => {
 							{plans.map((plan) => (
 								<div
 									key={plan.name}
-									className={`bg-background-card flex transform flex-col rounded-xl p-8 shadow-xl transition-all duration-300 ${plan.isPopular ? "ring-primary shadow-2xl ring-4 lg:scale-[1.03]" : "hover:-translate-y-1 hover:shadow-2xl"}`}
+									className={`bg-background-card relative flex transform flex-col rounded-xl p-8 shadow-xl transition-all duration-300 ${plan.isPopular ? "ring-primary shadow-2xl ring-4 lg:scale-[1.03]" : "hover:-translate-y-1 hover:shadow-2xl"}`}
 								>
 									{plan.isPopular && (
 										<div className="text-text-on-accent bg-primary absolute -top-3 right-6 rounded-full px-3 py-1 text-xs font-bold tracking-wider uppercase">
@@ -92,7 +92,7 @@ export const PricingPage: React.FC = () => {
 												: plan.price.split("/")[0]}
 										</span>
 										{!plan.isFree && (
-											<span className="text-text-body ml-1 text-lg font-medium">
+											<span className="text-text-body ml-1 text-sm font-medium">
 												{t("pricing.perMonth")}
 											</span>
 										)}

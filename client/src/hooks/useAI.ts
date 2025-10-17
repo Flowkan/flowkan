@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import { openrouter } from "../lib/openrouter";
-import { streamText } from "ai";
-import { formattedToHTML } from "../utils/formatted";
+import { generateDescription } from "../pages/boards/service";
 import { useTranslation } from "react-i18next";
+import { formattedToHTML } from "../utils/formatted";
+import axios from "axios";
 
 export const useAI = () => {
 	const { t } = useTranslation();
@@ -14,42 +14,38 @@ export const useAI = () => {
 		onChunk?: (chunk: string) => void,
 	): Promise<string | null> => {
 		abortAction.current = new AbortController();
+		const signal = abortAction.current?.signal;
+
 		setLoading(true);
 		setError(null);
 
-		const signal = abortAction.current.signal;
-
-		let description = "";
-
 		try {
-			const { textStream } = streamText({
-				model: openrouter("google/gemma-3n-e2b-it:free"),
-				prompt: t("boardModal.AI.prompt", {
-					title,
-				}),
-				abortSignal: signal,
-			});
-
-			let buffer = "";
-			for await (const chunk of textStream) {
-				description += chunk;
-				buffer += chunk;
-				if (buffer.length >= 30) {
-					const formatted = formattedToHTML(description);
-					onChunk?.(formatted); // descripcion en tiempo real
-					buffer = "";
-				}
-			}
-			if (buffer) {
-				const formatted = formattedToHTML(description);
-				onChunk?.(formatted);
-			}
+			const description = await generateDescription(title, signal);
+			// 			let buffer = "";
+			// 			for await (const chunk of textStream) {
+			// 				description += chunk;
+			// 				buffer += chunk;
+			// 				if (buffer.length >= 30) {
+			// 					const formatted = formattedToHTML(description);
+			// 					onChunk?.(formatted); // descripcion en tiempo real
+			// 					buffer = "";
+			// 				}
+			// 			}
+			// 			if (buffer) {
+			// 				const formatted = formattedToHTML(description);
+			// 				onChunk?.(formatted);
+			// 			}
+			// 			return description;
+			onChunk?.(formattedToHTML(description));
 			return description;
 		} catch (err: unknown) {
-			if (err instanceof Error) {
-				setError(err.message || t("boardModal.AI.error"));
+			if (axios.isCancel(err)) {
+				setError(t("boardModal.AI.canceled"));
+			} else if (err instanceof Error) {
 				if (err.message.includes("limit") || err.message.includes("quota")) {
-					setError(err.message || t("boardModal.AI.maxPetitions"));
+					setError(t("boardModal.AI.maxPetitions"));
+				} else {
+					setError(err.message || t("boardModal.AI.error"));
 				}
 			}
 			return null;
@@ -58,15 +54,14 @@ export const useAI = () => {
 			abortAction.current = null;
 		}
 	};
-
 	const stopGenerationDescription = () => {
 		abortAction.current?.abort();
+		setLoading(false);
 	};
-
 	return {
 		generateDescriptionFromTitle,
+		stopGenerationDescription,
 		loading,
 		error,
-		stopGenerationDescription,
 	};
 };

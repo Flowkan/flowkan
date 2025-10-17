@@ -51,6 +51,7 @@ describe("getBoards", () => {
 				lists: [],
 				members: [],
 				image: "",
+				labels: [],
 			},
 			{
 				id: "2",
@@ -92,6 +93,7 @@ describe("createBoard", () => {
 			lists: [],
 			members: [],
 			image: "",
+			labels: [],
 		} as Board;
 
 		(apiClient.post as ReturnType<typeof vi.fn>).mockResolvedValue({
@@ -133,6 +135,7 @@ describe("updateBoard", () => {
 			lists: [],
 			members: [],
 			image: "",
+			labels: [],
 		} as Board;
 
 		(apiClient.put as ReturnType<typeof vi.fn>).mockResolvedValue({
@@ -193,6 +196,7 @@ describe("getBoard", () => {
 			lists: [],
 			members: [],
 			image: "",
+			labels: [],
 		} as Board;
 
 		(apiClient.get as ReturnType<typeof vi.fn>).mockResolvedValue({
@@ -321,6 +325,7 @@ describe("createTask", () => {
 			description: "",
 			position: 1,
 			assignees: [],
+			labels: [],
 		} as Task;
 
 		(apiClient.post as ReturnType<typeof vi.fn>).mockResolvedValue({
@@ -358,6 +363,7 @@ describe("updateTask", () => {
 			description: "",
 			position: 1,
 			assignees: [],
+			labels: [],
 		} as Task;
 
 		(apiClient.put as ReturnType<typeof vi.fn>).mockResolvedValue({
