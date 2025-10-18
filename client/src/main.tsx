@@ -15,9 +15,14 @@ import i18n from "../src/lib/i18nextHandlers.ts";
 import configureStore from "./store/index.ts";
 import SocketProvider from "./hooks/socket/socket-provider.tsx";
 import { responseJwtInterceptors } from "./api/client.ts";
+import * as Sentry from "@sentry/react";
+// import { resolveBaseURLFromEnv } from "./utils/resolveBaseUrlEnv.ts";
+import initSentry from "./lib/sentryHandler.ts";
 
 // import { store } from "./store/store.ts";
 
+// Inicializo Sentry
+initSentry();
 
 const accessToken = storage.get("auth");
 if (accessToken) {
@@ -27,6 +32,13 @@ if (accessToken) {
 const storedUser = localStorage.getItem("user");
 
 const user = storedUser ? (JSON.parse(storedUser) as User) : null;
+if (user) {
+	Sentry.setUser({
+		id: user.id.toString(),
+		username: user.name,
+		email: user.email,
+	});
+}
 
 const router = createBrowserRouter([{ path: "*", element: <App /> }]);
 const store = configureStore(

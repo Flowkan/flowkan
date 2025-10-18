@@ -18,7 +18,7 @@ import { Form } from "../../components/ui/Form";
 import { FormFields } from "../../components/ui/FormFields";
 import { WithOtherServices } from "./withOtherServices/WithOtherServices";
 import { SpinnerLoadingText } from "../../components/ui/Spinner";
-import { __ } from "../../utils/i18nextHelper";
+import { __ } from "../../helpers/i18nextHelper";
 import Turnstile from "react-turnstile";
 import { useValidationForm } from "../../hooks/useValidationForm";
 import { validationForm } from "../../utils/validations";

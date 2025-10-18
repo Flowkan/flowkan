@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as authApi from "../pages/login/service";
 import * as profileApi from "../pages/profile/service";
 import * as boardsApi from "../pages/boards/service";
+import * as Sentry from "@sentry/react";
 import type { Actions } from "./boards/actions";
 import type { createBrowserRouter } from "react-router";
 import { authReducer } from "./auth/reducer";
@@ -24,7 +25,7 @@ const rootReducer = combineReducers({
 	auth: authReducer,
 	profile: profileReducer,
 	boards: boardsReducer,
-	ui: ui
+	ui: ui,
 });
 
 export type Router = ReturnType<typeof createBrowserRouter>;
@@ -64,7 +65,18 @@ const failureRedirects =
 			return result;
 		}
 
-		const status = action.payload?.status;
+		const status: number = action.payload?.status ?? 0;
+
+		if (action.error || action.payload) {
+			Sentry.captureException(action.error || action.payload, {
+				tags: {
+					action: action.type,
+					status: action.payload?.status,
+				},
+				level: status >= 500 ? "error" : status >= 400 ? "warning" : "info",
+			});
+		}
+
 		if (status === 404) {
 			router.navigate("/not-found");
 			return undefined;
@@ -72,7 +84,7 @@ const failureRedirects =
 		if (status === 401) {
 			localStorage.removeItem("auth");
 			localStorage.removeItem("user");
-			router.navigate("/login", {replace: true})
+			router.navigate("/login", { replace: true });
 			return undefined;
 		}
 

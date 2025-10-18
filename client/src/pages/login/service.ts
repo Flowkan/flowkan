@@ -7,6 +7,7 @@ import type { Credentials, ResponseChangePassword } from "./types";
 import storage from "../../utils/storage";
 import { USER_ENDPOINTS } from "../../utils/endpoints";
 import { resolveBaseURLFromEnv } from "../../utils/resolveBaseUrlEnv";
+import * as Sentry from "@sentry/react";
 
 export const login = async (credentials: Credentials) => {
 	const response = await apiClient.post<{
@@ -20,6 +21,11 @@ export const login = async (credentials: Credentials) => {
 		setAuthorizationHeader(accessToken);
 
 		storage.set("user", user);
+		Sentry.setUser({
+			id: user.id.toString(),
+			username: user.name,
+			email: user.email,
+		});
 
 		return user;
 	} else {

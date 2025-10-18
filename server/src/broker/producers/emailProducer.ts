@@ -2,6 +2,7 @@ import * as amqplib from "amqplib";
 import { setupBroker } from "../connection";
 import { Exchanges, RoutingKeys } from "../config";
 import { EmailPayload } from "../types";
+import * as Sentry from "@sentry/node";
 
 export async function sendEmailTask(payload: EmailPayload) {
   const channel = await setupBroker();
@@ -32,6 +33,15 @@ export async function sendEmailTask(payload: EmailPayload) {
       return false;
     }
   } catch (error) {
+    Sentry.withScope((scope) => {
+      scope.setExtra("exchangeName", exchangeName);
+      scope.setExtra("routingKey", routingKey);
+      scope.setExtra("type", payload.type);
+      if (payload.to) {
+        scope.setUser({ email: payload.to });
+      }
+      Sentry.captureException(error);
+    });
     console.error(
       `[Producer: Email] Error grave durante la publicación`,
       error,
