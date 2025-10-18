@@ -8,7 +8,7 @@ import { FormFields } from "../../components/ui/FormFields";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../components/CustomToast";
-import { __ } from "../../utils/i18nextHelper";
+import { __ } from "../../helpers/i18nextHelper";
 import { AxiosError } from "axios";
 
 const ChangePassword = () => {

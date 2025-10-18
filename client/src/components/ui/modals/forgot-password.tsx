@@ -14,7 +14,7 @@ import type { FormSendEmail } from "../../../pages/login/types";
 import { ForgotPasswordSchema } from "../../../utils/auth.schema";
 import toast from "react-hot-toast";
 import { CustomToast } from "../../CustomToast";
-import { __ } from "../../../utils/i18nextHelper";
+import { __ } from "../../../helpers/i18nextHelper";
 import { AxiosError } from "axios";
 import { useTranslation } from "react-i18next";
 

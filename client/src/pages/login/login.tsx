@@ -17,7 +17,7 @@ import { SpinnerLoadingText } from "../../components/ui/Spinner";
 import { Form } from "../../components/ui/Form";
 import { FormFields } from "../../components/ui/FormFields";
 import { Button } from "../../components/ui/Button";
-import { __ } from "../../utils/i18nextHelper";
+import { __ } from "../../helpers/i18nextHelper";
 import { WithOtherServices } from "../register/withOtherServices/WithOtherServices";
 import { useLoginAction } from "../../store/auth/hooks";
 import { useLoadedProfile } from "../../store/profile/hooks";
