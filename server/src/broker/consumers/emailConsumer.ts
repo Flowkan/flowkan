@@ -8,6 +8,7 @@ import {
 } from "../../services/TemplateEmailService";
 import { sendEmail } from "../../lib/emailService";
 import { DataUser, EmailPayload } from "../types";
+import * as Sentry from "@sentry/node";
 
 export async function startEmailConsumer(channel: amqplib.Channel) {
   const queueName = Queues.EMAIL_QUEUE;
@@ -37,6 +38,14 @@ async function processEmailMessage(
     await sendMailService(emailPayload);
     channel.ack(payload);
   } catch (error) {
+    Sentry.withScope((scope) => {
+      scope.setExtra("queue", Queues.EMAIL_QUEUE);
+      if (emailPayload) {
+        scope.setExtra("type", emailPayload.type);
+        scope.setUser({ email: emailPayload.to });
+      }
+      Sentry.captureException(error);
+    });
     console.error(
       `[Consume: Email] Fallo de procesamineto. Enviado a DLQ`,
       error,

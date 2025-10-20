@@ -2,6 +2,7 @@ import * as amqplib from "amqplib";
 import { closeBroker, setupBroker } from "./broker/connection";
 import { startEmailConsumer } from "./broker/consumers/emailConsumer";
 import { startThumbnailConsumer } from "./broker/consumers/thumbnailConsumer";
+import * as Sentry from "@sentry/node";
 async function startWorker() {
   let channel: amqplib.Channel;
   try {
@@ -11,6 +12,7 @@ async function startWorker() {
 
     startThumbnailConsumer(channel);
   } catch (error) {
+    Sentry.captureException(error);
     console.error("Fallo crítico al iniciar el Worker:", error);
     process.exit(1);
   }

@@ -4,6 +4,7 @@ import { MakeThumbnailPayload } from "../types";
 import sharp from "sharp";
 import { socketClientFromWorker } from "../client-socket/connectionManager";
 import WorkerSocketEvents from "../client-socket/workerSocketEvents";
+import * as Sentry from "@sentry/node";
 
 export async function startThumbnailConsumer(channel: amqplib.Channel) {
   const queueName = Queues.THUMBNAIL_QUEUE;
@@ -45,6 +46,14 @@ async function processThumbnailMessage(
     });
     channel.ack(payload);
   } catch (error) {
+    Sentry.withScope((scope) => {
+      scope.setExtra("queue", Queues.THUMBNAIL_QUEUE);
+      scope.setExtra("messageContent", payload.content.toString());
+      if (thumbnailPayload?.userId) {
+        scope.setExtra("userId", thumbnailPayload.userId);
+      }
+      Sentry.captureException(error);
+    });
     console.error(
       `[Consume: Thumbnail] Fallo de procesamineto. Enviado a DLQ`,
       error,
@@ -66,6 +75,15 @@ async function makeThumbnailService(
       .webp({ quality: 80 })
       .toFile(thumbPath);
   } catch (error) {
+    Sentry.withScope((scope) => {
+      scope.setExtra("originalPath", originalPath);
+      scope.setExtra("thumbPath", thumbPath);
+      scope.setExtra("thumbSize", thumbSize);
+      if (payload.userId) {
+        scope.setUser({ id: payload.userId.toString() });
+      }
+      Sentry.captureException(error);
+    });
     throw error;
   }
 }
