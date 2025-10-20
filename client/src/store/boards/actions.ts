@@ -507,7 +507,10 @@ export function editTask(
 			if (error instanceof AxiosError && error.response?.status === 403) {
 				const errorData = error.response.data as LimitErrorData;
 
-				if (errorData.errorCode === "LIMIT_STORAGE_REACHED") {
+				if (
+					errorData.errorCode === "LIMIT_STORAGE_REACHED" ||
+					errorData.errorCode == "LIMIT_AI_DESCRIPTION_REACHED"
+				) {
 					dispatch(boardLimitReached(errorData));
 				}
 			} else if (error instanceof Error) {

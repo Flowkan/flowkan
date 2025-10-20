@@ -263,3 +263,57 @@ export const checkStorageLimit = async (
     });
   }
 };
+
+export async function checkAiDescriptionLimit(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const userId = req.apiUserId;
+    if (!userId) {
+      return res.status(401).json({ message: "Usuario no autenticado" });
+    }
+
+    const subscription = await prisma.userSubscription.findUnique({
+      where: { userId },
+      include: { plan: true },
+    });
+
+    if (!subscription || !subscription.plan) {
+      return res.status(403).json({
+        message: "No tienes una suscripción activa",
+        errorCode: "NO_ACTIVE_PLAN",
+      });
+    }
+
+    const { plan, aiDescriptionCount } = subscription;
+    const limit = plan.aiDescriptionLimit;
+
+    if (limit === null || limit === undefined) {
+      return next();
+    }
+
+    if (aiDescriptionCount >= limit) {
+      return res.status(403).json({
+        message: `Has alcanzado el límite de ${limit} descripciones con IA permitidas por tu plan (${plan.name}).`,
+        errorCode: "LIMIT_AI_DESCRIPTION_REACHED",
+        current: aiDescriptionCount,
+        limit,
+      });
+    }
+
+    await prisma.userSubscription.update({
+      where: { userId },
+      data: { aiDescriptionCount: { increment: 1 } },
+    });
+
+    next();
+  } catch (error) {
+    console.error("Error en checkAiDescriptionLimit:", error);
+    res.status(500).json({
+      message: "Error verificando el límite de IA.",
+      errorCode: "INTERNAL_SERVER_ERROR",
+    });
+  }
+}
