@@ -8,6 +8,10 @@ import AuthService from "../services/AuthService";
 import AuthModel from "../models/AuthModel";
 import { processImage, upload } from "../lib/uploadConfigure";
 import CardModel from "../models/CardModel";
+import {
+  checkBoardLimit,
+  checkBoardMembersLimit,
+} from "../middlewares/checkResourceLimit";
 
 const router = Router();
 
@@ -24,6 +28,7 @@ router.get("/:slug", jwtAuth.guard, controller.get);
 router.post(
   "/",
   jwtAuth.guard,
+  checkBoardLimit,
   upload.single("image"),
   processImage(
     "boards",
@@ -45,8 +50,18 @@ router.put(
 );
 router.delete("/:id", jwtAuth.guard, controller.delete);
 
-router.get("/:id/share", jwtAuth.guard, controller.shareBoard);
-router.post("/:id/invite", jwtAuth.guard, controller.acceptInvitation);
+router.get(
+  "/:id/share",
+  jwtAuth.guard,
+  checkBoardMembersLimit,
+  controller.shareBoard,
+);
+router.post(
+  "/:id/invite",
+  jwtAuth.guard,
+  checkBoardMembersLimit,
+  controller.acceptInvitation,
+);
 
 router.get("/:id/users", jwtAuth.guard, controller.boardUsers);
 

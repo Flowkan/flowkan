@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAppSelector } from "../store";
 import { useNavigate } from "react-router-dom";
 import { acceptInvitation } from "../pages/boards/service";
+import { AxiosError } from "axios";
 
 export const useAcceptInvitation = () => {
 	const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
@@ -17,7 +18,15 @@ export const useAcceptInvitation = () => {
 				.then(() => {
 					navigate(`/boards/${boardSlug}`, { replace: true });
 				})
-				.catch(() => {
+				.catch((error) => {
+					if (
+						error instanceof AxiosError &&
+						error.response?.status === 403 &&
+						error.response?.data?.errorCode === "LIMIT_MEMBERS_REACHED"
+					) {
+						return;
+					}
+
 					navigate("/boards", { replace: true });
 				})
 				.finally(() => {

@@ -664,5 +664,9 @@
 		"arialabel": "Flag of {{label}}",
 		"title": "Flag of {{label}}",
 		"span": "Flag of {{label}}"
+	},
+	"upgradeModal": {
+		"title": "Limit Reached",
+		"buttonUpgrade": "Upgrade My Plan"
 	}
 }

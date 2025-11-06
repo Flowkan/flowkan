@@ -664,5 +664,9 @@
 		"arialabel": "Bandera de {{label}}",
 		"title": "Bandera de {{label}}",
 		"span": "Bandera de {{label}}"
+	},
+	"upgradeModal": {
+		"title": "Límite Alcanzado",
+		"buttonUpgrade": "Mejorar Mi Plan"
 	}
 }

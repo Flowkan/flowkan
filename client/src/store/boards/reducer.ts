@@ -342,6 +342,9 @@ export function ui(
 	if (action.type.endsWith("/fulfilled")) {
 		return { pending: false, error: null };
 	}
+	if (action.type === "boards/limitReached") {
+		return { ...state, pending: false, error: action.payload };
+	}
 	if (isRejectedAction(action)) {
 		return { pending: false, error: action.payload };
 	}

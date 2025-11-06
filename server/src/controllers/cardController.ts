@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import CardService from "../services/CardService";
 import createHttpError from "http-errors";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 
@@ -74,14 +74,51 @@ export class CardController {
     }
 
     const uploadedFileNames: string[] = [];
+    let totalSizeAddedMB = 0;
+    let totalSizeRemovedMB = 0;
 
     try {
+      if (removeMediaId !== undefined) {
+        const mediaAttachment =
+          await this.cardService.getMediaAttachmentDetails(removeMediaId);
+
+        if (mediaAttachment) {
+          totalSizeRemovedMB = mediaAttachment.sizeMB;
+          const fullPath = path.join(
+            UPLOAD_DIR,
+            String(cardId),
+            mediaAttachment.fileName,
+          );
+
+          try {
+            if (fs.existsSync(fullPath)) {
+              fs.unlinkSync(fullPath);
+            }
+          } catch (e) {
+            console.error(
+              `[FS ERROR] Error al eliminar el archivo ${fullPath}:`,
+              e,
+            );
+          }
+
+          await this.cardService.removeMediaFromCard(
+            userId,
+            cardId,
+            removeMediaId,
+          );
+        }
+      }
+
       if (files && files.length > 0) {
         const mediaFilesData: {
           url: string;
           fileName: string;
           fileType: "document" | "audio";
+          sizeMB: number;
         }[] = files.map((file) => {
+          const fileSizeMB = file.size / (1024 * 1024);
+          totalSizeAddedMB += fileSizeMB;
+
           const fileUrl = `/uploads/boards/${cardId}/${file.filename}`;
           uploadedFileNames.push(file.filename);
 
@@ -93,18 +130,11 @@ export class CardController {
             url: fileUrl,
             fileName: file.originalname,
             fileType: fileType,
+            sizeMB: fileSizeMB,
           };
         });
 
         await this.cardService.addMediaToCard(cardId, mediaFilesData);
-      }
-
-      if (removeMediaId !== undefined) {
-        await this.cardService.removeMediaFromCard(
-          userId,
-          cardId,
-          removeMediaId,
-        );
       }
 
       const updatedCard = await this.cardService.updateCard(
@@ -112,6 +142,12 @@ export class CardController {
         cardId,
         data,
       );
+
+      const deltaSize = totalSizeAddedMB - totalSizeRemovedMB;
+      console.log(deltaSize, totalSizeAddedMB, totalSizeRemovedMB);
+      if (deltaSize !== 0) {
+        await this.cardService.updateStorageUsedMB(userId, deltaSize);
+      }
 
       res.json(updatedCard);
     } catch (err) {

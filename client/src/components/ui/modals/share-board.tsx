@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../Button";
 import CloseButton from "../close-button";
-import { createInvitationLink } from "../../../pages/boards/service";
 import "./modal-boards.css";
 import { Icon } from "@iconify/react";
+import { shareBoard } from "../../../store/boards/actions";
+import { useAppDispatch } from "../../../store";
 
 interface ShareBoardProps {
 	boardId: string;
@@ -19,6 +20,7 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 		"idle" | "loading" | "succeeded" | "failed"
 	>("idle");
 	const [error, setError] = useState<string | null>(null);
+	const dispatch = useAppDispatch();
 
 	const handleCopyLink = () => {
 		if (invitationLink) {
@@ -29,29 +31,23 @@ const ShareBoard = ({ boardId, handleHideMessage }: ShareBoardProps) => {
 
 	const handleGenerateLink = async () => {
 		if (!boardId) {
-			const setErrorMsgId = t("share.error.id");
-			setError(setErrorMsgId);
+			setError(t("share.error.id"));
 			return;
 		}
 
 		setStatus("loading");
 		setError(null);
 
-		try {
-			const response = await createInvitationLink(boardId);
-			const token = response.token;
-			const FE_BASE_URL = window.location.origin;
-			let fullInvitationUrl = `${FE_BASE_URL}/invitacion?token=${token}&username=${response.inviterName}&title=${response.boardTitle}&boardId=${response.boardId}&boardSlug=${response.slug}`;
-			if (response.inviterPhoto) {
-				fullInvitationUrl += `&photo=${response.inviterPhoto}`;
-			}
+		const fullInvitationUrl = await (dispatch(
+			shareBoard(boardId),
+		) as unknown as Promise<string | undefined>);
+
+		if (fullInvitationUrl) {
 			setInvitationLink(fullInvitationUrl);
 			setStatus("succeeded");
-		} catch (err) {
-			const setErrorMsgLink = t("share.error.link");
+		} else {
 			setStatus("failed");
-			setError(setErrorMsgLink);
-			console.error(err);
+			handleClose();
 		}
 	};
 
