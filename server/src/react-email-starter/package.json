@@ -8,15 +8,15 @@
     "export": "email export"
   },
   "dependencies": {
-    "@react-email/components": "0.5.5",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwindcss": "^4.1.14"
+    "@react-email/components": "1.0.1",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
-    "@react-email/preview-server": "4.2.12",
-    "@types/react": "^19.0.1",
-    "@types/react-dom": "^19.0.1",
-    "react-email": "4.2.12"
+    "@react-email/preview-server": "5.0.7",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "react-email": "5.0.7"
   }
 }
